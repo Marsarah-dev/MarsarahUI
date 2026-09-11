@@ -89,6 +89,7 @@
     <Compile Include="Patches\UI\UIController.cs" />
     <Compile Include="Patches\UI\UILoadscreenTips.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />
+    <Compile Include="Patches\UI\UITamingProgress.cs" />
     <Compile Include="Patches\UI\UITimeAndDay.cs" />
     <Compile Include="Patches\UI\UIWeather.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
