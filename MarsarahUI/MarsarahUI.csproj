@@ -75,14 +75,19 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>Libs\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>Libs\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Managers\ConfigManager.cs" />
     <Compile Include="Managers\IconManager.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="MarsarahUI.cs" />
+    <Compile Include="Patches\UI\UIAshlandsHeatLevel.cs" />
     <Compile Include="Patches\UI\UIBossPowerExpiration.cs" />
     <Compile Include="Patches\UI\UIController.cs" />
+    <Compile Include="Patches\UI\UILoadscreenTips.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />
     <Compile Include="Patches\UI\UITimeAndDay.cs" />
     <Compile Include="Patches\UI\UIWeather.cs" />
