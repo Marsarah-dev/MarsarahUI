@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using MarsarahUI.Managers;
+using MarsarahUI.Patches.UI;
 
 namespace MarsarahUI
 {
@@ -23,6 +24,11 @@ namespace MarsarahUI
 			harmony.PatchAll();
 
 			log.Info($"{ModName} v{ModVersion} loaded.");
+		}
+
+		private void Update()
+		{
+			UIController.UpdateUIDisplay();
 		}
 
 		private void OnDestroy()
