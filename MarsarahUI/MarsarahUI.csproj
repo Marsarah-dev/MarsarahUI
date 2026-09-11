@@ -79,6 +79,7 @@
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="MarsarahUI.cs" />
     <Compile Include="Patches\UI\UIController.cs" />
+    <Compile Include="Patches\UI\UITimeAndDay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

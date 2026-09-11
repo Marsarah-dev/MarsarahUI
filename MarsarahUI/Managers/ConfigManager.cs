@@ -4,6 +4,8 @@ using System;
 using System.IO;
 using ServerSync;
 
+using MarsarahUI.Patches.UI;
+
 namespace MarsarahUI.Managers
 {
 	public static class ConfigManager
@@ -577,7 +579,14 @@ namespace MarsarahUI.Managers
 			log.Info($"Config setting '{configName}' changed!");
 			Config.Save();
 
-			// Feature-specific live refreshes will be added as the UI patches are ported.
+			if (configName == Configs.UICurrentDay.Name ||
+				configName == Configs.UITimeMode.Name ||
+				configName == Configs.OverrideCurrentDay.Name ||
+				configName == Configs.OverrideCurrentTime.Name ||
+				configName == Configs.EnableServerOverrides.Name)
+			{
+				UITimeAndDay.UpdatePositions();
+			}
 		}
 	}
 }
