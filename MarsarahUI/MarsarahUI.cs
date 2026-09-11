@@ -18,10 +18,16 @@ namespace MarsarahUI
 		private void Awake()
 		{
 			LogManager.SetGlobalLogLevel(LogManager.LogLevel.Info);
+			ConfigManager.Init(Config);
 
 			harmony.PatchAll();
 
 			log.Info($"{ModName} v{ModVersion} loaded.");
+		}
+
+		private void OnDestroy()
+		{
+			Config.Save();
 		}
 	}
 }
