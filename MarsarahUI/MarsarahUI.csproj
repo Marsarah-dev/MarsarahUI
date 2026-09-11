@@ -98,6 +98,7 @@
     <Compile Include="Patches\UI\UIEnemyNameplates.cs" />
     <Compile Include="Patches\UI\UIInventoryWeightAndSlots.cs" />
     <Compile Include="Patches\UI\UIItemDurability.cs" />
+    <Compile Include="Patches\UI\UIItemQuality.cs" />
     <Compile Include="Patches\UI\UILoadscreenTips.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />
     <Compile Include="Patches\UI\UITamingProgress.cs" />

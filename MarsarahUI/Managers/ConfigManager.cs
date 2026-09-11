@@ -596,6 +596,17 @@ namespace MarsarahUI.Managers
 			{
 				UIController.UpdateUIPositions();
 			}
+
+			if (configName == Configs.UIItemQualityIndicatorMode.Name ||
+				configName == Configs.UIItemQualitySymbol.Name ||
+				configName == Configs.UIItemQualityColor.Name ||
+				configName == Configs.OverrideItemQualityMode.Name ||
+				configName == Configs.OverrideItemQualitySymbol.Name ||
+				configName == Configs.OverrideItemQualityColor.Name ||
+				configName == Configs.EnableServerOverrides.Name)
+			{
+				UIItemQuality.UpdateSymbols();
+			}
 		}
 	}
 }
