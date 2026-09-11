@@ -72,6 +72,9 @@
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>Libs\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>Libs\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>Libs\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
@@ -88,6 +91,7 @@
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="MarsarahUI.cs" />
     <Compile Include="Patches\UI\UIAshlandsHeatLevel.cs" />
+    <Compile Include="Patches\UI\UIBoatSpeed.cs" />
     <Compile Include="Patches\UI\UIBossPowerExpiration.cs" />
     <Compile Include="Patches\UI\UIController.cs" />
     <Compile Include="Patches\UI\UIEnemyDetector.cs" />

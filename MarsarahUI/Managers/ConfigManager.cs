@@ -304,7 +304,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIMoreLoadingTips = new ConfigMetadata("01 - More Loading Tips", "More loading screen tips");
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Show Inventory Weight and Free Slots", "Shows inventory weight and free slots on the bottom left of the screen");
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Show Enemy Detector", "Shows enemy detector on the bottom left of the screen");
-			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("04 - Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator (if UI layout is new) or on the bottom left of the screen (if UI layout is old)");
+			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("04 - Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator");
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("05 - Show Current Day", "Shows the current day above the minimap.");
 			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("06 - Show Current Time", "Shows the current time above the minimap. Can choose between digital clock and day sections");
 			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("07 - Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.");
@@ -586,6 +586,15 @@ namespace MarsarahUI.Managers
 				configName == Configs.EnableServerOverrides.Name)
 			{
 				UITimeAndDay.UpdatePositions();
+			}
+
+			if (configName == Configs.UIInventoryWeightAndSlots.Name ||
+				configName == Configs.UIEnemyDetector.Name ||
+				configName == Configs.OverrideInventoryWeightAndSlots.Name ||
+				configName == Configs.OverrideEnemyDetector.Name ||
+				configName == Configs.EnableServerOverrides.Name)
+			{
+				UIController.UpdateUIPositions();
 			}
 		}
 	}
