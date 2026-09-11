@@ -1,0 +1,158 @@
+MARSARAHUI TODO
+===============
+
+============================================================
+IMPLEMENTED - NOT RELEASED
+============================================================
+
+A. Standalone Mod / Architecture
+--------------------------------
+* Created standalone MarsarahUI and removed the UI module from MarsarahTweaks.
+* Removed the old/alternate UI layout system and kept the preferred layout only.
+* Added ServerSync with a master Enable Server Overrides option.
+* Added admin overrides to 10 gameplay/information-oriented features:
+  - Enemy Detector
+  - Current Day
+  - Current Time
+  - Weather Forecast
+  - Smart Biome
+  - Ashlands Heat Meter
+  - Enemy Nameplate Mode
+  - Taming Progress
+  - Detailed Hover Information
+  - Container Contents
+* All other UI settings remain local player preferences.
+* Added lightweight CompatibilityManager integration for:
+  - MarsarahTweaks
+  - Craft From Containers
+  - Minimal Status Effects
+* Smart Biome accounts for Tweaks Gear Upgrade Unlock when Tweaks is installed.
+
+B. Ported UI Features
+---------------------
+* More Loading Tips.
+* Inventory Weight and Free Slots.
+* Enemy Detector.
+* Boat Speed.
+* Current Day.
+* Current Time.
+* Weather Forecast with embedded weather icons.
+* Smart Biome.
+* Summon Counter.
+* Online Players, bottom-right layout only.
+* Show Owned Resources.
+* Boss Power Expiration Message.
+* Ashlands Heat Meter.
+* Enemy Nameplate modes.
+* Taming Progress.
+* Item Quality indicator modes, symbols and colors.
+* Better Item Durability Bar.
+* Detailed Hovers:
+  - Containers
+  - Container contents
+  - Beehives
+  - Plants
+  - Fermenters
+  - Cooking Stations
+  - Smelters / Windmills
+  - Eggs
+
+C. Compatibility / Fixes
+------------------------
+* Boat Speed repositions when Minimal Status Effects is installed.
+* Show Owned Resources steps aside when Craft From Containers is installed.
+* Smart Biome uses MarsarahTweaks Gear Upgrade Unlock state when available.
+
+
+============================================================
+TO IMPLEMENT / VERIFY
+============================================================
+
+A. Release Blockers / Verification
+----------------------------------
+* Online Players multiplayer test with at least two connected players.
+* More Loading Tips final loading-screen sanity test.
+* Dedicated-server ServerSync testing:
+  - UserChoice
+  - ForceOn
+  - ForceOff
+  - Enable Server Overrides
+  - Disconnect/reconnect restoration of local choices
+* Re-test reflection/private-field features against the latest Valheim 1.0 assemblies.
+
+* Final consistency cleanup:
+  - Logging names/levels
+  - Naming conventions
+  - Donor-era field/class names
+  - Dead usings/comments
+  - Stale Old/New UI references
+  - Effective/local config usage
+  - Current assembly references
+
+* Final release packaging and documentation.
+
+B. Existing UI Ideas
+--------------------
+* Current Time: visual day-progress line with a moving time indicator.
+* Weather Forecast: choose a better position when No Map is enabled.
+* Smelter hover: add a Bars display mode.
+* Skill progress message/bar.
+* Player login-screen statistics.
+* Container contents: replace text with item icons / add as an alternate to text.
+* Item durability bars: test thicker bars and optional durability text.
+* Test item/tool tooltips with EpicLoot and add compatibility only if required.
+* Player Inspector for players currently logged into the world.
+* Investigate using in-game icons for inventory weight and free slots. Same for the Online Players indicator and other relevant places.
+
+C. Online / Player Information
+------------------------------
+* Consider showing player HP and death count with Online Players.
+* Consider indicating Corpse Run status, for example by coloring the player name.
+
+D. New UI Features
+------------------
+* Make custom UI elements draggable.
+* Smart Pins:
+  - Admin defines allowed/predefined pins.
+  - Players can place only the predefined pin types.
+* Show a center-screen message when a Trinket triggers.
+* Add MarsarahUI's own compact status-effects display under the minimap.
+
+E. Deep North / 1.0 Content
+---------------------------
+[DEFERRED] Do this after playing the Deep North to avoid spoilers.
+
+* Review Deep North gear for Smart Biome weighting.
+* Review any new Deep North mechanics that need UI indicators or hover information.
+* Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.
+
+
+============================================================
+COMPLETED / SUPERSEDED IDEAS FROM THE OLD TWEAKS TODO
+============================================================
+
+- "Add synced with server master toggle for UI elements":
+  DONE. MarsarahUI now has a master Server Overrides switch plus 10 selected admin-overridable features.
+
+- "Better enemy nameplates":
+  DONE.
+
+- "Better item level indicator":
+  DONE as the Item Quality indicator system.
+
+- "Add taming indicator for each creature":
+  The current Taming Progress display already shows per-creature taming percentage under the creature HUD.
+  Revisit only if a separate graphical indicator is desired.
+
+- "Add people emoji for Online Players in alternate UI":
+  NO LONGER NEEDED. The alternate UI layout was removed.
+
+- "Modify weather emojis / use in-game weather icons":
+  SUPERSEDED. Weather Forecast now uses embedded PNG weather icons rather than emoji.
+  Revisit only if intentionally replacing those assets with Valheim sprites.
+
+- "Modify the symbols next to time of day to indicate weather":
+  SUPERSEDED by the dedicated Weather Forecast indicator unless a combined Time/Weather design is wanted later.
+
+- "UI issues with the other mod":
+  The known Minimal Status Effects Boat Speed positioning issue is fixed.
