@@ -49,13 +49,6 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
-		public enum OnlinePlayersMode
-		{
-			BottomRight,
-			UnderMinimap,
-			Off
-		}
-
 		public enum EnemyNameplateMode
 		{
 			BarsOnly,
@@ -156,14 +149,6 @@ namespace MarsarahUI.Managers
 			UserChoice,
 			DigitalClock,
 			DayPhases,
-			Off
-		}
-
-		public enum OnlinePlayersModeOverride
-		{
-			UserChoice,
-			BottomRight,
-			UnderMinimap,
 			Off
 		}
 
@@ -310,7 +295,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("07 - Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.");
 			public static readonly ConfigMetadata UISmartBiome = new ConfigMetadata("08 - Smart Biome Indicator", "Shows smart biome text on the minimap (colored according to worn armor relative to current biome)");
 			public static readonly ConfigMetadata UISummonCounter = new ConfigMetadata("09 - Show Summon Counter", "Shows number of summoned skeletons from the Dead Raiser");
-			public static readonly ConfigMetadata UIOnlinePlayersMode = new ConfigMetadata("10 - Show Online Players", "Displays a list of online players. The player names can be toggled with the Home key. (Not displayed if only one player is online)");
+			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("10 - Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.");
 			public static readonly ConfigMetadata UIShowOwnedResources = new ConfigMetadata("11 - Show Owned Resources In Build Menu", "Displays the total amount of resources in the player's inventory in addition to the required resource amount for the selected piece or recipe in the build or crafting menu");
 			public static readonly ConfigMetadata UIShowPowerExpiration = new ConfigMetadata("12 - Show Boss Power Expiration Message", "Displays a message in the center of the screen when any Forsaken Power expires");
 			public static readonly ConfigMetadata UIPlayerLogoutAnnounce = new ConfigMetadata("13 - Player Logout Announce", "Displays a message when a player logs out in the top-left corner of the screen and in the chat window");
@@ -343,7 +328,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> WeatherForecastOverride;
 		public static ConfigEntry<BoolOverride> SmartBiomeOverride;
 		public static ConfigEntry<BoolOverride> SummonCounterOverride;
-		public static ConfigEntry<OnlinePlayersModeOverride> OnlinePlayersOverride;
+		public static ConfigEntry<BoolOverride> OnlinePlayersOverride;
 		public static ConfigEntry<BoolOverride> OwnedResourcesOverride;
 		public static ConfigEntry<BoolOverride> BossExpirationOverride;
 		public static ConfigEntry<BoolOverride> PlayerLogoutOverride;
@@ -373,7 +358,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ShowWeatherForecast;
 		public static ConfigEntry<bool> ShowSmartBiome;
 		public static ConfigEntry<bool> ShowSummonCounter;
-		public static ConfigEntry<OnlinePlayersMode> OnlinePlayersChoice;
+		public static ConfigEntry<bool> ShowOnlinePlayers;
 		public static ConfigEntry<bool> ShowOwnedResources;
 		public static ConfigEntry<bool> ShowBossExpirationMessage;
 		public static ConfigEntry<bool> AnnouncePlayerLogout;
@@ -404,7 +389,7 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveShowWeatherForecast => ResolveBool(ShowWeatherForecast, WeatherForecastOverride);
 		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
 		public static bool EffectiveShowSummonCounter => ResolveBool(ShowSummonCounter, SummonCounterOverride);
-		public static OnlinePlayersMode EffectiveOnlinePlayersChoice => ResolveEnum(OnlinePlayersChoice, OnlinePlayersOverride, OnlinePlayersModeOverride.UserChoice);
+		public static bool EffectiveShowOnlinePlayers => ResolveBool(ShowOnlinePlayers, OnlinePlayersOverride);
 		public static bool EffectiveShowOwnedResources => ResolveBool(ShowOwnedResources, OwnedResourcesOverride);
 		public static bool EffectiveShowBossExpirationMessage => ResolveBool(ShowBossExpirationMessage, BossExpirationOverride);
 		public static bool EffectiveAnnouncePlayerLogout => ResolveBool(AnnouncePlayerLogout, PlayerLogoutOverride);
@@ -439,7 +424,7 @@ namespace MarsarahUI.Managers
 			ShowWeatherForecast = CreateConfig(Configs.UIWeatherForecast, true);
 			ShowSmartBiome = CreateConfig(Configs.UISmartBiome, true);
 			ShowSummonCounter = CreateConfig(Configs.UISummonCounter, true);
-			OnlinePlayersChoice = CreateConfig(Configs.UIOnlinePlayersMode, OnlinePlayersMode.BottomRight);
+			ShowOnlinePlayers = CreateConfig(Configs.UIOnlinePlayers, true);
 			ShowOwnedResources = CreateConfig(Configs.UIShowOwnedResources, true);
 			ShowBossExpirationMessage = CreateConfig(Configs.UIShowPowerExpiration, true);
 			AnnouncePlayerLogout = CreateConfig(Configs.UIPlayerLogoutAnnounce, true);
@@ -473,7 +458,7 @@ namespace MarsarahUI.Managers
 			WeatherForecastOverride = CreateServerOverride(Configs.OverrideWeatherForecast, BoolOverride.UserChoice);
 			SmartBiomeOverride = CreateServerOverride(Configs.OverrideSmartBiome, BoolOverride.UserChoice);
 			SummonCounterOverride = CreateServerOverride(Configs.OverrideSummonCounter, BoolOverride.UserChoice);
-			OnlinePlayersOverride = CreateServerOverride(Configs.OverrideOnlinePlayers, OnlinePlayersModeOverride.UserChoice);
+			OnlinePlayersOverride = CreateServerOverride(Configs.OverrideOnlinePlayers, BoolOverride.UserChoice);
 			OwnedResourcesOverride = CreateServerOverride(Configs.OverrideOwnedResources, BoolOverride.UserChoice);
 			BossExpirationOverride = CreateServerOverride(Configs.OverrideBossExpiration, BoolOverride.UserChoice);
 			PlayerLogoutOverride = CreateServerOverride(Configs.OverridePlayerLogout, BoolOverride.UserChoice);

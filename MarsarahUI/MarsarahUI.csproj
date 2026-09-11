@@ -100,6 +100,7 @@
     <Compile Include="Patches\UI\UIItemDurability.cs" />
     <Compile Include="Patches\UI\UIItemQuality.cs" />
     <Compile Include="Patches\UI\UILoadscreenTips.cs" />
+    <Compile Include="Patches\UI\UIOnlinePlayers.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />
     <Compile Include="Patches\UI\UITamingProgress.cs" />
     <Compile Include="Patches\UI\UITimeAndDay.cs" />
