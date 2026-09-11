@@ -86,6 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
     <Compile Include="Managers\IconManager.cs" />
     <Compile Include="Managers\LogManager.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Patches\UI\UIItemQuality.cs" />
     <Compile Include="Patches\UI\UILoadscreenTips.cs" />
     <Compile Include="Patches\UI\UIOnlinePlayers.cs" />
+    <Compile Include="Patches\UI\UIShowOwnedResources.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />
     <Compile Include="Patches\UI\UITamingProgress.cs" />
     <Compile Include="Patches\UI\UITimeAndDay.cs" />

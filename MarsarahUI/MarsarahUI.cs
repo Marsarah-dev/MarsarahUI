@@ -20,6 +20,7 @@ namespace MarsarahUI
 		{
 			LogManager.SetGlobalLogLevel(LogManager.LogLevel.Info);
 			ConfigManager.Init(Config);
+			CompatibilityManager.Initialize();
 
 			harmony.PatchAll();
 

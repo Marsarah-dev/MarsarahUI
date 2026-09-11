@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -109,9 +108,7 @@ namespace MarsarahUI.Patches.UI
 			float xOffset = Game.m_noMap ? -145f : -283f;
 			float yOffset = -225f;
 
-			bool minimalStatusEffectsLoaded = AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.GetName().Name == "MinimalStatusEffects");
-
-			if (minimalStatusEffectsLoaded)
+			if (CompatibilityManager.MinimalStatusEffectsLoaded)
 			{
 				xOffset = -360f;
 				yOffset = -25f;
