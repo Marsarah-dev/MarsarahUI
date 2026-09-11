@@ -196,10 +196,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (!UIBiomeText.enabled) return;
 
-				Dictionary<string, BiomeWeights> biomeWeights =
-					CompatibilityManager.IsTweaksGearUpgradeUnlockEnabled()
-						? unlockedBiomeWeights
-						: defaultBiomeWeights;
+				Dictionary<string, BiomeWeights> biomeWeights =	CompatibilityManager.TweaksGearUpgradeUnlockEnabled	? unlockedBiomeWeights : defaultBiomeWeights;
 
 				if (currentBiome != null && biomeWeights.TryGetValue(currentBiome, out BiomeWeights weights))
 				{

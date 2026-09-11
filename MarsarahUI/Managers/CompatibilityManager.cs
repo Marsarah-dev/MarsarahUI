@@ -1,32 +1,40 @@
 ﻿using BepInEx.Bootstrap;
 using BepInEx.Configuration;
-using System;
-using System.Reflection;
 
 namespace MarsarahUI.Managers
 {
 	internal static class CompatibilityManager
 	{
-		private static readonly LogManager log = new LogManager("Compatibility Manager", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("Compatibility Manager", LogManager.LogLevel.Info);
 
 		private const string MarsarahTweaksGUID = "Marsarah.MarsarahTweaks";
 		private const string CraftFromContainersGUID = "aedenthorn.CraftFromContainers";
 		private const string MinimalStatusEffectsGUID = "randyknapp.mods.minimalstatuseffects";
 
+		private static ConfigEntry<bool> tweaksGearUpgradeUnlock;
+
 		internal static bool MarsarahTweaksLoaded { get; private set; }
 		internal static bool CraftFromContainersLoaded { get; private set; }
 		internal static bool MinimalStatusEffectsLoaded { get; private set; }
 
+		internal static bool TweaksGearUpgradeUnlockEnabled =>
+			MarsarahTweaksLoaded && tweaksGearUpgradeUnlock?.Value == true;
+
 		internal static void Initialize()
 		{
-			MarsarahTweaksLoaded = Chainloader.PluginInfos.ContainsKey(MarsarahTweaksGUID);
+			if (Chainloader.PluginInfos.TryGetValue(MarsarahTweaksGUID, out var pluginInfo) && pluginInfo.Instance != null)
+			{
+				MarsarahTweaksLoaded = true;
+
+				ConfigFile tweaksConfig = pluginInfo.Instance.Config;
+
+				tweaksGearUpgradeUnlock = GetBoolConfig(tweaksConfig, "3 - Balance (Synced with Server)", "04 - Gear Upgrade Unlock");
+
+				log.Info("MarsarahTweaks detected. Smart Biome will account for Gear Upgrade Unlock.");
+			}
+
 			CraftFromContainersLoaded = Chainloader.PluginInfos.ContainsKey(CraftFromContainersGUID);
 			MinimalStatusEffectsLoaded = Chainloader.PluginInfos.ContainsKey(MinimalStatusEffectsGUID);
-
-			if (MarsarahTweaksLoaded)
-			{
-				log.Warn("MarsarahTweaks detected. Smart Biome will account for Gear Upgrade Unlock.");
-			}
 
 			if (CraftFromContainersLoaded)
 			{
@@ -39,25 +47,17 @@ namespace MarsarahUI.Managers
 			}
 		}
 
-		internal static bool IsTweaksGearUpgradeUnlockEnabled()
+		private static ConfigEntry<bool> GetBoolConfig(ConfigFile config, string section, string key)
 		{
-			if (!MarsarahTweaksLoaded) return false;
+			ConfigDefinition definition = new ConfigDefinition(section, key);
 
-			try
+			if (config.TryGetEntry(definition, out ConfigEntry<bool> entry))
 			{
-				BepInEx.PluginInfo pluginInfo = Chainloader.PluginInfos[MarsarahTweaksGUID];
-				Type configManagerType = pluginInfo.Instance.GetType().Assembly.GetType("MarsarahTweaks.Managers.ConfigManager");
-
-				FieldInfo configField = configManagerType?.GetField("GearUpgradeUnlockEnabled", BindingFlags.Public | BindingFlags.Static);
-				ConfigEntry<bool> configEntry = configField?.GetValue(null) as ConfigEntry<bool>;
-
-				return configEntry?.Value ?? false;
+				return entry;
 			}
-			catch (Exception ex)
-			{
-				log.Warn($"Could not read MarsarahTweaks Gear Upgrade Unlock setting: {ex.Message}");
-				return false;
-			}
+
+			log.Warn($"Could not find MarsarahTweaks config '{section} / {key}'.");
+			return null;
 		}
 	}
 }

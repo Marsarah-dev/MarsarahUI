@@ -6,6 +6,7 @@ using MarsarahUI.Patches.UI;
 namespace MarsarahUI
 {
 	[BepInPlugin(ModGUID, ModName, ModVersion)]
+	[BepInDependency("Marsarah.MarsarahTweaks", BepInDependency.DependencyFlags.SoftDependency)]
 	public class MarsarahUI : BaseUnityPlugin
 	{
 		internal const string ModName = "MarsarahUI";
@@ -20,11 +21,15 @@ namespace MarsarahUI
 		{
 			LogManager.SetGlobalLogLevel(LogManager.LogLevel.Info);
 			ConfigManager.Init(Config);
-			CompatibilityManager.Initialize();
 
 			harmony.PatchAll();
 
 			log.Info($"{ModName} v{ModVersion} loaded.");
+		}
+
+		private void Start()
+		{
+			CompatibilityManager.Initialize();
 		}
 
 		private void Update()
