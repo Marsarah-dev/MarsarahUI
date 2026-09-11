@@ -37,6 +37,9 @@
     <Reference Include="0Harmony">
       <HintPath>Libs\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="assembly_guiutils">
+      <HintPath>Libs\assembly_guiutils.dll</HintPath>
+    </Reference>
     <Reference Include="assembly_valheim">
       <HintPath>Libs\assembly_valheim.dll</HintPath>
     </Reference>
@@ -78,6 +81,7 @@
     <Compile Include="Managers\IconManager.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="MarsarahUI.cs" />
+    <Compile Include="Patches\UI\UIBossPowerExpiration.cs" />
     <Compile Include="Patches\UI\UIController.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />
     <Compile Include="Patches\UI\UITimeAndDay.cs" />
