@@ -162,34 +162,6 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
-		public enum ItemQualityModeOverride
-		{
-			UserChoice,
-			Horizontal,
-			Vertical,
-			Off
-		}
-
-		public enum ItemQualitySymbolOverride
-		{
-			UserChoice,
-			Star,
-			Circle,
-			Diamond,
-			EmptyDiamond
-		}
-
-		public enum ItemQualityColorOverride
-		{
-			UserChoice,
-			White,
-			Yellow,
-			Green,
-			Red,
-			Blue,
-			Cyan
-		}
-
 		public enum HoverInfoModeOverride
 		{
 			UserChoice,
@@ -198,94 +170,8 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
-		public enum ContainerHoverModeOverride
-		{
-			UserChoice,
-			CurrentPerMax,
-			AmountOfFreeSlots,
-			Percent
-		}
-
-		public enum BeeHoverModeOverride
-		{
-			UserChoice,
-			RemainingTime,
-			Percent,
-			PercentAndTime
-		}
-
-		public enum PlantHoverModeOverride
-		{
-			UserChoice,
-			RemainingTime,
-			Percent,
-			PercentAndTime
-		}
-
-		public enum FermenterHoverModeOverride
-		{
-			UserChoice,
-			RemainingTime,
-			Percent,
-			PercentAndTime
-		}
-
-		public enum CookingStationHoverModeOverride
-		{
-			UserChoice,
-			RemainingTime,
-			Percent,
-			PercentAndTime
-		}
-
-		public enum SmelterHoverModeOverride
-		{
-			UserChoice,
-			RemainingTime
-		}
-
-		public enum EggHoverModeOverride
-		{
-			UserChoice,
-			RemainingTime,
-			Percent,
-			PercentAndTime
-		}
-
 		public static class Configs
 		{
-			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("01 - Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.");
-			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("02 - Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.");
-			public static readonly ConfigMetadata OverrideMoreLoadingTips = new ConfigMetadata("03 - More Loading Tips Override", "Overrides the player's local More Loading Tips setting.");
-			public static readonly ConfigMetadata OverrideInventoryWeightAndSlots = new ConfigMetadata("04 - Inventory Weight and Free Slots Override", "Overrides the player's local Inventory Weight and Free Slots setting.");
-			public static readonly ConfigMetadata OverrideEnemyDetector = new ConfigMetadata("05 - Enemy Detector Override", "Overrides the player's local Enemy Detector setting.");
-			public static readonly ConfigMetadata OverrideBoatSpeed = new ConfigMetadata("06 - Boat Speed Override", "Overrides the player's local Boat Speed setting.");
-			public static readonly ConfigMetadata OverrideCurrentDay = new ConfigMetadata("07 - Current Day Override", "Overrides the player's local Current Day setting.");
-			public static readonly ConfigMetadata OverrideCurrentTime = new ConfigMetadata("08 - Current Time Override", "Overrides the player's local Current Time setting.");
-			public static readonly ConfigMetadata OverrideWeatherForecast = new ConfigMetadata("09 - Weather Forecast Override", "Overrides the player's local Weather Forecast setting.");
-			public static readonly ConfigMetadata OverrideSmartBiome = new ConfigMetadata("10 - Smart Biome Override", "Overrides the player's local Smart Biome setting.");
-			public static readonly ConfigMetadata OverrideSummonCounter = new ConfigMetadata("11 - Summon Counter Override", "Overrides the player's local Summon Counter setting.");
-			public static readonly ConfigMetadata OverrideOnlinePlayers = new ConfigMetadata("12 - Online Players Override", "Overrides the player's local Online Players setting.");
-			public static readonly ConfigMetadata OverrideOwnedResources = new ConfigMetadata("13 - Owned Resources Override", "Overrides the player's local Owned Resources setting.");
-			public static readonly ConfigMetadata OverrideBossExpiration = new ConfigMetadata("14 - Boss Power Expiration Override", "Overrides the player's local Boss Power Expiration setting.");
-			public static readonly ConfigMetadata OverridePlayerLogout = new ConfigMetadata("15 - Player Logout Announce Override", "Overrides the player's local Player Logout Announce setting.");
-			public static readonly ConfigMetadata OverrideAshlandsHeat = new ConfigMetadata("16 - Ashlands Heat Meter Override", "Overrides the player's local Ashlands Heat Meter setting.");
-			public static readonly ConfigMetadata OverrideEnemyNameplates = new ConfigMetadata("17 - Enemy Nameplate Mode Override", "Overrides the player's local Enemy Nameplate Mode setting.");
-			public static readonly ConfigMetadata OverrideTamingProgress = new ConfigMetadata("18 - Taming Progress Override", "Overrides the player's local Taming Progress setting.");
-			public static readonly ConfigMetadata OverrideItemQualityMode = new ConfigMetadata("19 - Item Quality Indicator Mode Override", "Overrides the player's local Item Quality Indicator Mode setting.");
-			public static readonly ConfigMetadata OverrideItemQualitySymbol = new ConfigMetadata("20 - Item Quality Symbol Override", "Overrides the player's local Item Quality Symbol setting.");
-			public static readonly ConfigMetadata OverrideItemQualityColor = new ConfigMetadata("21 - Item Quality Color Override", "Overrides the player's local Item Quality Color setting.");
-			public static readonly ConfigMetadata OverrideItemDurability = new ConfigMetadata("22 - Item Durability Bar Override", "Overrides the player's local Item Durability Bar setting.");
-			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("23 - Detailed Hover Information Override", "Overrides the player's local Detailed Hover Information setting.");
-			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("24 - Container Contents Override", "Overrides the player's local Container Contents setting.");
-			public static readonly ConfigMetadata OverrideContainerHover = new ConfigMetadata("25 - Container Hover Mode Override", "Overrides the player's local Container Hover Mode setting.");
-			public static readonly ConfigMetadata OverrideBeeHover = new ConfigMetadata("26 - Beehive Hover Mode Override", "Overrides the player's local Beehive Hover Mode setting.");
-			public static readonly ConfigMetadata OverridePlantHover = new ConfigMetadata("27 - Plant Hover Mode Override", "Overrides the player's local Plant Hover Mode setting.");
-			public static readonly ConfigMetadata OverrideFermenterHover = new ConfigMetadata("28 - Fermenter Hover Mode Override", "Overrides the player's local Fermenter Hover Mode setting.");
-			public static readonly ConfigMetadata OverrideCookingStationHover = new ConfigMetadata("29 - Cooking Station Hover Mode Override", "Overrides the player's local Cooking Station Hover Mode setting.");
-			public static readonly ConfigMetadata OverrideSmelterHover = new ConfigMetadata("30 - Smelter Hover Mode Override", "Overrides the player's local Smelter Hover Mode setting.");
-			public static readonly ConfigMetadata OverrideEggHover = new ConfigMetadata("31 - Egg Hover Mode Override", "Overrides the player's local Egg Hover Mode setting.");
-
 			public static readonly ConfigMetadata UIMoreLoadingTips = new ConfigMetadata("01 - More Loading Tips", "More loading screen tips");
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Show Inventory Weight and Free Slots", "Shows inventory weight and free slots on the bottom left of the screen");
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Show Enemy Detector", "Shows enemy detector on the bottom left of the screen");
@@ -315,39 +201,20 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UICookingStationHoverMode = new ConfigMetadata("27 - CookingStation Hover Mode", "Choose the method of displaying Cooking Station hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("28 - Smelter Hover Mode", "Choose the method of displaying Smelter hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("29 - Egg Hover Mode", "Choose the method of displaying Egg hatching hover info. Requires Detailed Hover Information");
-		}
 
-		public static ConfigEntry<bool> ServerOverridesLocked;
-		public static ConfigEntry<bool> ServerOverridesEnabled;
-		public static ConfigEntry<BoolOverride> MoreLoadingTipsOverride;
-		public static ConfigEntry<BoolOverride> InventoryWeightAndSlotsOverride;
-		public static ConfigEntry<BoolOverride> EnemyDetectorOverride;
-		public static ConfigEntry<BoolOverride> BoatSpeedOverride;
-		public static ConfigEntry<BoolOverride> CurrentDayOverride;
-		public static ConfigEntry<TimeModeOverride> CurrentTimeOverride;
-		public static ConfigEntry<BoolOverride> WeatherForecastOverride;
-		public static ConfigEntry<BoolOverride> SmartBiomeOverride;
-		public static ConfigEntry<BoolOverride> SummonCounterOverride;
-		public static ConfigEntry<BoolOverride> OnlinePlayersOverride;
-		public static ConfigEntry<BoolOverride> OwnedResourcesOverride;
-		public static ConfigEntry<BoolOverride> BossExpirationOverride;
-		public static ConfigEntry<BoolOverride> PlayerLogoutOverride;
-		public static ConfigEntry<BoolOverride> AshlandsHeatOverride;
-		public static ConfigEntry<EnemyNameplateModeOverride> EnemyNameplatesOverride;
-		public static ConfigEntry<BoolOverride> TamingProgressOverride;
-		public static ConfigEntry<ItemQualityModeOverride> ItemQualityModeOverrideChoice;
-		public static ConfigEntry<ItemQualitySymbolOverride> ItemQualitySymbolOverrideChoice;
-		public static ConfigEntry<ItemQualityColorOverride> ItemQualityColorOverrideChoice;
-		public static ConfigEntry<BoolOverride> ItemDurabilityOverride;
-		public static ConfigEntry<HoverInfoModeOverride> DetailedHoversOverride;
-		public static ConfigEntry<BoolOverride> ContainerContentsOverride;
-		public static ConfigEntry<ContainerHoverModeOverride> ContainerHoverOverride;
-		public static ConfigEntry<BeeHoverModeOverride> BeeHoverOverride;
-		public static ConfigEntry<PlantHoverModeOverride> PlantHoverOverride;
-		public static ConfigEntry<FermenterHoverModeOverride> FermenterHoverOverride;
-		public static ConfigEntry<CookingStationHoverModeOverride> CookingStationHoverOverride;
-		public static ConfigEntry<SmelterHoverModeOverride> SmelterHoverOverride;
-		public static ConfigEntry<EggHoverModeOverride> EggHoverOverride;
+			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("01 - Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.");
+			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("02 - Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.");
+			public static readonly ConfigMetadata OverrideEnemyDetector = new ConfigMetadata("03 - Enemy Detector Override", "Overrides the player's local Enemy Detector setting.");
+			public static readonly ConfigMetadata OverrideCurrentDay = new ConfigMetadata("04 - Current Day Override", "Overrides the player's local Current Day setting.");
+			public static readonly ConfigMetadata OverrideCurrentTime = new ConfigMetadata("05 - Current Time Override", "Overrides the player's local Current Time setting.");
+			public static readonly ConfigMetadata OverrideWeatherForecast = new ConfigMetadata("06 - Weather Forecast Override", "Overrides the player's local Weather Forecast setting.");
+			public static readonly ConfigMetadata OverrideSmartBiome = new ConfigMetadata("07 - Smart Biome Override", "Overrides the player's local Smart Biome setting.");
+			public static readonly ConfigMetadata OverrideAshlandsHeat = new ConfigMetadata("08 - Ashlands Heat Meter Override", "Overrides the player's local Ashlands Heat Meter setting.");
+			public static readonly ConfigMetadata OverrideEnemyNameplates = new ConfigMetadata("09 - Enemy Nameplate Mode Override", "Overrides the player's local Enemy Nameplate Mode setting.");
+			public static readonly ConfigMetadata OverrideTamingProgress = new ConfigMetadata("10 - Taming Progress Override", "Overrides the player's local Taming Progress setting.");
+			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("11 - Detailed Hover Information Override", "Overrides the player's local Detailed Hover Information setting.");
+			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("12 - Container Contents Override", "Overrides the player's local Container Contents setting.");
+		}
 
 		public static ConfigEntry<bool> MoreLoadingTipsEnabled;
 		public static ConfigEntry<bool> ShowInventoryWeightAndSlots;
@@ -379,36 +246,51 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<SmelterHoverMode> SmelterHoverModeChoice;
 		public static ConfigEntry<EggHoverMode> EggHoverModeChoice;
 
+		public static ConfigEntry<bool> ServerOverridesLocked;
+		public static ConfigEntry<bool> ServerOverridesEnabled;
+
+		public static ConfigEntry<BoolOverride> EnemyDetectorOverride;
+		public static ConfigEntry<BoolOverride> CurrentDayOverride;
+		public static ConfigEntry<TimeModeOverride> CurrentTimeOverride;
+		public static ConfigEntry<BoolOverride> WeatherForecastOverride;
+		public static ConfigEntry<BoolOverride> SmartBiomeOverride;
+		public static ConfigEntry<BoolOverride> AshlandsHeatOverride;
+		public static ConfigEntry<EnemyNameplateModeOverride> EnemyNameplatesOverride;
+		public static ConfigEntry<BoolOverride> TamingProgressOverride;
+		public static ConfigEntry<HoverInfoModeOverride> DetailedHoversOverride;
+		public static ConfigEntry<BoolOverride> ContainerContentsOverride;
+
 		// Effective UI settings
-		public static bool EffectiveMoreLoadingTipsEnabled => ResolveBool(MoreLoadingTipsEnabled, MoreLoadingTipsOverride);
-		public static bool EffectiveShowInventoryWeightAndSlots => ResolveBool(ShowInventoryWeightAndSlots, InventoryWeightAndSlotsOverride);
+		public static bool EffectiveMoreLoadingTipsEnabled => MoreLoadingTipsEnabled.Value;
+		public static bool EffectiveShowInventoryWeightAndSlots => ShowInventoryWeightAndSlots.Value;
+
 		public static bool EffectiveShowEnemyDetector => ResolveBool(ShowEnemyDetector, EnemyDetectorOverride);
-		public static bool EffectiveShowBoatSpeed => ResolveBool(ShowBoatSpeed, BoatSpeedOverride);
+		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
 		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
 		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
 		public static bool EffectiveShowWeatherForecast => ResolveBool(ShowWeatherForecast, WeatherForecastOverride);
 		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
-		public static bool EffectiveShowSummonCounter => ResolveBool(ShowSummonCounter, SummonCounterOverride);
-		public static bool EffectiveShowOnlinePlayers => ResolveBool(ShowOnlinePlayers, OnlinePlayersOverride);
-		public static bool EffectiveShowOwnedResources => ResolveBool(ShowOwnedResources, OwnedResourcesOverride);
-		public static bool EffectiveShowBossExpirationMessage => ResolveBool(ShowBossExpirationMessage, BossExpirationOverride);
-		public static bool EffectiveAnnouncePlayerLogout => ResolveBool(AnnouncePlayerLogout, PlayerLogoutOverride);
+		public static bool EffectiveShowSummonCounter => ShowSummonCounter.Value;
+		public static bool EffectiveShowOnlinePlayers => ShowOnlinePlayers.Value;
+		public static bool EffectiveShowOwnedResources => ShowOwnedResources.Value;
+		public static bool EffectiveShowBossExpirationMessage => ShowBossExpirationMessage.Value;
+		public static bool EffectiveAnnouncePlayerLogout => AnnouncePlayerLogout.Value;
 		public static bool EffectiveShowHeatLevelInAshlands => ResolveBool(ShowHeatLevelInAshlands, AshlandsHeatOverride);
 		public static EnemyNameplateMode EffectiveEnemyNameplateChoice => ResolveEnum(EnemyNameplateChoice, EnemyNameplatesOverride, EnemyNameplateModeOverride.UserChoice);
 		public static bool EffectiveShowTamingProgress => ResolveBool(ShowTamingProgress, TamingProgressOverride);
-		public static ItemQualityMode EffectiveItemQualityIndicatorChoice => ResolveEnum(ItemQualityIndicatorChoice, ItemQualityModeOverrideChoice, ItemQualityModeOverride.UserChoice);
-		public static ItemQualitySymbol EffectiveItemQualitySymbolChoice => ResolveEnum(ItemQualitySymbolChoice, ItemQualitySymbolOverrideChoice, ItemQualitySymbolOverride.UserChoice);
-		public static ItemQualityColor EffectiveItemQualityColorChoice => ResolveEnum(ItemQualityColorChoice, ItemQualityColorOverrideChoice, ItemQualityColorOverride.UserChoice);
-		public static bool EffectiveColoredItemDurabilityBar => ResolveBool(ColoredItemDurabilityBar, ItemDurabilityOverride);
+		public static ItemQualityMode EffectiveItemQualityIndicatorChoice => ItemQualityIndicatorChoice.Value;
+		public static ItemQualitySymbol EffectiveItemQualitySymbolChoice => ItemQualitySymbolChoice.Value;
+		public static ItemQualityColor EffectiveItemQualityColorChoice => ItemQualityColorChoice.Value;
+		public static bool EffectiveColoredItemDurabilityBar => ColoredItemDurabilityBar.Value;
 		public static HoverInfoMode EffectiveDetailedHoverInfoChoice => ResolveEnum(DetailedHoverInfoChoice, DetailedHoversOverride, HoverInfoModeOverride.UserChoice);
 		public static bool EffectiveShowContainerContents => ResolveBool(ShowContainerContents, ContainerContentsOverride);
-		public static ContainerHoverMode EffectiveContainerHoverModeChoice => ResolveEnum(ContainerHoverModeChoice, ContainerHoverOverride, ContainerHoverModeOverride.UserChoice);
-		public static BeeHoverMode EffectiveBeehiveHoverModeChoice => ResolveEnum(BeehiveHoverModeChoice, BeeHoverOverride, BeeHoverModeOverride.UserChoice);
-		public static PlantHoverMode EffectivePlantHoverModeChoice => ResolveEnum(PlantHoverModeChoice, PlantHoverOverride, PlantHoverModeOverride.UserChoice);
-		public static FermenterHoverMode EffectiveFermenterHoverModeChoice => ResolveEnum(FermenterHoverModeChoice, FermenterHoverOverride, FermenterHoverModeOverride.UserChoice);
-		public static CookingStationHoverMode EffectiveCookingStationHoverModeChoice => ResolveEnum(CookingStationHoverModeChoice, CookingStationHoverOverride, CookingStationHoverModeOverride.UserChoice);
-		public static SmelterHoverMode EffectiveSmelterHoverModeChoice => ResolveEnum(SmelterHoverModeChoice, SmelterHoverOverride, SmelterHoverModeOverride.UserChoice);
-		public static EggHoverMode EffectiveEggHoverModeChoice => ResolveEnum(EggHoverModeChoice, EggHoverOverride, EggHoverModeOverride.UserChoice);
+		public static ContainerHoverMode EffectiveContainerHoverModeChoice => ContainerHoverModeChoice.Value;
+		public static BeeHoverMode EffectiveBeehiveHoverModeChoice => BeehiveHoverModeChoice.Value;
+		public static PlantHoverMode EffectivePlantHoverModeChoice => PlantHoverModeChoice.Value;
+		public static FermenterHoverMode EffectiveFermenterHoverModeChoice => FermenterHoverModeChoice.Value;
+		public static CookingStationHoverMode EffectiveCookingStationHoverModeChoice => CookingStationHoverModeChoice.Value;
+		public static SmelterHoverMode EffectiveSmelterHoverModeChoice => SmelterHoverModeChoice.Value;
+		public static EggHoverMode EffectiveEggHoverModeChoice => EggHoverModeChoice.Value;
 
 		public static void Init(ConfigFile configFile)
 		{
@@ -448,36 +330,19 @@ namespace MarsarahUI.Managers
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);
 			_ = configSync.AddLockingConfigEntry(ServerOverridesLocked);
+
 			ServerOverridesEnabled = CreateServerOverride(Configs.EnableServerOverrides, true);
-			MoreLoadingTipsOverride = CreateServerOverride(Configs.OverrideMoreLoadingTips, BoolOverride.UserChoice);
-			InventoryWeightAndSlotsOverride = CreateServerOverride(Configs.OverrideInventoryWeightAndSlots, BoolOverride.UserChoice);
+
 			EnemyDetectorOverride = CreateServerOverride(Configs.OverrideEnemyDetector, BoolOverride.UserChoice);
-			BoatSpeedOverride = CreateServerOverride(Configs.OverrideBoatSpeed, BoolOverride.UserChoice);
 			CurrentDayOverride = CreateServerOverride(Configs.OverrideCurrentDay, BoolOverride.UserChoice);
 			CurrentTimeOverride = CreateServerOverride(Configs.OverrideCurrentTime, TimeModeOverride.UserChoice);
 			WeatherForecastOverride = CreateServerOverride(Configs.OverrideWeatherForecast, BoolOverride.UserChoice);
 			SmartBiomeOverride = CreateServerOverride(Configs.OverrideSmartBiome, BoolOverride.UserChoice);
-			SummonCounterOverride = CreateServerOverride(Configs.OverrideSummonCounter, BoolOverride.UserChoice);
-			OnlinePlayersOverride = CreateServerOverride(Configs.OverrideOnlinePlayers, BoolOverride.UserChoice);
-			OwnedResourcesOverride = CreateServerOverride(Configs.OverrideOwnedResources, BoolOverride.UserChoice);
-			BossExpirationOverride = CreateServerOverride(Configs.OverrideBossExpiration, BoolOverride.UserChoice);
-			PlayerLogoutOverride = CreateServerOverride(Configs.OverridePlayerLogout, BoolOverride.UserChoice);
 			AshlandsHeatOverride = CreateServerOverride(Configs.OverrideAshlandsHeat, BoolOverride.UserChoice);
 			EnemyNameplatesOverride = CreateServerOverride(Configs.OverrideEnemyNameplates, EnemyNameplateModeOverride.UserChoice);
 			TamingProgressOverride = CreateServerOverride(Configs.OverrideTamingProgress, BoolOverride.UserChoice);
-			ItemQualityModeOverrideChoice = CreateServerOverride(Configs.OverrideItemQualityMode, ItemQualityModeOverride.UserChoice);
-			ItemQualitySymbolOverrideChoice = CreateServerOverride(Configs.OverrideItemQualitySymbol, ItemQualitySymbolOverride.UserChoice);
-			ItemQualityColorOverrideChoice = CreateServerOverride(Configs.OverrideItemQualityColor, ItemQualityColorOverride.UserChoice);
-			ItemDurabilityOverride = CreateServerOverride(Configs.OverrideItemDurability, BoolOverride.UserChoice);
 			DetailedHoversOverride = CreateServerOverride(Configs.OverrideDetailedHovers, HoverInfoModeOverride.UserChoice);
 			ContainerContentsOverride = CreateServerOverride(Configs.OverrideContainerContents, BoolOverride.UserChoice);
-			ContainerHoverOverride = CreateServerOverride(Configs.OverrideContainerHover, ContainerHoverModeOverride.UserChoice);
-			BeeHoverOverride = CreateServerOverride(Configs.OverrideBeeHover, BeeHoverModeOverride.UserChoice);
-			PlantHoverOverride = CreateServerOverride(Configs.OverridePlantHover, PlantHoverModeOverride.UserChoice);
-			FermenterHoverOverride = CreateServerOverride(Configs.OverrideFermenterHover, FermenterHoverModeOverride.UserChoice);
-			CookingStationHoverOverride = CreateServerOverride(Configs.OverrideCookingStationHover, CookingStationHoverModeOverride.UserChoice);
-			SmelterHoverOverride = CreateServerOverride(Configs.OverrideSmelterHover, SmelterHoverModeOverride.UserChoice);
-			EggHoverOverride = CreateServerOverride(Configs.OverrideEggHover, EggHoverModeOverride.UserChoice);
 
 			SetupWatcher();
 		}
@@ -575,7 +440,6 @@ namespace MarsarahUI.Managers
 
 			if (configName == Configs.UIInventoryWeightAndSlots.Name ||
 				configName == Configs.UIEnemyDetector.Name ||
-				configName == Configs.OverrideInventoryWeightAndSlots.Name ||
 				configName == Configs.OverrideEnemyDetector.Name ||
 				configName == Configs.EnableServerOverrides.Name)
 			{
@@ -584,11 +448,7 @@ namespace MarsarahUI.Managers
 
 			if (configName == Configs.UIItemQualityIndicatorMode.Name ||
 				configName == Configs.UIItemQualitySymbol.Name ||
-				configName == Configs.UIItemQualityColor.Name ||
-				configName == Configs.OverrideItemQualityMode.Name ||
-				configName == Configs.OverrideItemQualitySymbol.Name ||
-				configName == Configs.OverrideItemQualityColor.Name ||
-				configName == Configs.EnableServerOverrides.Name)
+				configName == Configs.UIItemQualityColor.Name)
 			{
 				UIItemQuality.UpdateSymbols();
 			}
