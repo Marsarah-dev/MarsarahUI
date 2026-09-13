@@ -52,7 +52,17 @@ namespace MarsarahUI.Patches.UI
 			"Sheathing or unsheathing equipped weapons and shields can be done by pressing R. Walking and running with unsheathed weapons will slow you down.",
 			"Old buildings can be found throughout Valheim. They can be either renovated for shelter, or torn down for resources.",
 			"Some animals can be tamed.",
-			"Sitting next to a lit fire in any open space provides a level 1 rested bonus."
+			"Sitting next to a lit fire in any open space provides a level 1 rested bonus.",
+			"Holding the interact key on a container will place matching item stacks from your inventory into it.",
+			"The rested effect also increases skill experience gain, making it worthwhile to stay rested while exploring, fighting, and gathering.",
+			"Your rested duration is determined by the highest comfort level you've recently rested at, so improving your home has benefits even after you leave it.",
+			"Blocking is more effective when you have enough health to withstand the incoming attack. Strong enemies can stagger you through an insufficient block.",
+			"Portals cannot normally transport metals or ores, but processed equipment made from those materials can pass through them.",
+			"Different shields are suited to different playstyles. Bucklers reward well-timed parries, while tower shields favor stronger regular blocking.",
+			"Enemy stars greatly increase their health and damage, but starred enemies also provide more resources when defeated.",
+			"Sneaking uses stamina while moving near enemies. The eye indicator shows how visible you currently are.",
+			"You can mark locations on the map and name your pins. Marking crypts, caves, resources, and unfinished areas can save a lot of searching later.",
+			"Hold the Shift key while building to disable snapping temporarily, allowing pieces to be positioned more freely."
 		};
 
 		[HarmonyPatch(typeof(Localization), "SetupLanguage")]
@@ -76,7 +86,7 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
 
-				if (ConfigManager.EffectiveMoreLoadingTipsEnabled)
+				if (ConfigManager.EffectiveBetterLoadingTipsEnabled)
 				{
 					loadingTipString = loadingTipStrings[UnityEngine.Random.Range(0, loadingTipStrings.Count)];
 				}
@@ -90,7 +100,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
-				if (!ConfigManager.EffectiveMoreLoadingTipsEnabled || localizationLanguage != "English") return;
+				if (!ConfigManager.EffectiveBetterLoadingTipsEnabled || localizationLanguage != "English") return;
 
 				if (string.IsNullOrEmpty(loadingTipString))
 				{

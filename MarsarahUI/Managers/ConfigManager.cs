@@ -172,7 +172,7 @@ namespace MarsarahUI.Managers
 
 		public static class Configs
 		{
-			public static readonly ConfigMetadata UIMoreLoadingTips = new ConfigMetadata("01 - More Loading Tips", "More loading screen tips");
+			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("01 - Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.");
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Show Inventory Weight and Free Slots", "Shows inventory weight and free slots on the bottom left of the screen");
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Show Enemy Detector", "Shows enemy detector on the bottom left of the screen");
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("04 - Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator");
@@ -215,7 +215,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("12 - Container Contents Override", "Overrides the player's local Container Contents setting.");
 		}
 
-		public static ConfigEntry<bool> MoreLoadingTipsEnabled;
+		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
 		public static ConfigEntry<bool> ShowInventoryWeightAndSlots;
 		public static ConfigEntry<bool> ShowEnemyDetector;
 		public static ConfigEntry<bool> ShowBoatSpeed;
@@ -259,7 +259,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> ContainerContentsOverride;
 
 		// Effective UI settings
-		public static bool EffectiveMoreLoadingTipsEnabled => MoreLoadingTipsEnabled.Value;
+		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
 		public static bool EffectiveShowInventoryWeightAndSlots => ShowInventoryWeightAndSlots.Value;
 
 		public static bool EffectiveShowEnemyDetector => ResolveBool(ShowEnemyDetector, EnemyDetectorOverride);
@@ -294,7 +294,7 @@ namespace MarsarahUI.Managers
 			Config = configFile;
 
 			// ===== Local UI Settings
-			MoreLoadingTipsEnabled = CreateConfig(Configs.UIMoreLoadingTips, true);
+			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			ShowInventoryWeightAndSlots = CreateConfig(Configs.UIInventoryWeightAndSlots, true);
 			ShowEnemyDetector = CreateConfig(Configs.UIEnemyDetector, true);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);

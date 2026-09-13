@@ -69,6 +69,8 @@ D. New additions
   - Added Lox Fur set for Plains
 * Detailed Hovers: 
   - Added MarsarahTweaks Progression Halt compatibility. Contents of progression-sealed chests are hidden and replaced with "This chest is sealed." until the required boss is defeated.
+* More Loading Tips renamed to Better Loading Tips
+  - Added 10 more tips
 
 
 ============================================================
