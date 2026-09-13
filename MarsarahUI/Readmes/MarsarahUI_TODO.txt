@@ -5,7 +5,7 @@ MARSARAH UI TODO
 IMPLEMENTED - NOT RELEASED
 ============================================================
 
-A. Standalone Mod / Architecture
+A. Standalone Mod port
 --------------------------------
 * Created standalone MarsarahUI and removed the UI module from MarsarahTweaks.
 * Removed the old/alternate UI layout system and kept the preferred layout only.
@@ -26,7 +26,7 @@ A. Standalone Mod / Architecture
   - MarsarahTweaks
   - Craft From Containers
   - Minimal Status Effects
-* Smart Biome accounts for Tweaks Gear Upgrade Unlock when Tweaks is installed.
+* Smart Biome accounts for Marsarah Tweaks Gear Upgrade Unlock when Marsarah Tweaks is installed.
 
 B. Ported UI Features
 ---------------------
@@ -80,17 +80,12 @@ TO IMPLEMENT / VERIFY
 A. Release Blockers / Verification
 ----------------------------------
 * Online Players multiplayer test with at least two connected players.
-* More Loading Tips final loading-screen sanity test.
 * Dedicated-server ServerSync testing:
   - UserChoice
   - ForceOn
   - ForceOff
   - Enable Server Overrides
   - Disconnect/reconnect restoration of local choices
-* Re-test reflection/private-field features against the latest Valheim 1.0 assemblies.
-
-* Display Chest Contents must respect MarsarahTweaks Progression Halt. If a chest is currently sealed by Progression Halt, MarsarahUI should not reveal its contents.
-* Get the vanilla loading screen tips strings to see what else was added and modify accordingly.
 
 * Final release packaging and documentation.
 

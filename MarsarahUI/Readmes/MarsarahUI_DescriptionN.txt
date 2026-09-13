@@ -1,0 +1,245 @@
+[size=5][b]Marsarah UI[/b][/size]
+
+[b]Version:[/b] 1.0.0
+[b]Author:[/b] Marsarah
+
+[line]
+
+[size=5][b]🧰 About the Mod[/b][/size]
+
+Marsarah UI is a standalone collection of UI and information improvements for Valheim.
+The features originally started as the UI section of [b]Marsarah Tweaks[/b] and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
+
+The mod adds useful HUD information, improved nameplates and item indicators, detailed object hovers, better loading tips, weather information, and other interface improvements. Most features can be configured independently.
+
+Marsarah UI also includes [b]ServerSync[/b] support for selected gameplay/information-oriented UI features. Local UI preferences remain local by default, while server administrators can optionally override selected settings.
+
+[line]
+
+[size=4][b]Development Notes[/b][/size]
+
+[b]Deep North / Spoiler Note:[/b] Deep North-specific UI integration is intentionally limited for now.
+I want to experience the new biome and progression myself before digging through its mechanics in detail, so I can play through it without spoiling the experience for myself.
+After completing the Deep North, I plan to review new gear for Smart Biome and check whether any new mechanics would benefit from additional indicators or hover information.
+
+[b]AI Usage Disclosure:[/b] The original UI features were developed as part of my MarsarahMod / Marsarah Tweaks projects. AI tools are now used as part of my development workflow for tasks such as debugging, refactoring, compatibility updates, researching game API changes, and documentation.
+Development remains human-directed: I decide what features are added, how they should behave, and I write code, review and test the changes included in releases. The mod's logo was also created using generative AI.
+
+[size=4][b]Related Marsarah Mods[/b][/size]
+- [b]MarsarahTweaks[/b] - Gameplay, balance, grind-reduction and quality-of-life tweaks. Marsarah UI includes optional compatibility with some Tweaks features.
+- [b]MarsarahBuildPieces[/b] - Custom functional and decorative build pieces, including portals, lights and the Mystical Light Ward.
+- Neither mod is required to use Marsarah UI.
+
+[line]
+
+[size=5][b]🔒 Permissions[/b][/size]
+
+Reuploading this mod, whether in part or in full, is [b]not permitted[/b].
+Anyone is free to take inspiration or implement similar features, but must do so with their own code and assets.
+
+[line]
+
+[size=5][b]🧱 Requirements[/b][/size]
+
+This mod requires [b]BepInEx for Valheim[/b], available here:
+[url=https://valheim.thunderstore.io/package/denikson/BepInExPack_Valheim/]BepInExPack_Valheim[/url]
+
+For multiplayer servers using Marsarah UI's Server Overrides, install the mod on the [b]server[/b] and [b]all clients[/b].
+
+[line]
+
+[size=5][b]📦 Installation[/b][/size]
+
+1. Unpack the [i].zip[/i] file.
+2. Copy [i]MarsarahUI.dll[/i] into your [i]Valheim/BepInEx/plugins[/i] folder.
+
+Or use a mod manager.
+
+If the server uses Marsarah UI Server Overrides, the mod must also be installed on the server and all connecting clients.
+
+[line]
+
+[size=5][b]⚙️ Configuration[/b][/size]
+
+A config file is generated on first launch:
+[i]Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg[/i]
+
+- [b]UI Settings (Local):[/b] Individual player preferences. These are not normally synced with the server.
+- [b]Server Overrides (Synced):[/b] Optional server-side controls for selected information-oriented features.
+
+Server Overrides use [b]UserChoice[/b] by default. The server can use [b]ForceOn[/b], [b]ForceOff[/b], or a specific display mode where applicable. The master [b]Enable Server Overrides[/b] option can disable the override system entirely.
+
+[b]Server-overridable features:[/b]
+- Enemy Detector
+- Current Day
+- Current Time
+- Weather Forecast
+- Smart Biome
+- Ashlands Heat Meter
+- Enemy Nameplate Mode
+- Taming Progress
+- Detailed Hover Information
+- Container Contents
+
+[b]Insert[/b] toggles many custom HUD widgets temporarily.
+[b]Home[/b] toggles the Online Players name list while keeping the online-player count visible.
+
+[line]
+
+[size=5][b]💰 Donations[/b][/size]
+My mods are and will always be free to use. If you'd like to support my work, you can donate here:
+[url=https://paypal.me/Marsarah9]PayPal[/url]
+
+[line]
+
+[size=5][b]⚡ Main Features[/b][/size]
+
+[size=4][b]🔧 Better Loading Tips[/b][/size]
+- Replaces the vanilla loading-tip selection with a larger pool of more useful gameplay tips.
+- Includes [b]51 tips[/b] covering controls, progression, combat, building, food, exploration and less-obvious mechanics.
+- Intentionally leaves out several very basic vanilla tips.
+- Only applies to the [b]English[/b] localization.
+
+[size=4][b]🔧 Show Inventory Weight and Free Slots[/b][/size]
+- Displays current/max carry weight near the bottom-left HUD using a filling, color-changing bar.
+- Displays remaining free inventory slots with color feedback.
+
+[size=4][b]🔧 Show Enemy Detector[/b][/size]
+- Counts nearby enemies within roughly [b]30 meters[/b].
+- Symbols and colors change as enemy count increases.
+- Neutral Dvergr are shown separately until aggravated.
+- Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
+
+[size=4][b]🔧 Show Boat Speed[/b][/size]
+- Displays current ship speed while controlling a boat.
+- Reverse speed uses an [b]R[/b] prefix.
+- Repositions for [b]Minimal Status Effects[/b] and No Map worlds.
+
+[size=4][b]🔧 Show Current Day[/b][/size]
+- Displays the current world day above the minimap and works in No Map worlds.
+
+[size=4][b]🔧 Show Current Time[/b][/size]
+- Modes: [b]DigitalClock, DayPhases, Off[/b].
+- DayPhases uses Night, Dawn, Morning, Day, Afternoon, Evening and Dusk.
+- Works in No Map worlds.
+
+[size=4][b]🔧 Show Weather Forecast Indicator[/b][/size]
+- Displays the next scheduled weather using an embedded icon and countdown near the minimap.
+- If no different weather is scheduled in the forecast window, the current weather is shown with a [b]--:--[/b] timer.
+- Includes mappings for weather used by Seasons and similar environment changes where supported.
+
+[size=4][b]🔧 Smart Biome Indicator[/b][/size]
+- Color-codes the biome name according to equipped armor and upgrade level.
+- Colors progress from [b]purple[/b] through red, orange, yellow and [b]green[/b].
+- Evaluates progression from Meadows through Ashlands; other biomes display in white.
+- Includes Bear, Vilebone and Lox Fur armor.
+- Accounts for [b]MarsarahTweaks Gear Upgrade Unlock[/b] when Tweaks is installed and the feature is enabled.
+
+[size=4][b]🔧 Show Summon Counter[/b][/size]
+- Displays active summoned skeletons from the Dead Raiser.
+- Summoned Trolls are not counted.
+
+[size=4][b]🔧 Show Online Players[/b][/size]
+- Displays total online players and up to [b]20 player names[/b] at the bottom-right.
+- Hidden when only one player is online.
+- Press [b]Home[/b] to hide/show the names while retaining the total count.
+
+[size=4][b]🔧 Show Owned Resources In Build Menu[/b][/size]
+- Shows resource requirements as [b]required / owned[/b] in build and crafting displays.
+- Example: [b]2/20[/b].
+- Steps aside when [b]Craft From Containers[/b] is installed.
+
+[size=4][b]🔧 Show Boss Power Expiration Message[/b][/size]
+- Displays a center-screen message when a Forsaken Power expires.
+
+[size=4][b]🔧 Show Heat Meter in Ashlands[/b][/size]
+- Displays a heat meter while relevant Ashlands water/lava heat mechanics are active.
+
+[size=4][b]🔧 Enemy Nameplate Mode[/b][/size]
+- Larger health bars, clearer colors and increased nameplate display distance.
+- Distinct colors for bosses, enemies, neutral/tamed characters, players and PVP-enabled players.
+- Alerted/aggravated state changes name colors.
+- Modes: [b]BarsOnly, BarsWithHealth, BarsWithPercent, BarsWithBoth, Off[/b].
+
+[size=4][b]🔧 Show Taming Progress[/b][/size]
+- Displays taming percentage beneath the creature's health bar while acclimatizing.
+- Independent of Enemy Nameplate Mode.
+
+[size=4][b]🔧 Item Quality Indicator[/b][/size]
+- Layouts: [b]Horizontal, Vertical, Off[/b].
+- Symbols: [b]Star ★, Circle ●, Diamond ◆, Empty Diamond ◇[/b].
+- Colors: [b]White, Yellow, Green, Red, Blue, Cyan[/b].
+
+[size=4][b]🔧 Better Item Durability Bar[/b][/size]
+- Uses a textured durability bar that transitions from green through yellow toward red as durability decreases.
+
+[size=4][b]🔧 Detailed Hover Information[/b][/size]
+- Adds information to Containers, Beehives, Plants, Fermenters, Cooking Stations/Ovens, Smelters/processing stations and Eggs.
+- Master modes: [b]ColoredText, WhiteText, Off[/b].
+- Most progress hovers support remaining time, percentage, or both.
+
+[b]Container Hover Information:[/b]
+- Can show used/max slots, free slots, or percentage filled.
+- Optional [b]Show Container Contents[/b] lists combined item amounts directly in the hover.
+- Shows up to 10 different item types and then a count of additional types.
+- If [b]MarsarahTweaks Progression Halt[/b] seals a chest, its contents are hidden and replaced with [b]"This chest is sealed."[/b]
+
+[line]
+
+[size=5][b]🔗 Compatibility[/b][/size]
+
+[b]MarsarahTweaks[/b]
+- Optional soft dependency. Marsarah UI works without Tweaks.
+- Smart Biome accounts for Gear Upgrade Unlock.
+- Detailed Hovers respects Progression Halt and will not reveal sealed chest contents.
+
+[b]Craft From Containers[/b]
+- Marsarah UI lets Craft From Containers handle the Owned Resources display.
+
+[b]Minimal Status Effects[/b]
+- Boat Speed uses an alternate position to avoid overlap.
+
+[line]
+
+[size=5][b]🔮 Future Plans[/b][/size]
+Future ideas include additional hover modes, skill progress information, improved player information, optional item icons for container contents, and additional status-effect/UI improvements.
+
+Deep North-specific UI changes will be reviewed after I have completed the biome myself.
+
+[line]
+
+[size=5][b]💬 Feedback[/b][/size]
+Suggestions and bug reports are welcome on the [b]Posts[/b] or [b]Bugs[/b] tabs of the Nexusmods page.
+Thanks for checking out Marsarah UI!
+
+[size=5][b]🧑‍🤝‍🧑 Credits[/b][/size]
+Blaxxun-bloop - for ServerSync
+
+[size=5][b]📜 Version History[/b][/size]
+
+[size=4][b]v1.0.0[/b][/size]
+- [b]Initial standalone release.[/b]
+
+[b]Standalone UI Mod:[/b]
+- Moved the UI features previously included in Marsarah Tweaks into MarsarahUI.
+- Removed the old alternate UI layout system and retained the preferred layout.
+- Added ServerSync support for optional server-side overrides while keeping normal UI preferences local.
+
+[b]Server Overrides:[/b]
+- Added optional overrides for Enemy Detector, Current Day, Current Time, Weather Forecast, Smart Biome, Ashlands Heat Meter, Enemy Nameplate Mode, Taming Progress, Detailed Hover Information and Container Contents.
+- Overrides default to UserChoice.
+
+[b]HUD / Information Features:[/b]
+- Better Loading Tips; Inventory Weight and Free Slots; Enemy Detector; Boat Speed; Current Day/Time; Weather Forecast; Smart Biome; Summon Counter; Online Players; Owned Resources; Boss Power Expiration; Ashlands Heat Meter.
+
+[b]Interface Improvements:[/b]
+- Enemy Nameplate modes; Taming Progress; Item Quality indicators; Better Item Durability Bar; Detailed Hover Information; optional Container Contents.
+
+[b]Compatibility:[/b]
+- MarsarahTweaks Gear Upgrade Unlock and Progression Halt integration.
+- Craft From Containers compatibility.
+- Minimal Status Effects compatibility.
+
+[b]Valheim 1.0 Updates:[/b]
+- Added Lox Fur to Smart Biome Plains weighting.
+- Expanded Better Loading Tips with additional useful gameplay tips.
