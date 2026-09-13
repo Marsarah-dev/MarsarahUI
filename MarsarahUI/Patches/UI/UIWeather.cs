@@ -310,8 +310,8 @@ namespace MarsarahUI.Patches.UI
 			{
 				string normalizedCurrentName = NormalizeWeatherName(currentBiome, currentEnv.m_name);
 
-				StringBuilder sequenceLog = new StringBuilder();
-				sequenceLog.AppendLine("Next 50 forecast environments:");
+				//StringBuilder sequenceLog = new StringBuilder();
+				//sequenceLog.AppendLine("Next 50 forecast environments:");
 
 				for (int i = 1; i <= 50; i++)
 				{
@@ -320,17 +320,17 @@ namespace MarsarahUI.Patches.UI
 
 					if (nextEnv == null)
 					{
-						sequenceLog.AppendLine($"  +{i,2} → null (normalized: -)");
+						//sequenceLog.AppendLine($"  +{i,2} → null (normalized: -)");
 						continue;
 					}
 
 					string rawName = nextEnv.m_name;
 					string normalizedNextName = NormalizeWeatherName(currentBiome, rawName);
 
-					sequenceLog.AppendLine($"  +{i,2} → {rawName} (normalized: {normalizedNextName})");
+					//sequenceLog.AppendLine($"  +{i,2} → {rawName} (normalized: {normalizedNextName})");
 				}
 
-				log.Info(sequenceLog.ToString());
+				//log.Info(sequenceLog.ToString());
 				log.Info($"Current weather: {currentEnv.m_name} (normalized: {normalizedCurrentName}), biome={currentBiome}");
 				log.Info($"Next forecast: {forecastEnv.m_name} (normalized: {normalizedForecastName}), ETA {timerStr}");
 

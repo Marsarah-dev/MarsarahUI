@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
-using System;
 using System.Collections.Generic;
 
 namespace MarsarahUI.Patches.UI
@@ -22,7 +21,7 @@ namespace MarsarahUI.Patches.UI
 			"Upon your arrival in Valheim, try to find stones and branches on the ground to build your first weapon.",
 			"Venturing outside at night is more dangerous. Be prepared if you plan to go out during that time.",
 			"Hunting deer with a ranged weapon provides a good source of meat and skin.",
-			"Build a rudimentary shelter as soon as possible, to refuge during your first nights. It can be used as a temporary home until you find a good spot for a better one.",
+			"Build a rudimentary shelter as soon as possible, to take refuge during your first nights. It can be used as a temporary home until you find a good spot for a better one.",
 			"Different enemies are resistant to different damage types. If you see grey damage indicators when attacking, try changing the weapon.",
 			"Claiming a bed after building it will set your spawn point to its location when dying.",
 			"Attacking with knives and bows while sneaking confers a large damage bonus.",
@@ -30,7 +29,7 @@ namespace MarsarahUI.Patches.UI
 			"Weapons, armor, and tools can be repaired for free at a Workbench or Forge by interacting with the hammer icon while crafting.",
 			"Some resources require better tools to harvest them.",
 			"Being rested helps to regenerate stamina and health faster.",
-			"Yellow damage numbers indicate a weakness, grey numbers indicate a resistance",
+			"Yellow damage numbers indicate a weakness, grey numbers indicate a resistance.",
 			"Use the hoe in combination with the pickaxe to flatten the ground. This will make it much easier to construct buildings.",
 			"Build a cart to haul heavy goods over longer distances. Carts cannot go through portals.",
 			"Boats are controlled by interacting with the steering oar.",
@@ -50,7 +49,7 @@ namespace MarsarahUI.Patches.UI
 			"The HUD can be toggled with the CTRL + F3 keys.",
 			"Parrying with a shield or weapon means blocking at the very last moment of an enemy attack before hitting you. If done right, the enemy will be staggered.",
 			"Don't be afraid to retreat from a fight. It is better to come back to it prepared than naked.",
-			"Sheathing or unsheathing equipped weapons and shields can be done by pressing R. Walking and runnig with unsheathed weapons will slow you down.",
+			"Sheathing or unsheathing equipped weapons and shields can be done by pressing R. Walking and running with unsheathed weapons will slow you down.",
 			"Old buildings can be found throughout Valheim. They can be either renovated for shelter, or torn down for resources.",
 			"Some animals can be tamed.",
 			"Sitting next to a lit fire in any open space provides a level 1 rested bonus."

@@ -13,30 +13,30 @@ namespace MarsarahUI.Patches.UI
 	{
 		private static readonly LogManager log = new LogManager("UI Taming Progress", LogManager.LogLevel.Warning);
 
-		private static readonly FieldInfo m_hudsField;
+		private static readonly FieldInfo hudsField;
 		private static readonly Type hudDataType;
-		private static readonly FieldInfo hud_m_gui_Field;
-		private static readonly FieldInfo hud_m_character_Field;
+		private static readonly FieldInfo hudGuiField;
+		private static readonly FieldInfo hudCharacterField;
 		private static readonly MethodInfo getTamenessMethod;
 
 		private static readonly ConditionalWeakTable<object, TextMeshProUGUI> tamingCache = new ConditionalWeakTable<object, TextMeshProUGUI>();
 
 		static UITamingProgress()
 		{
-			m_hudsField = typeof(EnemyHud).GetField("m_huds", BindingFlags.NonPublic | BindingFlags.Instance);
+			hudsField = typeof(EnemyHud).GetField("m_huds", BindingFlags.NonPublic | BindingFlags.Instance);
 			hudDataType = typeof(EnemyHud).GetNestedType("HudData", BindingFlags.NonPublic);
 
-			if (m_hudsField == null || hudDataType == null)
+			if (hudsField == null || hudDataType == null)
 			{
 				log.Error("Failed to locate EnemyHud.m_huds or nested type HudData via reflection.");
 				return;
 			}
 
-			hud_m_gui_Field = hudDataType.GetField("m_gui", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-			hud_m_character_Field = hudDataType.GetField("m_character", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			hudGuiField = hudDataType.GetField("m_gui", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			hudCharacterField = hudDataType.GetField("m_character", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			getTamenessMethod = typeof(Tameable).GetMethod("GetTameness", BindingFlags.NonPublic | BindingFlags.Instance);
 
-			if (hud_m_gui_Field == null || hud_m_character_Field == null || getTamenessMethod == null)
+			if (hudGuiField == null || hudCharacterField == null || getTamenessMethod == null)
 			{
 				log.Error("Failed to locate one or more fields or methods required for taming progress.");
 			}
@@ -47,15 +47,15 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(EnemyHud __instance, Character c)
 			{
-				if (c == null || m_hudsField == null) return;
+				if (c == null || hudsField == null) return;
 
-				IDictionary huds = m_hudsField.GetValue(__instance) as IDictionary;
+				IDictionary huds = hudsField.GetValue(__instance) as IDictionary;
 				if (huds == null || !huds.Contains(c)) return;
 
 				object hudData = huds[c];
 				if (hudData == null) return;
 
-				GameObject guiObject = hud_m_gui_Field?.GetValue(hudData) as GameObject;
+				GameObject guiObject = hudGuiField?.GetValue(hudData) as GameObject;
 				if (guiObject == null) return;
 
 				RectTransform healthTransform = guiObject.transform.Find("Health") as RectTransform;
@@ -70,9 +70,9 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(EnemyHud __instance)
 			{
-				if (m_hudsField == null) return;
+				if (hudsField == null) return;
 
-				IDictionary huds = m_hudsField.GetValue(__instance) as IDictionary;
+				IDictionary huds = hudsField.GetValue(__instance) as IDictionary;
 				if (huds == null) return;
 
 				foreach (DictionaryEntry entry in huds)
@@ -80,7 +80,7 @@ namespace MarsarahUI.Patches.UI
 					object hudData = entry.Value;
 					if (hudData == null) continue;
 
-					Character character = hud_m_character_Field?.GetValue(hudData) as Character;
+					Character character = hudCharacterField?.GetValue(hudData) as Character;
 					if (character == null || character.IsDead()) continue;
 
 					UpdateTamingText(character, hudData);

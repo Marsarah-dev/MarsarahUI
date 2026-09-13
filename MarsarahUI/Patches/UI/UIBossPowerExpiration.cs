@@ -5,7 +5,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIBossPowerExpiration
 	{
-		private static readonly LogManager log = new LogManager("UI Boss Power Expire", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Boss Power Expiration", LogManager.LogLevel.Warning);
 
 		[HarmonyPatch(typeof(StatusEffect), nameof(StatusEffect.Stop))]
 		private static class StatusEffectStopPatch

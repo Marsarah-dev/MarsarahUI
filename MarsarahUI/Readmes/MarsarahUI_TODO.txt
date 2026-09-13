@@ -1,5 +1,5 @@
-MARSARAHUI TODO
-===============
+MARSARAH UI TODO
+================
 
 ============================================================
 IMPLEMENTED - NOT RELEASED
@@ -80,14 +80,9 @@ A. Release Blockers / Verification
   - Disconnect/reconnect restoration of local choices
 * Re-test reflection/private-field features against the latest Valheim 1.0 assemblies.
 
-* Final consistency cleanup:
-  - Logging names/levels
-  - Naming conventions
-  - Donor-era field/class names
-  - Dead usings/comments
-  - Stale Old/New UI references
-  - Effective/local config usage
-  - Current assembly references
+* Display Chest Contents must respect MarsarahTweaks Progression Halt. If a chest is currently sealed by Progression Halt, MarsarahUI should not reveal its contents.
+* Add Lox Fur set to Smart Biome
+* Get the vanilla loading screen tips strings to see what else was added and modify accordingly.
 
 * Final release packaging and documentation.
 
@@ -101,7 +96,6 @@ B. Existing UI Ideas
 * Container contents: replace text with item icons / add as an alternate to text.
 * Item durability bars: test thicker bars and optional durability text.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
-* Player Inspector for players currently logged into the world.
 * Investigate using in-game icons for inventory weight and free slots. Same for the Online Players indicator and other relevant places.
 
 C. Online / Player Information
@@ -125,34 +119,3 @@ E. Deep North / 1.0 Content
 * Review Deep North gear for Smart Biome weighting.
 * Review any new Deep North mechanics that need UI indicators or hover information.
 * Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.
-
-
-============================================================
-COMPLETED / SUPERSEDED IDEAS FROM THE OLD TWEAKS TODO
-============================================================
-
-- "Add synced with server master toggle for UI elements":
-  DONE. MarsarahUI now has a master Server Overrides switch plus 10 selected admin-overridable features.
-
-- "Better enemy nameplates":
-  DONE.
-
-- "Better item level indicator":
-  DONE as the Item Quality indicator system.
-
-- "Add taming indicator for each creature":
-  The current Taming Progress display already shows per-creature taming percentage under the creature HUD.
-  Revisit only if a separate graphical indicator is desired.
-
-- "Add people emoji for Online Players in alternate UI":
-  NO LONGER NEEDED. The alternate UI layout was removed.
-
-- "Modify weather emojis / use in-game weather icons":
-  SUPERSEDED. Weather Forecast now uses embedded PNG weather icons rather than emoji.
-  Revisit only if intentionally replacing those assets with Valheim sprites.
-
-- "Modify the symbols next to time of day to indicate weather":
-  SUPERSEDED by the dedicated Weather Forecast indicator unless a combined Time/Weather design is wanted later.
-
-- "UI issues with the other mod":
-  The known Minimal Status Effects Boat Speed positioning issue is fixed.

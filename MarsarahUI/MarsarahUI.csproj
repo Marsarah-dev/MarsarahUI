@@ -113,7 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Libs\" />
-    <Folder Include="Readmes\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ILRepack.targets" />
@@ -132,6 +131,9 @@
     <EmbeddedResource Include="Assets\Icons\Weather\Snow.png" />
     <EmbeddedResource Include="Assets\Icons\Weather\Snowstorm.png" />
     <EmbeddedResource Include="Assets\Icons\Weather\Thunderstorm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Readmes\MarsarahUI_TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ILRepack.Lib.MSBuild.Task.2.0.40\build\ILRepack.Lib.MSBuild.Task.targets" Condition="Exists('..\packages\ILRepack.Lib.MSBuild.Task.2.0.40\build\ILRepack.Lib.MSBuild.Task.targets')" />

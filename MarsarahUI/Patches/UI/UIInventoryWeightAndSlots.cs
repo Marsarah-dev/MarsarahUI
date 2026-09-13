@@ -14,7 +14,7 @@ namespace MarsarahUI.Patches.UI
 		private static float currentWeight;
 		private static float maxWeight;
 		private static float freeSlots;
-		private static float freeSlotsPercent;
+		private static float slotsUsedPercent;
 
 		internal static GameObject UIWeightBarArea;
 		private static GameObject UIWeightBarEmojiArea;
@@ -40,7 +40,7 @@ namespace MarsarahUI.Patches.UI
 				currentWeight = inventory.GetTotalWeight();
 				maxWeight = ___m_localPlayer.GetMaxCarryWeight();
 				freeSlots = inventory.GetEmptySlots();
-				freeSlotsPercent = inventory.SlotsUsedPercentage();
+				slotsUsedPercent = inventory.SlotsUsedPercentage();
 			}
 		}
 
@@ -101,7 +101,7 @@ namespace MarsarahUI.Patches.UI
 					UIWeightBarEmojiTMP.color = barColor;
 				}
 
-				Color slotsColor = GetColorFromPercent(freeSlotsPercent);
+				Color slotsColor = GetColorFromPercent(slotsUsedPercent);
 
 				if (UISlotsText != null)
 				{

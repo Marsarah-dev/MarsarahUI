@@ -5,7 +5,7 @@ namespace MarsarahUI.Managers
 {
 	internal static class CompatibilityManager
 	{
-		private static readonly LogManager log = new LogManager("Compatibility Manager", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("Compatibility Manager", LogManager.LogLevel.Warning);
 
 		private const string MarsarahTweaksGUID = "Marsarah.MarsarahTweaks";
 		private const string CraftFromContainersGUID = "aedenthorn.CraftFromContainers";
@@ -38,12 +38,12 @@ namespace MarsarahUI.Managers
 
 			if (CraftFromContainersLoaded)
 			{
-				log.Warn("Craft From Containers detected. Show Owned Resources will be handled by Craft From Containers.");
+				log.Info("Craft From Containers detected. Show Owned Resources will be handled by Craft From Containers.");
 			}
 
 			if (MinimalStatusEffectsLoaded)
 			{
-				log.Warn("Minimal Status Effects detected.");
+				log.Info("Minimal Status Effects detected.");
 			}
 		}
 
