@@ -63,6 +63,11 @@ C. Compatibility / Fixes
 * Show Owned Resources steps aside when Craft From Containers is installed.
 * Smart Biome uses MarsarahTweaks Gear Upgrade Unlock state when available.
 
+D. New additions
+------------------------
+* Smart Biome Indicator
+  - Added Lox Fur set for Plains
+
 
 ============================================================
 TO IMPLEMENT / VERIFY
@@ -81,7 +86,6 @@ A. Release Blockers / Verification
 * Re-test reflection/private-field features against the latest Valheim 1.0 assemblies.
 
 * Display Chest Contents must respect MarsarahTweaks Progression Halt. If a chest is currently sealed by Progression Halt, MarsarahUI should not reveal its contents.
-* Add Lox Fur set to Smart Biome
 * Get the vanilla loading screen tips strings to see what else was added and modify accordingly.
 
 * Final release packaging and documentation.

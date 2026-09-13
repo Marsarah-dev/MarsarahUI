@@ -76,16 +76,17 @@ namespace MarsarahUI.Patches.UI
 				string localizedOpen = Localization.instance.Localize("$piece_container_open");
 				string localizedStack = Localization.instance.Localize("$msg_stackall_hover");
 				string useKeyColored = $"[{PaintText(Localization.instance.Localize("$KEY_Use"), Color.yellow)}]";
-				string containerItemsLine = GetContainerInventoryList(inventory);
+				string containerItemsLine = GetContainerInventoryList(container, inventory);
 
 				return containerItemsLine != ""
 					? $"{localizedName} ({containerText})\n{useKeyColored} {localizedOpen} {localizedStack}\n\n{containerItemsLine}"
 					: $"{localizedName} ({containerText})\n{useKeyColored} {localizedOpen} {localizedStack}";
 			}
 
-			private static string GetContainerInventoryList(Inventory inventory)
+			private static string GetContainerInventoryList(Container container, Inventory inventory)
 			{
 				if (!ConfigManager.EffectiveShowContainerContents) return "";
+				if (CompatibilityManager.TweaksIsContainerSealed(container)) return "This chest is sealed.";
 
 				Dictionary<string, int> itemCounts = new Dictionary<string, int>();
 

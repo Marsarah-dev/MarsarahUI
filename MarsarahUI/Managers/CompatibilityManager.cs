@@ -1,5 +1,7 @@
 ﻿using BepInEx.Bootstrap;
 using BepInEx.Configuration;
+using System;
+using System.Reflection;
 
 namespace MarsarahUI.Managers
 {
@@ -12,6 +14,7 @@ namespace MarsarahUI.Managers
 		private const string MinimalStatusEffectsGUID = "randyknapp.mods.minimalstatuseffects";
 
 		private static ConfigEntry<bool> tweaksGearUpgradeUnlock;
+		private static MethodInfo tweaksIsContainerSealedMethod;
 
 		internal static bool MarsarahTweaksLoaded { get; private set; }
 		internal static bool CraftFromContainersLoaded { get; private set; }
@@ -29,6 +32,15 @@ namespace MarsarahUI.Managers
 				ConfigFile tweaksConfig = pluginInfo.Instance.Config;
 
 				tweaksGearUpgradeUnlock = GetBoolConfig(tweaksConfig, "3 - Balance (Synced with Server)", "04 - Gear Upgrade Unlock");
+
+				Type containerInteractPatchType = pluginInfo.Instance.GetType().Assembly.GetType("\"MarsarahTweaks.Patches.Features.ProgressionHalt\"");
+
+				tweaksIsContainerSealedMethod = containerInteractPatchType?.GetMethod("IsContainerSealed", BindingFlags.Static | BindingFlags.NonPublic);
+
+				if (tweaksIsContainerSealedMethod == null)
+				{
+					log.Warn("Could not find MarsarahTweaks Progression Halt container compatibility method.");
+				}
 
 				log.Info("MarsarahTweaks detected. Smart Biome will account for Gear Upgrade Unlock.");
 			}
@@ -58,6 +70,21 @@ namespace MarsarahUI.Managers
 
 			log.Warn($"Could not find MarsarahTweaks config '{section} / {key}'.");
 			return null;
+		}
+
+		internal static bool TweaksIsContainerSealed(Container container)
+		{
+			if (!MarsarahTweaksLoaded || tweaksIsContainerSealedMethod == null || container == null) return false;
+
+			try
+			{
+				return (bool)tweaksIsContainerSealedMethod.Invoke(null, new object[] { container });
+			}
+			catch (Exception ex)
+			{
+				log.Warn($"Failed to check MarsarahTweaks Progression Halt container state: {ex.Message}");
+				return false;
+			}
 		}
 	}
 }
