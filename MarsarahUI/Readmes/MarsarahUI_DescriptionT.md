@@ -27,8 +27,8 @@ Development remains human-directed: I decide what features are added, how they s
 
 ### **Related Marsarah Mods**
 
-- **MarsarahTweaks** - Gameplay, balance, grind-reduction and quality-of-life tweaks. Marsarah UI includes optional compatibility with some Tweaks features.
-- **MarsarahBuildPieces** - Custom functional and decorative build pieces, including portals, lights and the Mystical Light Ward.
+- [**MarsarahTweaks**](https://old.thunderstore.io/c/valheim/p/Marsarah/MarsarahTweaks/) - Gameplay, balance, grind-reduction and quality-of-life tweaks. Marsarah UI includes optional compatibility with some Tweaks features.
+- [**MarsarahBuildPieces**](https://old.thunderstore.io/c/valheim/p/Marsarah/MarsarahBuildPieces/) - Custom functional and decorative build pieces, including portals, lights and the Mystical Light Ward.
 - Neither mod is required to use Marsarah UI.
 
 ---

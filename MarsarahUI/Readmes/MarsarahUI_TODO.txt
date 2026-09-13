@@ -79,15 +79,6 @@ TO IMPLEMENT / VERIFY
 
 A. Release Blockers / Verification
 ----------------------------------
-* Online Players multiplayer test with at least two connected players.
-* Dedicated-server ServerSync testing:
-  - UserChoice
-  - ForceOn
-  - ForceOff
-  - Enable Server Overrides
-  - Disconnect/reconnect restoration of local choices
-
-* Final release packaging and documentation.
 
 B. Existing UI Ideas
 --------------------

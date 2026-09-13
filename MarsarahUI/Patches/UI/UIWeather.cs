@@ -105,17 +105,21 @@ namespace MarsarahUI.Patches.UI
 			{ (Heightmap.Biome.Ocean, "SnowStorm"), "Snowstorm" }  // Seasons
 		};
 
-		private static void Prefix(EnvMan __instance, ref float ___m_smoothDayFraction, ref EnvSetup ___m_currentEnv, ref long ___m_environmentPeriod, ref double ___m_totalSeconds)
+		[HarmonyPatch(typeof(EnvMan), "Update")]
+		class Weather_EnvManPatch
 		{
-			if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
-			if (__instance == null) return;
-			if (Player.m_localPlayer == null || WorldGenerator.instance == null) return;
-			if (!ShouldShowWeatherUI()) return;
-
-			if (ConfigManager.EffectiveShowWeatherForecast == true)
+			private static void Prefix(EnvMan __instance, ref float ___m_smoothDayFraction, ref EnvSetup ___m_currentEnv, ref long ___m_environmentPeriod, ref double ___m_totalSeconds)
 			{
-				// Forecast
-				UpdateForecastData(__instance, ___m_currentEnv, ___m_environmentPeriod, ___m_totalSeconds);
+				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
+				if (__instance == null) return;
+				if (Player.m_localPlayer == null || WorldGenerator.instance == null) return;
+				if (!ShouldShowWeatherUI()) return;
+
+				if (ConfigManager.EffectiveShowWeatherForecast == true)
+				{
+					// Forecast
+					UpdateForecastData(__instance, ___m_currentEnv, ___m_environmentPeriod, ___m_totalSeconds);
+				}
 			}
 		}
 

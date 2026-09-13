@@ -26,8 +26,9 @@ After completing the Deep North, I plan to review new gear for Smart Biome and c
 Development remains human-directed: I decide what features are added, how they should behave, and I write code, review and test the changes included in releases. The mod's logo was also created using generative AI.
 
 [size=4][b]Related Marsarah Mods[/b][/size]
-- [b]MarsarahTweaks[/b] - Gameplay, balance, grind-reduction and quality-of-life tweaks. Marsarah UI includes optional compatibility with some Tweaks features.
-- [b]MarsarahBuildPieces[/b] - Custom functional and decorative build pieces, including portals, lights and the Mystical Light Ward.
+
+- [url=https://www.nexusmods.com/valheim/mods/3022][b]MarsarahTweaks[/b][/url] - Gameplay, balance, grind-reduction and quality-of-life tweaks. Marsarah UI includes optional compatibility with some Tweaks features.
+- [url=https://www.nexusmods.com/valheim/mods/3713][b]MarsarahBuildPieces[/b][/url] - Custom functional and decorative build pieces, including portals, lights and the Mystical Light Ward.
 - Neither mod is required to use Marsarah UI.
 
 [line]
