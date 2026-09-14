@@ -200,6 +200,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UICookingStationHoverMode = new ConfigMetadata("26 - CookingStation Hover Mode", "Choose the method of displaying Cooking Station hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("27 - Smelter Hover Mode", "Choose the method of displaying Smelter hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("28 - Egg Hover Mode", "Choose the method of displaying Egg hatching hover info. Requires Detailed Hover Information");
+			public static readonly ConfigMetadata UIStatusEffectsUnderMinimap = new ConfigMetadata("29 - Status Effects Under Minimap", "Moves status effects below the minimap and displays them in a more compact layout.");
 
 			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("01 - Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.");
 			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("02 - Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.");
@@ -243,6 +244,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<CookingStationHoverMode> CookingStationHoverModeChoice;
 		public static ConfigEntry<SmelterHoverMode> SmelterHoverModeChoice;
 		public static ConfigEntry<EggHoverMode> EggHoverModeChoice;
+		public static ConfigEntry<bool> StatusEffectsUnderMinimap;
 
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
@@ -288,6 +290,7 @@ namespace MarsarahUI.Managers
 		public static CookingStationHoverMode EffectiveCookingStationHoverModeChoice => CookingStationHoverModeChoice.Value;
 		public static SmelterHoverMode EffectiveSmelterHoverModeChoice => SmelterHoverModeChoice.Value;
 		public static EggHoverMode EffectiveEggHoverModeChoice => EggHoverModeChoice.Value;
+		public static bool EffectiveStatusEffectsUnderMinimap => StatusEffectsUnderMinimap.Value;
 
 		public static void Init(ConfigFile configFile)
 		{
@@ -322,6 +325,7 @@ namespace MarsarahUI.Managers
 			CookingStationHoverModeChoice = CreateConfig(Configs.UICookingStationHoverMode, CookingStationHoverMode.RemainingTime);
 			SmelterHoverModeChoice = CreateConfig(Configs.UISmelterHoverMode, SmelterHoverMode.RemainingTime);
 			EggHoverModeChoice = CreateConfig(Configs.UIEggHoverMode, EggHoverMode.RemainingTime);
+			StatusEffectsUnderMinimap = CreateConfig(Configs.UIStatusEffectsUnderMinimap, true);
 
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);

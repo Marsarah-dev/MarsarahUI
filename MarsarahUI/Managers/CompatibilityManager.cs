@@ -11,14 +11,12 @@ namespace MarsarahUI.Managers
 
 		private const string MarsarahTweaksGUID = "Marsarah.MarsarahTweaks";
 		private const string CraftFromContainersGUID = "aedenthorn.CraftFromContainers";
-		private const string MinimalStatusEffectsGUID = "randyknapp.mods.minimalstatuseffects";
 
 		private static ConfigEntry<bool> tweaksGearUpgradeUnlock;
 		private static MethodInfo tweaksIsContainerSealedMethod;
 
 		internal static bool MarsarahTweaksLoaded { get; private set; }
 		internal static bool CraftFromContainersLoaded { get; private set; }
-		internal static bool MinimalStatusEffectsLoaded { get; private set; }
 
 		internal static bool TweaksGearUpgradeUnlockEnabled =>
 			MarsarahTweaksLoaded && tweaksGearUpgradeUnlock?.Value == true;
@@ -45,16 +43,10 @@ namespace MarsarahUI.Managers
 			}
 
 			CraftFromContainersLoaded = Chainloader.PluginInfos.ContainsKey(CraftFromContainersGUID);
-			MinimalStatusEffectsLoaded = Chainloader.PluginInfos.ContainsKey(MinimalStatusEffectsGUID);
 
 			if (CraftFromContainersLoaded)
 			{
 				log.Info("Craft From Containers detected. Show Owned Resources will be handled by Craft From Containers.");
-			}
-
-			if (MinimalStatusEffectsLoaded)
-			{
-				log.Info("Minimal Status Effects detected.");
 			}
 		}
 

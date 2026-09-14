@@ -65,6 +65,7 @@ namespace MarsarahUI.Patches.UI
 				}
 
 				CreateUI(__instance);
+				UpdateBoatSpeedPosition();
 
 				bool shouldBeVisible = showBoatSpeedUI && ShowUI;
 
@@ -100,19 +101,13 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (UIBoatArea != null) return;
 
-			int UITextFontSize = 16;
-			string UITextFontName = "AveriaSansLibre-Bold";
+			int uiTextFontSize = 16;
+			string uiTextFontName = "AveriaSansLibre-Bold";
 			string UIEmojiFontName = "NotoEmoji-Regular SDF";
-			Vector2 UIBoatAreaSize = new Vector2(80f, 30f);
+			Vector2 uiBoatAreaSize = new Vector2(80f, 30f);
 
 			float xOffset = Game.m_noMap ? -145f : -283f;
 			float yOffset = -225f;
-
-			if (CompatibilityManager.MinimalStatusEffectsLoaded)
-			{
-				xOffset = -360f;
-				yOffset = -25f;
-			}
 
 			UIBoatArea = new GameObject("BoatArea");
 			UIBoatArea.layer = 5;
@@ -122,11 +117,29 @@ namespace MarsarahUI.Patches.UI
 			boatAreaTransform.anchorMin = new Vector2(1f, 1f);
 			boatAreaTransform.anchorMax = new Vector2(1f, 1f);
 			boatAreaTransform.anchoredPosition = new Vector2(xOffset, yOffset);
-			boatAreaTransform.sizeDelta = UIBoatAreaSize;
+			boatAreaTransform.sizeDelta = uiBoatAreaSize;
 			UIBoatArea.transform.localScale = Vector3.one;
 
-			UIBoatText = CreateTextObject("BoatText", UIBoatArea, Color.white, UITextFontName, UITextFontSize, TextAnchor.MiddleRight, new Vector2(-4f, 0f), UIBoatAreaSize);
-			UIBoatEmojiTMP = CreateTMPTextObject("BoatEmojiTMP", UIBoatArea, Color.white, UIEmojiFontName, UITextFontSize + 4, TextAlignmentOptions.MidlineLeft, new Vector2(4f, 0f), UIBoatAreaSize, log);
+			UIBoatText = CreateTextObject("BoatText", UIBoatArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(-4f, 0f), uiBoatAreaSize);
+			UIBoatEmojiTMP = CreateTMPTextObject("BoatEmojiTMP", UIBoatArea, Color.white, UIEmojiFontName, uiTextFontSize + 4, TextAlignmentOptions.MidlineLeft, new Vector2(4f, 0f), uiBoatAreaSize, log);
+		}
+
+		private static void UpdateBoatSpeedPosition()
+		{
+			if (UIBoatArea == null) return;
+
+			RectTransform boatAreaTransform = UIBoatArea.GetComponent<RectTransform>();
+			if (boatAreaTransform == null) return;
+
+			if (ConfigManager.EffectiveStatusEffectsUnderMinimap && !Game.m_noMap)
+			{
+				boatAreaTransform.anchoredPosition = new Vector2(-360f, -25f);
+			}
+			else
+			{
+				float xOffset = Game.m_noMap ? -145f : -283f;
+				boatAreaTransform.anchoredPosition = new Vector2(xOffset, -225f);
+			}
 		}
 	}
 }
