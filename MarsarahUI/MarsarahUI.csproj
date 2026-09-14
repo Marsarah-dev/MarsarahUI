@@ -49,6 +49,9 @@
     <Reference Include="BepInEx">
       <HintPath>Libs\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="gui_framework">
+      <HintPath>Libs\gui_framework.dll</HintPath>
+    </Reference>
     <Reference Include="ServerSync">
       <HintPath>Libs\ServerSync.dll</HintPath>
     </Reference>
@@ -98,6 +101,7 @@
     <Compile Include="Patches\UI\UIDetailedHovers.cs" />
     <Compile Include="Patches\UI\UIEnemyDetector.cs" />
     <Compile Include="Patches\UI\UIEnemyNameplates.cs" />
+    <Compile Include="Patches\UI\UIGlobalChat.cs" />
     <Compile Include="Patches\UI\UIInventoryWeightAndSlots.cs" />
     <Compile Include="Patches\UI\UIItemDurability.cs" />
     <Compile Include="Patches\UI\UIItemQuality.cs" />

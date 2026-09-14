@@ -201,6 +201,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("27 - Smelter Hover Mode", "Choose the method of displaying Smelter hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("28 - Egg Hover Mode", "Choose the method of displaying Egg hatching hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIStatusEffectsUnderMinimap = new ConfigMetadata("29 - Status Effects Under Minimap", "Moves status effects below the minimap and displays them in a more compact layout.");
+			public static readonly ConfigMetadata UIGlobalChatByDefault = new ConfigMetadata("30 - Global Chat By Default", "Makes regular chat messages visible to all players regardless of distance.");
 
 			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("01 - Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.");
 			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("02 - Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.");
@@ -214,6 +215,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideTamingProgress = new ConfigMetadata("10 - Taming Progress Override", "Overrides the player's local Taming Progress setting.");
 			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("11 - Detailed Hover Information Override", "Overrides the player's local Detailed Hover Information setting.");
 			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("12 - Container Contents Override", "Overrides the player's local Container Contents setting.");
+			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("13 - Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.");
 		}
 
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
@@ -245,6 +247,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<SmelterHoverMode> SmelterHoverModeChoice;
 		public static ConfigEntry<EggHoverMode> EggHoverModeChoice;
 		public static ConfigEntry<bool> StatusEffectsUnderMinimap;
+		public static ConfigEntry<bool> GlobalChatByDefault;
 
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
@@ -259,6 +262,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> TamingProgressOverride;
 		public static ConfigEntry<HoverInfoModeOverride> DetailedHoversOverride;
 		public static ConfigEntry<BoolOverride> ContainerContentsOverride;
+		public static ConfigEntry<BoolOverride> GlobalChatByDefaultOverride;
 
 		// Effective UI settings
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
@@ -291,6 +295,7 @@ namespace MarsarahUI.Managers
 		public static SmelterHoverMode EffectiveSmelterHoverModeChoice => SmelterHoverModeChoice.Value;
 		public static EggHoverMode EffectiveEggHoverModeChoice => EggHoverModeChoice.Value;
 		public static bool EffectiveStatusEffectsUnderMinimap => StatusEffectsUnderMinimap.Value;
+		public static bool EffectiveGlobalChatByDefault => ResolveBool(GlobalChatByDefault, GlobalChatByDefaultOverride);
 
 		public static void Init(ConfigFile configFile)
 		{
@@ -326,6 +331,7 @@ namespace MarsarahUI.Managers
 			SmelterHoverModeChoice = CreateConfig(Configs.UISmelterHoverMode, SmelterHoverMode.RemainingTime);
 			EggHoverModeChoice = CreateConfig(Configs.UIEggHoverMode, EggHoverMode.RemainingTime);
 			StatusEffectsUnderMinimap = CreateConfig(Configs.UIStatusEffectsUnderMinimap, true);
+			GlobalChatByDefault = CreateConfig(Configs.UIGlobalChatByDefault, true);
 
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);
@@ -343,6 +349,7 @@ namespace MarsarahUI.Managers
 			TamingProgressOverride = CreateServerOverride(Configs.OverrideTamingProgress, BoolOverride.UserChoice);
 			DetailedHoversOverride = CreateServerOverride(Configs.OverrideDetailedHovers, HoverInfoModeOverride.UserChoice);
 			ContainerContentsOverride = CreateServerOverride(Configs.OverrideContainerContents, BoolOverride.UserChoice);
+			GlobalChatByDefaultOverride = CreateServerOverride(Configs.OverrideGlobalChatByDefault, BoolOverride.UserChoice);
 
 			SetupWatcher();
 		}
