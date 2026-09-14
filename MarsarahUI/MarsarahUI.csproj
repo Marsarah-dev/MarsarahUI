@@ -108,6 +108,7 @@
     <Compile Include="Patches\UI\UILoadscreenTips.cs" />
     <Compile Include="Patches\UI\UIOnlinePlayers.cs" />
     <Compile Include="Patches\UI\UIShowOwnedResources.cs" />
+    <Compile Include="Patches\UI\UISkillProgress.cs" />
     <Compile Include="Patches\UI\UISmartBiome.cs" />
     <Compile Include="Patches\UI\UIStatusEffects.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />

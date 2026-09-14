@@ -159,6 +159,8 @@ namespace MarsarahUI.Patches.UI
 				UIEnemyDetector.UIEnemyArea.GetComponent<RectTransform>().anchoredPosition = new Vector2(xOffset, yOffset);
 				UIEnemyDetector.UIFriendlyArea.GetComponent<RectTransform>().anchoredPosition = new Vector2(xOffset + 54f, yOffset);
 			}
+
+			UISkillProgress.UpdatePosition();
 		}
 	}
 }

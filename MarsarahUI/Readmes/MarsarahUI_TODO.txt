@@ -13,6 +13,32 @@ A. Updates / Fixes
 
 B. New additions
 ------------------------
+* Status Effects Under Minimap:
+  - Added a compact status-effects vertical layout below the minimap.
+  - Added a local config toggle with live switching back to the vanilla layout.
+  - Restores the vanilla layout automatically when No Map mode is active.
+  - Repositioned and resized the vanilla sailing wind indicator and sailing controls to the left of the minimap while this layout is enabled.
+  - Repositioned the Boat Speed indicator above the relocated sailing controls.
+  - All sailing UI positioning restores dynamically when the feature is disabled or No Map mode is active.
+
+* Global Chat By Default:
+  - Added an option that makes normal chat input use global/Shout chat automatically.
+  - Preserves the player's original capitalization instead of vanilla Shout forcing messages to uppercase.
+  - Explicit chat commands such as /w, /say and /s remain available and are not redirected.
+  - Added a synced server override allowing servers to Force On, Force Off, or leave the feature to each player's preference.
+
+* Skill Progress Bar:
+  - Added a temporary full-width progress bar along the bottom edge of the screen when a skill crosses a whole percentage toward its next level.
+  - Displays the skill's actual in-game icon together with its current level and progress percentage.
+  - Skill information is positioned alongside the Inventory Weight / Free Slots and Enemy Detector widgets and dynamically accounts for those features being enabled or disabled.
+  - Reserves space for the optional neutral Enemy Detector indicator so the Skill Progress widget does not move when neutral creatures appear or disappear.
+  - Excludes Run skill progress from triggering the display.
+  - New progress from the same or another skill updates the current display and resets its duration rather than stacking notifications.
+  - Leaves vanilla skill level-up notifications unchanged.
+  - Fades the progress bar and skill information out after a short display period.
+  - Added selectable progress-bar colors: Gold, White, Green, Blue, Cyan, Red and Purple.
+  - Added Off directly to the color dropdown to disable the feature without requiring a separate toggle.
+  - Bar color changes do not affect the skill icon or skill information text.
 
 
 ============================================================
@@ -27,13 +53,11 @@ B. Existing UI Ideas
 * Current Time: visual day-progress line with a moving time indicator.
 * Weather Forecast: choose a better position when No Map is enabled.
 * Smelter hover: add a Bars display mode.
-* Skill progress message/bar.
 * Player login-screen statistics.
 * Container contents: replace text with item icons / add as an alternate to text.
 * Item durability bars: test thicker bars and optional durability text.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
 * Investigate using in-game icons for inventory weight and free slots. Same for the Online Players indicator and other relevant places.
-* Make chat speak in yell be default and make it lowercase
 
 C. Online / Player Information
 ------------------------------
@@ -47,7 +71,6 @@ D. New UI Features
   - Admin defines allowed/predefined pins.
   - Players can place only the predefined pin types.
 * Show a center-screen message when a Trinket triggers.
-* Add MarsarahUI's own compact status-effects display under the minimap.
 
 E. Deep North / 1.0 Content
 ---------------------------
