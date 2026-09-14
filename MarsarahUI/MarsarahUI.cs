@@ -10,16 +10,16 @@ namespace MarsarahUI
 	public class MarsarahUI : BaseUnityPlugin
 	{
 		internal const string ModName = "MarsarahUI";
-		internal const string ModVersion = "1.0.0";
+		internal const string ModVersion = "1.0.1";
 		internal const string Author = "Marsarah";
 		public const string ModGUID = Author + "." + ModName;
 
 		private readonly Harmony harmony = new Harmony(ModGUID);
-		private static readonly LogManager log = new LogManager("Main", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("Main", LogManager.LogLevel.Warning);
 
 		private void Awake()
 		{
-			LogManager.SetGlobalLogLevel(LogManager.LogLevel.Info);
+			LogManager.SetGlobalLogLevel(LogManager.LogLevel.Warning);
 			ConfigManager.Init(Config);
 
 			harmony.PatchAll();

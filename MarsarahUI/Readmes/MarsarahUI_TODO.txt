@@ -5,72 +5,14 @@ MARSARAH UI TODO
 IMPLEMENTED - NOT RELEASED
 ============================================================
 
-A. Standalone Mod port
---------------------------------
-* Created standalone MarsarahUI and removed the UI module from MarsarahTweaks.
-* Removed the old/alternate UI layout system and kept the preferred layout only.
-* Added ServerSync with a master Enable Server Overrides option.
-* Added admin overrides to 10 gameplay/information-oriented features:
-  - Enemy Detector
-  - Current Day
-  - Current Time
-  - Weather Forecast
-  - Smart Biome
-  - Ashlands Heat Meter
-  - Enemy Nameplate Mode
-  - Taming Progress
-  - Detailed Hover Information
-  - Container Contents
-* All other UI settings remain local player preferences.
-* Added lightweight CompatibilityManager integration for:
-  - MarsarahTweaks
-  - Craft From Containers
-  - Minimal Status Effects
-* Smart Biome accounts for Marsarah Tweaks Gear Upgrade Unlock when Marsarah Tweaks is installed.
-
-B. Ported UI Features
----------------------
-* More Loading Tips.
-* Inventory Weight and Free Slots.
-* Enemy Detector.
-* Boat Speed.
-* Current Day.
-* Current Time.
-* Weather Forecast with embedded weather icons.
-* Smart Biome.
-* Summon Counter.
-* Online Players, bottom-right layout only.
-* Show Owned Resources.
-* Boss Power Expiration Message.
-* Ashlands Heat Meter.
-* Enemy Nameplate modes.
-* Taming Progress.
-* Item Quality indicator modes, symbols and colors.
-* Better Item Durability Bar.
-* Detailed Hovers:
-  - Containers
-  - Container contents
-  - Beehives
-  - Plants
-  - Fermenters
-  - Cooking Stations
-  - Smelters / Windmills
-  - Eggs
-
-C. Compatibility / Fixes
+A. Updates / Fixes
 ------------------------
-* Boat Speed repositions when Minimal Status Effects is installed.
-* Show Owned Resources steps aside when Craft From Containers is installed.
-* Smart Biome uses MarsarahTweaks Gear Upgrade Unlock state when available.
+* Weather Forecast:
+  - Updated Weather Forecast to use Valheim 1.0's BiomeSector/AltBiome weather system.
+  - Added proper AltBiome weather forecasting support, including Dark Meadows.
 
-D. New additions
+B. New additions
 ------------------------
-* Smart Biome Indicator
-  - Added Lox Fur set for Plains
-* Detailed Hovers: 
-  - Added MarsarahTweaks Progression Halt compatibility. Contents of progression-sealed chests are hidden and replaced with "This chest is sealed." until the required boss is defeated.
-* More Loading Tips renamed to Better Loading Tips
-  - Added 10 more tips
 
 
 ============================================================
@@ -91,6 +33,7 @@ B. Existing UI Ideas
 * Item durability bars: test thicker bars and optional durability text.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
 * Investigate using in-game icons for inventory weight and free slots. Same for the Online Players indicator and other relevant places.
+* Make chat speak in yell be default and make it lowercase
 
 C. Online / Player Information
 ------------------------------

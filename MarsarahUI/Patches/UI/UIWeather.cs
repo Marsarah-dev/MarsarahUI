@@ -2,7 +2,6 @@
 using MarsarahUI.Managers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,7 +23,7 @@ namespace MarsarahUI.Patches.UI
 		// Cache
 		private static EnvSetup _lastForecastEnv = null;
 		private static long _lastForecastPeriod = -1;
-		private static string _lastAvailableWeathersLog = string.Empty;
+		private static string _lastEnvironmentSignature = string.Empty;
 
 		private static readonly Dictionary<(Heightmap.Biome, string), string> WeatherIcons = new Dictionary<(Heightmap.Biome, string), string>()
 		{
@@ -39,7 +38,6 @@ namespace MarsarahUI.Patches.UI
 			{ (Heightmap.Biome.Meadows, "Snow"), "Snow" },           // Seasons
 			{ (Heightmap.Biome.Meadows, "SnowStorm"), "Snowstorm" }, // Seasons
 
-			
 			// BlackForest
 			{ (Heightmap.Biome.BlackForest, "DeepForest Mist"), "Clear" },
 			{ (Heightmap.Biome.BlackForest, "Rain"), "Rain" },
@@ -50,7 +48,6 @@ namespace MarsarahUI.Patches.UI
 			{ (Heightmap.Biome.BlackForest, "SwampRain"), "LightRain" }, // Seasons
 			{ (Heightmap.Biome.BlackForest, "Snow"), "Snow" },           // Seasons
 			{ (Heightmap.Biome.BlackForest, "SnowStorm"), "Snowstorm" }, // Seasons
-
 
 			// Swamp
 			{ (Heightmap.Biome.Swamp, "SwampRain"), "LightRain" },
@@ -108,14 +105,14 @@ namespace MarsarahUI.Patches.UI
 		[HarmonyPatch(typeof(EnvMan), "Update")]
 		class Weather_EnvManPatch
 		{
-			private static void Prefix(EnvMan __instance, ref float ___m_smoothDayFraction, ref EnvSetup ___m_currentEnv, ref long ___m_environmentPeriod, ref double ___m_totalSeconds)
+			private static void Prefix(EnvMan __instance, ref EnvSetup ___m_currentEnv, ref long ___m_environmentPeriod, ref double ___m_totalSeconds)
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
 				if (Player.m_localPlayer == null || WorldGenerator.instance == null) return;
 				if (!ShouldShowWeatherUI()) return;
 
-				if (ConfigManager.EffectiveShowWeatherForecast == true)
+				if (ConfigManager.EffectiveShowWeatherForecast)
 				{
 					// Forecast
 					UpdateForecastData(__instance, ___m_currentEnv, ___m_environmentPeriod, ___m_totalSeconds);
@@ -129,7 +126,6 @@ namespace MarsarahUI.Patches.UI
 			private static void Postfix(Hud __instance)
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
-
 				if (__instance == null) return;
 
 				if (ConfigManager.EffectiveShowWeatherForecast)
@@ -145,7 +141,6 @@ namespace MarsarahUI.Patches.UI
 			private static void Postfix(Hud __instance)
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
-
 				if (__instance == null) return;
 
 				if (ConfigManager.EffectiveShowWeatherForecast)
@@ -179,7 +174,7 @@ namespace MarsarahUI.Patches.UI
 		private static void CreateUI(Hud hud)
 		{
 			if (UIForecastIcon != null && UINextWeatherTimerText != null)
-				return;  // UI already exists
+				return; // UI already exists
 
 			int UITextFontSize = 16;
 			string UITextFontName = "AveriaSansLibre-Bold";
@@ -192,7 +187,7 @@ namespace MarsarahUI.Patches.UI
 			UIWeatherWidgetArea.transform.SetParent(hud.m_rootObject.transform);
 			RectTransform widgetTransform = UIWeatherWidgetArea.AddComponent<RectTransform>();
 			widgetTransform.anchorMin = new Vector2(1f, 1f);
-			widgetTransform.anchorMax = new Vector2(1f, 1f); 
+			widgetTransform.anchorMax = new Vector2(1f, 1f);
 			widgetTransform.anchoredPosition = UIWeatherAreaPos;
 			widgetTransform.sizeDelta = UIWeatherAreaSize;
 			UIWeatherWidgetArea.transform.localScale = Vector3.one;
@@ -206,23 +201,14 @@ namespace MarsarahUI.Patches.UI
 
 		private static void UpdateForecastData(EnvMan envMan, EnvSetup currentEnv, long currentEnvironmentPeriod, double totalSeconds)
 		{
-			if (envMan == null || currentEnv == null)
+			if (envMan == null || currentEnv == null || Player.m_localPlayer == null)
 			{
 				UIForecastTimer = "--:--";
 				return;
 			}
 
 			// Player position → biome context
-			Vector3 position = Vector3.zero;
-			if (Player.m_localPlayer != null)
-				position = Player.m_localPlayer.transform.position;
-
-			Heightmap.Biome currentBiome = Heightmap.Biome.None;
-			if (Player.m_localPlayer != null)
-			{
-				currentBiome = Player.m_localPlayer.GetCurrentBiome();
-			}
-
+			Vector3 position = Player.m_localPlayer.transform.position;
 			BiomeSector biomeSector = WorldGenerator.instance != null ? WorldGenerator.instance.GetBiomeSector(position, false) : null;
 
 			if (biomeSector == null)
@@ -232,8 +218,14 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
+			Heightmap.Biome currentBiome = biomeSector.Biome;
+
 			bool isAshlands = WorldGenerator.IsAshlands(position.x, position.z);
 			bool isDeepNorth = WorldGenerator.IsDeepnorth(position.x, position.z);
+
+			// Track changes to the resolved weather list so diagnostics can also
+			// react to runtime weight changes such as Clearer Weather.
+			bool availableEnvironmentsChanged = HasAvailableEnvironmentsChanged(envMan, biomeSector);
 
 			EnvSetup forecastEnv = null;
 			long forecastPeriod = -1;
@@ -256,9 +248,9 @@ namespace MarsarahUI.Patches.UI
 			{
 				// No upcoming weather change within 50 periods
 				// → show the current environment icon and a neutral timer ("--:--")
-
 				Sprite iconSpriteCurrent = null;
 				string currentNameNormalized = NormalizeWeatherName(currentBiome, currentEnv.m_name);
+
 				if (WeatherIcons.TryGetValue((currentBiome, currentNameNormalized), out var iconKeyCurrent))
 				{
 					string resourcePath = $"MarsarahUI.Assets.Icons.Weather.{iconKeyCurrent}.png";
@@ -277,25 +269,27 @@ namespace MarsarahUI.Patches.UI
 
 			string normalizedForecastName = NormalizeWeatherName(currentBiome, forecastEnv.m_name);
 			string timerStr = GetNextWeatherTimer(forecastPeriod, totalSeconds);
+			bool forecastChanged = availableEnvironmentsChanged || forecastEnv != _lastForecastEnv || forecastPeriod != _lastForecastPeriod;
 
-			// pick icons
+			// Pick icon
 			Sprite iconSprite = null;
+
 			if (WeatherIcons.TryGetValue((currentBiome, normalizedForecastName), out var iconKey))
 			{
 				string resourcePath = $"MarsarahUI.Assets.Icons.Weather.{iconKey}.png";
 				iconSprite = IconManager.LoadEmbeddedIcon(resourcePath);
 
-				if (iconSprite == null)
+				if (iconSprite == null && forecastChanged)
 				{
 					log.Warn($"Failed to load weather icon '{resourcePath}'.");
 				}
 			}
-			else
+			else if (forecastChanged)
 			{
-				log.Info($"No weather icon mapping for biome '{currentBiome}' and environment '{normalizedForecastName}'.");
+				log.Warn($"No weather icon mapping for biome '{currentBiome}' and environment '{normalizedForecastName}'.");
 			}
 
-			// assign globals
+			// Assign globals
 			UIForecastTimer = timerStr;
 
 			// Update UI element
@@ -305,13 +299,13 @@ namespace MarsarahUI.Patches.UI
 				UIForecastIcon.enabled = iconSprite != null;
 			}
 
-			// log only when forecast changes
-			if (forecastEnv != _lastForecastEnv || forecastPeriod != _lastForecastPeriod)
+			if (forecastChanged)
 			{
 				string normalizedCurrentName = NormalizeWeatherName(currentBiome, currentEnv.m_name);
 
-				//StringBuilder sequenceLog = new StringBuilder();
-				//sequenceLog.AppendLine("Next 50 forecast environments:");
+				// Debug: print the next 50 deterministic weather periods.
+				StringBuilder sequenceLog = new StringBuilder();
+				sequenceLog.AppendLine("Next 50 forecast environments:");
 
 				for (int i = 1; i <= 50; i++)
 				{
@@ -320,23 +314,50 @@ namespace MarsarahUI.Patches.UI
 
 					if (nextEnv == null)
 					{
-						//sequenceLog.AppendLine($"  +{i,2} → null (normalized: -)");
+						sequenceLog.AppendLine($"  +{i,2} → null (normalized: -)");
 						continue;
 					}
 
 					string rawName = nextEnv.m_name;
 					string normalizedNextName = NormalizeWeatherName(currentBiome, rawName);
 
-					//sequenceLog.AppendLine($"  +{i,2} → {rawName} (normalized: {normalizedNextName})");
+					sequenceLog.AppendLine($"  +{i,2} → {rawName} (normalized: {normalizedNextName})");
 				}
 
-				//log.Info(sequenceLog.ToString());
+				log.Info(sequenceLog.ToString());
 				log.Info($"Current weather: {currentEnv.m_name} (normalized: {normalizedCurrentName}), biome={currentBiome}");
 				log.Info($"Next forecast: {forecastEnv.m_name} (normalized: {normalizedForecastName}), ETA {timerStr}");
-
-				_lastForecastEnv = forecastEnv;
-				_lastForecastPeriod = forecastPeriod;
 			}
+
+			_lastForecastEnv = forecastEnv;
+			_lastForecastPeriod = forecastPeriod;
+		}
+
+		private static bool HasAvailableEnvironmentsChanged(EnvMan envMan, BiomeSector biomeSector)
+		{
+			List<EnvEntry> availableEnvironments = envMan.GetAvailableEnvironments(biomeSector);
+
+			if (availableEnvironments == null)
+				return false;
+
+			StringBuilder signature = new StringBuilder();
+			signature.Append($"{biomeSector.Biome}|");
+
+			foreach (EnvEntry entry in availableEnvironments)
+			{
+				if (entry?.m_env == null)
+					continue;
+
+				signature.Append($"{entry.m_env.m_name}:{entry.m_weight}:{entry.m_ashlandsOverride}:{entry.m_deepnorthOverride}|");
+			}
+
+			string currentSignature = signature.ToString();
+
+			if (currentSignature == _lastEnvironmentSignature)
+				return false;
+
+			_lastEnvironmentSignature = currentSignature;
+			return true;
 		}
 
 		private static EnvSetup GetEnvironment(long period, BiomeSector biomeSector, bool isAshlands, bool isDeepNorth)
@@ -351,46 +372,12 @@ namespace MarsarahUI.Patches.UI
 
 			try
 			{
-				var envMan = EnvMan.instance;
+				EnvMan envMan = EnvMan.instance;
+
 				if (envMan != null)
 				{
-					// Get all the available weathers for given biome
+					// Get all the available weathers for the given biome sector
 					List<EnvEntry> availableEnvironments = envMan.GetAvailableEnvironments(biomeSector);
-
-					if (availableEnvironments != null && availableEnvironments.Count > 0)
-					{
-						// Calculate total weight
-						float totalWeight = availableEnvironments
-							.Where(e => e != null && e.m_env != null)
-							.Sum(e => e.m_weight);
-
-						// Build debug log for available weathers
-						StringBuilder envListLog = new StringBuilder();
-						envListLog.AppendLine($"Available weathers for biome sector {biomeSector}:");
-
-						foreach (var entry in availableEnvironments)
-						{
-							if (entry == null || entry.m_env == null)
-								continue;
-
-							string name = entry.m_env.m_name;
-							float weight = entry.m_weight;
-							float probability = totalWeight > 0 ? (weight / totalWeight) * 100f : 0f;
-							bool ashlands = entry.m_ashlandsOverride;
-							bool deepnorth = entry.m_deepnorthOverride;
-
-							envListLog.AppendLine($"  - {name} (weight={weight}, probability={probability:F1}%)");
-						}
-
-						string logStr = envListLog.ToString();
-
-						// Only log once per forecast change (avoid spam)
-						if (logStr != _lastAvailableWeathersLog)
-						{
-							log.Info(logStr);
-							_lastAvailableWeathersLog = logStr;
-						}
-					}
 
 					if (availableEnvironments != null && availableEnvironments.Count > 0)
 					{
@@ -398,18 +385,16 @@ namespace MarsarahUI.Patches.UI
 						result = Traverse.Create(envMan).Method("SelectWeightedEnvironment", new object[] { availableEnvironments }).GetValue<EnvSetup>();
 
 						// Apply Ashlands / DeepNorth overrides
-						foreach (var entry in availableEnvironments)
+						foreach (EnvEntry entry in availableEnvironments)
 						{
-							if (entry == null) continue;
+							if (entry == null)
+								continue;
 
 							if (entry.m_ashlandsOverride && isAshlands)
-							{
 								result = entry.m_env;
-							}
+
 							if (entry.m_deepnorthOverride && isDeepNorth)
-							{
 								result = entry.m_env;
-							}
 						}
 					}
 				}
@@ -426,7 +411,7 @@ namespace MarsarahUI.Patches.UI
 		// Returns a timer string until the given forecast period occurs.
 		private static string GetNextWeatherTimer(long forecastPeriod, double totalSecondsToNow)
 		{
-			var envMan = EnvMan.instance;
+			EnvMan envMan = EnvMan.instance;
 			if (envMan == null) return "";
 
 			// Period length in seconds (derived from EnvMan constant)
@@ -441,6 +426,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (ts.TotalHours >= 1.0)
 				return $"{(int)ts.TotalHours}:{ts.Minutes:D2}h";
+
 			return $"{ts.Minutes:D2}:{ts.Seconds:D2}";
 		}
 
