@@ -128,7 +128,6 @@ B. Existing UI Ideas
 * Current Time: visual day-progress line with a moving time indicator.
 * Weather Forecast: choose a better position when No Map is enabled.
 * Smelter hover: add a Bars display mode.
-* Player login-screen statistics.
 * Container contents: replace text with item icons / add as an alternate to text.
 * Item durability bars: test thicker bars and optional durability text.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.

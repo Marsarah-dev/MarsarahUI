@@ -90,6 +90,13 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
+		public enum ContainerContentsMode
+		{
+			Icons,
+			Text,
+			Off
+		}
+
 		public enum ContainerHoverMode
 		{
 			CurrentPerMax,
@@ -204,7 +211,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIItemQualityColor = new ConfigMetadata("18 - Color For Item Quality", "Choose the color used for the item quality indicator. Requires Item Quality Indicator Mode to be enabled");
 			public static readonly ConfigMetadata UIItemDurabilityColor = new ConfigMetadata("19 - Better Item Durability Bar", "Colors the item durability bar according to current durability and modifies the sprite texture");
 			public static readonly ConfigMetadata UIHoverInfoMode = new ConfigMetadata("20 - Detailed Hover Information", "Adds more information when hovering over objects. Master toggle for the hover information configs below");
-			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("21 - Show Container Contents", "Show the contents of a chest or container when hovering. Requires Detailed Hover Information");
+			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("21 - Container Contents Mode", "Choose how container contents are displayed when hovering. Requires Detailed Hover Information.");
 			public static readonly ConfigMetadata UIContainerHoverMode = new ConfigMetadata("22 - Container Hover Mode", "Choose the method of displaying Container hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIBeeHoverMode = new ConfigMetadata("23 - Beehive Hover Mode", "Choose the method of displaying Beehive hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIPlantHoverMode = new ConfigMetadata("24 - Plant Hover Mode", "Choose the method of displaying Plant hover info. Requires Detailed Hover Information");
@@ -252,7 +259,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<ItemQualityColor> ItemQualityColorChoice;
 		public static ConfigEntry<bool> ColoredItemDurabilityBar;
 		public static ConfigEntry<HoverInfoMode> DetailedHoverInfoChoice;
-		public static ConfigEntry<bool> ShowContainerContents;
+		public static ConfigEntry<ContainerContentsMode> ContainerContentsChoice;
 		public static ConfigEntry<ContainerHoverMode> ContainerHoverModeChoice;
 		public static ConfigEntry<BeeHoverMode> BeehiveHoverModeChoice;
 		public static ConfigEntry<PlantHoverMode> PlantHoverModeChoice;
@@ -302,7 +309,28 @@ namespace MarsarahUI.Managers
 		public static ItemQualityColor EffectiveItemQualityColorChoice => ItemQualityColorChoice.Value;
 		public static bool EffectiveColoredItemDurabilityBar => ColoredItemDurabilityBar.Value;
 		public static HoverInfoMode EffectiveDetailedHoverInfoChoice => ResolveEnum(DetailedHoverInfoChoice, DetailedHoversOverride, HoverInfoModeOverride.UserChoice);
-		public static bool EffectiveShowContainerContents => ResolveBool(ShowContainerContents, ContainerContentsOverride);
+		public static ContainerContentsMode EffectiveContainerContentsChoice
+		{
+			get
+			{
+				if (!ServerOverridesEnabled.Value || ContainerContentsOverride.Value == BoolOverride.UserChoice)
+					return ContainerContentsChoice.Value;
+
+				switch (ContainerContentsOverride.Value)
+				{
+					case BoolOverride.ForceOn:
+						return ContainerContentsChoice.Value == ContainerContentsMode.Off
+							? ContainerContentsMode.Icons
+							: ContainerContentsChoice.Value;
+
+					case BoolOverride.ForceOff:
+						return ContainerContentsMode.Off;
+
+					default:
+						return ContainerContentsChoice.Value;
+				}
+			}
+		}
 		public static ContainerHoverMode EffectiveContainerHoverModeChoice => ContainerHoverModeChoice.Value;
 		public static BeeHoverMode EffectiveBeehiveHoverModeChoice => BeehiveHoverModeChoice.Value;
 		public static PlantHoverMode EffectivePlantHoverModeChoice => PlantHoverModeChoice.Value;
@@ -340,7 +368,7 @@ namespace MarsarahUI.Managers
 			ItemQualityColorChoice = CreateConfig(Configs.UIItemQualityColor, ItemQualityColor.Yellow);
 			ColoredItemDurabilityBar = CreateConfig(Configs.UIItemDurabilityColor, true);
 			DetailedHoverInfoChoice = CreateConfig(Configs.UIHoverInfoMode, HoverInfoMode.ColoredText);
-			ShowContainerContents = CreateConfig(Configs.UIContainerContents, false);
+			ContainerContentsChoice = CreateConfig(Configs.UIContainerContents, ContainerContentsMode.Icons);
 			ContainerHoverModeChoice = CreateConfig(Configs.UIContainerHoverMode, ContainerHoverMode.CurrentPerMax);
 			BeehiveHoverModeChoice = CreateConfig(Configs.UIBeeHoverMode, BeeHoverMode.RemainingTime);
 			PlantHoverModeChoice = CreateConfig(Configs.UIPlantHoverMode, PlantHoverMode.RemainingTime);

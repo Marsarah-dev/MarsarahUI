@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 using static MarsarahUI.Managers.ConfigManager;
 
@@ -76,61 +74,11 @@ namespace MarsarahUI.Patches.UI
 				string localizedOpen = Localization.instance.Localize("$piece_container_open");
 				string localizedStack = Localization.instance.Localize("$msg_stackall_hover");
 				string useKeyColored = $"[{PaintText(Localization.instance.Localize("$KEY_Use"), Color.yellow)}]";
-				string containerItemsLine = GetContainerInventoryList(container, inventory);
+				string containerItemsLine = UIContainerContents.GetContainerInventoryList(container, inventory);
 
 				return containerItemsLine != ""
 					? $"{localizedName} ({containerText})\n{useKeyColored} {localizedOpen} {localizedStack}\n\n{containerItemsLine}"
 					: $"{localizedName} ({containerText})\n{useKeyColored} {localizedOpen} {localizedStack}";
-			}
-
-			private static string GetContainerInventoryList(Container container, Inventory inventory)
-			{
-				if (!ConfigManager.EffectiveShowContainerContents) return "";
-				if (CompatibilityManager.TweaksIsContainerSealed(container)) return "This chest is sealed.";
-
-				Dictionary<string, int> itemCounts = new Dictionary<string, int>();
-
-				foreach (ItemDrop.ItemData item in inventory.GetAllItems())
-				{
-					if (item?.m_shared == null) continue;
-
-					string itemName = Localization.instance.Localize(item.m_shared.m_name);
-
-					if (!itemCounts.ContainsKey(itemName))
-					{
-						itemCounts[itemName] = 0;
-					}
-
-					itemCounts[itemName] += item.m_stack;
-				}
-
-				if (itemCounts.Count == 0) return "";
-
-				StringBuilder stringBuilder = new StringBuilder();
-				int shown = 0;
-				int total = itemCounts.Count;
-
-				foreach (KeyValuePair<string, int> item in itemCounts)
-				{
-					if (shown >= 10) break;
-
-					string countColored = PaintTextIfEnabled(item.Value.ToString(), Color.yellow);
-					string nameColored = PaintTextIfEnabled(item.Key, Color.gray);
-
-					stringBuilder.AppendLine($"{countColored} {nameColored}");
-					shown++;
-				}
-
-				if (total > 10)
-				{
-					string plus = PaintTextIfEnabled("+", Color.yellow);
-					string number = PaintTextIfEnabled((total - 10).ToString(), Color.yellow);
-					string others = PaintTextIfEnabled(" Others", Color.gray);
-
-					stringBuilder.AppendLine($"{plus}{number}{others}");
-				}
-
-				return stringBuilder.ToString().TrimEnd();
 			}
 
 			private static Color GetInventoryRatioColor(int used, int max)
@@ -788,7 +736,7 @@ namespace MarsarahUI.Patches.UI
 			return $"<color=#{hex}>{text}</color>";
 		}
 
-		private static string PaintTextIfEnabled(string text, Color color, bool bold = false)
+		internal static string PaintTextIfEnabled(string text, Color color, bool bold = false)
 		{
 			if (ConfigManager.EffectiveDetailedHoverInfoChoice != HoverInfoMode.ColoredText)
 			{
