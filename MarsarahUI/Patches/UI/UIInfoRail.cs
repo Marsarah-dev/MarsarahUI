@@ -45,6 +45,10 @@ namespace MarsarahUI.Patches.UI
 		private static Text summonText;
 		private static TextMeshProUGUI summonIcon;
 
+		// Skill Progress
+		private static Image skillIcon;
+		private static Text skillText;
+
 		// Rail
 		private const float RailHeight = 30f;
 		private const float AnimationDuration = 0.2f;
@@ -89,6 +93,7 @@ namespace MarsarahUI.Patches.UI
 				UpdateInventoryElements();
 				UpdateEnemyElements();
 				UpdateSummonElements();
+				UpdateSkillElements();
 				UpdateAnimations();
 				UpdateRailVisibility();
 			}
@@ -138,6 +143,7 @@ namespace MarsarahUI.Patches.UI
 			CreateInventoryElements();
 			CreateEnemyElements();
 			CreateSummonElements();
+			CreateSkillElements();
 
 			UIRail.SetActive(false);
 
@@ -591,6 +597,40 @@ namespace MarsarahUI.Patches.UI
 			if (num >= 3) return Color.green;
 
 			return Color.white;
+		}
+
+		private static void CreateSkillElements()
+		{
+			GameObject skillContent = GetElementContent(ElementType.Skill);
+
+			if (skillContent == null) return;
+
+			skillIcon = CreateUIImageObject("SkillIcon", skillContent, new Vector2(-31f, 0f), new Vector2(24f, 24f));
+			skillIcon.preserveAspect = true;
+
+			skillText = CreateTextObject("SkillText", skillContent, Color.yellow, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, new Vector2(12f, 0f), new Vector2(64f, RailHeight));
+		}
+
+		private static void UpdateSkillElements()
+		{
+			bool enabled = ConfigManager.EffectiveSkillProgressBarChoice != ConfigManager.SkillProgressBarColor.Off;
+			bool visible = enabled && UISkillProgress.IsDisplaying;
+
+			SetElementVisible(ElementType.Skill, visible);
+
+			if (!visible) return;
+
+			if (skillIcon != null)
+			{
+				skillIcon.sprite = UISkillProgress.CurrentSkillIcon;
+				skillIcon.gameObject.SetActive(UISkillProgress.CurrentSkillIcon != null);
+			}
+
+			if (skillText != null)
+			{
+				skillText.text = UISkillProgress.CurrentDisplayText;
+				skillText.color = Color.yellow;
+			}
 		}
 	}
 }

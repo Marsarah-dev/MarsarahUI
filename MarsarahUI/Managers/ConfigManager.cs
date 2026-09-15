@@ -534,14 +534,6 @@ namespace MarsarahUI.Managers
 				UITimeAndDay.UpdatePositions();
 			}
 
-			if (configName == Configs.UIInventoryWeightAndSlots.Name ||
-				configName == Configs.UIEnemyDetector.Name ||
-				configName == Configs.OverrideEnemyDetector.Name ||
-				configName == Configs.EnableServerOverrides.Name)
-			{
-				UIController.UpdateUIPositions();
-			}
-
 			if (configName == Configs.UIItemQualityIndicatorMode.Name ||
 				configName == Configs.UIItemQualitySymbol.Name ||
 				configName == Configs.UIItemQualityColor.Name)

@@ -4,7 +4,6 @@ using System;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
 using static Skills;
 
 namespace MarsarahUI.Patches.UI
@@ -20,23 +19,15 @@ namespace MarsarahUI.Patches.UI
 		private const float DisplayDuration = 3f;
 		private const float BarHeight = 4f;
 		private const float FadeDuration = 0.5f;
-		private static readonly Color SkillTextColor = Color.yellow;
 
 		private static GameObject UISkillProgressArea;
-		private static GameObject UISkillProgressTextArea;
 		private static Image skillProgressFill;
-		private static Text skillProgressText;
-		private static Image skillProgressIcon;
+		private static CanvasGroup skillProgressCanvasGroup;
 		private static float displayTimer;
 
-		private static CanvasGroup skillProgressCanvasGroup;
-		private static CanvasGroup skillProgressTextCanvasGroup;
-
-		private static void SetUIActive(bool active)
-		{
-			UISkillProgressArea?.SetActive(active);
-			UISkillProgressTextArea?.SetActive(active);
-		}
+		internal static bool IsDisplaying { get; private set; }
+		internal static Sprite CurrentSkillIcon { get; private set; }
+		internal static string CurrentDisplayText { get; private set; } = "";
 
 		private struct SkillProgressState
 		{
@@ -108,24 +99,26 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix()
 			{
-				if (UISkillProgressArea == null || UISkillProgressTextArea == null) return;
+				if (UISkillProgressArea == null) return;
 
 				if (ConfigManager.EffectiveSkillProgressBarChoice == ConfigManager.SkillProgressBarColor.Off)
 				{
 					displayTimer = 0f;
-					SetUIActive(false);
+					IsDisplaying = false;
+					UISkillProgressArea.SetActive(false);
 					return;
 				}
 
 				if (!ShowUI)
 				{
-					SetUIActive(false);
+					UISkillProgressArea.SetActive(false);
 					return;
 				}
 
 				if (displayTimer <= 0f)
 				{
-					SetUIActive(false);
+					IsDisplaying = false;
+					UISkillProgressArea.SetActive(false);
 					return;
 				}
 
@@ -135,7 +128,10 @@ namespace MarsarahUI.Patches.UI
 					? Mathf.Clamp01(displayTimer / FadeDuration)
 					: 1f;
 
-				SetUIAlpha(alpha);
+				if (skillProgressCanvasGroup != null)
+				{
+					skillProgressCanvasGroup.alpha = alpha;
+				}
 
 				if (skillProgressFill != null)
 				{
@@ -189,45 +185,13 @@ namespace MarsarahUI.Patches.UI
 
 			skillProgressFill = fillObject.AddComponent<Image>();
 
-			Vector2 skillTextAreaSize = new Vector2(96f, 30f);
-
-			UISkillProgressTextArea = new GameObject("SkillProgressTextArea");
-			UISkillProgressTextArea.layer = 5;
-			UISkillProgressTextArea.transform.SetParent(hud.m_healthPanel.transform);
-
-			skillProgressTextCanvasGroup = UISkillProgressTextArea.AddComponent<CanvasGroup>();
-
-			RectTransform skillTextAreaTransform = UISkillProgressTextArea.AddComponent<RectTransform>();
-			skillTextAreaTransform.anchorMin = new Vector2(1f, 1f);
-			skillTextAreaTransform.anchorMax = new Vector2(1f, 1f);
-			skillTextAreaTransform.sizeDelta = skillTextAreaSize;
-			skillTextAreaTransform.localScale = Vector3.one;
-
-			Sprite backgroundSprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(sprite => sprite.name == "InputFieldBackground");
-
-			Image skillTextAreaBackground = UISkillProgressTextArea.AddComponent<Image>();
-			skillTextAreaBackground.color = new Color(0f, 0f, 0f, 0.4f);
-			skillTextAreaBackground.sprite = backgroundSprite;
-			skillTextAreaBackground.type = Image.Type.Sliced;
-
-			skillProgressIcon = CreateUIImageObject("SkillProgressIcon", UISkillProgressTextArea, new Vector2(-31f, 0f), new Vector2(24f, 24f));
-			skillProgressIcon.preserveAspect = true;
-
-			skillProgressText = CreateTextObject("SkillProgressText", UISkillProgressTextArea, SkillTextColor, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, new Vector2(12f, 0f), new Vector2(64f, 30f));
-
-			UpdatePosition();
-
-			UISkillProgressArea.transform.SetAsLastSibling();
-			UISkillProgressArea.SetActive(false);
-			UISkillProgressTextArea.SetActive(false);
-
 			UISkillProgressArea.transform.SetAsLastSibling();
 			UISkillProgressArea.SetActive(false);
 		}
 
 		private static void ShowProgress(string skillName, int level, int percent, Sprite skillIcon)
 		{
-			if (UISkillProgressArea == null || skillProgressFill == null || skillProgressText == null) return;
+			if (UISkillProgressArea == null || skillProgressFill == null) return;
 
 			float progress = Mathf.Clamp01(percent / 100f);
 
@@ -236,21 +200,19 @@ namespace MarsarahUI.Patches.UI
 
 			skillProgressFill.color = GetBarColor(ConfigManager.EffectiveSkillProgressBarChoice);
 
-			if (skillIcon != null)
+			CurrentSkillIcon = skillIcon;
+			CurrentDisplayText = skillIcon != null
+				? $"{level} - {percent}%"
+				: $"{skillName} {level} - {percent}%";
+
+			if (skillProgressCanvasGroup != null)
 			{
-				skillProgressIcon.sprite = skillIcon;
-				skillProgressIcon.gameObject.SetActive(true);
-				skillProgressText.text = $"{level} - {percent}%";
-			}
-			else
-			{
-				skillProgressIcon.gameObject.SetActive(false);
-				skillProgressText.text = $"{skillName} {level} - {percent}%";
+				skillProgressCanvasGroup.alpha = 1f;
 			}
 
-			SetUIAlpha(1f);
 			displayTimer = DisplayDuration;
-			SetUIActive(true);
+			IsDisplaying = true;
+			UISkillProgressArea.SetActive(true);
 		}
 
 		private static Color GetBarColor(ConfigManager.SkillProgressBarColor color)
@@ -314,49 +276,6 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			return (float)getNextLevelRequirementMethod.Invoke(skill, null);
-		}
-
-		internal static void UpdatePosition()
-		{
-			if (UISkillProgressTextArea == null) return;
-
-			bool inventoryEnabled = ConfigManager.EffectiveShowInventoryWeightAndSlots;
-			bool enemyDetectorEnabled = ConfigManager.EffectiveShowEnemyDetector;
-
-			float xOffset;
-
-			if (inventoryEnabled && enemyDetectorEnabled)
-			{
-				xOffset = 253f;
-			}
-			else if (inventoryEnabled)
-			{
-				xOffset = 145f;
-			}
-			else if (enemyDetectorEnabled)
-			{
-				xOffset = 66f;
-			}
-			else
-			{
-				xOffset = -42f;
-			}
-
-			RectTransform textAreaTransform = UISkillProgressTextArea.GetComponent<RectTransform>();
-			textAreaTransform.anchoredPosition = new Vector2(xOffset, -230f);
-		}
-
-		private static void SetUIAlpha(float alpha)
-		{
-			if (skillProgressCanvasGroup != null)
-			{
-				skillProgressCanvasGroup.alpha = alpha;
-			}
-
-			if (skillProgressTextCanvasGroup != null)
-			{
-				skillProgressTextCanvasGroup.alpha = alpha;
-			}
 		}
 	}
 }

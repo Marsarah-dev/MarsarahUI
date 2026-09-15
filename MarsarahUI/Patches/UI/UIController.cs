@@ -129,10 +129,5 @@ namespace MarsarahUI.Patches.UI
 
 			return image;
 		}
-
-		public static void UpdateUIPositions()
-		{
-			UISkillProgress.UpdatePosition();
-		}
 	}
 }
