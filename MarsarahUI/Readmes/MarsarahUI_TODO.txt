@@ -116,6 +116,19 @@ B. New additions
       - Master of Everything: Every vanilla skill has reached level 100.
       - When Master of Everything qualifies, the individual level 100 skill facts are not added to the random pool. Master of Everything represents the achievement instead.
 
+* Container Contents Mode (renamed from Show container contents)
+  - Redesigned Container Contents with four modes:
+    - IconsHorizontal (default)
+    - IconsVertical
+    - Text
+    - Off
+  - Icon modes use actual vanilla/modded item icons with stack totals.
+  - Horizontal uses 5x2 layout; Vertical uses 2x5 layout.
+  - Multiple stacks of the same item are combined.
+  - Maximum 10 unique items, with "+N Others" for overflow.
+  - Text mode now aligns quantities/names and adjusts for large numbers.
+
+
 ============================================================
 TO IMPLEMENT / VERIFY
 ============================================================

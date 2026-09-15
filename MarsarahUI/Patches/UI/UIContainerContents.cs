@@ -16,10 +16,20 @@ namespace MarsarahUI.Patches.UI
 		private static readonly List<Image> itemIcons = new List<Image>();
 		private static readonly List<Text> itemCounts = new List<Text>();
 		private static Text othersText;
+
 		private const int MaxDisplayedItems = 10;
-		private const int IconsPerRow = 5;
+
 		private const float IconSize = 32f;
 		private const float IconSpacing = 3f;
+		private const int CountFontSize = 12;
+		private const int OthersFontSize = 11;
+
+		private const int HorizontalColumns = 5;
+		private const int VerticalRows = 5;
+
+		private const float GridLeftOffset = -1f;
+		private const float GridTopOffset = 20f;
+		private const float OthersGap = 7f;
 
 		private class ContainerItemEntry
 		{
@@ -72,18 +82,22 @@ namespace MarsarahUI.Patches.UI
 
 		internal static string GetContainerInventoryList(Container container, Inventory inventory)
 		{
-			if (ConfigManager.EffectiveContainerContentsChoice == ContainerContentsMode.Off) return "";
+			ContainerContentsMode mode = ConfigManager.EffectiveContainerContentsChoice;
+
+			if (mode == ContainerContentsMode.Off) return "";
 			if (CompatibilityManager.TweaksIsContainerSealed(container)) return "This chest is sealed.";
 
 			List<ContainerItemEntry> items = GetContainerItems(inventory);
 
 			if (items.Count == 0) return "";
 
-			if (ConfigManager.EffectiveContainerContentsChoice == ContainerContentsMode.Icons)
+			if (mode == ContainerContentsMode.IconsHorizontal || mode == ContainerContentsMode.IconsVertical)
 			{
-				ShowIcons(items);
+				ShowIcons(items, mode);
 				return "";
 			}
+
+			if (mode != ContainerContentsMode.Text) return "";
 
 			if (ConfigManager.EffectiveContainerContentsChoice != ContainerContentsMode.Text) return "";
 
@@ -127,7 +141,7 @@ namespace MarsarahUI.Patches.UI
 			return stringBuilder.ToString().TrimEnd();
 		}
 
-		private static void ShowIcons(List<ContainerItemEntry> items)
+		private static void ShowIcons(List<ContainerItemEntry> items, ContainerContentsMode mode)
 		{
 			if (Hud.instance == null || Hud.instance.m_hoverName == null) return;
 
@@ -135,11 +149,13 @@ namespace MarsarahUI.Patches.UI
 
 			if (containerContentsArea == null) return;
 
+			ConfigureIconLayout(mode);
+
 			containerContentsArea.SetActive(true);
 
 			int shown = Mathf.Min(items.Count, MaxDisplayedItems);
 
-			PositionIcons(shown);
+			PositionIcons(shown, mode);
 
 			for (int i = 0; i < MaxDisplayedItems; i++)
 			{
@@ -180,8 +196,8 @@ namespace MarsarahUI.Patches.UI
 			areaTransform.anchorMin = new Vector2(0.5f, 0.5f);
 			areaTransform.anchorMax = new Vector2(0.5f, 0.5f);
 			areaTransform.pivot = new Vector2(0.5f, 1f);
-			areaTransform.anchoredPosition = new Vector2(-90f, 20f);
-			areaTransform.sizeDelta = new Vector2(IconsPerRow * (IconSize + IconSpacing), 2f * (IconSize + IconSpacing));
+			areaTransform.anchoredPosition = Vector2.zero;
+			areaTransform.sizeDelta = Vector2.zero;
 
 			itemIcons.Clear();
 			itemCounts.Clear();
@@ -191,10 +207,7 @@ namespace MarsarahUI.Patches.UI
 				CreateIconSlot(i);
 			}
 
-			float rowWidth = IconsPerRow * IconSize + (IconsPerRow - 1) * IconSpacing;
-			float leftEdge = -rowWidth / 2f;
-
-			othersText = CreateTextObject("ContainerContentsOthers", containerContentsArea, Color.gray, "AveriaSansLibre-Bold", 11, TextAnchor.MiddleLeft, new Vector2(leftEdge, -74f), new Vector2(220f, 25f));
+			othersText = CreateTextObject("ContainerContentsOthers", containerContentsArea, Color.white, "AveriaSansLibre-Bold", OthersFontSize, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(220f, 25f));
 			othersText.raycastTarget = false;
 
 			RectTransform othersTransform = othersText.GetComponent<RectTransform>();
@@ -207,11 +220,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static void CreateIconSlot(int index)
 		{
-			int row = index / IconsPerRow;
-
-			float y = -row * (IconSize + IconSpacing);
-
-			Image icon = CreateUIImageObject($"ContainerItemIcon_{index}", containerContentsArea, new Vector2(0f, y), new Vector2(IconSize, IconSize));
+			Image icon = CreateUIImageObject($"ContainerItemIcon_{index}", containerContentsArea, Vector2.zero, new Vector2(IconSize, IconSize));
 
 			RectTransform iconTransform = icon.GetComponent<RectTransform>();
 			iconTransform.anchorMin = new Vector2(0.5f, 1f);
@@ -221,7 +230,7 @@ namespace MarsarahUI.Patches.UI
 			icon.preserveAspect = true;
 			icon.raycastTarget = false;
 
-			Text countText = CreateTextObject($"ContainerItemCount_{index}", icon.gameObject, Color.white, "AveriaSansLibre-Bold", 12, TextAnchor.LowerRight, Vector2.zero, new Vector2(IconSize, IconSize));
+			Text countText = CreateTextObject($"ContainerItemCount_{index}", icon.gameObject, Color.white, "AveriaSansLibre-Bold", CountFontSize, TextAnchor.LowerRight, Vector2.zero, new Vector2(IconSize, IconSize));
 
 			RectTransform countTransform = countText.GetComponent<RectTransform>();
 			countTransform.anchorMin = Vector2.zero;
@@ -237,16 +246,62 @@ namespace MarsarahUI.Patches.UI
 			icon.gameObject.SetActive(false);
 		}
 
-		private static void PositionIcons(int shown)
+		private static void ConfigureIconLayout(ContainerContentsMode mode)
 		{
-			float rowWidth = IconsPerRow * IconSize + (IconsPerRow - 1) * IconSpacing;
+			bool vertical = mode == ContainerContentsMode.IconsVertical;
+
+			int columns = vertical ? 2 : HorizontalColumns;
+			int rows = vertical ? VerticalRows : 2;
+
+			float gridWidth = columns * IconSize + (columns - 1) * IconSpacing;
+			float gridHeight = rows * IconSize + (rows - 1) * IconSpacing;
+
+			RectTransform areaTransform = containerContentsArea.GetComponent<RectTransform>();
+			RectTransform hoverTransform = Hud.instance.m_hoverName.GetComponent<RectTransform>();
+
+			float hoverWidth = hoverTransform != null ? hoverTransform.rect.width : 350f;
+			float xPosition = -hoverWidth / 2f + gridWidth / 2f + GridLeftOffset;
+
+			areaTransform.anchoredPosition = new Vector2(xPosition, GridTopOffset);
+			areaTransform.sizeDelta = new Vector2(gridWidth, gridHeight);
+
+			for (int i = 0; i < itemIcons.Count; i++)
+			{
+				itemIcons[i].rectTransform.sizeDelta = new Vector2(IconSize, IconSize);
+				itemCounts[i].fontSize = CountFontSize;
+			}
+
+			othersText.fontSize = OthersFontSize;
+
+			RectTransform othersTransform = othersText.GetComponent<RectTransform>();
+			othersTransform.anchoredPosition = new Vector2(-gridWidth / 2f, -(gridHeight + OthersGap));
+		}
+
+		private static void PositionIcons(int shown, ContainerContentsMode mode)
+		{
+			bool vertical = mode == ContainerContentsMode.IconsVertical;
+
+			int columns = vertical ? 2 : HorizontalColumns;
+
+			float gridWidth = columns * IconSize + (columns - 1) * IconSpacing;
 
 			for (int i = 0; i < shown; i++)
 			{
-				int row = i / IconsPerRow;
-				int column = i % IconsPerRow;
+				int row;
+				int column;
 
-				float x = -rowWidth / 2f + IconSize / 2f + column * (IconSize + IconSpacing);
+				if (vertical)
+				{
+					row = i % VerticalRows;
+					column = i / VerticalRows;
+				}
+				else
+				{
+					row = i / HorizontalColumns;
+					column = i % HorizontalColumns;
+				}
+
+				float x = -gridWidth / 2f + IconSize / 2f + column * (IconSize + IconSpacing);
 				float y = -row * (IconSize + IconSpacing);
 
 				itemIcons[i].rectTransform.anchoredPosition = new Vector2(x, y);

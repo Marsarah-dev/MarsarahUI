@@ -92,7 +92,8 @@ namespace MarsarahUI.Managers
 
 		public enum ContainerContentsMode
 		{
-			Icons,
+			IconsHorizontal,
+			IconsVertical,
 			Text,
 			Off
 		}
@@ -211,7 +212,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIItemQualityColor = new ConfigMetadata("18 - Color For Item Quality", "Choose the color used for the item quality indicator. Requires Item Quality Indicator Mode to be enabled");
 			public static readonly ConfigMetadata UIItemDurabilityColor = new ConfigMetadata("19 - Better Item Durability Bar", "Colors the item durability bar according to current durability and modifies the sprite texture");
 			public static readonly ConfigMetadata UIHoverInfoMode = new ConfigMetadata("20 - Detailed Hover Information", "Adds more information when hovering over objects. Master toggle for the hover information configs below");
-			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("21 - Container Contents Mode", "Choose how container contents are displayed when hovering. Requires Detailed Hover Information.");
+			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("21 - Container Contents Mode", "Choose how container contents are displayed when hovering: horizontal icons, vertical icons, text, or off. Requires Detailed Hover Information.");
 			public static readonly ConfigMetadata UIContainerHoverMode = new ConfigMetadata("22 - Container Hover Mode", "Choose the method of displaying Container hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIBeeHoverMode = new ConfigMetadata("23 - Beehive Hover Mode", "Choose the method of displaying Beehive hover info. Requires Detailed Hover Information");
 			public static readonly ConfigMetadata UIPlantHoverMode = new ConfigMetadata("24 - Plant Hover Mode", "Choose the method of displaying Plant hover info. Requires Detailed Hover Information");
@@ -320,7 +321,7 @@ namespace MarsarahUI.Managers
 				{
 					case BoolOverride.ForceOn:
 						return ContainerContentsChoice.Value == ContainerContentsMode.Off
-							? ContainerContentsMode.Icons
+							? ContainerContentsMode.IconsHorizontal
 							: ContainerContentsChoice.Value;
 
 					case BoolOverride.ForceOff:
@@ -368,7 +369,7 @@ namespace MarsarahUI.Managers
 			ItemQualityColorChoice = CreateConfig(Configs.UIItemQualityColor, ItemQualityColor.Yellow);
 			ColoredItemDurabilityBar = CreateConfig(Configs.UIItemDurabilityColor, true);
 			DetailedHoverInfoChoice = CreateConfig(Configs.UIHoverInfoMode, HoverInfoMode.ColoredText);
-			ContainerContentsChoice = CreateConfig(Configs.UIContainerContents, ContainerContentsMode.Icons);
+			ContainerContentsChoice = CreateConfig(Configs.UIContainerContents, ContainerContentsMode.IconsHorizontal);
 			ContainerHoverModeChoice = CreateConfig(Configs.UIContainerHoverMode, ContainerHoverMode.CurrentPerMax);
 			BeehiveHoverModeChoice = CreateConfig(Configs.UIBeeHoverMode, BeeHoverMode.RemainingTime);
 			PlantHoverModeChoice = CreateConfig(Configs.UIPlantHoverMode, PlantHoverMode.RemainingTime);
