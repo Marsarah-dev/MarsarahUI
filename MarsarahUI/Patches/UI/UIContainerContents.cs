@@ -1,7 +1,9 @@
-﻿using MarsarahUI.Managers;
+﻿using HarmonyLib;
+using MarsarahUI.Managers;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 using static MarsarahUI.Managers.ConfigManager;
 
 namespace MarsarahUI.Patches.UI
@@ -10,55 +12,268 @@ namespace MarsarahUI.Patches.UI
 	{
 		private static readonly LogManager log = new LogManager("UI Container Contents", LogManager.LogLevel.Warning);
 
-		internal static string GetContainerInventoryList(Container container, Inventory inventory)
-		{
-			if (ConfigManager.EffectiveContainerContentsChoice == ContainerContentsMode.Off) return "";
-			if (CompatibilityManager.TweaksIsContainerSealed(container)) return "This chest is sealed.";
-			if (ConfigManager.EffectiveContainerContentsChoice != ContainerContentsMode.Text) return "";
+		private static GameObject containerContentsArea;
+		private static readonly List<Image> itemIcons = new List<Image>();
+		private static readonly List<Text> itemCounts = new List<Text>();
+		private static Text othersText;
+		private const int MaxDisplayedItems = 10;
+		private const int IconsPerRow = 5;
+		private const float IconSize = 32f;
+		private const float IconSpacing = 3f;
 
-			Dictionary<string, int> itemCounts = new Dictionary<string, int>();
+		private class ContainerItemEntry
+		{
+			internal ItemDrop.ItemData Item;
+			internal string LocalizedName;
+			internal int Count;
+
+			internal ContainerItemEntry(ItemDrop.ItemData item, string localizedName)
+			{
+				Item = item;
+				LocalizedName = localizedName;
+				Count = 0;
+			}
+		}
+
+		[HarmonyPatch(typeof(Hud), "UpdateCrosshair")]
+		private static class HudUpdateCrosshairPatch
+		{
+			private static void Prefix()
+			{
+				HideIcons();
+			}
+		}
+
+		private static List<ContainerItemEntry> GetContainerItems(Inventory inventory)
+		{
+			List<ContainerItemEntry> items = new List<ContainerItemEntry>();
+			Dictionary<string, ContainerItemEntry> itemLookup = new Dictionary<string, ContainerItemEntry>();
 
 			foreach (ItemDrop.ItemData item in inventory.GetAllItems())
 			{
 				if (item?.m_shared == null) continue;
 
-				string itemName = Localization.instance.Localize(item.m_shared.m_name);
+				string itemKey = item.m_shared.m_name;
 
-				if (!itemCounts.ContainsKey(itemName))
+				if (!itemLookup.TryGetValue(itemKey, out ContainerItemEntry entry))
 				{
-					itemCounts[itemName] = 0;
+					string localizedName = Localization.instance.Localize(item.m_shared.m_name);
+
+					entry = new ContainerItemEntry(item, localizedName);
+					itemLookup.Add(itemKey, entry);
+					items.Add(entry);
 				}
 
-				itemCounts[itemName] += item.m_stack;
+				entry.Count += item.m_stack;
 			}
 
-			if (itemCounts.Count == 0) return "";
+			return items;
+		}
+
+		internal static string GetContainerInventoryList(Container container, Inventory inventory)
+		{
+			if (ConfigManager.EffectiveContainerContentsChoice == ContainerContentsMode.Off) return "";
+			if (CompatibilityManager.TweaksIsContainerSealed(container)) return "This chest is sealed.";
+
+			List<ContainerItemEntry> items = GetContainerItems(inventory);
+
+			if (items.Count == 0) return "";
+
+			if (ConfigManager.EffectiveContainerContentsChoice == ContainerContentsMode.Icons)
+			{
+				ShowIcons(items);
+				return "";
+			}
+
+			if (ConfigManager.EffectiveContainerContentsChoice != ContainerContentsMode.Text) return "";
 
 			StringBuilder stringBuilder = new StringBuilder();
 			int shown = 0;
-			int total = itemCounts.Count;
+			int total = items.Count;
 
-			foreach (KeyValuePair<string, int> item in itemCounts)
+			int maxCountLength = 2;
+
+			for (int i = 0; i < Mathf.Min(items.Count, 10); i++)
+			{
+				maxCountLength = Mathf.Max(maxCountLength, items[i].Count.ToString().Length);
+			}
+
+			if (total > 10)
+			{
+				maxCountLength = Mathf.Max(maxCountLength, $"+{total - 10}".Length);
+			}
+
+			int namePosition = 25 + Mathf.Max(0, maxCountLength - 2) * 10;
+
+			foreach (ContainerItemEntry item in items)
 			{
 				if (shown >= 10) break;
 
-				string countColored = UIDetailedHovers.PaintTextIfEnabled(item.Value.ToString(), Color.yellow);
-				string nameColored = UIDetailedHovers.PaintTextIfEnabled(item.Key, Color.gray);
+				string countColored = UIDetailedHovers.PaintTextIfEnabled(item.Count.ToString(), Color.yellow);
+				string nameColored = UIDetailedHovers.PaintTextIfEnabled(item.LocalizedName, Color.gray);
 
-				stringBuilder.AppendLine($"{countColored} {nameColored}");
+				stringBuilder.AppendLine($"{countColored}<pos={namePosition}>{nameColored}");
 				shown++;
 			}
 
 			if (total > 10)
 			{
-				string plus = UIDetailedHovers.PaintTextIfEnabled("+", Color.yellow);
-				string number = UIDetailedHovers.PaintTextIfEnabled((total - 10).ToString(), Color.yellow);
-				string others = UIDetailedHovers.PaintTextIfEnabled(" Others", Color.gray);
+				string number = UIDetailedHovers.PaintTextIfEnabled($"+{total - 10}", Color.yellow);
+				string others = UIDetailedHovers.PaintTextIfEnabled("Others", Color.gray);
 
-				stringBuilder.AppendLine($"{plus}{number}{others}");
+				stringBuilder.AppendLine($"{number}<pos={namePosition}>{others}");
 			}
 
 			return stringBuilder.ToString().TrimEnd();
+		}
+
+		private static void ShowIcons(List<ContainerItemEntry> items)
+		{
+			if (Hud.instance == null || Hud.instance.m_hoverName == null) return;
+
+			EnsureIconUI();
+
+			if (containerContentsArea == null) return;
+
+			containerContentsArea.SetActive(true);
+
+			int shown = Mathf.Min(items.Count, MaxDisplayedItems);
+
+			PositionIcons(shown);
+
+			for (int i = 0; i < MaxDisplayedItems; i++)
+			{
+				if (i < shown)
+				{
+					UpdateItemIcon(items[i], i);
+					itemIcons[i].gameObject.SetActive(true);
+				}
+				else
+				{
+					itemIcons[i].gameObject.SetActive(false);
+				}
+			}
+
+			int remaining = items.Count - MaxDisplayedItems;
+
+			if (remaining > 0)
+			{
+				othersText.text = $"+{remaining} Others";
+				othersText.gameObject.SetActive(true);
+			}
+			else
+			{
+				othersText.gameObject.SetActive(false);
+			}
+		}
+
+		private static void EnsureIconUI()
+		{
+			if (containerContentsArea != null) return;
+			if (Hud.instance == null || Hud.instance.m_hoverName == null) return;
+
+			containerContentsArea = new GameObject("ContainerContentsArea");
+			containerContentsArea.layer = 5;
+			containerContentsArea.transform.SetParent(Hud.instance.m_hoverName.transform, false);
+
+			RectTransform areaTransform = containerContentsArea.AddComponent<RectTransform>();
+			areaTransform.anchorMin = new Vector2(0.5f, 0.5f);
+			areaTransform.anchorMax = new Vector2(0.5f, 0.5f);
+			areaTransform.pivot = new Vector2(0.5f, 1f);
+			areaTransform.anchoredPosition = new Vector2(-90f, 20f);
+			areaTransform.sizeDelta = new Vector2(IconsPerRow * (IconSize + IconSpacing), 2f * (IconSize + IconSpacing));
+
+			itemIcons.Clear();
+			itemCounts.Clear();
+
+			for (int i = 0; i < MaxDisplayedItems; i++)
+			{
+				CreateIconSlot(i);
+			}
+
+			float rowWidth = IconsPerRow * IconSize + (IconsPerRow - 1) * IconSpacing;
+			float leftEdge = -rowWidth / 2f;
+
+			othersText = CreateTextObject("ContainerContentsOthers", containerContentsArea, Color.gray, "AveriaSansLibre-Bold", 11, TextAnchor.MiddleLeft, new Vector2(leftEdge, -74f), new Vector2(220f, 25f));
+			othersText.raycastTarget = false;
+
+			RectTransform othersTransform = othersText.GetComponent<RectTransform>();
+			othersTransform.anchorMin = new Vector2(0.5f, 1f);
+			othersTransform.anchorMax = new Vector2(0.5f, 1f);
+			othersTransform.pivot = new Vector2(0f, 1f);
+
+			othersText.gameObject.SetActive(false);
+		}
+
+		private static void CreateIconSlot(int index)
+		{
+			int row = index / IconsPerRow;
+
+			float y = -row * (IconSize + IconSpacing);
+
+			Image icon = CreateUIImageObject($"ContainerItemIcon_{index}", containerContentsArea, new Vector2(0f, y), new Vector2(IconSize, IconSize));
+
+			RectTransform iconTransform = icon.GetComponent<RectTransform>();
+			iconTransform.anchorMin = new Vector2(0.5f, 1f);
+			iconTransform.anchorMax = new Vector2(0.5f, 1f);
+			iconTransform.pivot = new Vector2(0.5f, 1f);
+
+			icon.preserveAspect = true;
+			icon.raycastTarget = false;
+
+			Text countText = CreateTextObject($"ContainerItemCount_{index}", icon.gameObject, Color.white, "AveriaSansLibre-Bold", 12, TextAnchor.LowerRight, Vector2.zero, new Vector2(IconSize, IconSize));
+
+			RectTransform countTransform = countText.GetComponent<RectTransform>();
+			countTransform.anchorMin = Vector2.zero;
+			countTransform.anchorMax = Vector2.one;
+			countTransform.offsetMin = Vector2.zero;
+			countTransform.offsetMax = Vector2.zero;
+
+			countText.raycastTarget = false;
+
+			itemIcons.Add(icon);
+			itemCounts.Add(countText);
+
+			icon.gameObject.SetActive(false);
+		}
+
+		private static void PositionIcons(int shown)
+		{
+			float rowWidth = IconsPerRow * IconSize + (IconsPerRow - 1) * IconSpacing;
+
+			for (int i = 0; i < shown; i++)
+			{
+				int row = i / IconsPerRow;
+				int column = i % IconsPerRow;
+
+				float x = -rowWidth / 2f + IconSize / 2f + column * (IconSize + IconSpacing);
+				float y = -row * (IconSize + IconSpacing);
+
+				itemIcons[i].rectTransform.anchoredPosition = new Vector2(x, y);
+			}
+		}
+
+		private static void UpdateItemIcon(ContainerItemEntry entry, int index)
+		{
+			Sprite sprite = entry.Item.GetIcon();
+
+			if (sprite == null)
+			{
+				log.Warn($"No icon found for container item '{entry.LocalizedName}'.");
+				itemIcons[index].sprite = null;
+				itemCounts[index].text = "";
+				return;
+			}
+
+			itemIcons[index].sprite = sprite;
+			itemCounts[index].text = entry.Count > 1 ? entry.Count.ToString() : "";
+		}
+
+		private static void HideIcons()
+		{
+			if (containerContentsArea == null) return;
+
+			containerContentsArea.SetActive(false);
 		}
 	}
 }

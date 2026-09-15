@@ -51,7 +51,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			GameObject textObject = new GameObject(name);
 			textObject.layer = 5;
-			textObject.transform.SetParent(parent.transform);
+			textObject.transform.SetParent(parent.transform, false);
 
 			RectTransform textTransform = textObject.AddComponent<RectTransform>();
 			textTransform.anchoredPosition = position;
