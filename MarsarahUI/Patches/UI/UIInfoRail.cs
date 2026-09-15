@@ -20,7 +20,6 @@ namespace MarsarahUI.Patches.UI
 			ToughEnemies,
 			Bosses,
 			NeutralEnemies,
-			Summons,
 			Skill
 		}
 
@@ -40,10 +39,6 @@ namespace MarsarahUI.Patches.UI
 		private static TextMeshProUGUI toughEnemyIcon;
 		private static Text bossText;
 		private static TextMeshProUGUI bossIcon;
-
-		// Summon Counter
-		private static Text summonText;
-		private static TextMeshProUGUI summonIcon;
 
 		// Skill Progress
 		private static Image skillIcon;
@@ -92,7 +87,6 @@ namespace MarsarahUI.Patches.UI
 
 				UpdateInventoryElements();
 				UpdateEnemyElements();
-				UpdateSummonElements();
 				UpdateSkillElements();
 				UpdateAnimations();
 				UpdateRailVisibility();
@@ -137,12 +131,10 @@ namespace MarsarahUI.Patches.UI
 			CreateElement(ElementType.ToughEnemies, 50f);
 			CreateElement(ElementType.Bosses, 50f);
 			CreateElement(ElementType.NeutralEnemies, 50f);
-			CreateElement(ElementType.Summons, 50f);
 			CreateElement(ElementType.Skill, 96f);
 
 			CreateInventoryElements();
 			CreateEnemyElements();
-			CreateSummonElements();
 			CreateSkillElements();
 
 			UIRail.SetActive(false);
@@ -486,7 +478,7 @@ namespace MarsarahUI.Patches.UI
 			int bosses = UIEnemyDetector.NumBosses;
 			int neutralEnemies = UIEnemyDetector.NumNeutralEnemies;
 
-			SetElementVisible(ElementType.Enemies, true);
+			SetElementVisible(ElementType.Enemies, enemies > 0);
 			SetElementVisible(ElementType.ToughEnemies, separateToughEnemies && toughEnemies > 0);
 			SetElementVisible(ElementType.Bosses, bosses > 0);
 			SetElementVisible(ElementType.NeutralEnemies, neutralEnemies > 0);
@@ -499,7 +491,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (enemyIcon != null)
 			{
-				enemyIcon.text = enemies == 0 ? "👁" : "😈";
+				enemyIcon.text = "😈";
 				enemyIcon.color = Color.white;
 			}
 
@@ -553,50 +545,6 @@ namespace MarsarahUI.Patches.UI
 			if (num < 7) return new Color(1f, 0.549019f, 0f);
 
 			return Color.red;
-		}
-
-		private static void CreateSummonElements()
-		{
-			GameObject summonContent = GetElementContent(ElementType.Summons);
-
-			if (summonContent == null) return;
-
-			summonIcon = CreateTMPTextObject("SummonIcon", summonContent, Color.white, "NotoEmoji-Regular SDF", 20, TextAlignmentOptions.Midline, new Vector2(-13f, 0f), new Vector2(24f, RailHeight), log);
-			summonIcon.text = "💀";
-
-			summonText = CreateTextObject("SummonText", summonContent, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
-		}
-
-		private static void UpdateSummonElements()
-		{
-			bool enabled = ConfigManager.EffectiveShowSummonCounter;
-			int summons = UISummonCounter.NumSummons;
-
-			bool visible = enabled && summons > 0;
-
-			SetElementVisible(ElementType.Summons, visible);
-
-			if (!visible) return;
-
-			if (summonText != null)
-			{
-				summonText.text = summons.ToString();
-				summonText.color = GetSummonColor(summons);
-			}
-
-			if (summonIcon != null)
-			{
-				summonIcon.color = Color.white;
-			}
-		}
-
-		private static Color GetSummonColor(int num)
-		{
-			if (num < 2) return new Color(1f, 0.549019f, 0f);
-			if (num == 2) return Color.yellow;
-			if (num >= 3) return Color.green;
-
-			return Color.white;
 		}
 
 		private static void CreateSkillElements()

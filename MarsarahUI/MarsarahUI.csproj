@@ -116,6 +116,7 @@
     <Compile Include="Patches\UI\UISmartBiome.cs" />
     <Compile Include="Patches\UI\UIStatusEffects.cs" />
     <Compile Include="Patches\UI\UISummonCounter.cs" />
+    <Compile Include="Patches\UI\UISummonDisplay.cs" />
     <Compile Include="Patches\UI\UITamingProgress.cs" />
     <Compile Include="Patches\UI\UITimeAndDay.cs" />
     <Compile Include="Patches\UI\UIWeather.cs" />
