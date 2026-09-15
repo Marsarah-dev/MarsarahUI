@@ -8,27 +8,27 @@ namespace MarsarahUI.Patches.UI
 	{
 		private static readonly LogManager log = new LogManager("UI Enemy Detector", LogManager.LogLevel.Warning);
 
+		private const float DetectionRadius = 30f;
+		private const float BossDetectionRadius = 60f;
+
 		private static readonly Dictionary<string, string> toughEnemyTiers = new Dictionary<string, string>
 		{
 			// Black Forest
 			{ "Troll", "BlackForest" },
 			{ "Bjorn", "BlackForest" },
 			{ "Bjorn_sleeping", "BlackForest" },
-			{ "Skeleton_Hildir", "BlackForest" },
 
 			// Swamp
 			{ "Abomination", "Swamp" },
-			{ "Wraith", "Swamp" },
+			//{ "Wraith", "Swamp" },
 			{ "Writhan", "Swamp" },
 
 			// Mountains
 			{ "StoneGolem", "Mountain" },
-			{ "Fenring_Cultist_Hildir", "Mountain" },
 
 			// Plains
 			{ "GoblinBrute", "Plains" },
 			{ "Unbjorn", "Plains" },
-			{ "GoblinBruteBros", "Plains" },
 
 			// Mistlands
 			{ "SeekerBrute", "Mistlands" },
@@ -38,17 +38,25 @@ namespace MarsarahUI.Patches.UI
 			{ "FallenValkyrie", "AshLands" },
 			{ "Morgen", "AshLands" },
 			{ "Morgen_NonSleeping", "AshLands" },
-			{ "Charred_Melee_Dyrnwyn", "AshLands" },
 			{ "BonemawSerpent", "AshLands" },
 
 			// Ocean - balanced around Swamp progression
 			{ "Serpent", "Swamp" }
 		};
 
+		private static readonly HashSet<string> minibossPrefabs = new HashSet<string>
+		{
+			"Skeleton_Hildir",
+			"Fenring_Cultist_Hildir",
+			"GoblinBruteBros",
+			"Charred_Melee_Dyrnwyn"
+		};
+
 		internal static int NumEnemies { get; private set; }
 		internal static int NumToughEnemies { get; private set; }
 		internal static int NumNeutralEnemies { get; private set; }
 		internal static GearProgressionManager.ThreatLevel ToughEnemyThreatLevel { get; private set; }
+		internal static int NumBosses { get; private set; }
 
 		[HarmonyPatch(typeof(Player), "Update")]
 		private static class EnemyDetectorPlayerPatch
@@ -61,6 +69,7 @@ namespace MarsarahUI.Patches.UI
 
 				int enemies = 0;
 				int toughEnemies = 0;
+				int bosses = 0;
 				int neutralEnemies = 0;
 
 				GearProgressionManager.ThreatLevel highestThreat = GearProgressionManager.ThreatLevel.Safe;
@@ -71,11 +80,23 @@ namespace MarsarahUI.Patches.UI
 					ConfigManager.EnemyDetectorMode.SeparateToughEnemies;
 
 				List<Character> characters = new List<Character>();
-				Character.GetCharactersInRange(___m_localPlayer.transform.position, 30f, characters);
+				Character.GetCharactersInRange(___m_localPlayer.transform.position, BossDetectionRadius, characters);
 
 				foreach (Character character in characters)
 				{
 					if (ShouldIgnoreCharacter(character)) continue;
+
+					bool isBoss = IsBossOrMiniboss(character);
+
+					if (isBoss)
+					{
+						bosses++;
+						continue;
+					}
+
+					float distanceSqr = (character.transform.position - ___m_localPlayer.transform.position).sqrMagnitude;
+
+					if (distanceSqr > DetectionRadius * DetectionRadius) continue;
 
 					if (IsNeutralEnemy(character))
 					{
@@ -103,6 +124,7 @@ namespace MarsarahUI.Patches.UI
 
 				NumEnemies = enemies;
 				NumToughEnemies = toughEnemies;
+				NumBosses = bosses;
 				NumNeutralEnemies = neutralEnemies;
 				ToughEnemyThreatLevel = highestThreat;
 			}
@@ -126,10 +148,17 @@ namespace MarsarahUI.Patches.UI
 				!character.GetBaseAI().IsAggravated();
 		}
 
-		private static bool TryGetToughEnemyTier(Character character, out string progressionBiome)
+		private static bool IsBossOrMiniboss(Character character)
 		{
-			progressionBiome = null;
+			if (character.IsBoss()) return true;
 
+			string prefabName = GetPrefabName(character);
+
+			return minibossPrefabs.Contains(prefabName);
+		}
+
+		private static string GetPrefabName(Character character)
+		{
 			string prefabName = character.gameObject.name;
 
 			if (prefabName.EndsWith("(Clone)"))
@@ -137,7 +166,12 @@ namespace MarsarahUI.Patches.UI
 				prefabName = prefabName.Substring(0, prefabName.Length - "(Clone)".Length);
 			}
 
-			return toughEnemyTiers.TryGetValue(prefabName, out progressionBiome);
+			return prefabName;
+		}
+
+		private static bool TryGetToughEnemyTier(Character character, out string progressionBiome)
+		{
+			return toughEnemyTiers.TryGetValue(GetPrefabName(character), out progressionBiome);
 		}
 	}
 }

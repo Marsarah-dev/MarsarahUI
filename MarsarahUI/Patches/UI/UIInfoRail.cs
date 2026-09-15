@@ -18,6 +18,7 @@ namespace MarsarahUI.Patches.UI
 			Slots,
 			Enemies,
 			ToughEnemies,
+			Bosses,
 			NeutralEnemies,
 			Summons,
 			Skill
@@ -37,6 +38,8 @@ namespace MarsarahUI.Patches.UI
 		private static TextMeshProUGUI neutralEnemyIcon;
 		private static Text toughEnemyText;
 		private static TextMeshProUGUI toughEnemyIcon;
+		private static Text bossText;
+		private static TextMeshProUGUI bossIcon;
 
 		// Rail
 		private const float RailHeight = 30f;
@@ -122,6 +125,7 @@ namespace MarsarahUI.Patches.UI
 			CreateElement(ElementType.Slots, 50f);
 			CreateElement(ElementType.Enemies, 50f);
 			CreateElement(ElementType.ToughEnemies, 50f);
+			CreateElement(ElementType.Bosses, 50f);
 			CreateElement(ElementType.NeutralEnemies, 50f);
 			CreateElement(ElementType.Summons, 50f);
 			CreateElement(ElementType.Skill, 96f);
@@ -337,6 +341,16 @@ namespace MarsarahUI.Patches.UI
 				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
 			}
 
+			GameObject bossContent = GetElementContent(ElementType.Bosses);
+
+			if (bossContent != null)
+			{
+				bossIcon = CreateTMPTextObject("BossIcon", bossContent, Color.white, "NotoEmoji-Regular SDF", 20, TextAlignmentOptions.Midline, new Vector2(-13f, 0f), new Vector2(24f, RailHeight), log);
+				bossIcon.text = "👑";
+
+				bossText = CreateTextObject("BossText", bossContent, Color.magenta, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+			}
+
 			GameObject neutralContent = GetElementContent(ElementType.NeutralEnemies);
 
 			if (neutralContent != null)
@@ -448,6 +462,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				SetElementVisible(ElementType.Enemies, false);
 				SetElementVisible(ElementType.ToughEnemies, false);
+				SetElementVisible(ElementType.Bosses, false);
 				SetElementVisible(ElementType.NeutralEnemies, false);
 				return;
 			}
@@ -456,10 +471,12 @@ namespace MarsarahUI.Patches.UI
 
 			int enemies = UIEnemyDetector.NumEnemies;
 			int toughEnemies = UIEnemyDetector.NumToughEnemies;
+			int bosses = UIEnemyDetector.NumBosses;
 			int neutralEnemies = UIEnemyDetector.NumNeutralEnemies;
 
 			SetElementVisible(ElementType.Enemies, true);
 			SetElementVisible(ElementType.ToughEnemies, separateToughEnemies && toughEnemies > 0);
+			SetElementVisible(ElementType.Bosses, bosses > 0);
 			SetElementVisible(ElementType.NeutralEnemies, neutralEnemies > 0);
 
 			if (enemyText != null)
@@ -485,6 +502,20 @@ namespace MarsarahUI.Patches.UI
 				if (toughEnemyIcon != null)
 				{
 					toughEnemyIcon.color = Color.white;
+				}
+			}
+
+			if (bosses > 0)
+			{
+				if (bossText != null)
+				{
+					bossText.text = bosses.ToString();
+					bossText.color = Color.magenta;
+				}
+
+				if (bossIcon != null)
+				{
+					bossIcon.color = Color.white;
 				}
 			}
 
