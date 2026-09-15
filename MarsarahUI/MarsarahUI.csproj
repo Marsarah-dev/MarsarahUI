@@ -97,6 +97,7 @@
     <Compile Include="Patches\UI\UIAshlandsHeatLevel.cs" />
     <Compile Include="Patches\UI\UIBoatSpeed.cs" />
     <Compile Include="Patches\UI\UIBossPowerExpiration.cs" />
+    <Compile Include="Patches\UI\UICharacterStatistics.cs" />
     <Compile Include="Patches\UI\UIController.cs" />
     <Compile Include="Patches\UI\UIDetailedHovers.cs" />
     <Compile Include="Patches\UI\UIEnemyDetector.cs" />

@@ -215,6 +215,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIStatusEffectsUnderMinimap = new ConfigMetadata("29 - Status Effects Under Minimap", "Moves status effects below the minimap and displays them in a more compact layout.");
 			public static readonly ConfigMetadata UIGlobalChatByDefault = new ConfigMetadata("30 - Global Chat By Default", "Makes regular chat messages visible to all players regardless of distance.");
 			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("31 - Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.");
+			public static readonly ConfigMetadata UICharacterStatistics = new ConfigMetadata("32 - Logon Screen Character Statistics", "Displays statistics and notable facts for the selected character on the character selection screen.");
 
 			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("01 - Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.");
 			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("02 - Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.");
@@ -262,6 +263,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> StatusEffectsUnderMinimap;
 		public static ConfigEntry<bool> GlobalChatByDefault;
 		public static ConfigEntry<SkillProgressBarColor> SkillProgressBarChoice;
+		public static ConfigEntry<bool> ShowCharacterStatistics;
 
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
@@ -311,6 +313,7 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveStatusEffectsUnderMinimap => StatusEffectsUnderMinimap.Value;
 		public static bool EffectiveGlobalChatByDefault => ResolveBool(GlobalChatByDefault, GlobalChatByDefaultOverride);
 		public static SkillProgressBarColor EffectiveSkillProgressBarChoice => SkillProgressBarChoice.Value;
+		public static bool EffectiveShowCharacterStatistics => ShowCharacterStatistics.Value;
 
 		public static void Init(ConfigFile configFile)
 		{
@@ -348,6 +351,7 @@ namespace MarsarahUI.Managers
 			StatusEffectsUnderMinimap = CreateConfig(Configs.UIStatusEffectsUnderMinimap, true);
 			GlobalChatByDefault = CreateConfig(Configs.UIGlobalChatByDefault, true);
 			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
+			ShowCharacterStatistics = CreateConfig(Configs.UICharacterStatistics, true);
 
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);
