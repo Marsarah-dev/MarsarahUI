@@ -150,7 +150,7 @@
     <EmbeddedResource Include="Assets\Icons\HUD\Enemy.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Neutral.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Slots.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\Summmon.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Summon.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\ToughEnemy.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Weight.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />

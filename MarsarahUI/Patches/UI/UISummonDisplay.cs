@@ -89,7 +89,7 @@ namespace MarsarahUI.Patches.UI
 				log.Warn("Could not load HUD icon 'Summon'.");
 			}
 
-			summonText = CreateTextObject("SummonText", UISummonArea, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, new Vector2(-5f, 0f), areaSize);
+			summonText = CreateTextObject("SummonText", UISummonArea, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, new Vector2(-5f, 0f), areaSize);
 
 			UISummonArea.SetActive(false);
 
@@ -113,18 +113,10 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (!targetVisible) return;
 
-			int summons = UISummonCounter.NumSummons;
-			Color color = GetSummonColor(summons);
-
 			if (summonText != null)
 			{
-				summonText.text = summons.ToString();
-				summonText.color = color;
-			}
-
-			if (summonIcon != null)
-			{
-				summonIcon.color = Color.white;
+				summonText.text = UISummonCounter.NumSummons.ToString();
+				summonText.color = InfoValueColor;
 			}
 		}
 
@@ -161,15 +153,6 @@ namespace MarsarahUI.Patches.UI
 		private static Vector2 GetHiddenPosition()
 		{
 			return VisiblePosition + new Vector2(0f, SlideDistance);
-		}
-
-		private static Color GetSummonColor(int num)
-		{
-			if (num < 2) return new Color(1f, 0.549019f, 0f);
-			if (num == 2) return Color.yellow;
-			if (num >= 3) return Color.green;
-
-			return Color.white;
 		}
 	}
 }

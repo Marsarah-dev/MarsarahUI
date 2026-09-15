@@ -90,6 +90,11 @@ namespace MarsarahUI.Patches.UI
 		private const float SeparatorLineWidth = 1f;
 		private const float SeparatorHeight = 18f;
 
+		// Colors
+		private static readonly Color InventoryTextColor = new Color(0.88f, 0.87f, 0.82f);
+		//private static readonly Color WeightFillColor = new Color(0.38f, 0.40f, 0.40f);
+		private static readonly Color WeightFillColor = new Color(0.333f, 0.357f, 0.369f);
+
 		private static readonly Dictionary<ElementType, RailElement> elements = new Dictionary<ElementType, RailElement>();
 
 		private class RailElement
@@ -497,7 +502,7 @@ namespace MarsarahUI.Patches.UI
 				weightIcon = CreateRailIcon("WeightIcon", weightContent, "Weight", new Vector2(-50f, 0f));
 				weightIcon.preserveAspect = true;
 
-				weightText = CreateTextObject("WeightText", weightContent, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(15f, 0f), new Vector2(100f, RailHeight));
+				weightText = CreateTextObject("WeightText", weightContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(15f, 0f), new Vector2(100f, RailHeight));
 			}
 
 			GameObject slotsContent = GetElementContent(ElementType.Slots);
@@ -506,7 +511,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				slotsIcon = CreateRailIcon("SlotsIcon", slotsContent, "Slots", new Vector2(-13f, 0f));
 
-				slotsText = CreateTextObject("SlotsText", slotsContent, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				slotsText = CreateTextObject("SlotsText", slotsContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
 			}
 		}
 
@@ -517,7 +522,7 @@ namespace MarsarahUI.Patches.UI
 			if (enemyContent != null)
 			{
 				enemyIcon = CreateRailIcon("EnemyIcon", enemyContent, "Enemy", new Vector2(-13f, 0f));
-				enemyText = CreateTextObject("EnemyText", enemyContent, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				enemyText = CreateTextObject("EnemyText", enemyContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
 			}
 
 			GameObject toughEnemyContent = GetElementContent(ElementType.ToughEnemies);
@@ -525,7 +530,7 @@ namespace MarsarahUI.Patches.UI
 			if (toughEnemyContent != null)
 			{
 				toughEnemyIcon = CreateRailIcon("ToughEnemyIcon", toughEnemyContent, "ToughEnemy", new Vector2(-13f, 0f));
-				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
 			}
 
 			GameObject bossContent = GetElementContent(ElementType.Bosses);
@@ -533,7 +538,7 @@ namespace MarsarahUI.Patches.UI
 			if (bossContent != null)
 			{
 				bossIcon = CreateRailIcon("BossIcon", bossContent, "Boss", new Vector2(-13f, 0f));
-				bossText = CreateTextObject("BossText", bossContent, Color.magenta, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				bossText = CreateTextObject("BossText", bossContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
 			}
 
 			GameObject neutralContent = GetElementContent(ElementType.NeutralEnemies);
@@ -541,7 +546,7 @@ namespace MarsarahUI.Patches.UI
 			if (neutralContent != null)
 			{
 				neutralEnemyIcon = CreateRailIcon("NeutralEnemyIcon", neutralContent, "Neutral", new Vector2(-13f, 0f));
-				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, Color.green, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
 			}
 		}
 
@@ -566,65 +571,28 @@ namespace MarsarahUI.Patches.UI
 					? Mathf.Clamp01(UIInventoryWeightAndSlots.CurrentWeight / UIInventoryWeightAndSlots.MaxWeight)
 					: 0f;
 
-				Color weightColor = GetWeightColor(weightPercent);
-
 				if (weightBarFill != null)
 				{
 					weightBarFill.fillAmount = weightPercent;
-					weightBarFill.color = weightColor;
+					weightBarFill.color = WeightFillColor;
 				}
 
 				if (weightText != null)
 				{
 					weightText.text = $"{UIInventoryWeightAndSlots.CurrentWeight:0.0}/{UIInventoryWeightAndSlots.MaxWeight:0}";
+					weightText.color = InventoryTextColor;
 				}
 			}
 
 			if (showSlots)
 			{
-				Color slotsColor = GetSlotsColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
-
 				if (slotsText != null)
 				{
 					slotsText.text = UIInventoryWeightAndSlots.FreeSlots.ToString();
-					slotsText.color = slotsColor;
+					slotsText.color = InventoryTextColor;
 				}
 			}
 		}
-
-		private static Color GetSlotsColor(float percent)
-		{
-			if (percent < 33f) return Color.green;
-			if (percent < 66f) return Color.yellow;
-			if (percent < 100f) return new Color(1f, 0.549019f, 0f);
-
-			return Color.red;
-		}
-
-		private static Color GetWeightColor(float percent)
-		{
-			Color green = Color.green;
-			Color yellow = Color.yellow;
-			Color orange = new Color(1f, 0.549019f, 0f);
-
-			if (percent <= 0.33f)
-			{
-				return green;
-			}
-
-			if (percent <= 0.66f)
-			{
-				return Color.Lerp(green, yellow, (percent - 0.33f) / 0.33f);
-			}
-
-			if (percent < 1f)
-			{
-				return Color.Lerp(yellow, orange, (percent - 0.66f) / 0.34f);
-			}
-
-			return Color.red;
-		}
-		
 
 		private static void UpdateEnemyElements()
 		{
@@ -655,44 +623,26 @@ namespace MarsarahUI.Patches.UI
 			if (enemyText != null)
 			{
 				enemyText.text = enemies.ToString();
-				enemyText.color = GetEnemyColor(enemies);
+				enemyText.color = InfoValueColor;
 			}
 
-			if (separateToughEnemies && toughEnemies > 0)
+			if (separateToughEnemies && toughEnemies > 0 && toughEnemyText != null)
 			{
-				if (toughEnemyText != null)
-				{
-					toughEnemyText.text = toughEnemies.ToString();
-					toughEnemyText.color = GearProgressionManager.GetThreatColor(UIEnemyDetector.ToughEnemyThreatLevel);
-				}
+				toughEnemyText.text = toughEnemies.ToString();
+				toughEnemyText.color = InfoValueColor;
 			}
 
-			if (bosses > 0)
+			if (bosses > 0 && bossText != null)
 			{
-				if (bossText != null)
-				{
-					bossText.text = bosses.ToString();
-					bossText.color = Color.magenta;
-				}
+				bossText.text = bosses.ToString();
+				bossText.color = InfoValueColor;
 			}
 
-			if (neutralEnemies > 0)
+			if (neutralEnemies > 0 && neutralEnemyText != null)
 			{
-				if (neutralEnemyText != null)
-				{
-					neutralEnemyText.text = neutralEnemies.ToString();
-					neutralEnemyText.color = Color.green;
-				}
+				neutralEnemyText.text = neutralEnemies.ToString();
+				neutralEnemyText.color = InfoValueColor;
 			}
-		}
-
-		private static Color GetEnemyColor(int num)
-		{
-			if (num < 3) return Color.green;
-			if (num < 5) return Color.yellow;
-			if (num < 7) return new Color(1f, 0.549019f, 0f);
-
-			return Color.red;
 		}
 
 		private static void CreateSkillElements()
@@ -704,7 +654,7 @@ namespace MarsarahUI.Patches.UI
 			skillIcon = CreateUIImageObject("SkillIcon", skillContent, new Vector2(-31f, 0f), new Vector2(24f, 24f));
 			skillIcon.preserveAspect = true;
 
-			skillText = CreateTextObject("SkillText", skillContent, Color.yellow, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, new Vector2(12f, 0f), new Vector2(64f, RailHeight));
+			skillText = CreateTextObject("SkillText", skillContent, InfoValueColor, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, new Vector2(12f, 0f), new Vector2(64f, RailHeight));
 		}
 
 		private static void UpdateSkillElements()
@@ -725,7 +675,7 @@ namespace MarsarahUI.Patches.UI
 			if (skillText != null)
 			{
 				skillText.text = UISkillProgress.CurrentDisplayText;
-				skillText.color = Color.yellow;
+				skillText.color = InfoValueColor;
 			}
 		}
 	}

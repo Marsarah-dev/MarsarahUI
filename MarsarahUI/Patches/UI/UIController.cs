@@ -14,6 +14,8 @@ namespace MarsarahUI.Patches.UI
 		internal static bool ShowUI = true;
 		internal static bool ShowPlayerList = true;
 
+		internal static readonly Color InfoValueColor = new Color(0.88f, 0.87f, 0.82f);
+
 		// Needed since the Unity 6 update because LiberationSans is no longer available as the default TMP font.
 		[HarmonyPatch(typeof(Hud), "Awake")]
 		private static class HudAwakePatch

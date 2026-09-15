@@ -11,37 +11,36 @@ namespace MarsarahUI.Patches.UI
 		private const float DetectionRadius = 30f;
 		private const float BossDetectionRadius = 60f;
 
-		private static readonly Dictionary<string, string> toughEnemyTiers = new Dictionary<string, string>
+		private static readonly HashSet<string> toughEnemyPrefabs = new HashSet<string>
 		{
 			// Black Forest
-			{ "Troll", "BlackForest" },
-			{ "Bjorn", "BlackForest" },
-			{ "Bjorn_sleeping", "BlackForest" },
+			"Troll",
+			"Bjorn",
+			"Bjorn_sleeping",
 
 			// Swamp
-			{ "Abomination", "Swamp" },
-			//{ "Wraith", "Swamp" },
-			{ "Writhan", "Swamp" },
+			"Abomination",
+			"Writhan",
 
 			// Mountains
-			{ "StoneGolem", "Mountain" },
+			"StoneGolem",
 
 			// Plains
-			{ "GoblinBrute", "Plains" },
-			{ "Unbjorn", "Plains" },
+			"GoblinBrute",
+			"Unbjorn",
 
 			// Mistlands
-			{ "SeekerBrute", "Mistlands" },
-			{ "Gjall", "Mistlands" },
+			"SeekerBrute",
+			"Gjall",
 
 			// Ashlands
-			{ "FallenValkyrie", "AshLands" },
-			{ "Morgen", "AshLands" },
-			{ "Morgen_NonSleeping", "AshLands" },
-			{ "BonemawSerpent", "AshLands" },
+			"FallenValkyrie",
+			"Morgen",
+			"Morgen_NonSleeping",
+			"BonemawSerpent",
 
 			// Ocean - balanced around Swamp progression
-			{ "Serpent", "Swamp" }
+			"Serpent"
 		};
 
 		private static readonly HashSet<string> minibossPrefabs = new HashSet<string>
@@ -55,7 +54,6 @@ namespace MarsarahUI.Patches.UI
 		internal static int NumEnemies { get; private set; }
 		internal static int NumToughEnemies { get; private set; }
 		internal static int NumNeutralEnemies { get; private set; }
-		internal static GearProgressionManager.ThreatLevel ToughEnemyThreatLevel { get; private set; }
 		internal static int NumBosses { get; private set; }
 
 		[HarmonyPatch(typeof(Player), "Update")]
@@ -71,9 +69,6 @@ namespace MarsarahUI.Patches.UI
 				int toughEnemies = 0;
 				int bosses = 0;
 				int neutralEnemies = 0;
-
-				GearProgressionManager.ThreatLevel highestThreat = GearProgressionManager.ThreatLevel.Safe;
-				int armorWeight = GearProgressionManager.GetEquippedArmorWeight(___m_localPlayer);
 
 				bool separateToughEnemies =
 					ConfigManager.EffectiveEnemyDetectorChoice ==
@@ -104,18 +99,9 @@ namespace MarsarahUI.Patches.UI
 						continue;
 					}
 
-					if (separateToughEnemies && TryGetToughEnemyTier(character, out string progressionBiome))
+					if (separateToughEnemies && IsToughEnemy(character))
 					{
 						toughEnemies++;
-
-						GearProgressionManager.ThreatLevel threat =
-							GearProgressionManager.GetThreatLevel(armorWeight, progressionBiome);
-
-						if (threat > highestThreat)
-						{
-							highestThreat = threat;
-						}
-
 						continue;
 					}
 
@@ -126,7 +112,6 @@ namespace MarsarahUI.Patches.UI
 				NumToughEnemies = toughEnemies;
 				NumBosses = bosses;
 				NumNeutralEnemies = neutralEnemies;
-				ToughEnemyThreatLevel = highestThreat;
 			}
 		}
 
@@ -169,9 +154,9 @@ namespace MarsarahUI.Patches.UI
 			return prefabName;
 		}
 
-		private static bool TryGetToughEnemyTier(Character character, out string progressionBiome)
+		private static bool IsToughEnemy(Character character)
 		{
-			return toughEnemyTiers.TryGetValue(GetPrefabName(character), out progressionBiome);
+			return toughEnemyPrefabs.Contains(GetPrefabName(character));
 		}
 	}
 }
