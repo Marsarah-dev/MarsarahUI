@@ -23,6 +23,29 @@ namespace MarsarahUI.Patches.UI
 			Skill
 		}
 
+		private static readonly Dictionary<ElementType, RailSeparator> separators = new Dictionary<ElementType, RailSeparator>();
+
+		private static readonly ElementType[] elementOrder =
+		{
+			ElementType.Weight,
+			ElementType.Slots,
+			ElementType.Enemies,
+			ElementType.ToughEnemies,
+			ElementType.Bosses,
+			ElementType.NeutralEnemies,
+			ElementType.Skill
+		};
+
+		private class RailSeparator
+		{
+			internal GameObject Root;
+			internal LayoutElement Layout;
+			internal CanvasGroup CanvasGroup;
+			internal float Progress;
+			internal bool TargetVisible;
+			internal bool Animating;
+		}
+
 		// Weight and Slots
 		private static Image weightBarFill;
 		private static Text weightText;
@@ -46,10 +69,26 @@ namespace MarsarahUI.Patches.UI
 
 		// Rail
 		private const float RailHeight = 30f;
+		private const float RailOuterPadding = 6f;
+
+		private const float WeightWidth = 136f;
+		private const float SlotsWidth = 52f;
+		private const float CounterWidth = 52f;
+		private const float SkillWidth = 100f;
+
+		private const float IconSize = 24f;
+		private const float CounterIconX = -13f;
+		private const float CounterTextX = 13f;
+
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 8f;
 		private static GameObject UIRail;
 		private static RectTransform railRect;
+
+		// Separators
+		private const float SeparatorWidth = 7f;
+		private const float SeparatorLineWidth = 1f;
+		private const float SeparatorHeight = 18f;
 
 		private static readonly Dictionary<ElementType, RailElement> elements = new Dictionary<ElementType, RailElement>();
 
@@ -88,6 +127,8 @@ namespace MarsarahUI.Patches.UI
 				UpdateInventoryElements();
 				UpdateEnemyElements();
 				UpdateSkillElements();
+
+				UpdateSeparatorTargets();
 				UpdateAnimations();
 				UpdateRailVisibility();
 			}
@@ -125,13 +166,25 @@ namespace MarsarahUI.Patches.UI
 			sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
 			sizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
-			CreateElement(ElementType.Weight, 130f);
-			CreateElement(ElementType.Slots, 50f);
-			CreateElement(ElementType.Enemies, 50f);
-			CreateElement(ElementType.ToughEnemies, 50f);
-			CreateElement(ElementType.Bosses, 50f);
-			CreateElement(ElementType.NeutralEnemies, 50f);
-			CreateElement(ElementType.Skill, 96f);
+			CreateElement(ElementType.Weight, WeightWidth);
+			CreateSeparator(ElementType.Weight);
+
+			CreateElement(ElementType.Slots, SlotsWidth);
+			CreateSeparator(ElementType.Slots);
+
+			CreateElement(ElementType.Enemies, CounterWidth);
+			CreateSeparator(ElementType.Enemies);
+
+			CreateElement(ElementType.ToughEnemies, CounterWidth);
+			CreateSeparator(ElementType.ToughEnemies);
+
+			CreateElement(ElementType.Bosses, CounterWidth);
+			CreateSeparator(ElementType.Bosses);
+
+			CreateElement(ElementType.NeutralEnemies, CounterWidth);
+			CreateSeparator(ElementType.NeutralEnemies);
+
+			CreateElement(ElementType.Skill, SkillWidth);
 
 			CreateInventoryElements();
 			CreateEnemyElements();
@@ -186,6 +239,96 @@ namespace MarsarahUI.Patches.UI
 			};
 
 			root.SetActive(false);
+		}
+
+		private static void CreateSeparator(ElementType afterElement)
+		{
+			GameObject root = new GameObject($"{afterElement}Separator");
+			root.layer = 5;
+			root.transform.SetParent(UIRail.transform, false);
+
+			RectTransform rootRect = root.AddComponent<RectTransform>();
+			rootRect.localScale = Vector3.one;
+
+			LayoutElement layout = root.AddComponent<LayoutElement>();
+			layout.preferredWidth = 0f;
+			layout.minWidth = 0f;
+			layout.flexibleWidth = 0f;
+
+			CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
+			canvasGroup.alpha = 0f;
+			canvasGroup.interactable = false;
+			canvasGroup.blocksRaycasts = false;
+
+			GameObject lineObject = new GameObject("Line");
+			lineObject.layer = 5;
+			lineObject.transform.SetParent(root.transform, false);
+
+			RectTransform lineRect = lineObject.AddComponent<RectTransform>();
+			lineRect.anchorMin = new Vector2(0.5f, 0.5f);
+			lineRect.anchorMax = new Vector2(0.5f, 0.5f);
+			lineRect.pivot = new Vector2(0.5f, 0.5f);
+			lineRect.anchoredPosition = Vector2.zero;
+			lineRect.sizeDelta = new Vector2(SeparatorLineWidth, SeparatorHeight);
+
+			Image line = lineObject.AddComponent<Image>();
+			line.color = new Color(1f, 1f, 1f, 0.4f);
+
+			separators[afterElement] = new RailSeparator
+			{
+				Root = root,
+				Layout = layout,
+				CanvasGroup = canvasGroup,
+				Progress = 0f,
+				TargetVisible = false,
+				Animating = false
+			};
+
+			root.SetActive(false);
+		}
+
+		private static void UpdateSeparatorTargets()
+		{
+			for (int i = 0; i < elementOrder.Length - 1; i++)
+			{
+				ElementType currentType = elementOrder[i];
+
+				if (!elements.TryGetValue(currentType, out RailElement currentElement))
+				{
+					continue;
+				}
+
+				bool hasVisibleElementAfter = false;
+
+				for (int j = i + 1; j < elementOrder.Length; j++)
+				{
+					if (elements.TryGetValue(elementOrder[j], out RailElement laterElement) &&
+						laterElement.TargetVisible)
+					{
+						hasVisibleElementAfter = true;
+						break;
+					}
+				}
+
+				bool shouldShow = currentElement.TargetVisible && hasVisibleElementAfter;
+
+				SetSeparatorVisible(currentType, shouldShow);
+			}
+		}
+
+		private static void SetSeparatorVisible(ElementType afterElement, bool visible)
+		{
+			if (!separators.TryGetValue(afterElement, out RailSeparator separator)) return;
+			if (separator.TargetVisible == visible && !separator.Animating) return;
+
+			separator.TargetVisible = visible;
+
+			if (visible)
+			{
+				separator.Root.SetActive(true);
+			}
+
+			separator.Animating = true;
 		}
 
 		internal static GameObject GetElementContent(ElementType type)
@@ -251,6 +394,34 @@ namespace MarsarahUI.Patches.UI
 				if (!element.TargetVisible)
 				{
 					element.Root.SetActive(false);
+				}
+			}
+
+			foreach (RailSeparator separator in separators.Values)
+			{
+				if (!separator.Animating) continue;
+
+				float target = separator.TargetVisible ? 1f : 0f;
+
+				separator.Progress = Mathf.MoveTowards(
+					separator.Progress,
+					target,
+					Time.deltaTime / AnimationDuration);
+
+				float easedProgress = Mathf.SmoothStep(0f, 1f, separator.Progress);
+
+				separator.Layout.preferredWidth = SeparatorWidth * easedProgress;
+				separator.CanvasGroup.alpha = easedProgress;
+
+				layoutChanged = true;
+
+				if (!Mathf.Approximately(separator.Progress, target)) continue;
+
+				separator.Animating = false;
+
+				if (!separator.TargetVisible)
+				{
+					separator.Root.SetActive(false);
 				}
 			}
 
