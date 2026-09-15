@@ -11,8 +11,16 @@ namespace MarsarahUI.Managers
 		private static readonly LogManager log = new LogManager("Icon Manager", LogManager.LogLevel.Warning);
 
 		private static readonly Dictionary<string, Sprite> icons = new Dictionary<string, Sprite>();
+		private const string HudIconResourcePrefix = "MarsarahUI.Assets.Icons.HUD.";
 
-		public static Sprite LoadEmbeddedIcon(string resourceName)
+		public static Sprite LoadHudIcon(string iconName)
+		{
+			if (string.IsNullOrEmpty(iconName)) return null;
+
+			return LoadEmbeddedIcon($"{HudIconResourcePrefix}{iconName}.png");
+		}
+
+		internal static Sprite LoadEmbeddedIcon(string resourceName)
 		{
 			if (string.IsNullOrEmpty(resourceName)) return null;
 			if (icons.TryGetValue(resourceName, out Sprite cached)) return cached;

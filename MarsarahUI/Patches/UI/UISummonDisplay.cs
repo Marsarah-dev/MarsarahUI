@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +18,7 @@ namespace MarsarahUI.Patches.UI
 		private static RectTransform summonAreaRect;
 		private static CanvasGroup summonCanvasGroup;
 		private static Text summonText;
-		private static TextMeshProUGUI summonIcon;
+		private static Image summonIcon;
 
 		private static float animationProgress;
 		private static bool targetVisible;
@@ -80,8 +79,15 @@ namespace MarsarahUI.Patches.UI
 			summonCanvasGroup.interactable = false;
 			summonCanvasGroup.blocksRaycasts = false;
 
-			summonIcon = CreateTMPTextObject("SummonIcon", UISummonArea, Color.white, "NotoEmoji-Regular SDF", 20, TextAlignmentOptions.MidlineLeft, new Vector2(5f, 0f), areaSize, log);
-			summonIcon.text = "💀";
+			summonIcon = CreateUIImageObject("SummonIcon", UISummonArea, new Vector2(-12f, 0f), new Vector2(24f, 24f));
+			summonIcon.sprite = IconManager.LoadHudIcon("Summon");
+			summonIcon.preserveAspect = true;
+			summonIcon.color = Color.white;
+
+			if (summonIcon.sprite == null)
+			{
+				log.Warn("Could not load HUD icon 'Summon'.");
+			}
 
 			summonText = CreateTextObject("SummonText", UISummonArea, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, new Vector2(-5f, 0f), areaSize);
 
