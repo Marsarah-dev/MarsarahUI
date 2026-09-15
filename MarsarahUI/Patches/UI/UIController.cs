@@ -132,34 +132,6 @@ namespace MarsarahUI.Patches.UI
 
 		public static void UpdateUIPositions()
 		{
-			float xOffset = -10f;
-			float yOffset = -230f;
-
-			bool inventoryUIActive =
-				UIInventoryWeightAndSlots.UIWeightBarArea != null &&
-				UIInventoryWeightAndSlots.UISlotsArea != null &&
-				ConfigManager.EffectiveShowInventoryWeightAndSlots;
-
-			bool enemyDetectorUIActive =
-				UIEnemyDetector.UIEnemyArea != null &&
-				UIEnemyDetector.UIFriendlyArea != null &&
-				ConfigManager.EffectiveShowEnemyDetector;
-
-			if (inventoryUIActive)
-			{
-				xOffset += 132f;
-			}
-			else if (enemyDetectorUIActive)
-			{
-				xOffset -= 55f;
-			}
-
-			if (enemyDetectorUIActive)
-			{
-				UIEnemyDetector.UIEnemyArea.GetComponent<RectTransform>().anchoredPosition = new Vector2(xOffset, yOffset);
-				UIEnemyDetector.UIFriendlyArea.GetComponent<RectTransform>().anchoredPosition = new Vector2(xOffset + 54f, yOffset);
-			}
-
 			UISkillProgress.UpdatePosition();
 		}
 	}

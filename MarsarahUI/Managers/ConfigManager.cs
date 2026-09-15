@@ -49,6 +49,21 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
+		public enum InventoryDisplayMode
+		{
+			WeightAndFreeSlots,
+			WeightOnly,
+			FreeSlotsOnly,
+			Off
+		}
+
+		public enum EnemyDetectorMode
+		{
+			Consolidated,
+			SeparateToughEnemies,
+			Off
+		}
+
 		public enum EnemyNameplateMode
 		{
 			BarsOnly,
@@ -193,8 +208,8 @@ namespace MarsarahUI.Managers
 		public static class Configs
 		{
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("01 - Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.");
-			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Show Inventory Weight and Free Slots", "Shows inventory weight and free slots on the bottom left of the screen");
-			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Show Enemy Detector", "Shows enemy detector on the bottom left of the screen");
+			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.");
+			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Enemy Detector", "Choose whether nearby hostile enemies are consolidated into one counter, tougher enemies are shown separately, or enemy detection is disabled.");
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("04 - Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator");
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("05 - Show Current Day", "Shows the current day above the minimap.");
 			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("06 - Show Current Time", "Shows the current time above the minimap. Can choose between digital clock and day sections");
@@ -241,8 +256,8 @@ namespace MarsarahUI.Managers
 		}
 
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
-		public static ConfigEntry<bool> ShowInventoryWeightAndSlots;
-		public static ConfigEntry<bool> ShowEnemyDetector;
+		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
+		public static ConfigEntry<EnemyDetectorMode> EnemyDetectorChoice;
 		public static ConfigEntry<bool> ShowBoatSpeed;
 		public static ConfigEntry<bool> ShowCurrentDay;
 		public static ConfigEntry<TimeMode> TimeChoice;
@@ -290,9 +305,34 @@ namespace MarsarahUI.Managers
 
 		// Effective UI settings
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
-		public static bool EffectiveShowInventoryWeightAndSlots => ShowInventoryWeightAndSlots.Value;
+		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
 
-		public static bool EffectiveShowEnemyDetector => ResolveBool(ShowEnemyDetector, EnemyDetectorOverride);
+		public static bool EffectiveShowInventoryWeightAndSlots => EffectiveInventoryDisplayChoice != InventoryDisplayMode.Off;
+
+		public static EnemyDetectorMode EffectiveEnemyDetectorChoice
+		{
+			get
+			{
+				if (!ServerOverridesEnabled.Value || EnemyDetectorOverride.Value == BoolOverride.UserChoice)
+					return EnemyDetectorChoice.Value;
+
+				switch (EnemyDetectorOverride.Value)
+				{
+					case BoolOverride.ForceOn:
+						return EnemyDetectorChoice.Value == EnemyDetectorMode.Off
+							? EnemyDetectorMode.Consolidated
+							: EnemyDetectorChoice.Value;
+
+					case BoolOverride.ForceOff:
+						return EnemyDetectorMode.Off;
+
+					default:
+						return EnemyDetectorChoice.Value;
+				}
+			}
+		}
+
+		public static bool EffectiveShowEnemyDetector => EffectiveEnemyDetectorChoice != EnemyDetectorMode.Off;
 		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
 		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
 		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
@@ -350,8 +390,8 @@ namespace MarsarahUI.Managers
 
 			// ===== Local UI Settings
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
-			ShowInventoryWeightAndSlots = CreateConfig(Configs.UIInventoryWeightAndSlots, true);
-			ShowEnemyDetector = CreateConfig(Configs.UIEnemyDetector, true);
+			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
+			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
 			ShowCurrentDay = CreateConfig(Configs.UICurrentDay, true);
 			TimeChoice = CreateConfig(Configs.UITimeMode, TimeMode.DigitalClock);

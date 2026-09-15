@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
+    <Compile Include="Managers\GearProgressionManager.cs" />
     <Compile Include="Managers\IconManager.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="MarsarahUI.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Patches\UI\UIEnemyDetector.cs" />
     <Compile Include="Patches\UI\UIEnemyNameplates.cs" />
     <Compile Include="Patches\UI\UIGlobalChat.cs" />
+    <Compile Include="Patches\UI\UIInfoRail.cs" />
     <Compile Include="Patches\UI\UIInventoryWeightAndSlots.cs" />
     <Compile Include="Patches\UI\UIItemDurability.cs" />
     <Compile Include="Patches\UI\UIItemQuality.cs" />

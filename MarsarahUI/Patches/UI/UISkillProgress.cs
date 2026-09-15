@@ -11,7 +11,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UISkillProgress : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Skill Progress", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Skill Progress", LogManager.LogLevel.Warning);
 
 		private static readonly MethodInfo getSkillMethod = AccessTools.Method(typeof(Skills), "GetSkill", new Type[] { typeof(SkillType) });
 		private static readonly MethodInfo getNextLevelRequirementMethod = AccessTools.Method(typeof(Skills.Skill), "GetNextLevelRequirement");
