@@ -15,6 +15,7 @@ namespace MarsarahUI.Managers
 	internal enum InfoRailBorderType
 	{
 		None,
+		SideCapsSprite,
 		ThreePartSprite
 	}
 
@@ -49,7 +50,9 @@ namespace MarsarahUI.Managers
 		internal InfoRailBorderType BorderType;
 		internal string RailBorderAsset;
 		internal string SummonBorderAsset;
+		internal string BorderCapAsset;
 		internal Color BorderColor;
+		internal Vector2 BorderCapSize;
 
 		internal string WeightIcon;
 		internal string SlotsIcon;

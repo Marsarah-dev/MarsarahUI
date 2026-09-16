@@ -210,6 +210,72 @@ namespace MarsarahUI.Patches.UI
 			image.raycastTarget = false;
 		}
 
+		private static GameObject CreateSideCapsBorder(string objectName, GameObject parent, string spriteName, Color color, Vector2 capSize, LogManager specificLog)
+		{
+			Sprite sprite = IconManager.LoadHudIcon(spriteName);
+
+			if (sprite == null)
+			{
+				specificLog.Warn($"Could not load HUD border cap '{spriteName}'.");
+				return null;
+			}
+
+			GameObject border = new GameObject(objectName);
+			border.layer = 5;
+			border.transform.SetParent(parent.transform, false);
+			border.transform.SetSiblingIndex(1);
+
+			RectTransform borderRect = border.AddComponent<RectTransform>();
+			borderRect.anchorMin = Vector2.zero;
+			borderRect.anchorMax = Vector2.one;
+			borderRect.offsetMin = Vector2.zero;
+			borderRect.offsetMax = Vector2.zero;
+			borderRect.localScale = Vector3.one;
+
+			LayoutElement borderLayout = border.AddComponent<LayoutElement>();
+			borderLayout.ignoreLayout = true;
+
+			CreateSideCap("Left", border, sprite, color, capSize, false);
+			CreateSideCap("Right", border, sprite, color, capSize, true);
+
+			return border;
+		}
+
+		private static void CreateSideCap(string objectName, GameObject parent, Sprite sprite, Color color, Vector2 capSize, bool mirror)
+		{
+			GameObject cap = new GameObject(objectName);
+			cap.layer = 5;
+			cap.transform.SetParent(parent.transform, false);
+
+			RectTransform rect = cap.AddComponent<RectTransform>();
+
+			if (mirror)
+			{
+				rect.anchorMin = new Vector2(1f, 0.5f);
+				rect.anchorMax = new Vector2(1f, 0.5f);
+				rect.pivot = new Vector2(0.5f, 0.5f);
+				rect.anchoredPosition = Vector2.zero;
+				rect.localScale = new Vector3(-1f, 1f, 1f);
+			}
+			else
+			{
+				rect.anchorMin = new Vector2(0f, 0.5f);
+				rect.anchorMax = new Vector2(0f, 0.5f);
+				rect.pivot = new Vector2(0.5f, 0.5f);
+				rect.anchoredPosition = Vector2.zero;
+				rect.localScale = Vector3.one;
+			}
+
+			rect.sizeDelta = capSize;
+
+			Image image = cap.AddComponent<Image>();
+			image.sprite = sprite;
+			image.type = Image.Type.Simple;
+			image.color = color;
+			image.preserveAspect = true;
+			image.raycastTarget = false;
+		}
+
 		internal static GameObject ReplaceStyledBackground(GameObject currentBackground, string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
 		{
 			if (currentBackground != null)
@@ -220,14 +286,14 @@ namespace MarsarahUI.Patches.UI
 			return CreateStyledBackground(objectName, parent, backgroundType, backgroundColor, vanillaSpriteName, specificLog);
 		}
 
-		internal static GameObject ReplaceStyledBorder(GameObject currentBorder, string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, Color borderColor, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject ReplaceStyledBorder(GameObject currentBorder, string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, string capSpriteName, Color borderColor, Vector2 capSize, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
 		{
 			if (currentBorder != null)
 			{
 				UnityEngine.Object.Destroy(currentBorder);
 			}
 
-			return CreateStyledBorder(objectName, parent, borderType, spriteName, borderColor, sourceEndWidth, renderedEndWidth, specificLog);
+			return CreateStyledBorder(objectName, parent, borderType, spriteName, capSpriteName, borderColor, capSize, sourceEndWidth, renderedEndWidth, specificLog);
 		}
 
 		internal static GameObject CreateStyledBackground(string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
@@ -280,12 +346,15 @@ namespace MarsarahUI.Patches.UI
 			return background;
 		}
 
-		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, Color borderColor, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, string capSpriteName, Color borderColor, Vector2 capSize, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
 		{
 			switch (borderType)
 			{
 				case InfoRailBorderType.None:
 					return null;
+
+				case InfoRailBorderType.SideCapsSprite:
+					return CreateSideCapsBorder(objectName, parent, capSpriteName, borderColor, capSize, specificLog);
 
 				case InfoRailBorderType.ThreePartSprite:
 					return CreateThreePartBackground(objectName, parent, spriteName, borderColor, sourceEndWidth, renderedEndWidth, specificLog);
