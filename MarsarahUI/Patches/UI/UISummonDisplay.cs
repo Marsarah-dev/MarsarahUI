@@ -77,7 +77,7 @@ namespace MarsarahUI.Patches.UI
 			summonAreaRect.localScale = Vector3.one;
 
 			summonBackground = CreateStyledBackground("SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
-			summonBorder = CreateStyledBorder("SummonBorder", UISummonArea, style.BorderType, style.SummonBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.SummonSourceEndWidth, style.SummonEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+			summonBorder = CreateStyledBorder("SummonBorder", UISummonArea, style.SummonBorderType, style.SummonBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.SummonSourceEndWidth, style.SummonEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			summonCanvasGroup = UISummonArea.AddComponent<CanvasGroup>();
 			summonCanvasGroup.alpha = 0f;
@@ -177,7 +177,7 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			summonBackground = ReplaceStyledBackground(summonBackground, "SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
-			summonBorder = ReplaceStyledBorder(summonBorder, "SummonBorder", UISummonArea, style.BorderType, style.SummonBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.SummonSourceEndWidth, style.SummonEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+			summonBorder = ReplaceStyledBorder(summonBorder, "SummonBorder", UISummonArea, style.SummonBorderType, style.SummonBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.SummonSourceEndWidth, style.SummonEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			if (summonIcon != null)
 			{

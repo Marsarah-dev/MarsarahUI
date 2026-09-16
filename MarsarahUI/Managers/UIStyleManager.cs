@@ -50,6 +50,7 @@ namespace MarsarahUI.Managers
 
 		// Border
 		internal InfoRailBorderType BorderType;
+		internal InfoRailBorderType SummonBorderType;
 		internal string RailBorderAsset;
 		internal string SummonBorderAsset;
 		internal string BorderCapAsset;
@@ -107,6 +108,7 @@ namespace MarsarahUI.Managers
 			BackgroundColor = new Color(0f, 0f, 0f, 0.4f),
 
 			BorderType = InfoRailBorderType.None,
+			SummonBorderType = InfoRailBorderType.None,
 			BorderColor = Color.white,
 
 			WeightIcon = "Style1.Weight",
@@ -152,6 +154,7 @@ namespace MarsarahUI.Managers
 			BackgroundColor = new Color(0f, 0f, 0f, 0.45f),
 
 			BorderType = InfoRailBorderType.SideCapsSprite,
+			SummonBorderType = InfoRailBorderType.SideCapsSprite,
 			BorderCapAsset = "Style2.BorderCap",
 			BorderColor = Color.white,
 			BorderCapSize = new Vector2(18f, 36f),
@@ -203,6 +206,7 @@ namespace MarsarahUI.Managers
 			BackgroundColor = new Color(0f, 0f, 0f, 0.45f),
 
 			BorderType = InfoRailBorderType.UnityBorder,
+			SummonBorderType = InfoRailBorderType.None,
 
 			BorderOuterColor = new Color(0.12f, 0.12f, 0.12f, 1f),
 			BorderColor = new Color(0.58f, 0.58f, 0.55f, 1f),
