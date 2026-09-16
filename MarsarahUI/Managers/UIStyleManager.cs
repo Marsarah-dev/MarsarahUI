@@ -75,6 +75,10 @@ namespace MarsarahUI.Managers
 		internal float SeparatorLineWidth;
 		internal float SeparatorHeight;
 
+		internal bool UseSeparatorShadow;
+		internal Color SeparatorShadowColor;
+		internal Vector2 SeparatorShadowDistance;
+
 		internal Vector2 SummonSize;
 		internal float SummonSourceEndWidth;
 		internal float SummonEndWidth;
@@ -116,6 +120,10 @@ namespace MarsarahUI.Managers
 
 			SummonSize = new Vector2(49f, 30f),
 
+			UseSeparatorShadow = false,
+			SeparatorShadowColor = Color.clear,
+			SeparatorShadowDistance = Vector2.zero,
+
 			// Special colors
 			WeightFillColorMode = InfoRailColorMode.WeightGradient,
 			SlotsTextColorMode = InfoRailColorMode.SlotsGradient,
@@ -127,6 +135,56 @@ namespace MarsarahUI.Managers
 			NeutralTextColor = new Color(1f, 0.75f, 0.2f),
 			SkillTextColor = new Color(1f, 0.75f, 0.2f),
 			SummonTextColor = Color.white,
+		};
+
+		private static readonly UIStyleDefinition style2 = new UIStyleDefinition
+		{
+			BackgroundType = InfoRailBackgroundType.VanillaSlicedSprite,
+			VanillaBackgroundSprite = "InputFieldBackground",
+			BackgroundColor = new Color(0f, 0f, 0f, 0.3f),
+
+			BorderType = InfoRailBorderType.SideCapsSprite,
+			BorderCapAsset = "Style2.BorderCap",
+			BorderColor = Color.white,
+			//BorderCapSize = new Vector2(12f, 30f)
+			BorderCapSize = new Vector2(18f, 36f),
+
+			WeightIcon = "Style2.Weight",
+			SlotsIcon = "Style2.Slots",
+			EnemyIcon = "Style2.Enemy",
+			ToughEnemyIcon = "Style2.ToughEnemy",
+			BossIcon = "Style2.Boss",
+			NeutralIcon = "Style2.Neutral",
+			SummonIcon = "Style2.Summon",
+
+			ValueTextColor = Color.white,
+			WeightFillColor = Color.green,
+			SeparatorColor = new Color(0.62f, 0.52f, 0.34f, 1f),
+
+			RailHeight = 30f,
+			RailPadding = new RectOffset(7, 7, 3, 3),
+
+			SeparatorWidth = 7f,
+			SeparatorLineWidth = 2f,
+			SeparatorHeight = 22f,
+
+			SummonSize = new Vector2(49f, 30f),
+
+			UseSeparatorShadow = true,
+			SeparatorShadowColor = new Color(0f, 0f, 0f, 0.55f),
+			SeparatorShadowDistance = new Vector2(1f, -1f),
+
+			// Colors
+			WeightFillColorMode = InfoRailColorMode.WeightGradient,
+			SlotsTextColorMode = InfoRailColorMode.SlotsGradient,
+			EnemyTextColorMode = InfoRailColorMode.EnemyCountGradient,
+			SummonTextColorMode = InfoRailColorMode.SummonCountGradient,
+
+			ToughEnemyTextColor = new Color(1f, 0.549019f, 0f),
+			BossTextColor = new Color(0.75f, 0.4f, 1f),
+			NeutralTextColor = new Color(1f, 0.75f, 0.2f),
+			SkillTextColor = new Color(1f, 0.75f, 0.2f),
+			SummonTextColor = Color.white
 		};
 
 		private static readonly UIStyleDefinition style3 = new UIStyleDefinition
@@ -164,6 +222,10 @@ namespace MarsarahUI.Managers
 			SummonSourceEndWidth = 12f,
 			SummonEndWidth = 12f,
 
+			UseSeparatorShadow = false,
+			SeparatorShadowColor = Color.clear,
+			SeparatorShadowDistance = Vector2.zero,
+
 			// Colors
 			WeightFillColorMode = InfoRailColorMode.Fixed,
 			SlotsTextColorMode = InfoRailColorMode.Fixed,
@@ -180,6 +242,7 @@ namespace MarsarahUI.Managers
 		private static readonly Dictionary<ConfigManager.InfoRailStyle, UIStyleDefinition> styles = new Dictionary<ConfigManager.InfoRailStyle, UIStyleDefinition>
 		{
 			{ ConfigManager.InfoRailStyle.Style1, style1 },
+			{ ConfigManager.InfoRailStyle.Style2, style2 },
 			{ ConfigManager.InfoRailStyle.Style3, style3 }
 		};
 

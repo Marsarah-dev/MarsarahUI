@@ -213,6 +213,7 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject CreateSideCapsBorder(string objectName, GameObject parent, string spriteName, Color color, Vector2 capSize, LogManager specificLog)
 		{
 			Sprite sprite = IconManager.LoadHudIcon(spriteName);
+			float horizontalInset = 3f;
 
 			if (sprite == null)
 			{
@@ -235,13 +236,13 @@ namespace MarsarahUI.Patches.UI
 			LayoutElement borderLayout = border.AddComponent<LayoutElement>();
 			borderLayout.ignoreLayout = true;
 
-			CreateSideCap("Left", border, sprite, color, capSize, false);
-			CreateSideCap("Right", border, sprite, color, capSize, true);
+			CreateSideCap("Left", border, sprite, color, capSize, false, horizontalInset);
+			CreateSideCap("Right", border, sprite, color, capSize, true, horizontalInset);
 
 			return border;
 		}
 
-		private static void CreateSideCap(string objectName, GameObject parent, Sprite sprite, Color color, Vector2 capSize, bool mirror)
+		private static void CreateSideCap(string objectName, GameObject parent, Sprite sprite, Color color, Vector2 capSize, bool mirror, float horizontalInset)
 		{
 			GameObject cap = new GameObject(objectName);
 			cap.layer = 5;
@@ -254,7 +255,7 @@ namespace MarsarahUI.Patches.UI
 				rect.anchorMin = new Vector2(1f, 0.5f);
 				rect.anchorMax = new Vector2(1f, 0.5f);
 				rect.pivot = new Vector2(0.5f, 0.5f);
-				rect.anchoredPosition = Vector2.zero;
+				rect.anchoredPosition = new Vector2(-horizontalInset, 0f);
 				rect.localScale = new Vector3(-1f, 1f, 1f);
 			}
 			else
@@ -262,7 +263,7 @@ namespace MarsarahUI.Patches.UI
 				rect.anchorMin = new Vector2(0f, 0.5f);
 				rect.anchorMax = new Vector2(0f, 0.5f);
 				rect.pivot = new Vector2(0.5f, 0.5f);
-				rect.anchoredPosition = Vector2.zero;
+				rect.anchoredPosition = new Vector2(horizontalInset, 0f);
 				rect.localScale = Vector3.one;
 			}
 

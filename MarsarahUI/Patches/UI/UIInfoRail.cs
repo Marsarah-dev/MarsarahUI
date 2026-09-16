@@ -297,6 +297,14 @@ namespace MarsarahUI.Patches.UI
 			Image line = lineObject.AddComponent<Image>();
 			line.color = style.SeparatorColor;
 
+			if (style.UseSeparatorShadow)
+			{
+				Shadow shadow = lineObject.AddComponent<Shadow>();
+				shadow.effectColor = style.SeparatorShadowColor;
+				shadow.effectDistance = style.SeparatorShadowDistance;
+				shadow.useGraphicAlpha = true;
+			}
+
 			separators[afterElement] = new RailSeparator
 			{
 				Root = root,
