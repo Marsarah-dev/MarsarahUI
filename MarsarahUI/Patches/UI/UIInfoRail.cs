@@ -46,6 +46,10 @@ namespace MarsarahUI.Patches.UI
 			internal float Progress;
 			internal bool TargetVisible;
 			internal bool Animating;
+			internal RectTransform EdgeRect;
+			internal Image EdgeImage;
+			internal RectTransform HighlightRect;
+			internal Image HighlightImage;
 		}
 
 		// Weight and Slots
@@ -167,7 +171,7 @@ namespace MarsarahUI.Patches.UI
 
 			railBackground = CreateStyledBackground("RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
 
-			railBorder = CreateStyledBorder("RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.RailSourceEndWidth, style.RailEndWidth, log);
+			railBorder = CreateStyledBorder("RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.RailSourceEndWidth, style.RailEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			railLayoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
 			railLayoutGroup.padding = style.RailPadding;
@@ -283,6 +287,23 @@ namespace MarsarahUI.Patches.UI
 			canvasGroup.interactable = false;
 			canvasGroup.blocksRaycasts = false;
 
+			GameObject edgeObject = new GameObject("Edge");
+			edgeObject.layer = 5;
+			edgeObject.transform.SetParent(root.transform, false);
+
+			RectTransform edgeRect = edgeObject.AddComponent<RectTransform>();
+			edgeRect.anchorMin = new Vector2(0.5f, 0.5f);
+			edgeRect.anchorMax = new Vector2(0.5f, 0.5f);
+			edgeRect.pivot = new Vector2(0.5f, 0.5f);
+			edgeRect.anchoredPosition = Vector2.zero;
+			edgeRect.sizeDelta = new Vector2(style.SeparatorEdgeWidth, style.SeparatorHeight);
+
+			Image edgeImage = edgeObject.AddComponent<Image>();
+			edgeImage.color = style.SeparatorEdgeColor;
+			edgeImage.raycastTarget = false;
+
+			edgeObject.SetActive(style.UseSeparatorEdge);
+
 			GameObject lineObject = new GameObject("Line");
 			lineObject.layer = 5;
 			lineObject.transform.SetParent(root.transform, false);
@@ -297,13 +318,22 @@ namespace MarsarahUI.Patches.UI
 			Image line = lineObject.AddComponent<Image>();
 			line.color = style.SeparatorColor;
 
-			if (style.UseSeparatorShadow)
-			{
-				Shadow shadow = lineObject.AddComponent<Shadow>();
-				shadow.effectColor = style.SeparatorShadowColor;
-				shadow.effectDistance = style.SeparatorShadowDistance;
-				shadow.useGraphicAlpha = true;
-			}
+			GameObject highlightObject = new GameObject("Highlight");
+			highlightObject.layer = 5;
+			highlightObject.transform.SetParent(root.transform, false);
+
+			RectTransform highlightRect = highlightObject.AddComponent<RectTransform>();
+			highlightRect.anchorMin = new Vector2(0.5f, 0.5f);
+			highlightRect.anchorMax = new Vector2(0.5f, 0.5f);
+			highlightRect.pivot = new Vector2(0.5f, 0.5f);
+			highlightRect.anchoredPosition = new Vector2(-0.5f, 0f);
+			highlightRect.sizeDelta = new Vector2(style.SeparatorHighlightWidth, style.SeparatorHeight - 2f);
+
+			Image highlightImage = highlightObject.AddComponent<Image>();
+			highlightImage.color = style.SeparatorHighlightColor;
+			highlightImage.raycastTarget = false;
+
+			highlightObject.SetActive(style.UseSeparatorEdge);
 
 			separators[afterElement] = new RailSeparator
 			{
@@ -312,6 +342,10 @@ namespace MarsarahUI.Patches.UI
 				CanvasGroup = canvasGroup,
 				LineRect = lineRect,
 				LineImage = line,
+				EdgeRect = edgeRect,
+				EdgeImage = edgeImage,
+				HighlightRect = highlightRect,
+				HighlightImage = highlightImage,
 				Progress = 0f,
 				TargetVisible = false,
 				Animating = false
@@ -714,7 +748,7 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			railBackground = ReplaceStyledBackground(railBackground, "RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
-			railBorder = ReplaceStyledBorder(railBorder, "RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.RailSourceEndWidth, style.RailEndWidth, log);
+			railBorder = ReplaceStyledBorder(railBorder, "RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.RailSourceEndWidth, style.RailEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			ApplyIconStyle(weightIcon, style.WeightIcon);
 			ApplyIconStyle(slotsIcon, style.SlotsIcon);
@@ -753,6 +787,29 @@ namespace MarsarahUI.Patches.UI
 				if (!separator.Animating)
 				{
 					separator.Layout.preferredWidth = separator.TargetVisible ? style.SeparatorWidth : 0f;
+				}
+
+				if (separator.EdgeRect != null)
+				{
+					separator.EdgeRect.sizeDelta = new Vector2(style.SeparatorEdgeWidth, style.SeparatorHeight);
+					separator.EdgeRect.gameObject.SetActive(style.UseSeparatorEdge);
+				}
+
+				if (separator.EdgeImage != null)
+				{
+					separator.EdgeImage.color = style.SeparatorEdgeColor;
+				}
+
+				if (separator.HighlightRect != null)
+				{
+					separator.HighlightRect.anchoredPosition = new Vector2(-0.5f, 0f);
+					separator.HighlightRect.sizeDelta = new Vector2(style.SeparatorHighlightWidth, style.SeparatorHeight - 2f);
+					separator.HighlightRect.gameObject.SetActive(style.UseSeparatorEdge);
+				}
+
+				if (separator.HighlightImage != null)
+				{
+					separator.HighlightImage.color = style.SeparatorHighlightColor;
 				}
 			}
 

@@ -15,6 +15,7 @@ namespace MarsarahUI.Managers
 	internal enum InfoRailBorderType
 	{
 		None,
+		UnityBorder,
 		SideCapsSprite,
 		ThreePartSprite
 	}
@@ -23,6 +24,7 @@ namespace MarsarahUI.Managers
 	{
 		Fixed,
 		WeightGradient,
+		WarmWeightGradient,
 		SlotsGradient,
 		EnemyCountGradient,
 		SummonCountGradient
@@ -75,13 +77,21 @@ namespace MarsarahUI.Managers
 		internal float SeparatorLineWidth;
 		internal float SeparatorHeight;
 
-		internal bool UseSeparatorShadow;
-		internal Color SeparatorShadowColor;
-		internal Vector2 SeparatorShadowDistance;
-
 		internal Vector2 SummonSize;
 		internal float SummonSourceEndWidth;
 		internal float SummonEndWidth;
+
+		internal Color BorderOuterColor;
+		internal Color BorderInnerColor;
+		internal float BorderOuterWidth;
+		internal float BorderInnerWidth;
+
+		// Some separator stuff
+		internal bool UseSeparatorEdge;
+		internal Color SeparatorEdgeColor;
+		internal Color SeparatorHighlightColor;
+		internal float SeparatorEdgeWidth;
+		internal float SeparatorHighlightWidth;
 	}
 
 	internal static class UIStyleManager
@@ -120,9 +130,7 @@ namespace MarsarahUI.Managers
 
 			SummonSize = new Vector2(49f, 30f),
 
-			UseSeparatorShadow = false,
-			SeparatorShadowColor = Color.clear,
-			SeparatorShadowDistance = Vector2.zero,
+			UseSeparatorEdge = false,
 
 			// Special colors
 			WeightFillColorMode = InfoRailColorMode.WeightGradient,
@@ -141,12 +149,11 @@ namespace MarsarahUI.Managers
 		{
 			BackgroundType = InfoRailBackgroundType.VanillaSlicedSprite,
 			VanillaBackgroundSprite = "InputFieldBackground",
-			BackgroundColor = new Color(0f, 0f, 0f, 0.3f),
+			BackgroundColor = new Color(0f, 0f, 0f, 0.45f),
 
 			BorderType = InfoRailBorderType.SideCapsSprite,
 			BorderCapAsset = "Style2.BorderCap",
 			BorderColor = Color.white,
-			//BorderCapSize = new Vector2(12f, 30f)
 			BorderCapSize = new Vector2(18f, 36f),
 
 			WeightIcon = "Style2.Weight",
@@ -170,12 +177,14 @@ namespace MarsarahUI.Managers
 
 			SummonSize = new Vector2(49f, 30f),
 
-			UseSeparatorShadow = true,
-			SeparatorShadowColor = new Color(0f, 0f, 0f, 0.55f),
-			SeparatorShadowDistance = new Vector2(1f, -1f),
+			UseSeparatorEdge = true,
+			SeparatorEdgeColor = new Color(0.18f, 0.10f, 0.05f, 0.8f),
+			SeparatorHighlightColor = new Color(0.95f, 0.72f, 0.35f, 0.85f),
+			SeparatorEdgeWidth = 3f,
+			SeparatorHighlightWidth = 1f,
 
 			// Colors
-			WeightFillColorMode = InfoRailColorMode.WeightGradient,
+			WeightFillColorMode = InfoRailColorMode.WarmWeightGradient,
 			SlotsTextColorMode = InfoRailColorMode.SlotsGradient,
 			EnemyTextColorMode = InfoRailColorMode.EnemyCountGradient,
 			SummonTextColorMode = InfoRailColorMode.SummonCountGradient,
@@ -189,13 +198,18 @@ namespace MarsarahUI.Managers
 
 		private static readonly UIStyleDefinition style3 = new UIStyleDefinition
 		{
-			BackgroundType = InfoRailBackgroundType.None,
-			BackgroundColor = Color.clear,
+			BackgroundType = InfoRailBackgroundType.VanillaSlicedSprite,
+			VanillaBackgroundSprite = "InputFieldBackground",
+			BackgroundColor = new Color(0f, 0f, 0f, 0.45f),
 
-			BorderType = InfoRailBorderType.ThreePartSprite,
-			RailBorderAsset = "Style3.RailBorder",
-			SummonBorderAsset = "Style3.RailBorder",
-			BorderColor = Color.white,
+			BorderType = InfoRailBorderType.UnityBorder,
+
+			BorderOuterColor = new Color(0.12f, 0.12f, 0.12f, 1f),
+			BorderColor = new Color(0.58f, 0.58f, 0.55f, 1f),
+			BorderInnerColor = new Color(0.28f, 0.28f, 0.27f, 1f),
+
+			BorderOuterWidth = 2f,
+			BorderInnerWidth = 1f,
 
 			WeightIcon = "Style3.Weight",
 			SlotsIcon = "Style3.Slots",
@@ -210,8 +224,6 @@ namespace MarsarahUI.Managers
 			SeparatorColor = new Color(1f, 1f, 1f, 0.4f),
 
 			RailHeight = 34f,
-			RailSourceEndWidth = 12f,
-			RailEndWidth = 12f,
 			RailPadding = new RectOffset(7, 7, 3, 3),
 
 			SeparatorWidth = 7f,
@@ -219,12 +231,8 @@ namespace MarsarahUI.Managers
 			SeparatorHeight = 18f,
 
 			SummonSize = new Vector2(49f, 34f),
-			SummonSourceEndWidth = 12f,
-			SummonEndWidth = 12f,
 
-			UseSeparatorShadow = false,
-			SeparatorShadowColor = Color.clear,
-			SeparatorShadowDistance = Vector2.zero,
+			UseSeparatorEdge = false,
 
 			// Colors
 			WeightFillColorMode = InfoRailColorMode.Fixed,
@@ -297,11 +305,13 @@ namespace MarsarahUI.Managers
 				case InfoRailColorMode.WeightGradient:
 					return GetUsageGradientColor(weightPercent);
 
+				case InfoRailColorMode.WarmWeightGradient:
+					return GetWarmWeightGradientColor(weightPercent);
+
 				default:
 					return Current.WeightFillColor;
 			}
 		}
-
 		internal static Color GetSlotsTextColor(float slotsUsedPercent)
 		{
 			switch (Current.SlotsTextColorMode)
@@ -350,6 +360,27 @@ namespace MarsarahUI.Managers
 			}
 
 			return Color.red;
+		}
+
+		private static Color GetWarmWeightGradientColor(float percent)
+		{
+			Color gold = new Color(0.85f, 0.65f, 0.22f);
+			Color orange = new Color(1f, 0.45f, 0.08f);
+			Color red = new Color(0.85f, 0.20f, 0.12f);
+
+			percent = Mathf.Clamp01(percent);
+
+			if (percent <= 0.66f)
+			{
+				return gold;
+			}
+
+			if (percent <= 0.90f)
+			{
+				return Color.Lerp(gold, orange, (percent - 0.66f) / 0.24f);
+			}
+
+			return Color.Lerp(orange, red, (percent - 0.90f) / 0.10f);
 		}
 
 		private static Color GetCountGradientColor(int count)

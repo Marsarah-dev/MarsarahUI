@@ -287,14 +287,14 @@ namespace MarsarahUI.Patches.UI
 			return CreateStyledBackground(objectName, parent, backgroundType, backgroundColor, vanillaSpriteName, specificLog);
 		}
 
-		internal static GameObject ReplaceStyledBorder(GameObject currentBorder, string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, string capSpriteName, Color borderColor, Vector2 capSize, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject ReplaceStyledBorder(GameObject currentBorder, string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, string capSpriteName, Color borderColor, Vector2 capSize, float sourceEndWidth, float renderedEndWidth, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
 		{
 			if (currentBorder != null)
 			{
 				UnityEngine.Object.Destroy(currentBorder);
 			}
 
-			return CreateStyledBorder(objectName, parent, borderType, spriteName, capSpriteName, borderColor, capSize, sourceEndWidth, renderedEndWidth, specificLog);
+			return CreateStyledBorder(objectName, parent, borderType, spriteName, capSpriteName, borderColor, capSize, sourceEndWidth, renderedEndWidth, borderOuterColor, borderInnerColor, borderOuterWidth, borderInnerWidth, specificLog);
 		}
 
 		internal static GameObject CreateStyledBackground(string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
@@ -347,7 +347,7 @@ namespace MarsarahUI.Patches.UI
 			return background;
 		}
 
-		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, string capSpriteName, Color borderColor, Vector2 capSize, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, string capSpriteName, Color borderColor, Vector2 capSize, float sourceEndWidth, float renderedEndWidth, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
 		{
 			switch (borderType)
 			{
@@ -359,6 +359,9 @@ namespace MarsarahUI.Patches.UI
 
 				case InfoRailBorderType.ThreePartSprite:
 					return CreateThreePartBackground(objectName, parent, spriteName, borderColor, sourceEndWidth, renderedEndWidth, specificLog);
+
+				case InfoRailBorderType.UnityBorder:
+					return CreateUnityBorder(objectName, parent, borderOuterColor, borderColor, borderInnerColor, borderOuterWidth, borderInnerWidth);
 
 				default:
 					specificLog.Warn($"Unsupported information rail border type '{borderType}'.");
@@ -384,6 +387,67 @@ namespace MarsarahUI.Patches.UI
 			layout.ignoreLayout = true;
 
 			return background;
+		}
+
+		private static GameObject CreateUnityBorder(string objectName, GameObject parent, Color outerColor, Color mainColor, Color innerColor, float outerWidth, float innerWidth)
+		{
+			GameObject border = new GameObject(objectName);
+			border.layer = 5;
+			border.transform.SetParent(parent.transform, false);
+			border.transform.SetSiblingIndex(1);
+
+			RectTransform borderRect = border.AddComponent<RectTransform>();
+			borderRect.anchorMin = Vector2.zero;
+			borderRect.anchorMax = Vector2.one;
+			borderRect.offsetMin = Vector2.zero;
+			borderRect.offsetMax = Vector2.zero;
+			borderRect.localScale = Vector3.one;
+
+			LayoutElement layout = border.AddComponent<LayoutElement>();
+			layout.ignoreLayout = true;
+
+			CreateUnityBorderLayer("Outer", border, outerColor, outerWidth, 0f);
+			CreateUnityBorderLayer("Main", border, mainColor, 1f, 1f);
+			CreateUnityBorderLayer("Inner", border, innerColor, innerWidth, 2f);
+
+			return border;
+		}
+
+		private static void CreateUnityBorderLayer(string objectName, GameObject parent, Color color, float width, float inset)
+		{
+			GameObject layer = new GameObject(objectName);
+			layer.layer = 5;
+			layer.transform.SetParent(parent.transform, false);
+
+			RectTransform layerRect = layer.AddComponent<RectTransform>();
+			layerRect.anchorMin = Vector2.zero;
+			layerRect.anchorMax = Vector2.one;
+			layerRect.offsetMin = Vector2.zero;
+			layerRect.offsetMax = Vector2.zero;
+			layerRect.localScale = Vector3.one;
+
+			CreateUnityBorderLine("Top", layer, color, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(inset, -inset - width), new Vector2(-inset, -inset));
+			CreateUnityBorderLine("Bottom", layer, color, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(inset, inset), new Vector2(-inset, inset + width));
+			CreateUnityBorderLine("Left", layer, color, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(inset, inset), new Vector2(inset + width, -inset));
+			CreateUnityBorderLine("Right", layer, color, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(-inset - width, inset), new Vector2(-inset, -inset));
+		}
+
+		private static void CreateUnityBorderLine(string objectName, GameObject parent, Color color, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+		{
+			GameObject line = new GameObject(objectName);
+			line.layer = 5;
+			line.transform.SetParent(parent.transform, false);
+
+			RectTransform rect = line.AddComponent<RectTransform>();
+			rect.anchorMin = anchorMin;
+			rect.anchorMax = anchorMax;
+			rect.offsetMin = offsetMin;
+			rect.offsetMax = offsetMax;
+			rect.localScale = Vector3.one;
+
+			Image image = line.AddComponent<Image>();
+			image.color = color;
+			image.raycastTarget = false;
 		}
 	}
 }
