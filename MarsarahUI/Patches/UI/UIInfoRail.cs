@@ -580,7 +580,7 @@ namespace MarsarahUI.Patches.UI
 				if (weightBarFill != null)
 				{
 					weightBarFill.fillAmount = weightPercent;
-					weightBarFill.color = UIStyleManager.Current.WeightFillColor;
+					weightBarFill.color = UIStyleManager.GetWeightFillColor(weightPercent);
 				}
 
 				if (weightText != null)
@@ -595,7 +595,7 @@ namespace MarsarahUI.Patches.UI
 				if (slotsText != null)
 				{
 					slotsText.text = UIInventoryWeightAndSlots.FreeSlots.ToString();
-					slotsText.color = UIStyleManager.Current.ValueTextColor;
+					slotsText.color = UIStyleManager.GetSlotsTextColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
 				}
 			}
 		}
@@ -629,21 +629,25 @@ namespace MarsarahUI.Patches.UI
 			if (enemyText != null)
 			{
 				enemyText.text = enemies.ToString();
+				enemyText.color = UIStyleManager.GetEnemyTextColor(enemies);
 			}
 
 			if (separateToughEnemies && toughEnemies > 0 && toughEnemyText != null)
 			{
 				toughEnemyText.text = toughEnemies.ToString();
+				toughEnemyText.color = UIStyleManager.Current.ToughEnemyTextColor;
 			}
 
 			if (bosses > 0 && bossText != null)
 			{
 				bossText.text = bosses.ToString();
+				bossText.color = UIStyleManager.Current.BossTextColor;
 			}
 
 			if (neutralEnemies > 0 && neutralEnemyText != null)
 			{
 				neutralEnemyText.text = neutralEnemies.ToString();
+				neutralEnemyText.color = UIStyleManager.Current.NeutralTextColor;
 			}
 		}
 
@@ -708,16 +712,18 @@ namespace MarsarahUI.Patches.UI
 			ApplyIconStyle(neutralEnemyIcon, style.NeutralIcon);
 
 			if (weightText != null) weightText.color = style.ValueTextColor;
-			if (slotsText != null) slotsText.color = style.ValueTextColor;
-			if (enemyText != null) enemyText.color = style.ValueTextColor;
-			if (toughEnemyText != null) toughEnemyText.color = style.ValueTextColor;
-			if (bossText != null) bossText.color = style.ValueTextColor;
-			if (neutralEnemyText != null) neutralEnemyText.color = style.ValueTextColor;
-			if (skillText != null) skillText.color = style.ValueTextColor;
+			if (slotsText != null) slotsText.color = UIStyleManager.GetSlotsTextColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
+			if (enemyText != null) enemyText.color = UIStyleManager.GetEnemyTextColor(UIEnemyDetector.NumEnemies);
+			if (toughEnemyText != null) toughEnemyText.color = style.ToughEnemyTextColor;
+			if (bossText != null) bossText.color = style.BossTextColor;
+			if (neutralEnemyText != null) neutralEnemyText.color = style.NeutralTextColor;
+			if (skillText != null) skillText.color = style.SkillTextColor;
 
 			if (weightBarFill != null)
 			{
-				weightBarFill.color = style.WeightFillColor;
+				float weightPercent = UIInventoryWeightAndSlots.MaxWeight > 0f ? Mathf.Clamp01(UIInventoryWeightAndSlots.CurrentWeight / UIInventoryWeightAndSlots.MaxWeight) : 0f;
+
+				weightBarFill.color = UIStyleManager.GetWeightFillColor(weightPercent);
 			}
 
 			foreach (RailSeparator separator in separators.Values)

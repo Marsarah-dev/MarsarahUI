@@ -124,6 +124,7 @@ namespace MarsarahUI.Patches.UI
 			if (summonText != null)
 			{
 				summonText.text = UISummonCounter.NumSummons.ToString();
+				summonText.color = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
 			}
 		}
 
@@ -189,7 +190,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (summonText != null)
 			{
-				summonText.color = style.ValueTextColor;
+				summonText.color = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
 				summonText.rectTransform.sizeDelta = style.SummonSize;
 			}
 

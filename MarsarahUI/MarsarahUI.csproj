@@ -124,7 +124,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\Icons\HUD\Style1\" />
     <Folder Include="Assets\Icons\HUD\Style2\" />
     <Folder Include="Libs\" />
   </ItemGroup>
@@ -157,6 +156,13 @@
     <EmbeddedResource Include="Assets\Icons\HUD\Style3\Summon.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Style3\ToughEnemy.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Style3\Weight.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\Boss.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\Enemy.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\Neutral.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\Slots.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\Summon.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\ToughEnemy.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\Weight.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />
