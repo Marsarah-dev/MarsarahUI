@@ -124,6 +124,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets\Icons\HUD\Style1\" />
+    <Folder Include="Assets\Icons\HUD\Style2\" />
     <Folder Include="Libs\" />
   </ItemGroup>
   <ItemGroup>
@@ -147,14 +149,14 @@
     <EmbeddedResource Include="Assets\Icons\Weather\Thunderstorm.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assets\Icons\HUD\Boss.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\Enemy.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\Neutral.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\Slots.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\Summon.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\ToughEnemy.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\Weight.png" />
-    <EmbeddedResource Include="Assets\Icons\HUD\RailBorder.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\Boss.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\Enemy.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\Neutral.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\RailBorder.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\Slots.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\Summon.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\ToughEnemy.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\Weight.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />

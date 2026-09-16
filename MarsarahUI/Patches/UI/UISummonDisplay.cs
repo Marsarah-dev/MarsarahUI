@@ -75,7 +75,7 @@ namespace MarsarahUI.Patches.UI
 			summonAreaRect.sizeDelta = areaSize;
 			summonAreaRect.localScale = Vector3.one;
 
-			summonBackground = CreateThreePartBackground("SummonBackground", UISummonArea, style.SummonBackgroundAsset, style.SummonSourceEndWidth, style.SummonEndWidth, log);
+			summonBackground = CreateStyledBackground("SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.SummonBackgroundAsset, style.SummonSourceEndWidth, style.SummonEndWidth, log);
 
 			summonCanvasGroup = UISummonArea.AddComponent<CanvasGroup>();
 			summonCanvasGroup.alpha = 0f;
@@ -173,7 +173,7 @@ namespace MarsarahUI.Patches.UI
 				summonAreaRect.sizeDelta = style.SummonSize;
 			}
 
-			summonBackground = ReplaceThreePartBackground(summonBackground, "SummonBackground", UISummonArea, style.SummonBackgroundAsset, style.SummonSourceEndWidth, style.SummonEndWidth, log);
+			summonBackground = ReplaceStyledBackground(summonBackground, "SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.SummonBackgroundAsset, style.SummonSourceEndWidth, style.SummonEndWidth, log);
 
 			if (summonIcon != null)
 			{

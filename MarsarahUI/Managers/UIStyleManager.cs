@@ -5,6 +5,12 @@ using UnityEngine;
 
 namespace MarsarahUI.Managers
 {
+	internal enum InfoRailBackgroundType
+	{
+		UnityImage,
+		VanillaSlicedSprite,
+		ThreePartSprite
+	}
 	internal static class UIStyleManager
 	{
 		private static readonly LogManager log = new LogManager("UI Style Manager", LogManager.LogLevel.Warning);
@@ -13,16 +19,19 @@ namespace MarsarahUI.Managers
 
 		private static readonly UIStyleDefinition style3 = new UIStyleDefinition
 		{
-			RailBackgroundAsset = "RailBorder",
-			SummonBackgroundAsset = "RailBorder",
+			BackgroundType = InfoRailBackgroundType.ThreePartSprite,
+			BackgroundColor = Color.white,
 
-			WeightIcon = "Weight",
-			SlotsIcon = "Slots",
-			EnemyIcon = "Enemy",
-			ToughEnemyIcon = "ToughEnemy",
-			BossIcon = "Boss",
-			NeutralIcon = "Neutral",
-			SummonIcon = "Summon",
+			RailBackgroundAsset = "Style3.RailBorder",
+			SummonBackgroundAsset = "Style3.RailBorder",
+
+			WeightIcon = "Style3.Weight",
+			SlotsIcon = "Style3.Slots",
+			EnemyIcon = "Style3.Enemy",
+			ToughEnemyIcon = "Style3.ToughEnemy",
+			BossIcon = "Style3.Boss",
+			NeutralIcon = "Style3.Neutral",
+			SummonIcon = "Style3.Summon",
 
 			ValueTextColor = new Color(0.88f, 0.87f, 0.82f),
 			WeightFillColor = new Color(0.333f, 0.357f, 0.369f),
@@ -94,6 +103,10 @@ namespace MarsarahUI.Managers
 
 	internal sealed class UIStyleDefinition
 	{
+		internal InfoRailBackgroundType BackgroundType;
+		internal string VanillaBackgroundSprite;
+		internal Color BackgroundColor;
+
 		internal string RailBackgroundAsset;
 		internal string SummonBackgroundAsset;
 

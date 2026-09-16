@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static MarsarahUI.Managers.UIStyleManager;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -210,14 +211,84 @@ namespace MarsarahUI.Patches.UI
 			image.raycastTarget = false;
 		}
 
-		internal static GameObject ReplaceThreePartBackground(GameObject currentBackground, string objectName, GameObject parent, string spriteName, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject ReplaceStyledBackground(GameObject currentBackground, string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, string customSpriteName, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
 		{
 			if (currentBackground != null)
 			{
 				UnityEngine.Object.Destroy(currentBackground);
 			}
 
-			return CreateThreePartBackground(objectName, parent, spriteName, sourceEndWidth, renderedEndWidth, specificLog);
+			return CreateStyledBackground(objectName, parent, backgroundType, backgroundColor, vanillaSpriteName, customSpriteName, sourceEndWidth, renderedEndWidth, specificLog);
+		}
+
+		internal static GameObject CreateStyledBackground(string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, string customSpriteName, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		{
+			switch (backgroundType)
+			{
+				case InfoRailBackgroundType.UnityImage:
+					return CreateUnityBackground(objectName, parent, backgroundColor);
+
+				case InfoRailBackgroundType.VanillaSlicedSprite:
+					return CreateVanillaSlicedBackground(objectName, parent, vanillaSpriteName, backgroundColor, specificLog);
+
+				case InfoRailBackgroundType.ThreePartSprite:
+					return CreateThreePartBackground(objectName, parent, customSpriteName, sourceEndWidth, renderedEndWidth, specificLog);
+
+				default:
+					specificLog.Warn($"Unsupported information rail background type '{backgroundType}'.");
+					return null;
+			}
+		}
+
+		private static GameObject CreateUnityBackground(string objectName, GameObject parent, Color color)
+		{
+			GameObject background = CreateBackgroundObject(objectName, parent);
+
+			Image image = background.AddComponent<Image>();
+			image.color = color;
+			image.raycastTarget = false;
+
+			return background;
+		}
+
+		private static GameObject CreateVanillaSlicedBackground(string objectName, GameObject parent, string spriteName, Color color, LogManager specificLog)
+		{
+			GameObject background = CreateBackgroundObject(objectName, parent);
+
+			Sprite sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(foundSprite => foundSprite.name == spriteName);
+
+			if (sprite == null)
+			{
+				specificLog.Warn($"Could not find vanilla UI sprite '{spriteName}'.");
+			}
+
+			Image image = background.AddComponent<Image>();
+			image.sprite = sprite;
+			image.type = Image.Type.Sliced;
+			image.color = color;
+			image.raycastTarget = false;
+
+			return background;
+		}
+
+		private static GameObject CreateBackgroundObject(string objectName, GameObject parent)
+		{
+			GameObject background = new GameObject(objectName);
+			background.layer = 5;
+			background.transform.SetParent(parent.transform, false);
+			background.transform.SetAsFirstSibling();
+
+			RectTransform rect = background.AddComponent<RectTransform>();
+			rect.anchorMin = Vector2.zero;
+			rect.anchorMax = Vector2.one;
+			rect.offsetMin = Vector2.zero;
+			rect.offsetMax = Vector2.zero;
+			rect.localScale = Vector3.one;
+
+			LayoutElement layout = background.AddComponent<LayoutElement>();
+			layout.ignoreLayout = true;
+
+			return background;
 		}
 	}
 }

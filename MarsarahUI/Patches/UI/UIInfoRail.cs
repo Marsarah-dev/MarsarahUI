@@ -164,7 +164,7 @@ namespace MarsarahUI.Patches.UI
 			railRect.sizeDelta = new Vector2(0f, style.RailHeight);
 			railRect.localScale = Vector3.one;
 
-			railBackground = CreateThreePartBackground("RailBackground", UIRail, style.RailBackgroundAsset, style.RailSourceEndWidth, style.RailEndWidth, log);
+			railBackground = CreateStyledBackground("RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.RailBackgroundAsset, style.RailSourceEndWidth, style.RailEndWidth, log);
 
 			railLayoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
 			railLayoutGroup.padding = style.RailPadding;
@@ -698,14 +698,7 @@ namespace MarsarahUI.Patches.UI
 				railLayoutGroup.padding = style.RailPadding;
 			}
 
-			railBackground = ReplaceThreePartBackground(
-				railBackground,
-				"RailBackground",
-				UIRail,
-				style.RailBackgroundAsset,
-				style.RailSourceEndWidth,
-				style.RailEndWidth,
-				log);
+			railBackground = ReplaceStyledBackground(railBackground, "RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.RailBackgroundAsset, style.RailSourceEndWidth, style.RailEndWidth, log);
 
 			ApplyIconStyle(weightIcon, style.WeightIcon);
 			ApplyIconStyle(slotsIcon, style.SlotsIcon);
