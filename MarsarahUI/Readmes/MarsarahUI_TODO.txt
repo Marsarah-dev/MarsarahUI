@@ -133,8 +133,9 @@ B. New additions
 TO IMPLEMENT / VERIFY
 ============================================================
 
-A. Release Blockers / Verification
+A. Fixes
 ----------------------------------
+* Fix item durability bar at 0 durability in quickslots showin full instead.
 
 B. Existing UI Ideas
 --------------------

@@ -20,6 +20,17 @@ namespace MarsarahUI.Managers
 			return LoadEmbeddedIcon($"{HudIconResourcePrefix}{iconName}.png");
 		}
 
+		internal static Sprite CreateSpriteSection(Sprite source, Rect rect)
+		{
+			if (source == null || source.texture == null) return null;
+
+			return Sprite.Create(
+				source.texture,
+				rect,
+				new Vector2(0.5f, 0.5f),
+				source.pixelsPerUnit);
+		}
+
 		internal static Sprite LoadEmbeddedIcon(string resourceName)
 		{
 			if (string.IsNullOrEmpty(resourceName)) return null;
