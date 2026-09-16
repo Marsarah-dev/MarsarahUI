@@ -7,8 +7,14 @@ namespace MarsarahUI.Managers
 {
 	internal enum InfoRailBackgroundType
 	{
+		None,
 		UnityImage,
-		VanillaSlicedSprite,
+		VanillaSlicedSprite
+	}
+
+	internal enum InfoRailBorderType
+	{
+		None,
 		ThreePartSprite
 	}
 
@@ -34,12 +40,16 @@ namespace MarsarahUI.Managers
 		internal Color SkillTextColor;
 		internal Color SummonTextColor;
 
+		// Background
 		internal InfoRailBackgroundType BackgroundType;
 		internal string VanillaBackgroundSprite;
 		internal Color BackgroundColor;
 
-		internal string RailBackgroundAsset;
-		internal string SummonBackgroundAsset;
+		// Border
+		internal InfoRailBorderType BorderType;
+		internal string RailBorderAsset;
+		internal string SummonBorderAsset;
+		internal Color BorderColor;
 
 		internal string WeightIcon;
 		internal string SlotsIcon;
@@ -79,6 +89,9 @@ namespace MarsarahUI.Managers
 			VanillaBackgroundSprite = "InputFieldBackground",
 			BackgroundColor = new Color(0f, 0f, 0f, 0.4f),
 
+			BorderType = InfoRailBorderType.None,
+			BorderColor = Color.white,
+
 			WeightIcon = "Style1.Weight",
 			SlotsIcon = "Style1.Slots",
 			EnemyIcon = "Style1.Enemy",
@@ -115,11 +128,13 @@ namespace MarsarahUI.Managers
 
 		private static readonly UIStyleDefinition style3 = new UIStyleDefinition
 		{
-			BackgroundType = InfoRailBackgroundType.ThreePartSprite,
-			BackgroundColor = Color.white,
+			BackgroundType = InfoRailBackgroundType.None,
+			BackgroundColor = Color.clear,
 
-			RailBackgroundAsset = "Style3.RailBorder",
-			SummonBackgroundAsset = "Style3.RailBorder",
+			BorderType = InfoRailBorderType.ThreePartSprite,
+			RailBorderAsset = "Style3.RailBorder",
+			SummonBorderAsset = "Style3.RailBorder",
+			BorderColor = Color.white,
 
 			WeightIcon = "Style3.Weight",
 			SlotsIcon = "Style3.Slots",

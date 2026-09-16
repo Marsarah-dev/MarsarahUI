@@ -130,7 +130,7 @@ namespace MarsarahUI.Patches.UI
 			return image;
 		}
 
-		internal static GameObject CreateThreePartBackground(string objectName, GameObject parent, string spriteName, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject CreateThreePartBackground(string objectName, GameObject parent, string spriteName, Color color, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
 		{
 			Sprite source = IconManager.LoadHudIcon(spriteName);
 
@@ -161,7 +161,7 @@ namespace MarsarahUI.Patches.UI
 			GameObject background = new GameObject(objectName);
 			background.layer = 5;
 			background.transform.SetParent(parent.transform, false);
-			background.transform.SetAsFirstSibling();
+			background.transform.SetSiblingIndex(1);
 
 			RectTransform backgroundRect = background.AddComponent<RectTransform>();
 			backgroundRect.anchorMin = Vector2.zero;
@@ -173,14 +173,14 @@ namespace MarsarahUI.Patches.UI
 			LayoutElement backgroundLayout = background.AddComponent<LayoutElement>();
 			backgroundLayout.ignoreLayout = true;
 
-			CreateThreePartBackgroundPart("Left", background, leftSprite, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(renderedEndWidth, 0f));
-			CreateThreePartBackgroundPart("Center", background, centerSprite, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), Vector2.zero, renderedEndWidth);
-			CreateThreePartBackgroundPart("Right", background, rightSprite, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(renderedEndWidth, 0f));
+			CreateThreePartBackgroundPart("Left", background, leftSprite, color, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(renderedEndWidth, 0f));
+			CreateThreePartBackgroundPart("Center", background, centerSprite, color, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), Vector2.zero, renderedEndWidth);
+			CreateThreePartBackgroundPart("Right", background, rightSprite, color, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(renderedEndWidth, 0f));
 
 			return background;
 		}
 
-		private static void CreateThreePartBackgroundPart(string objectName, GameObject parent, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 sizeDelta, float horizontalInset = 0f)
+		private static void CreateThreePartBackgroundPart(string objectName, GameObject parent, Sprite sprite, Color color, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 sizeDelta, float horizontalInset = 0f)
 		{
 			GameObject part = new GameObject(objectName);
 			part.layer = 5;
@@ -206,32 +206,42 @@ namespace MarsarahUI.Patches.UI
 			Image image = part.AddComponent<Image>();
 			image.sprite = sprite;
 			image.type = Image.Type.Simple;
-			image.color = Color.white;
+			image.color = color;
 			image.raycastTarget = false;
 		}
 
-		internal static GameObject ReplaceStyledBackground(GameObject currentBackground, string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, string customSpriteName, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject ReplaceStyledBackground(GameObject currentBackground, string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
 		{
 			if (currentBackground != null)
 			{
 				UnityEngine.Object.Destroy(currentBackground);
 			}
 
-			return CreateStyledBackground(objectName, parent, backgroundType, backgroundColor, vanillaSpriteName, customSpriteName, sourceEndWidth, renderedEndWidth, specificLog);
+			return CreateStyledBackground(objectName, parent, backgroundType, backgroundColor, vanillaSpriteName, specificLog);
 		}
 
-		internal static GameObject CreateStyledBackground(string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, string customSpriteName, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		internal static GameObject ReplaceStyledBorder(GameObject currentBorder, string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, Color borderColor, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		{
+			if (currentBorder != null)
+			{
+				UnityEngine.Object.Destroy(currentBorder);
+			}
+
+			return CreateStyledBorder(objectName, parent, borderType, spriteName, borderColor, sourceEndWidth, renderedEndWidth, specificLog);
+		}
+
+		internal static GameObject CreateStyledBackground(string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
 		{
 			switch (backgroundType)
 			{
+				case InfoRailBackgroundType.None:
+					return null;
+
 				case InfoRailBackgroundType.UnityImage:
 					return CreateUnityBackground(objectName, parent, backgroundColor);
 
 				case InfoRailBackgroundType.VanillaSlicedSprite:
 					return CreateVanillaSlicedBackground(objectName, parent, vanillaSpriteName, backgroundColor, specificLog);
-
-				case InfoRailBackgroundType.ThreePartSprite:
-					return CreateThreePartBackground(objectName, parent, customSpriteName, sourceEndWidth, renderedEndWidth, specificLog);
 
 				default:
 					specificLog.Warn($"Unsupported information rail background type '{backgroundType}'.");
@@ -241,7 +251,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static GameObject CreateUnityBackground(string objectName, GameObject parent, Color color)
 		{
-			GameObject background = CreateBackgroundObject(objectName, parent);
+			GameObject background = CreateBackgroundObject(objectName, parent, 0);
 
 			Image image = background.AddComponent<Image>();
 			image.color = color;
@@ -252,7 +262,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static GameObject CreateVanillaSlicedBackground(string objectName, GameObject parent, string spriteName, Color color, LogManager specificLog)
 		{
-			GameObject background = CreateBackgroundObject(objectName, parent);
+			GameObject background = CreateBackgroundObject(objectName, parent, 0);
 
 			Sprite sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(foundSprite => foundSprite.name == spriteName);
 
@@ -270,12 +280,28 @@ namespace MarsarahUI.Patches.UI
 			return background;
 		}
 
-		private static GameObject CreateBackgroundObject(string objectName, GameObject parent)
+		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, InfoRailBorderType borderType, string spriteName, Color borderColor, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		{
+			switch (borderType)
+			{
+				case InfoRailBorderType.None:
+					return null;
+
+				case InfoRailBorderType.ThreePartSprite:
+					return CreateThreePartBackground(objectName, parent, spriteName, borderColor, sourceEndWidth, renderedEndWidth, specificLog);
+
+				default:
+					specificLog.Warn($"Unsupported information rail border type '{borderType}'.");
+					return null;
+			}
+		}
+
+		private static GameObject CreateBackgroundObject(string objectName, GameObject parent, int siblingIndex)
 		{
 			GameObject background = new GameObject(objectName);
 			background.layer = 5;
 			background.transform.SetParent(parent.transform, false);
-			background.transform.SetAsFirstSibling();
+			background.transform.SetSiblingIndex(siblingIndex);
 
 			RectTransform rect = background.AddComponent<RectTransform>();
 			rect.anchorMin = Vector2.zero;

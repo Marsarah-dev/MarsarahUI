@@ -85,6 +85,7 @@ namespace MarsarahUI.Patches.UI
 		private static RectTransform railRect;
 
 		private static GameObject railBackground;
+		private static GameObject railBorder;
 		private static HorizontalLayoutGroup railLayoutGroup;
 
 		private static readonly Dictionary<ElementType, RailElement> elements = new Dictionary<ElementType, RailElement>();
@@ -164,7 +165,9 @@ namespace MarsarahUI.Patches.UI
 			railRect.sizeDelta = new Vector2(0f, style.RailHeight);
 			railRect.localScale = Vector3.one;
 
-			railBackground = CreateStyledBackground("RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.RailBackgroundAsset, style.RailSourceEndWidth, style.RailEndWidth, log);
+			railBackground = CreateStyledBackground("RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+
+			railBorder = CreateStyledBorder("RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderColor, style.RailSourceEndWidth, style.RailEndWidth, log);
 
 			railLayoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
 			railLayoutGroup.padding = style.RailPadding;
@@ -702,7 +705,8 @@ namespace MarsarahUI.Patches.UI
 				railLayoutGroup.padding = style.RailPadding;
 			}
 
-			railBackground = ReplaceStyledBackground(railBackground, "RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.RailBackgroundAsset, style.RailSourceEndWidth, style.RailEndWidth, log);
+			railBackground = ReplaceStyledBackground(railBackground, "RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+			railBorder = ReplaceStyledBorder(railBorder, "RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderColor, style.RailSourceEndWidth, style.RailEndWidth, log);
 
 			ApplyIconStyle(weightIcon, style.WeightIcon);
 			ApplyIconStyle(slotsIcon, style.SlotsIcon);

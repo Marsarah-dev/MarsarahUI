@@ -25,6 +25,7 @@ namespace MarsarahUI.Patches.UI
 		private static bool animating;
 
 		private static GameObject summonBackground;
+		private static GameObject summonBorder;
 
 		[HarmonyPatch(typeof(Hud), "Awake")]
 		private static class SummonDisplayHudAwakePatch
@@ -75,7 +76,8 @@ namespace MarsarahUI.Patches.UI
 			summonAreaRect.sizeDelta = areaSize;
 			summonAreaRect.localScale = Vector3.one;
 
-			summonBackground = CreateStyledBackground("SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.SummonBackgroundAsset, style.SummonSourceEndWidth, style.SummonEndWidth, log);
+			summonBackground = CreateStyledBackground("SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+			summonBorder = CreateStyledBorder("SummonBorder", UISummonArea, style.BorderType, style.SummonBorderAsset, style.BorderColor, style.SummonSourceEndWidth, style.SummonEndWidth, log);
 
 			summonCanvasGroup = UISummonArea.AddComponent<CanvasGroup>();
 			summonCanvasGroup.alpha = 0f;
@@ -174,7 +176,8 @@ namespace MarsarahUI.Patches.UI
 				summonAreaRect.sizeDelta = style.SummonSize;
 			}
 
-			summonBackground = ReplaceStyledBackground(summonBackground, "SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, style.SummonBackgroundAsset, style.SummonSourceEndWidth, style.SummonEndWidth, log);
+			summonBackground = ReplaceStyledBackground(summonBackground, "SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+			summonBorder = ReplaceStyledBorder(summonBorder, "SummonBorder", UISummonArea, style.BorderType, style.SummonBorderAsset, style.BorderColor, style.SummonSourceEndWidth, style.SummonEndWidth, log);
 
 			if (summonIcon != null)
 			{
