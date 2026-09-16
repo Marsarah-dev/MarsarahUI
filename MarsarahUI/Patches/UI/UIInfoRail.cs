@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static TextViewer;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -630,25 +629,21 @@ namespace MarsarahUI.Patches.UI
 			if (enemyText != null)
 			{
 				enemyText.text = enemies.ToString();
-				enemyText.color = InfoValueColor;
 			}
 
 			if (separateToughEnemies && toughEnemies > 0 && toughEnemyText != null)
 			{
 				toughEnemyText.text = toughEnemies.ToString();
-				toughEnemyText.color = InfoValueColor;
 			}
 
 			if (bosses > 0 && bossText != null)
 			{
 				bossText.text = bosses.ToString();
-				bossText.color = InfoValueColor;
 			}
 
 			if (neutralEnemies > 0 && neutralEnemyText != null)
 			{
 				neutralEnemyText.text = neutralEnemies.ToString();
-				neutralEnemyText.color = InfoValueColor;
 			}
 		}
 
@@ -684,7 +679,6 @@ namespace MarsarahUI.Patches.UI
 			if (skillText != null)
 			{
 				skillText.text = UISkillProgress.CurrentDisplayText;
-				skillText.color = InfoValueColor;
 			}
 		}
 
