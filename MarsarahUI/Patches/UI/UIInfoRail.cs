@@ -68,7 +68,7 @@ namespace MarsarahUI.Patches.UI
 		private static Text skillText;
 
 		// Rail
-		private const float RailHeight = 30f;
+		private const float RailHeight = 34f;
 		private const float RailOuterPadding = 6f;
 
 		private const float WeightWidth = 136f;
@@ -171,10 +171,17 @@ namespace MarsarahUI.Patches.UI
 			railRect.localScale = Vector3.one;
 
 			Image background = UIRail.AddComponent<Image>();
-			background.color = new Color(0f, 0f, 0f, 0.4f);
+			background.sprite = IconManager.LoadSlicedHudIcon("RailBorder", new Vector4(100f, 70f, 100f, 70f));
+			background.type = Image.Type.Sliced;
+			background.color = Color.white;
+
+			if (background.sprite == null)
+			{
+				log.Warn("Could not load HUD rail border.");
+			}
 
 			HorizontalLayoutGroup layoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
-			layoutGroup.padding = new RectOffset(4, 4, 2, 2);
+			layoutGroup.padding = new RectOffset(7, 7, 3, 3);
 			layoutGroup.spacing = 0f;
 			layoutGroup.childAlignment = TextAnchor.MiddleLeft;
 			layoutGroup.childControlWidth = true;

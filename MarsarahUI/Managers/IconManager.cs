@@ -59,6 +59,22 @@ namespace MarsarahUI.Managers
 			return sprite;
 		}
 
+		internal static Sprite LoadSlicedHudIcon(string iconName, Vector4 border)
+		{
+			Sprite source = LoadHudIcon(iconName);
+
+			if (source == null) return null;
+
+			return Sprite.Create(
+				source.texture,
+				source.rect,
+				new Vector2(0.5f, 0.5f),
+				source.pixelsPerUnit,
+				0,
+				SpriteMeshType.FullRect,
+				border);
+		}
+
 		private static bool TryLoadImageBytes(Texture2D texture, byte[] data)
 		{
 			if (texture == null || data == null) return false;
