@@ -86,7 +86,7 @@ namespace MarsarahUI.Patches.UI
 		private static RectTransform railRect;
 
 		private const float RailEndWidth = 12f;
-		private static GameObject railBackground;
+		private const float RailSourceEndWidth = 12f;
 
 		// Separators
 		private const float SeparatorWidth = 7f;
@@ -157,81 +157,6 @@ namespace MarsarahUI.Patches.UI
 			return icon;
 		}
 
-		private static void CreateRailBackground()
-		{
-			Sprite source = IconManager.LoadHudIcon("RailBorder");
-
-			if (source == null)
-			{
-				log.Warn("Could not load HUD rail border.");
-				return;
-			}
-
-			Texture2D texture = source.texture;
-
-			float textureWidth = texture.width;
-			float textureHeight = texture.height;
-
-			float sourceEndWidth = 12f;
-
-			Rect leftRect = new Rect(0f, 0f, sourceEndWidth, textureHeight);
-			Rect centerRect = new Rect(sourceEndWidth, 0f, textureWidth - sourceEndWidth * 2f, textureHeight);
-			Rect rightRect = new Rect(textureWidth - sourceEndWidth, 0f, sourceEndWidth, textureHeight);
-
-			Sprite leftSprite = IconManager.CreateSpriteSection(source, leftRect);
-			Sprite centerSprite = IconManager.CreateSpriteSection(source, centerRect);
-			Sprite rightSprite = IconManager.CreateSpriteSection(source, rightRect);
-
-			railBackground = new GameObject("RailBackground");
-			railBackground.layer = 5;
-			railBackground.transform.SetParent(UIRail.transform, false);
-			railBackground.transform.SetAsFirstSibling();
-
-			RectTransform backgroundRect = railBackground.AddComponent<RectTransform>();
-			backgroundRect.anchorMin = Vector2.zero;
-			backgroundRect.anchorMax = Vector2.one;
-			backgroundRect.offsetMin = Vector2.zero;
-			backgroundRect.offsetMax = Vector2.zero;
-			backgroundRect.localScale = Vector3.one;
-
-			LayoutElement backgroundLayout = railBackground.AddComponent<LayoutElement>();
-			backgroundLayout.ignoreLayout = true;
-
-			CreateRailBackgroundPart("Left", railBackground, leftSprite, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(RailEndWidth, 0f));
-			CreateRailBackgroundPart("Center", railBackground, centerSprite, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(-RailEndWidth * 2f, 0f), RailEndWidth);
-			CreateRailBackgroundPart("Right", railBackground, rightSprite, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(RailEndWidth, 0f));
-		}
-
-		private static void CreateRailBackgroundPart(string name, GameObject parent, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 sizeDelta, float horizontalInset = 0f)
-		{
-			GameObject part = new GameObject(name);
-			part.layer = 5;
-			part.transform.SetParent(parent.transform, false);
-
-			RectTransform rect = part.AddComponent<RectTransform>();
-			rect.anchorMin = anchorMin;
-			rect.anchorMax = anchorMax;
-			rect.pivot = pivot;
-			rect.localScale = Vector3.one;
-
-			if (anchorMin.x != anchorMax.x)
-			{
-				rect.offsetMin = new Vector2(horizontalInset, 0f);
-				rect.offsetMax = new Vector2(-horizontalInset, 0f);
-			}
-			else
-			{
-				rect.anchoredPosition = Vector2.zero;
-				rect.sizeDelta = sizeDelta;
-			}
-
-			Image image = part.AddComponent<Image>();
-			image.sprite = sprite;
-			image.type = Image.Type.Simple;
-			image.color = Color.white;
-			image.raycastTarget = false;
-		}
-
 		private static void CreateUI(Hud hud)
 		{
 			if (UIRail != null) return;
@@ -248,7 +173,7 @@ namespace MarsarahUI.Patches.UI
 			railRect.sizeDelta = new Vector2(0f, RailHeight);
 			railRect.localScale = Vector3.one;
 
-			CreateRailBackground();
+			CreateThreePartBackground("RailBackground", UIRail, "RailBorder", RailSourceEndWidth, RailEndWidth, log);
 
 			HorizontalLayoutGroup layoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
 			layoutGroup.padding = new RectOffset(7, 7, 3, 3);

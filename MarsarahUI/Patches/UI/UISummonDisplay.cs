@@ -24,6 +24,11 @@ namespace MarsarahUI.Patches.UI
 		private static bool targetVisible;
 		private static bool animating;
 
+		private const float SummonWidth = 49f;
+		private const float SummonHeight = 34f;
+		private const float SummonEndWidth = 12f;
+		private const float SummonSourceEndWidth = 12f;
+
 		[HarmonyPatch(typeof(Hud), "Awake")]
 		private static class SummonDisplayHudAwakePatch
 		{
@@ -58,7 +63,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (UISummonArea != null) return;
 
-			Vector2 areaSize = new Vector2(49f, 30f);
+			Vector2 areaSize = new Vector2(SummonWidth, SummonHeight);
 
 			UISummonArea = new GameObject("SummonDisplay");
 			UISummonArea.layer = 5;
@@ -71,8 +76,7 @@ namespace MarsarahUI.Patches.UI
 			summonAreaRect.sizeDelta = areaSize;
 			summonAreaRect.localScale = Vector3.one;
 
-			Image background = UISummonArea.AddComponent<Image>();
-			background.color = new Color(0f, 0f, 0f, 0.4f);
+			CreateThreePartBackground("SummonBackground", UISummonArea, "RailBorder", SummonSourceEndWidth, SummonEndWidth, log);
 
 			summonCanvasGroup = UISummonArea.AddComponent<CanvasGroup>();
 			summonCanvasGroup.alpha = 0f;
