@@ -1,9 +1,10 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
+using static TextViewer;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -41,6 +42,8 @@ namespace MarsarahUI.Patches.UI
 			internal GameObject Root;
 			internal LayoutElement Layout;
 			internal CanvasGroup CanvasGroup;
+			internal RectTransform LineRect;
+			internal Image LineImage;
 			internal float Progress;
 			internal bool TargetVisible;
 			internal bool Animating;
@@ -68,9 +71,6 @@ namespace MarsarahUI.Patches.UI
 		private static Text skillText;
 
 		// Rail
-		private const float RailHeight = 34f;
-		private const float RailOuterPadding = 6f;
-
 		private const float WeightWidth = 136f;
 		private const float SlotsWidth = 52f;
 		private const float CounterWidth = 52f;
@@ -85,18 +85,8 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject UIRail;
 		private static RectTransform railRect;
 
-		private const float RailEndWidth = 12f;
-		private const float RailSourceEndWidth = 12f;
-
-		// Separators
-		private const float SeparatorWidth = 7f;
-		private const float SeparatorLineWidth = 1f;
-		private const float SeparatorHeight = 18f;
-
-		// Colors
-		private static readonly Color InventoryTextColor = new Color(0.88f, 0.87f, 0.82f);
-		//private static readonly Color WeightFillColor = new Color(0.38f, 0.40f, 0.40f);
-		private static readonly Color WeightFillColor = new Color(0.333f, 0.357f, 0.369f);
+		private static GameObject railBackground;
+		private static HorizontalLayoutGroup railLayoutGroup;
 
 		private static readonly Dictionary<ElementType, RailElement> elements = new Dictionary<ElementType, RailElement>();
 
@@ -161,6 +151,8 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (UIRail != null) return;
 
+			UIStyleDefinition style = UIStyleManager.Current;
+
 			UIRail = new GameObject("InfoRail");
 			UIRail.layer = 5;
 			UIRail.transform.SetParent(hud.m_healthPanel.transform, false);
@@ -170,19 +162,19 @@ namespace MarsarahUI.Patches.UI
 			railRect.anchorMax = new Vector2(1f, 1f);
 			railRect.pivot = new Vector2(0f, 0.5f);
 			railRect.anchoredPosition = new Vector2(-88f, -230f);
-			railRect.sizeDelta = new Vector2(0f, RailHeight);
+			railRect.sizeDelta = new Vector2(0f, style.RailHeight);
 			railRect.localScale = Vector3.one;
 
-			CreateThreePartBackground("RailBackground", UIRail, "RailBorder", RailSourceEndWidth, RailEndWidth, log);
+			railBackground = CreateThreePartBackground("RailBackground", UIRail, style.RailBackgroundAsset, style.RailSourceEndWidth, style.RailEndWidth, log);
 
-			HorizontalLayoutGroup layoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
-			layoutGroup.padding = new RectOffset(7, 7, 3, 3);
-			layoutGroup.spacing = 0f;
-			layoutGroup.childAlignment = TextAnchor.MiddleLeft;
-			layoutGroup.childControlWidth = true;
-			layoutGroup.childControlHeight = true;
-			layoutGroup.childForceExpandWidth = false;
-			layoutGroup.childForceExpandHeight = true;
+			railLayoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
+			railLayoutGroup.padding = style.RailPadding;
+			railLayoutGroup.spacing = 0f;
+			railLayoutGroup.childAlignment = TextAnchor.MiddleLeft;
+			railLayoutGroup.childControlWidth = true;
+			railLayoutGroup.childControlHeight = true;
+			railLayoutGroup.childForceExpandWidth = false;
+			railLayoutGroup.childForceExpandHeight = true;
 
 			ContentSizeFitter sizeFitter = UIRail.AddComponent<ContentSizeFitter>();
 			sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -211,6 +203,11 @@ namespace MarsarahUI.Patches.UI
 			CreateInventoryElements();
 			CreateEnemyElements();
 			CreateSkillElements();
+
+			UIStyleManager.StyleChanged -= ApplyStyle;
+			UIStyleManager.StyleChanged += ApplyStyle;
+
+			ApplyStyle();
 
 			UIRail.SetActive(false);
 
@@ -265,6 +262,8 @@ namespace MarsarahUI.Patches.UI
 
 		private static void CreateSeparator(ElementType afterElement)
 		{
+			UIStyleDefinition style = UIStyleManager.Current;
+
 			GameObject root = new GameObject($"{afterElement}Separator");
 			root.layer = 5;
 			root.transform.SetParent(UIRail.transform, false);
@@ -291,16 +290,18 @@ namespace MarsarahUI.Patches.UI
 			lineRect.anchorMax = new Vector2(0.5f, 0.5f);
 			lineRect.pivot = new Vector2(0.5f, 0.5f);
 			lineRect.anchoredPosition = Vector2.zero;
-			lineRect.sizeDelta = new Vector2(SeparatorLineWidth, SeparatorHeight);
+			lineRect.sizeDelta = new Vector2(style.SeparatorLineWidth, style.SeparatorHeight);
 
 			Image line = lineObject.AddComponent<Image>();
-			line.color = new Color(1f, 1f, 1f, 0.4f);
+			line.color = style.SeparatorColor;
 
 			separators[afterElement] = new RailSeparator
 			{
 				Root = root,
 				Layout = layout,
 				CanvasGroup = canvasGroup,
+				LineRect = lineRect,
+				LineImage = line,
 				Progress = 0f,
 				TargetVisible = false,
 				Animating = false
@@ -432,7 +433,7 @@ namespace MarsarahUI.Patches.UI
 
 				float easedProgress = Mathf.SmoothStep(0f, 1f, separator.Progress);
 
-				separator.Layout.preferredWidth = SeparatorWidth * easedProgress;
+				separator.Layout.preferredWidth = UIStyleManager.Current.SeparatorWidth * easedProgress;
 				separator.CanvasGroup.alpha = easedProgress;
 
 				layoutChanged = true;
@@ -479,6 +480,8 @@ namespace MarsarahUI.Patches.UI
 
 		private static void CreateInventoryElements()
 		{
+			UIStyleDefinition style = UIStyleManager.Current;
+
 			GameObject weightContent = GetElementContent(ElementType.Weight);
 
 			if (weightContent != null)
@@ -501,54 +504,56 @@ namespace MarsarahUI.Patches.UI
 				weightBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
 				weightBarFill.fillAmount = 0f;
 
-				weightIcon = CreateRailIcon("WeightIcon", weightContent, "Weight", new Vector2(-50f, 0f));
+				weightIcon = CreateRailIcon("WeightIcon", weightContent, style.WeightIcon, new Vector2(-50f, 0f));
 				weightIcon.preserveAspect = true;
 
-				weightText = CreateTextObject("WeightText", weightContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(15f, 0f), new Vector2(100f, RailHeight));
+				weightText = CreateTextObject("WeightText", weightContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(15f, 0f), new Vector2(100f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject slotsContent = GetElementContent(ElementType.Slots);
 
 			if (slotsContent != null)
 			{
-				slotsIcon = CreateRailIcon("SlotsIcon", slotsContent, "Slots", new Vector2(-13f, 0f));
+				slotsIcon = CreateRailIcon("SlotsIcon", slotsContent, style.SlotsIcon, new Vector2(-13f, 0f));
 
-				slotsText = CreateTextObject("SlotsText", slotsContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				slotsText = CreateTextObject("SlotsText", slotsContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 		}
 
 		private static void CreateEnemyElements()
 		{
+			UIStyleDefinition style = UIStyleManager.Current;
+
 			GameObject enemyContent = GetElementContent(ElementType.Enemies);
 
 			if (enemyContent != null)
 			{
-				enemyIcon = CreateRailIcon("EnemyIcon", enemyContent, "Enemy", new Vector2(-13f, 0f));
-				enemyText = CreateTextObject("EnemyText", enemyContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				enemyIcon = CreateRailIcon("EnemyIcon", enemyContent, style.EnemyIcon, new Vector2(-13f, 0f));
+				enemyText = CreateTextObject("EnemyText", enemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject toughEnemyContent = GetElementContent(ElementType.ToughEnemies);
 
 			if (toughEnemyContent != null)
 			{
-				toughEnemyIcon = CreateRailIcon("ToughEnemyIcon", toughEnemyContent, "ToughEnemy", new Vector2(-13f, 0f));
-				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				toughEnemyIcon = CreateRailIcon("ToughEnemyIcon", toughEnemyContent, style.ToughEnemyIcon, new Vector2(-13f, 0f));
+				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject bossContent = GetElementContent(ElementType.Bosses);
 
 			if (bossContent != null)
 			{
-				bossIcon = CreateRailIcon("BossIcon", bossContent, "Boss", new Vector2(-13f, 0f));
-				bossText = CreateTextObject("BossText", bossContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				bossIcon = CreateRailIcon("BossIcon", bossContent, style.BossIcon, new Vector2(-13f, 0f));
+				bossText = CreateTextObject("BossText", bossContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject neutralContent = GetElementContent(ElementType.NeutralEnemies);
 
 			if (neutralContent != null)
 			{
-				neutralEnemyIcon = CreateRailIcon("NeutralEnemyIcon", neutralContent, "Neutral", new Vector2(-13f, 0f));
-				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, InfoValueColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, RailHeight));
+				neutralEnemyIcon = CreateRailIcon("NeutralEnemyIcon", neutralContent, style.NeutralIcon, new Vector2(-13f, 0f));
+				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 		}
 
@@ -576,13 +581,13 @@ namespace MarsarahUI.Patches.UI
 				if (weightBarFill != null)
 				{
 					weightBarFill.fillAmount = weightPercent;
-					weightBarFill.color = WeightFillColor;
+					weightBarFill.color = UIStyleManager.Current.WeightFillColor;
 				}
 
 				if (weightText != null)
 				{
 					weightText.text = $"{UIInventoryWeightAndSlots.CurrentWeight:0.0}/{UIInventoryWeightAndSlots.MaxWeight:0}";
-					weightText.color = InventoryTextColor;
+					weightText.color = UIStyleManager.Current.ValueTextColor;
 				}
 			}
 
@@ -591,7 +596,7 @@ namespace MarsarahUI.Patches.UI
 				if (slotsText != null)
 				{
 					slotsText.text = UIInventoryWeightAndSlots.FreeSlots.ToString();
-					slotsText.color = InventoryTextColor;
+					slotsText.color = UIStyleManager.Current.ValueTextColor;
 				}
 			}
 		}
@@ -649,6 +654,8 @@ namespace MarsarahUI.Patches.UI
 
 		private static void CreateSkillElements()
 		{
+			UIStyleDefinition style = UIStyleManager.Current;
+
 			GameObject skillContent = GetElementContent(ElementType.Skill);
 
 			if (skillContent == null) return;
@@ -656,7 +663,7 @@ namespace MarsarahUI.Patches.UI
 			skillIcon = CreateUIImageObject("SkillIcon", skillContent, new Vector2(-31f, 0f), new Vector2(24f, 24f));
 			skillIcon.preserveAspect = true;
 
-			skillText = CreateTextObject("SkillText", skillContent, InfoValueColor, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, new Vector2(12f, 0f), new Vector2(64f, RailHeight));
+			skillText = CreateTextObject("SkillText", skillContent, style.ValueTextColor, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, new Vector2(12f, 0f), new Vector2(64f, UIStyleManager.Current.RailHeight));
 		}
 
 		private static void UpdateSkillElements()
@@ -679,6 +686,107 @@ namespace MarsarahUI.Patches.UI
 				skillText.text = UISkillProgress.CurrentDisplayText;
 				skillText.color = InfoValueColor;
 			}
+		}
+
+		internal static void ApplyStyle()
+		{
+			if (UIRail == null) return;
+
+			UIStyleDefinition style = UIStyleManager.Current;
+
+			if (railRect != null)
+			{
+				railRect.sizeDelta = new Vector2(railRect.sizeDelta.x, style.RailHeight);
+			}
+
+			if (railLayoutGroup != null)
+			{
+				railLayoutGroup.padding = style.RailPadding;
+			}
+
+			railBackground = ReplaceThreePartBackground(
+				railBackground,
+				"RailBackground",
+				UIRail,
+				style.RailBackgroundAsset,
+				style.RailSourceEndWidth,
+				style.RailEndWidth,
+				log);
+
+			ApplyIconStyle(weightIcon, style.WeightIcon);
+			ApplyIconStyle(slotsIcon, style.SlotsIcon);
+			ApplyIconStyle(enemyIcon, style.EnemyIcon);
+			ApplyIconStyle(toughEnemyIcon, style.ToughEnemyIcon);
+			ApplyIconStyle(bossIcon, style.BossIcon);
+			ApplyIconStyle(neutralEnemyIcon, style.NeutralIcon);
+
+			if (weightText != null) weightText.color = style.ValueTextColor;
+			if (slotsText != null) slotsText.color = style.ValueTextColor;
+			if (enemyText != null) enemyText.color = style.ValueTextColor;
+			if (toughEnemyText != null) toughEnemyText.color = style.ValueTextColor;
+			if (bossText != null) bossText.color = style.ValueTextColor;
+			if (neutralEnemyText != null) neutralEnemyText.color = style.ValueTextColor;
+			if (skillText != null) skillText.color = style.ValueTextColor;
+
+			if (weightBarFill != null)
+			{
+				weightBarFill.color = style.WeightFillColor;
+			}
+
+			foreach (RailSeparator separator in separators.Values)
+			{
+				if (separator.LineRect != null)
+				{
+					separator.LineRect.sizeDelta = new Vector2(style.SeparatorLineWidth, style.SeparatorHeight);
+				}
+
+				if (separator.LineImage != null)
+				{
+					separator.LineImage.color = style.SeparatorColor;
+				}
+
+				if (!separator.Animating)
+				{
+					separator.Layout.preferredWidth = separator.TargetVisible ? style.SeparatorWidth : 0f;
+				}
+			}
+
+			UpdateTextHeights(style.RailHeight);
+			RebuildLayout();
+
+			log.Info($"Applied information rail style '{ConfigManager.InfoRailStyleChoice.Value}'.");
+		}
+
+		private static void ApplyIconStyle(Image icon, string iconName)
+		{
+			if (icon == null) return;
+
+			icon.sprite = IconManager.LoadHudIcon(iconName);
+			icon.preserveAspect = true;
+
+			if (icon.sprite == null)
+			{
+				log.Warn($"Could not load HUD icon '{iconName}'.");
+			}
+		}
+
+		private static void UpdateTextHeights(float railHeight)
+		{
+			UpdateTextHeight(weightText, railHeight);
+			UpdateTextHeight(slotsText, railHeight);
+			UpdateTextHeight(enemyText, railHeight);
+			UpdateTextHeight(toughEnemyText, railHeight);
+			UpdateTextHeight(bossText, railHeight);
+			UpdateTextHeight(neutralEnemyText, railHeight);
+			UpdateTextHeight(skillText, railHeight);
+		}
+
+		private static void UpdateTextHeight(Text text, float height)
+		{
+			if (text == null) return;
+
+			RectTransform rect = text.rectTransform;
+			rect.sizeDelta = new Vector2(rect.sizeDelta.x, height);
 		}
 	}
 } 

@@ -211,5 +211,15 @@ namespace MarsarahUI.Patches.UI
 			image.color = Color.white;
 			image.raycastTarget = false;
 		}
+
+		internal static GameObject ReplaceThreePartBackground(GameObject currentBackground, string objectName, GameObject parent, string spriteName, float sourceEndWidth, float renderedEndWidth, LogManager specificLog)
+		{
+			if (currentBackground != null)
+			{
+				UnityEngine.Object.Destroy(currentBackground);
+			}
+
+			return CreateThreePartBackground(objectName, parent, spriteName, sourceEndWidth, renderedEndWidth, specificLog);
+		}
 	}
 }

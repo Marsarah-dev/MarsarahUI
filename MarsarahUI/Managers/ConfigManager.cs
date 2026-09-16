@@ -42,6 +42,13 @@ namespace MarsarahUI.Managers
 			}
 		}
 
+		public enum InfoRailStyle
+		{
+			Style1,
+			Style2,
+			Style3
+		}
+
 		public enum TimeMode
 		{
 			DigitalClock,
@@ -207,6 +214,7 @@ namespace MarsarahUI.Managers
 
 		public static class Configs
 		{
+			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("00 - Information Rail Style", "Choose the visual style used by the information rail and summon counter.");
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("01 - Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.");
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.");
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Enemy Detector", "Choose whether nearby hostile enemies are consolidated into one counter, tougher enemies are shown separately, or enemy detection is disabled.");
@@ -255,6 +263,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("13 - Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.");
 		}
 
+		public static ConfigEntry<InfoRailStyle> InfoRailStyleChoice;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
 		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
 		public static ConfigEntry<EnemyDetectorMode> EnemyDetectorChoice;
@@ -389,6 +398,9 @@ namespace MarsarahUI.Managers
 			Config = configFile;
 
 			// ===== Local UI Settings
+			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style3);
+			UIStyleManager.Initialize(InfoRailStyleChoice);
+
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
 			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);

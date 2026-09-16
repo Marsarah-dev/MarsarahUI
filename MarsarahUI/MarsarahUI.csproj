@@ -94,6 +94,7 @@
     <Compile Include="Managers\GearProgressionManager.cs" />
     <Compile Include="Managers\IconManager.cs" />
     <Compile Include="Managers\LogManager.cs" />
+    <Compile Include="Managers\UIStyleManager.cs" />
     <Compile Include="MarsarahUI.cs" />
     <Compile Include="Patches\UI\UIAshlandsHeatLevel.cs" />
     <Compile Include="Patches\UI\UIBoatSpeed.cs" />
