@@ -82,6 +82,7 @@ namespace MarsarahUI.Managers
 		internal Color NeutralTextColor;
 		internal Color SkillTextColor;
 		internal Color SummonTextColor;
+		internal Color WeightLabelColor;
 
 		// Color Modes
 		internal InfoRailColorMode WeightFillColorMode;
@@ -139,6 +140,7 @@ namespace MarsarahUI.Managers
 			NeutralTextColor = new Color(1f, 0.75f, 0.2f),
 			SkillTextColor = new Color(1f, 0.75f, 0.2f),
 			SummonTextColor = Color.white,
+			WeightLabelColor = Color.yellow,
 
 			// Color Modes
 			WeightFillColorMode = InfoRailColorMode.WeightGradient,
@@ -196,6 +198,7 @@ namespace MarsarahUI.Managers
 			NeutralTextColor = new Color(1f, 0.75f, 0.2f),
 			SkillTextColor = new Color(1f, 0.75f, 0.2f),
 			SummonTextColor = Color.white,
+			WeightLabelColor = Color.yellow,
 
 			// Color Modes
 			WeightFillColorMode = InfoRailColorMode.WarmWeightGradient,
@@ -251,6 +254,7 @@ namespace MarsarahUI.Managers
 			NeutralTextColor = new Color(0.88f, 0.87f, 0.82f),
 			SkillTextColor = new Color(0.88f, 0.87f, 0.82f),
 			SummonTextColor = new Color(0.88f, 0.87f, 0.82f),
+			WeightLabelColor = new Color(0.88f, 0.87f, 0.82f),
 
 			// Color Modes
 			WeightFillColorMode = InfoRailColorMode.Fixed,

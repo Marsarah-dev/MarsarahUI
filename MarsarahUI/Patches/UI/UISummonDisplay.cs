@@ -9,12 +9,15 @@ namespace MarsarahUI.Patches.UI
 	{
 		private static readonly LogManager log = new LogManager("UI Summon Display", LogManager.LogLevel.Warning);
 
+		private static ConfigManager.InfoRailDisplayMode currentDisplayMode;
+
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 8f;
 
 		private static readonly Vector2 VisiblePosition = new Vector2(38f, -85f);
 
 		private static GameObject UISummonArea;
+		private static Text summonLabel;
 		private static RectTransform summonAreaRect;
 		private static CanvasGroup summonCanvasGroup;
 		private static Text summonText;
@@ -26,6 +29,15 @@ namespace MarsarahUI.Patches.UI
 
 		private static GameObject summonBackground;
 		private static GameObject summonBorder;
+
+		private static readonly Vector2 SummonIconModeSize = new Vector2(49f, 34f);
+		private static readonly Vector2 SummonTextModeSize = new Vector2(66f, 42f);
+
+		private static readonly Vector2 SummonIconModeIconPosition = new Vector2(-9f, 0f);
+		private static readonly Vector2 SummonIconModeTextPosition = new Vector2(-8f, 0f);
+
+		private static readonly Vector2 SummonTextModeLabelPosition = new Vector2(0f, 9f);
+		private static readonly Vector2 SummonTextModeValuePosition = new Vector2(0f, -8f);
 
 		[HarmonyPatch(typeof(Hud), "Awake")]
 		private static class SummonDisplayHudAwakePatch
@@ -54,6 +66,7 @@ namespace MarsarahUI.Patches.UI
 				SetVisible(visible);
 				UpdateDisplay();
 				UpdateAnimation();
+				UpdateDisplayMode();
 			}
 		}
 
@@ -84,7 +97,7 @@ namespace MarsarahUI.Patches.UI
 			summonCanvasGroup.interactable = false;
 			summonCanvasGroup.blocksRaycasts = false;
 
-			summonIcon = CreateUIImageObject("SummonIcon", UISummonArea, new Vector2(-10f, 0f), new Vector2(24f, 24f));
+			summonIcon = CreateUIImageObject("SummonIcon", UISummonArea, SummonIconModeIconPosition, new Vector2(24f, 24f));
 			summonIcon.sprite = IconManager.LoadHudIcon(style.SummonIcon);
 			summonIcon.preserveAspect = true;
 			summonIcon.color = Color.white;
@@ -94,12 +107,16 @@ namespace MarsarahUI.Patches.UI
 				log.Warn($"Could not load HUD icon '{style.SummonIcon}'.");
 			}
 
-			summonText = CreateTextObject("SummonText", UISummonArea, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, new Vector2(-7f, 0f), areaSize);
+			summonText = CreateTextObject("SummonText", UISummonArea, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, SummonIconModeTextPosition, areaSize);
+
+			summonLabel = CreateTextObject("SummonLabel", UISummonArea, style.SummonTextColor, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, SummonTextModeLabelPosition, new Vector2(66f, 18f));
+			summonLabel.text = "Summons";
 
 			UIStyleManager.StyleChanged -= ApplyStyle;
 			UIStyleManager.StyleChanged += ApplyStyle;
 
 			ApplyStyle();
+			ApplyDisplayMode();
 
 			UISummonArea.SetActive(false);
 
@@ -197,7 +214,77 @@ namespace MarsarahUI.Patches.UI
 				summonText.rectTransform.sizeDelta = style.SummonSize;
 			}
 
+			if (summonLabel != null) summonLabel.color = style.SummonTextColor;
+
+			ApplyDisplayMode();
+
 			log.Info($"Applied information rail style '{ConfigManager.InfoRailStyleChoice.Value}' to summon display.");
+		}
+
+		private static void ApplyDisplayMode()
+		{
+			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+			UIStyleDefinition style = UIStyleManager.Current;
+
+			if (summonIcon != null)
+			{
+				summonIcon.gameObject.SetActive(!useText);
+			}
+
+			if (summonLabel != null)
+			{
+				summonLabel.gameObject.SetActive(useText);
+			}
+
+			if (summonAreaRect != null)
+			{
+				summonAreaRect.sizeDelta = useText ? SummonTextModeSize : style.SummonSize;
+			}
+
+			if (summonText != null)
+			{
+				RectTransform textRect = summonText.rectTransform;
+
+				if (useText)
+				{
+					textRect.anchorMin = new Vector2(0.5f, 0.5f);
+					textRect.anchorMax = new Vector2(0.5f, 0.5f);
+					textRect.pivot = new Vector2(0.5f, 0.5f);
+					textRect.anchoredPosition = SummonTextModeValuePosition;
+					textRect.sizeDelta = new Vector2(66f, 18f);
+					summonText.alignment = TextAnchor.MiddleCenter;
+				}
+				else
+				{
+					textRect.anchorMin = new Vector2(0.5f, 0.5f);
+					textRect.anchorMax = new Vector2(0.5f, 0.5f);
+					textRect.pivot = new Vector2(0.5f, 0.5f);
+					textRect.anchoredPosition = SummonIconModeTextPosition;
+					textRect.sizeDelta = style.SummonSize;
+					summonText.alignment = TextAnchor.MiddleRight;
+				}
+			}
+
+			if (summonLabel != null)
+			{
+				RectTransform labelRect = summonLabel.rectTransform;
+				labelRect.anchorMin = new Vector2(0.5f, 0.5f);
+				labelRect.anchorMax = new Vector2(0.5f, 0.5f);
+				labelRect.pivot = new Vector2(0.5f, 0.5f);
+				labelRect.anchoredPosition = SummonTextModeLabelPosition;
+				labelRect.sizeDelta = new Vector2(66f, 18f);
+			}
+
+			currentDisplayMode = ConfigManager.EffectiveInfoRailDisplayModeChoice;
+		}
+
+		private static void UpdateDisplayMode()
+		{
+			ConfigManager.InfoRailDisplayMode mode = ConfigManager.EffectiveInfoRailDisplayModeChoice;
+
+			if (mode == currentDisplayMode) return;
+
+			ApplyDisplayMode();
 		}
 	}
 }

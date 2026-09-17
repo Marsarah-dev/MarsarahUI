@@ -77,13 +77,10 @@ namespace MarsarahUI.Patches.UI
 
 		// Rail
 		private const float WeightWidth = 136f;
-		private const float WeightTextModeWidth = 168f;
+		private const float WeightTextModeWidth = 162f;
 
 		private static readonly Vector2 WeightBarIconModePosition = new Vector2(80f, 0f);
-		private static readonly Vector2 WeightBarTextModePosition = new Vector2(96f, 0f);
-
 		private static readonly Vector2 WeightTextIconModePosition = new Vector2(15f, 0f);
-		private static readonly Vector2 WeightTextTextModePosition = new Vector2(31f, 0f);
 
 		private const float SlotsWidth = 52f;
 		private const float SlotsTextWidth = 70f;
@@ -97,7 +94,6 @@ namespace MarsarahUI.Patches.UI
 		private const float IconSize = 24f;
 		private const float CounterIconX = -13f;
 		private const float CounterTextX = 13f;
-		private const float CounterTextModeValueX = 30f;
 
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 8f;
@@ -171,7 +167,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static Text CreateRailLabel(string objectName, GameObject parent, string label, Vector2 position, Vector2 size)
 		{
-			Text text = CreateTextObject(objectName, parent, UIStyleManager.Current.ValueTextColor, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, position, size);
+			Text text = CreateTextObject(objectName, parent, UIStyleManager.Current.WeightLabelColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, position, size);
 			text.text = label;
 			return text;
 		}
@@ -791,7 +787,7 @@ namespace MarsarahUI.Patches.UI
 			if (bossText != null) bossText.color = style.BossTextColor;
 			if (neutralEnemyText != null) neutralEnemyText.color = style.NeutralTextColor;
 			if (skillText != null) skillText.color = style.SkillTextColor;
-			if (weightLabel != null) weightLabel.color = style.ValueTextColor;
+			if (weightLabel != null) weightLabel.color = style.WeightLabelColor;
 
 			if (weightBarFill != null)
 			{
@@ -967,12 +963,58 @@ namespace MarsarahUI.Patches.UI
 
 			if (weightBarRect != null)
 			{
-				weightBarRect.anchoredPosition = useText ? WeightBarTextModePosition : WeightBarIconModePosition;
+				if (useText)
+				{
+					weightBarRect.anchorMin = new Vector2(0f, 0.5f);
+					weightBarRect.anchorMax = new Vector2(0f, 0.5f);
+					weightBarRect.pivot = new Vector2(0f, 0.5f);
+					weightBarRect.anchoredPosition = new Vector2(60f, 0f);
+					weightBarRect.sizeDelta = new Vector2(102f, 24f);
+				}
+				else
+				{
+					weightBarRect.anchorMin = new Vector2(0f, 0.5f);
+					weightBarRect.anchorMax = new Vector2(0f, 0.5f);
+					weightBarRect.pivot = new Vector2(0.5f, 0.5f);
+					weightBarRect.anchoredPosition = WeightBarIconModePosition;
+					weightBarRect.sizeDelta = new Vector2(94f, 24f);
+				}
+			}
+
+			if (weightLabel != null)
+			{
+				RectTransform labelRect = weightLabel.rectTransform;
+
+				if (useText)
+				{
+					labelRect.anchorMin = new Vector2(0f, 0.5f);
+					labelRect.anchorMax = new Vector2(0f, 0.5f);
+					labelRect.pivot = new Vector2(0f, 0.5f);
+					labelRect.anchoredPosition = Vector2.zero;
+					labelRect.sizeDelta = new Vector2(55f, UIStyleManager.Current.RailHeight);
+				}
 			}
 
 			if (weightText != null)
 			{
-				weightText.rectTransform.anchoredPosition = useText ? WeightTextTextModePosition : WeightTextIconModePosition;
+				RectTransform textRect = weightText.rectTransform;
+
+				if (useText)
+				{
+					textRect.anchorMin = new Vector2(0f, 0.5f);
+					textRect.anchorMax = new Vector2(0f, 0.5f);
+					textRect.pivot = new Vector2(0f, 0.5f);
+					textRect.anchoredPosition = new Vector2(60f, 0f);
+					textRect.sizeDelta = new Vector2(102f, UIStyleManager.Current.RailHeight);
+				}
+				else
+				{
+					textRect.anchorMin = new Vector2(0.5f, 0.5f);
+					textRect.anchorMax = new Vector2(0.5f, 0.5f);
+					textRect.pivot = new Vector2(0.5f, 0.5f);
+					textRect.anchoredPosition = WeightTextIconModePosition;
+					textRect.sizeDelta = new Vector2(100f, UIStyleManager.Current.RailHeight);
+				}
 			}
 		}
 	}
