@@ -84,7 +84,7 @@ namespace MarsarahUI.Patches.UI
 			summonCanvasGroup.interactable = false;
 			summonCanvasGroup.blocksRaycasts = false;
 
-			summonIcon = CreateUIImageObject("SummonIcon", UISummonArea, new Vector2(-12f, 0f), new Vector2(24f, 24f));
+			summonIcon = CreateUIImageObject("SummonIcon", UISummonArea, new Vector2(-10f, 0f), new Vector2(24f, 24f));
 			summonIcon.sprite = IconManager.LoadHudIcon(style.SummonIcon);
 			summonIcon.preserveAspect = true;
 			summonIcon.color = Color.white;
@@ -94,7 +94,7 @@ namespace MarsarahUI.Patches.UI
 				log.Warn($"Could not load HUD icon '{style.SummonIcon}'.");
 			}
 
-			summonText = CreateTextObject("SummonText", UISummonArea, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, new Vector2(-5f, 0f), areaSize);
+			summonText = CreateTextObject("SummonText", UISummonArea, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, new Vector2(-7f, 0f), areaSize);
 
 			UIStyleManager.StyleChanged -= ApplyStyle;
 			UIStyleManager.StyleChanged += ApplyStyle;

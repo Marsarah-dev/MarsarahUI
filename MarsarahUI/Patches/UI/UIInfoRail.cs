@@ -548,7 +548,7 @@ namespace MarsarahUI.Patches.UI
 				weightBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
 				weightBarFill.fillAmount = 0f;
 
-				weightIcon = CreateRailIcon("WeightIcon", weightContent, style.WeightIcon, new Vector2(-50f, 0f));
+				weightIcon = CreateRailIcon("WeightIcon", weightContent, style.WeightIcon, new Vector2(-54f, 0f));
 				weightText = CreateTextObject("WeightText", weightContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(15f, 0f), new Vector2(100f, UIStyleManager.Current.RailHeight));
 			}
 
