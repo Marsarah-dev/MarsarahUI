@@ -47,7 +47,7 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		public static Text CreateTextObject(string name, GameObject parent, Color textColor, string fontName, int fontSize, TextAnchor alignment, Vector2 position, Vector2 sizeDelta)
+		internal static Text CreateTextObject(string name, GameObject parent, Color textColor, string fontName, int fontSize, TextAnchor alignment, Vector2 position, Vector2 sizeDelta)
 		{
 			GameObject textObject = new GameObject(name);
 			textObject.layer = 5;
@@ -73,7 +73,7 @@ namespace MarsarahUI.Patches.UI
 			return text;
 		}
 
-		public static TextMeshProUGUI CreateTMPTextObject(string name, GameObject parent, Color textColor, string fontName, int fontSize, TextAlignmentOptions alignment, Vector2 position, Vector2 sizeDelta, LogManager specificLog)
+		internal static TextMeshProUGUI CreateTMPTextObject(string name, GameObject parent, Color textColor, string fontName, int fontSize, TextAlignmentOptions alignment, Vector2 position, Vector2 sizeDelta, LogManager specificLog)
 		{
 			GameObject textObject = new GameObject(name);
 			textObject.layer = 5;
@@ -113,7 +113,7 @@ namespace MarsarahUI.Patches.UI
 			return tmpText;
 		}
 
-		public static Image CreateUIImageObject(string name, GameObject parent, Vector2 position, Vector2 sizeDelta)
+		internal static Image CreateUIImageObject(string name, GameObject parent, Vector2 position, Vector2 sizeDelta)
 		{
 			GameObject iconObject = new GameObject(name);
 			iconObject.layer = 5;

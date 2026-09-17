@@ -549,8 +549,6 @@ namespace MarsarahUI.Patches.UI
 				weightBarFill.fillAmount = 0f;
 
 				weightIcon = CreateRailIcon("WeightIcon", weightContent, style.WeightIcon, new Vector2(-50f, 0f));
-				weightIcon.preserveAspect = true;
-
 				weightText = CreateTextObject("WeightText", weightContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(15f, 0f), new Vector2(100f, UIStyleManager.Current.RailHeight));
 			}
 
@@ -559,7 +557,7 @@ namespace MarsarahUI.Patches.UI
 			if (slotsContent != null)
 			{
 				slotsIcon = CreateRailIcon("SlotsIcon", slotsContent, style.SlotsIcon, new Vector2(CounterIconX, 0f));
-				slotsText = CreateTextObject("SlotsText", slotsContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				slotsText = CreateTextObject("SlotsText", slotsContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 		}
 
@@ -572,7 +570,7 @@ namespace MarsarahUI.Patches.UI
 			if (enemyContent != null)
 			{
 				enemyIcon = CreateRailIcon("EnemyIcon", enemyContent, style.EnemyIcon, new Vector2(CounterIconX, 0f));
-				enemyText = CreateTextObject("EnemyText", enemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				enemyText = CreateTextObject("EnemyText", enemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject toughEnemyContent = GetElementContent(ElementType.ToughEnemies);
@@ -580,7 +578,7 @@ namespace MarsarahUI.Patches.UI
 			if (toughEnemyContent != null)
 			{
 				toughEnemyIcon = CreateRailIcon("ToughEnemyIcon", toughEnemyContent, style.ToughEnemyIcon, new Vector2(CounterIconX, 0f));
-				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject bossContent = GetElementContent(ElementType.Bosses);
@@ -588,7 +586,7 @@ namespace MarsarahUI.Patches.UI
 			if (bossContent != null)
 			{
 				bossIcon = CreateRailIcon("BossIcon", bossContent, style.BossIcon, new Vector2(CounterIconX, 0f));
-				bossText = CreateTextObject("BossText", bossContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				bossText = CreateTextObject("BossText", bossContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject neutralContent = GetElementContent(ElementType.NeutralEnemies);
@@ -596,7 +594,7 @@ namespace MarsarahUI.Patches.UI
 			if (neutralContent != null)
 			{
 				neutralEnemyIcon = CreateRailIcon("NeutralEnemyIcon", neutralContent, style.NeutralIcon, new Vector2(CounterIconX, 0f));
-				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 		}
 
