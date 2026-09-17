@@ -69,7 +69,7 @@ namespace MarsarahUI.Patches.UI
 				int bosses = 0;
 				int neutralEnemies = 0;
 
-				bool splitEnemies =	ConfigManager.EffectiveEnemyDetectorChoice == ConfigManager.EnemyDetectorMode.Split;
+				bool splitEnemies = ConfigManager.EffectiveEnemyDetectorChoice == ConfigManager.EnemyDetectorMode.Split;
 
 				List<Character> characters = new List<Character>();
 				Character.GetCharactersInRange(___m_localPlayer.transform.position, DetectionRadius, characters);

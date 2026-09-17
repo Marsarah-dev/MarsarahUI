@@ -99,8 +99,6 @@ namespace MarsarahUI.Patches.UI
 
 			if (mode != ContainerContentsMode.Text) return "";
 
-			if (ConfigManager.EffectiveContainerContentsChoice != ContainerContentsMode.Text) return "";
-
 			StringBuilder stringBuilder = new StringBuilder();
 			int shown = 0;
 			int total = items.Count;

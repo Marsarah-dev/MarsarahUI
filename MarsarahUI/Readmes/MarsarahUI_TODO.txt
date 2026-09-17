@@ -13,17 +13,20 @@ A. Updates / Fixes
 
 * Better Item Durability Bar
   - Fixed an incorrect durability display if an item was positioned in a quickslot that had empty quicklots before it. 
+  - Fixed the vanilla sprite not restoring when this config was toggled off mid-game.
 
-* Upated config layout and grouped by categories. Added more server overrides options.
+* Configuration
+  - Upated config layout and grouped by categorie, currently having 5 in total. 
+  - Added Configuration Manager medatata for ordering of configs. 
+  - Removed the "xx - " from individual naming of configs, due to the new metadata.
+  - Added a server override option for the Information Rail display mode.
 
 B. New additions
 ------------------------
 * Status Effects Under Minimap:
   - Added a compact status-effects vertical layout below the minimap.
-  - Added a local config toggle with live switching back to the vanilla layout.
   - Restores the vanilla layout automatically when No Map mode is active.
   - Repositioned and resized the vanilla sailing wind indicator and sailing controls to the left of the minimap while this layout is enabled.
-  - Repositioned the Boat Speed indicator above the relocated sailing controls.
   - All sailing UI positioning restores dynamically when the feature is disabled or No Map mode is active.
 
 * Global Chat By Default:
@@ -34,8 +37,8 @@ B. New additions
 
 * Skill Progress Bar:
   - Added a temporary full-width progress bar along the bottom edge of the screen when a skill crosses a whole percentage toward its next level.
-  - Displays the skill's actual in-game icon together with its current level and progress percentage.
-  - Skill information is positioned alongside the Inventory Weight / Free Slots and Enemy Detector widgets and dynamically accounts for those features being enabled or disabled.
+  - Displays the skill's actual in-game icon (if in icon style) together with its current level and progress percentage.
+  - Skill information is now displayed as a temporary element in the Information Rail and supports both Icons and Text display modes.
   - Reserves space for the optional neutral Enemy Detector indicator so the Skill Progress widget does not move when neutral creatures appear or disappear.
   - Excludes Run skill progress from triggering the display.
   - New progress from the same or another skill updates the current display and resets its duration rather than stacking notifications.
@@ -134,18 +137,24 @@ B. New additions
   - Text mode now aligns quantities/names and adjusts for large numbers.
 
 * Information Rail Overhaul
-  - Overhauled the bottom-left imfo panel to better handle different information elements
-  - Added animation transitions for the temporary elements showing in the rail
-  - Added 3 visual styles for the information rail selectable from config, that affect the icons, text color display and borders
+  - Overhauled the bottom-left imfo panel to better handle different information elements.
+  - Inventory Weight/Free Slots, Enemy Detector and Skill Progress were consolidated into the rail.
+  - Temporary elements (enemies / skill levelups) animate in/out.
+  - Summons remains standalone but shares Information Rail style/display mode
+  - Added 3 visual styles for the information rail selectable from config, that affects the icons, text color display and borders
   - Added a text option in place of icons that applies for all 3 styles
+  - Icons/Text is live-switchable, and can be server-overridden.
  
 * Enemy Detector
-  - Added an option for trasking enemies split by type
-  - The categories are: normal, tough and boss
+  - Added an option for traking enemies split by type (in addition to the normal detection method)
+  - Current selections are: Consoliated and Split.
+  - In Consolidated, bosses/minibosses contribute to the normal enemy count
+  - In Split, tough enemies and bosses get their own counters.
   - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Solder, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
   - Enemies in the boss category are all bosses and 4 minibosses
   - Added a config option to display the enemy detector at the top-middle of the screen
-  - The Enemy Detector is now affected by the main Information Rail styles.
+  - The Enemy Detector is now affected by the main Information Rail styles
+  - The normal counter dissapears when there are no enemies detected.
 
 ============================================================
 TO IMPLEMENT / VERIFY
