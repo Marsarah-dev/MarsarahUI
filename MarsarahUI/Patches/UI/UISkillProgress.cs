@@ -28,6 +28,7 @@ namespace MarsarahUI.Patches.UI
 		internal static bool IsDisplaying { get; private set; }
 		internal static Sprite CurrentSkillIcon { get; private set; }
 		internal static string CurrentDisplayText { get; private set; } = "";
+		internal static string CurrentSkillName { get; private set; } = "";
 
 		private struct SkillProgressState
 		{
@@ -201,9 +202,8 @@ namespace MarsarahUI.Patches.UI
 			skillProgressFill.color = GetBarColor(ConfigManager.EffectiveSkillProgressBarChoice);
 
 			CurrentSkillIcon = skillIcon;
-			CurrentDisplayText = skillIcon != null
-				? $"{level} - {percent}%"
-				: $"{skillName} {level} - {percent}%";
+			CurrentSkillName = skillName;
+			CurrentDisplayText = $"{level} - {percent}%";
 
 			if (skillProgressCanvasGroup != null)
 			{

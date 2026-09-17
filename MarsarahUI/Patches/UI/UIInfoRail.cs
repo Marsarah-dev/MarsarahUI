@@ -85,8 +85,9 @@ namespace MarsarahUI.Patches.UI
 		private const float SlotsWidth = 52f;
 		private const float SlotsTextWidth = 70f;
 		private const float CounterIconWidth = 52f;
-		private const float SkillWidth = 100f;
-		private const float EnemyTextWidth = 82f;
+		private const float SkillIconWidth = 100f;
+		private const float SkillTextPadding = 16f;
+		private const float EnemyTextWidth = 85f;
 		private const float ToughEnemyTextWidth = 72f;
 		private const float BossTextWidth = 65f;
 		private const float NeutralEnemyTextWidth = 78f;
@@ -225,7 +226,7 @@ namespace MarsarahUI.Patches.UI
 			CreateElement(ElementType.NeutralEnemies, CounterIconWidth);
 			CreateSeparator(ElementType.NeutralEnemies);
 
-			CreateElement(ElementType.Skill, SkillWidth);
+			CreateElement(ElementType.Skill, SkillIconWidth);
 
 			CreateInventoryElements();
 			CreateEnemyElements();
@@ -742,15 +743,27 @@ namespace MarsarahUI.Patches.UI
 
 			if (!visible) return;
 
+			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+
 			if (skillIcon != null)
 			{
 				skillIcon.sprite = UISkillProgress.CurrentSkillIcon;
-				skillIcon.gameObject.SetActive(UISkillProgress.CurrentSkillIcon != null);
+				skillIcon.gameObject.SetActive(!useText && UISkillProgress.CurrentSkillIcon != null);
 			}
 
 			if (skillText != null)
 			{
-				skillText.text = UISkillProgress.CurrentDisplayText;
+				skillText.text = useText
+					? $"{UISkillProgress.CurrentSkillName}: {UISkillProgress.CurrentDisplayText}"
+					: UISkillProgress.CurrentDisplayText;
+
+				if (useText)
+				{
+					float textWidth = skillText.preferredWidth + SkillTextPadding;
+
+					SetElementWidth(ElementType.Skill, textWidth);
+					ApplySkillLayout(true, textWidth);
+				}
 			}
 		}
 
@@ -895,6 +908,19 @@ namespace MarsarahUI.Patches.UI
 			SetElementWidth(ElementType.Bosses, useText ? BossTextWidth : CounterIconWidth);
 			SetElementWidth(ElementType.NeutralEnemies, useText ? NeutralEnemyTextWidth : CounterIconWidth);
 
+			if (useText)
+			{
+				float textWidth = skillText != null ? skillText.preferredWidth + SkillTextPadding : SkillIconWidth;
+
+				SetElementWidth(ElementType.Skill, textWidth);
+				ApplySkillLayout(true, textWidth);
+			}
+			else
+			{
+				SetElementWidth(ElementType.Skill, SkillIconWidth);
+				ApplySkillLayout(false, SkillIconWidth);
+			}
+
 			SetCounterTextLayout(slotsText, useText, SlotsTextWidth);
 			SetCounterTextLayout(enemyText, useText, EnemyTextWidth);
 			SetCounterTextLayout(toughEnemyText, useText, ToughEnemyTextWidth);
@@ -1015,6 +1041,31 @@ namespace MarsarahUI.Patches.UI
 					textRect.anchoredPosition = WeightTextIconModePosition;
 					textRect.sizeDelta = new Vector2(100f, UIStyleManager.Current.RailHeight);
 				}
+			}
+		}
+
+		private static void ApplySkillLayout(bool useText, float textWidth)
+		{
+			if (skillIcon != null)
+			{
+				skillIcon.gameObject.SetActive(!useText && UISkillProgress.CurrentSkillIcon != null);
+			}
+
+			if (skillText == null) return;
+
+			RectTransform rect = skillText.rectTransform;
+
+			if (useText)
+			{
+				rect.anchoredPosition = Vector2.zero;
+				rect.sizeDelta = new Vector2(textWidth, UIStyleManager.Current.RailHeight);
+				skillText.alignment = TextAnchor.MiddleCenter;
+			}
+			else
+			{
+				rect.anchoredPosition = new Vector2(12f, 0f);
+				rect.sizeDelta = new Vector2(64f, UIStyleManager.Current.RailHeight);
+				skillText.alignment = TextAnchor.MiddleCenter;
 			}
 		}
 	}
