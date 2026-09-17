@@ -26,20 +26,32 @@ namespace MarsarahUI.Managers
 
 		public static class ConfigSections
 		{
-			public const string UI = "1 - UI Settings (Local)";
-			public const string ServerOverrides = "2 - Server Overrides (Synced)";
+			public const string GeneralHUD = "01 - General & HUD (Local)";
+			public const string InformationRail = "02 - Information Rail (Local)";
+			public const string ItemsInteraction = "03 - Items & Interaction (Local)";
+			public const string DetailedHovers = "04 - Detailed Hovers (Local)";
+			public const string ServerOverrides = "05 - Server Overrides (Synced)";
 		}
 
 		public struct ConfigMetadata
 		{
 			public string Name;
 			public string Description;
+			public string Section;
+			public int Order;
 
-			public ConfigMetadata(string name, string description)
+			public ConfigMetadata(string name, string description, string section, int order)
 			{
 				Name = name;
 				Description = description;
+				Section = section;
+				Order = order;
 			}
+		}
+
+		private sealed class ConfigurationManagerAttributes
+		{
+			public int? Order;
 		}
 
 		public enum InfoRailStyle
@@ -173,6 +185,24 @@ namespace MarsarahUI.Managers
 			PercentAndTime
 		}
 
+		public enum SkillProgressBarColor
+		{
+			Gold,
+			White,
+			Green,
+			Blue,
+			Cyan,
+			Red,
+			Purple,
+			Off
+		}
+
+		public enum EnemyDetectorPosition
+		{
+			InfoRail,
+			TopCenter
+		}
+
 		public enum BoolOverride
 		{
 			UserChoice,
@@ -206,75 +236,73 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
-		public enum SkillProgressBarColor
+		public enum InfoRailDisplayModeOverride
 		{
-			Gold,
-			White,
-			Green,
-			Blue,
-			Cyan,
-			Red,
-			Purple,
-			Off
-		}
-
-		public enum EnemyDetectorPosition
-		{
-			InfoRail,
-			TopCenter
+			UserChoice,
+			Icons,
+			Text
 		}
 
 		public static class Configs
 		{
-			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("00 - Information Rail Style", "Choose the visual style used by the information rail and summon counter.");
-			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("00a - Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.");
-			public static readonly ConfigMetadata UIEnemyDetectorPosition = new ConfigMetadata("00b - Enemy Detector Position", "Choose whether the enemy detector is displayed in the bottom-left information rail or separately at the top-center of the screen.");
-			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("01 - Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.");
-			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.");
-			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.");
-			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("04 - Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator");
-			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("05 - Show Current Day", "Shows the current day above the minimap.");
-			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("06 - Show Current Time", "Shows the current time above the minimap. Can choose between digital clock and day sections");
-			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("07 - Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.");
-			public static readonly ConfigMetadata UISmartBiome = new ConfigMetadata("08 - Smart Biome Indicator", "Shows smart biome text on the minimap (colored according to worn armor relative to current biome)");
-			public static readonly ConfigMetadata UISummonCounter = new ConfigMetadata("09 - Show Summon Counter", "Shows number of summoned skeletons from the Dead Raiser");
-			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("10 - Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.");
-			public static readonly ConfigMetadata UIShowOwnedResources = new ConfigMetadata("11 - Show Owned Resources In Build Menu", "Displays the total amount of resources in the player's inventory in addition to the required resource amount for the selected piece or recipe in the build or crafting menu");
-			public static readonly ConfigMetadata UIShowPowerExpiration = new ConfigMetadata("12 - Show Boss Power Expiration Message", "Displays a message in the center of the screen when any Forsaken Power expires");
-			public static readonly ConfigMetadata UIAshlandsHeatLevel = new ConfigMetadata("13 - Show Heat Meter in Ashlands", "Shows a heat meter at the top-center of the screen when in Ashlands water or lava");
-			public static readonly ConfigMetadata UIEnemyNameplateMode = new ConfigMetadata("14 - Enemy Nameplate Mode", "Changes the way enemy nameplates are displayed by changing bar style and colors and alerted/aggravated status. Has different ways of showing HP");
-			public static readonly ConfigMetadata UITamingProgress = new ConfigMetadata("15 - Show Taming Progress", "Displays current taming percentage of animals that are acclamatizing under the HP bar. This is independent of Enemy Nameplate Mode");
-			public static readonly ConfigMetadata UIItemQualityIndicatorMode = new ConfigMetadata("16 - Item Quality Indicator Mode", "Changes the way item quality is displayed by converting the vanilla number to symbols.");
-			public static readonly ConfigMetadata UIItemQualitySymbol = new ConfigMetadata("17 - Symbol For Item Quality", "Choose the symbol used for the item quality indicator. Requires Item Quality Indicator Mode to be enabled");
-			public static readonly ConfigMetadata UIItemQualityColor = new ConfigMetadata("18 - Color For Item Quality", "Choose the color used for the item quality indicator. Requires Item Quality Indicator Mode to be enabled");
-			public static readonly ConfigMetadata UIItemDurabilityColor = new ConfigMetadata("19 - Better Item Durability Bar", "Colors the item durability bar according to current durability and modifies the sprite texture");
-			public static readonly ConfigMetadata UIHoverInfoMode = new ConfigMetadata("20 - Detailed Hover Information", "Adds more information when hovering over objects. Master toggle for the hover information configs below");
-			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("21 - Container Contents Mode", "Choose how container contents are displayed when hovering: horizontal icons, vertical icons, text, or off. Requires Detailed Hover Information.");
-			public static readonly ConfigMetadata UIContainerHoverMode = new ConfigMetadata("22 - Container Hover Mode", "Choose the method of displaying Container hover info. Requires Detailed Hover Information");
-			public static readonly ConfigMetadata UIBeeHoverMode = new ConfigMetadata("23 - Beehive Hover Mode", "Choose the method of displaying Beehive hover info. Requires Detailed Hover Information");
-			public static readonly ConfigMetadata UIPlantHoverMode = new ConfigMetadata("24 - Plant Hover Mode", "Choose the method of displaying Plant hover info. Requires Detailed Hover Information");
-			public static readonly ConfigMetadata UIFermenterHoverMode = new ConfigMetadata("25 - Fermenter Hover Mode", "Choose the method of displaying Fermenter hover info. Requires Detailed Hover Information");
-			public static readonly ConfigMetadata UICookingStationHoverMode = new ConfigMetadata("26 - CookingStation Hover Mode", "Choose the method of displaying Cooking Station hover info. Requires Detailed Hover Information");
-			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("27 - Smelter Hover Mode", "Choose the method of displaying Smelter hover info. Requires Detailed Hover Information");
-			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("28 - Egg Hover Mode", "Choose the method of displaying Egg hatching hover info. Requires Detailed Hover Information");
-			public static readonly ConfigMetadata UIStatusEffectsUnderMinimap = new ConfigMetadata("29 - Status Effects Under Minimap", "Moves status effects below the minimap and displays them in a more compact layout.");
-			public static readonly ConfigMetadata UIGlobalChatByDefault = new ConfigMetadata("30 - Global Chat By Default", "Makes regular chat messages visible to all players regardless of distance.");
-			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("31 - Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.");
-			public static readonly ConfigMetadata UICharacterStatistics = new ConfigMetadata("32 - Logon Screen Character Statistics", "Displays statistics and notable facts for the selected character on the character selection screen.");
+			// ===== General & HUD
+			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
+			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator", ConfigSections.GeneralHUD, 110);
+			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("Show Current Day", "Shows the current day above the minimap.", ConfigSections.GeneralHUD, 100);
+			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("Show Current Time", "Shows the current time above the minimap. Can choose between digital clock and day sections", ConfigSections.GeneralHUD, 90);
+			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.", ConfigSections.GeneralHUD, 80);
+			public static readonly ConfigMetadata UISmartBiome = new ConfigMetadata("Smart Biome Indicator", "Shows smart biome text on the minimap (colored according to worn armor relative to current biome)", ConfigSections.GeneralHUD, 70);
+			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.", ConfigSections.GeneralHUD, 60);
+			public static readonly ConfigMetadata UIShowPowerExpiration = new ConfigMetadata("Show Boss Power Expiration Message", "Displays a message in the center of the screen when any Forsaken Power expires", ConfigSections.GeneralHUD, 50);
+			public static readonly ConfigMetadata UIAshlandsHeatLevel = new ConfigMetadata("Show Heat Meter in Ashlands", "Shows a heat meter at the top-center of the screen when in Ashlands water or lava", ConfigSections.GeneralHUD, 40);
+			public static readonly ConfigMetadata UIStatusEffectsUnderMinimap = new ConfigMetadata("Status Effects Under Minimap", "Moves status effects below the minimap and displays them in a more compact layout.", ConfigSections.GeneralHUD, 30);
+			public static readonly ConfigMetadata UIGlobalChatByDefault = new ConfigMetadata("Global Chat By Default", "Makes regular chat messages visible to all players regardless of distance.", ConfigSections.GeneralHUD, 20);
+			public static readonly ConfigMetadata UICharacterStatistics = new ConfigMetadata("Logon Screen Character Statistics", "Displays statistics and notable facts for the selected character on the character selection screen.", ConfigSections.GeneralHUD, 10);
 
-			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("01 - Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.");
-			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("02 - Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.");
-			public static readonly ConfigMetadata OverrideEnemyDetector = new ConfigMetadata("03 - Enemy Detector Override", "Overrides the player's local Enemy Detector setting.");
-			public static readonly ConfigMetadata OverrideCurrentDay = new ConfigMetadata("04 - Current Day Override", "Overrides the player's local Current Day setting.");
-			public static readonly ConfigMetadata OverrideCurrentTime = new ConfigMetadata("05 - Current Time Override", "Overrides the player's local Current Time setting.");
-			public static readonly ConfigMetadata OverrideWeatherForecast = new ConfigMetadata("06 - Weather Forecast Override", "Overrides the player's local Weather Forecast setting.");
-			public static readonly ConfigMetadata OverrideSmartBiome = new ConfigMetadata("07 - Smart Biome Override", "Overrides the player's local Smart Biome setting.");
-			public static readonly ConfigMetadata OverrideAshlandsHeat = new ConfigMetadata("08 - Ashlands Heat Meter Override", "Overrides the player's local Ashlands Heat Meter setting.");
-			public static readonly ConfigMetadata OverrideEnemyNameplates = new ConfigMetadata("09 - Enemy Nameplate Mode Override", "Overrides the player's local Enemy Nameplate Mode setting.");
-			public static readonly ConfigMetadata OverrideTamingProgress = new ConfigMetadata("10 - Taming Progress Override", "Overrides the player's local Taming Progress setting.");
-			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("11 - Detailed Hover Information Override", "Overrides the player's local Detailed Hover Information setting.");
-			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("12 - Container Contents Override", "Overrides the player's local Container Contents setting.");
-			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("13 - Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.");
+			// ===== Information Rail
+			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("Information Rail Style", "Choose the visual style used by the information rail and summon counter.", ConfigSections.InformationRail, 70);
+			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.", ConfigSections.InformationRail, 60);
+			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.", ConfigSections.InformationRail, 50);
+			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.", ConfigSections.InformationRail, 40);
+			public static readonly ConfigMetadata UIEnemyDetectorPosition = new ConfigMetadata("Enemy Detector Position", "Choose whether the enemy detector is displayed in the bottom-left information rail or separately at the top-center of the screen.", ConfigSections.InformationRail, 30);
+			public static readonly ConfigMetadata UISummonCounter = new ConfigMetadata("Show Summon Counter", "Shows number of summoned skeletons from the Dead Raiser", ConfigSections.InformationRail, 20);
+			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.", ConfigSections.InformationRail, 10);
+
+			// ===== Items & Interaction
+			public static readonly ConfigMetadata UIShowOwnedResources = new ConfigMetadata("Show Owned Resources In Build Menu", "Displays the total amount of resources in the player's inventory in addition to the required resource amount for the selected piece or recipe in the build or crafting menu", ConfigSections.ItemsInteraction, 70);
+			public static readonly ConfigMetadata UIEnemyNameplateMode = new ConfigMetadata("Enemy Nameplate Mode", "Changes the way enemy nameplates are displayed by changing bar style and colors and alerted/aggravated status. Has different ways of showing HP", ConfigSections.ItemsInteraction, 60);
+			public static readonly ConfigMetadata UITamingProgress = new ConfigMetadata("Show Taming Progress", "Displays current taming percentage of animals that are acclamatizing under the HP bar. This is independent of Enemy Nameplate Mode", ConfigSections.ItemsInteraction, 50);
+			public static readonly ConfigMetadata UIItemQualityIndicatorMode = new ConfigMetadata("Item Quality Indicator Mode", "Changes the way item quality is displayed by converting the vanilla number to symbols.", ConfigSections.ItemsInteraction, 40);
+			public static readonly ConfigMetadata UIItemQualitySymbol = new ConfigMetadata("Symbol For Item Quality", "Choose the symbol used for the item quality indicator. Requires Item Quality Indicator Mode to be enabled", ConfigSections.ItemsInteraction, 30);
+			public static readonly ConfigMetadata UIItemQualityColor = new ConfigMetadata("Color For Item Quality", "Choose the color used for the item quality indicator. Requires Item Quality Indicator Mode to be enabled", ConfigSections.ItemsInteraction, 20);
+			public static readonly ConfigMetadata UIItemDurabilityColor = new ConfigMetadata("Better Item Durability Bar", "Colors the item durability bar according to current durability and modifies the sprite texture", ConfigSections.ItemsInteraction, 10);
+
+			// ===== Detailed Hovers
+			public static readonly ConfigMetadata UIHoverInfoMode = new ConfigMetadata("Detailed Hover Information", "Adds more information when hovering over objects. Master toggle for the hover information configs below", ConfigSections.DetailedHovers, 90);
+			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("Container Contents Mode", "Choose how container contents are displayed when hovering: horizontal icons, vertical icons, text, or off. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 80);
+			public static readonly ConfigMetadata UIContainerHoverMode = new ConfigMetadata("Container Hover Mode", "Choose the method of displaying Container hover info. Requires Detailed Hover Information", ConfigSections.DetailedHovers, 70);
+			public static readonly ConfigMetadata UIBeeHoverMode = new ConfigMetadata("Beehive Hover Mode", "Choose the method of displaying Beehive hover info. Requires Detailed Hover Information", ConfigSections.DetailedHovers, 60);
+			public static readonly ConfigMetadata UIPlantHoverMode = new ConfigMetadata("Plant Hover Mode", "Choose the method of displaying Plant hover info. Requires Detailed Hover Information", ConfigSections.DetailedHovers, 50);
+			public static readonly ConfigMetadata UIFermenterHoverMode = new ConfigMetadata("Fermenter Hover Mode", "Choose the method of displaying Fermenter hover info. Requires Detailed Hover Information", ConfigSections.DetailedHovers, 40);
+			public static readonly ConfigMetadata UICookingStationHoverMode = new ConfigMetadata("Cooking Station Hover Mode", "Choose the method of displaying Cooking Station hover info. Requires Detailed Hover Information", ConfigSections.DetailedHovers, 30);
+			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("Smelter Hover Mode", "Choose the method of displaying Smelter hover info. Requires Detailed Hover Information", ConfigSections.DetailedHovers, 20);
+			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("Egg Hover Mode", "Choose the method of displaying Egg hatching hover info. Requires Detailed Hover Information", ConfigSections.DetailedHovers, 10);
+
+			// ===== Server Overrides
+			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.", ConfigSections.ServerOverrides, 130);
+			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.", ConfigSections.ServerOverrides, 120);
+			public static readonly ConfigMetadata OverrideInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode Override", "Overrides the player's local Information Rail Display Mode setting.", ConfigSections.ServerOverrides, 115);
+			public static readonly ConfigMetadata OverrideEnemyDetector = new ConfigMetadata("Enemy Detector Override", "Overrides the player's local Enemy Detector setting.", ConfigSections.ServerOverrides, 110);
+			public static readonly ConfigMetadata OverrideCurrentDay = new ConfigMetadata("Current Day Override", "Overrides the player's local Current Day setting.", ConfigSections.ServerOverrides, 100);
+			public static readonly ConfigMetadata OverrideCurrentTime = new ConfigMetadata("Current Time Override", "Overrides the player's local Current Time setting.", ConfigSections.ServerOverrides, 90);
+			public static readonly ConfigMetadata OverrideWeatherForecast = new ConfigMetadata("Weather Forecast Override", "Overrides the player's local Weather Forecast setting.", ConfigSections.ServerOverrides, 80);
+			public static readonly ConfigMetadata OverrideSmartBiome = new ConfigMetadata("Smart Biome Override", "Overrides the player's local Smart Biome setting.", ConfigSections.ServerOverrides, 70);
+			public static readonly ConfigMetadata OverrideAshlandsHeat = new ConfigMetadata("Ashlands Heat Meter Override", "Overrides the player's local Ashlands Heat Meter setting.", ConfigSections.ServerOverrides, 60);
+			public static readonly ConfigMetadata OverrideEnemyNameplates = new ConfigMetadata("Enemy Nameplate Mode Override", "Overrides the player's local Enemy Nameplate Mode setting.", ConfigSections.ServerOverrides, 50);
+			public static readonly ConfigMetadata OverrideTamingProgress = new ConfigMetadata("Taming Progress Override", "Overrides the player's local Taming Progress setting.", ConfigSections.ServerOverrides, 40);
+			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("Detailed Hover Information Override", "Overrides the player's local Detailed Hover Information setting.", ConfigSections.ServerOverrides, 30);
+			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("Container Contents Override", "Overrides the player's local Container Contents setting.", ConfigSections.ServerOverrides, 20);
+			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.", ConfigSections.ServerOverrides, 10);
 		}
 
 		public static ConfigEntry<InfoRailStyle> InfoRailStyleChoice;
@@ -316,6 +344,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
 
+		public static ConfigEntry<InfoRailDisplayModeOverride> InfoRailDisplayModeOverrideChoice;
 		public static ConfigEntry<BoolOverride> EnemyDetectorOverride;
 		public static ConfigEntry<BoolOverride> CurrentDayOverride;
 		public static ConfigEntry<TimeModeOverride> CurrentTimeOverride;
@@ -329,7 +358,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> GlobalChatByDefaultOverride;
 
 		// Effective UI settings
-		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => InfoRailDisplayModeChoice.Value;
+		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
 		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
 		public static EnemyDetectorPosition EffectiveEnemyDetectorPositionChoice => EnemyDetectorPositionChoice.Value;
@@ -415,30 +444,40 @@ namespace MarsarahUI.Managers
 		{
 			Config = configFile;
 
-			// ===== Local UI Settings
-			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
-			UIStyleManager.Initialize(InfoRailStyleChoice);
-			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
-			EnemyDetectorPositionChoice = CreateConfig(Configs.UIEnemyDetectorPosition, EnemyDetectorPosition.InfoRail);
+			// ===== General & HUD
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
-			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
-			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
 			ShowCurrentDay = CreateConfig(Configs.UICurrentDay, true);
 			TimeChoice = CreateConfig(Configs.UITimeMode, TimeMode.DigitalClock);
 			ShowWeatherForecast = CreateConfig(Configs.UIWeatherForecast, true);
 			ShowSmartBiome = CreateConfig(Configs.UISmartBiome, true);
-			ShowSummonCounter = CreateConfig(Configs.UISummonCounter, true);
 			ShowOnlinePlayers = CreateConfig(Configs.UIOnlinePlayers, true);
-			ShowOwnedResources = CreateConfig(Configs.UIShowOwnedResources, true);
 			ShowBossExpirationMessage = CreateConfig(Configs.UIShowPowerExpiration, true);
 			ShowHeatLevelInAshlands = CreateConfig(Configs.UIAshlandsHeatLevel, true);
+			StatusEffectsUnderMinimap = CreateConfig(Configs.UIStatusEffectsUnderMinimap, true);
+			GlobalChatByDefault = CreateConfig(Configs.UIGlobalChatByDefault, true);
+			ShowCharacterStatistics = CreateConfig(Configs.UICharacterStatistics, true);
+
+			// ===== Information Rail
+			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
+			UIStyleManager.Initialize(InfoRailStyleChoice);
+			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
+			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
+			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);
+			EnemyDetectorPositionChoice = CreateConfig(Configs.UIEnemyDetectorPosition, EnemyDetectorPosition.InfoRail);
+			ShowSummonCounter = CreateConfig(Configs.UISummonCounter, true);
+			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
+
+			// ===== Items & Interaction
+			ShowOwnedResources = CreateConfig(Configs.UIShowOwnedResources, true);
 			EnemyNameplateChoice = CreateConfig(Configs.UIEnemyNameplateMode, EnemyNameplateMode.BarsWithHealth);
 			ShowTamingProgress = CreateConfig(Configs.UITamingProgress, true);
 			ItemQualityIndicatorChoice = CreateConfig(Configs.UIItemQualityIndicatorMode, ItemQualityMode.Horizontal);
 			ItemQualitySymbolChoice = CreateConfig(Configs.UIItemQualitySymbol, ItemQualitySymbol.Star);
 			ItemQualityColorChoice = CreateConfig(Configs.UIItemQualityColor, ItemQualityColor.Yellow);
 			ColoredItemDurabilityBar = CreateConfig(Configs.UIItemDurabilityColor, true);
+
+			// ===== Detailed Hovers
 			DetailedHoverInfoChoice = CreateConfig(Configs.UIHoverInfoMode, HoverInfoMode.ColoredText);
 			ContainerContentsChoice = CreateConfig(Configs.UIContainerContents, ContainerContentsMode.IconsHorizontal);
 			ContainerHoverModeChoice = CreateConfig(Configs.UIContainerHoverMode, ContainerHoverMode.CurrentPerMax);
@@ -448,17 +487,12 @@ namespace MarsarahUI.Managers
 			CookingStationHoverModeChoice = CreateConfig(Configs.UICookingStationHoverMode, CookingStationHoverMode.RemainingTime);
 			SmelterHoverModeChoice = CreateConfig(Configs.UISmelterHoverMode, SmelterHoverMode.RemainingTime);
 			EggHoverModeChoice = CreateConfig(Configs.UIEggHoverMode, EggHoverMode.RemainingTime);
-			StatusEffectsUnderMinimap = CreateConfig(Configs.UIStatusEffectsUnderMinimap, true);
-			GlobalChatByDefault = CreateConfig(Configs.UIGlobalChatByDefault, true);
-			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
-			ShowCharacterStatistics = CreateConfig(Configs.UICharacterStatistics, true);
 
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);
 			_ = configSync.AddLockingConfigEntry(ServerOverridesLocked);
-
 			ServerOverridesEnabled = CreateServerOverride(Configs.EnableServerOverrides, true);
-
+			InfoRailDisplayModeOverrideChoice = CreateServerOverride(Configs.OverrideInfoRailDisplayMode, InfoRailDisplayModeOverride.UserChoice);
 			EnemyDetectorOverride = CreateServerOverride(Configs.OverrideEnemyDetector, BoolOverride.UserChoice);
 			CurrentDayOverride = CreateServerOverride(Configs.OverrideCurrentDay, BoolOverride.UserChoice);
 			CurrentTimeOverride = CreateServerOverride(Configs.OverrideCurrentTime, TimeModeOverride.UserChoice);
@@ -476,14 +510,24 @@ namespace MarsarahUI.Managers
 
 		private static ConfigEntry<T> CreateConfig<T>(ConfigMetadata metadata, T defaultValue)
 		{
-			ConfigEntry<T> configEntry = Config.Bind(ConfigSections.UI, metadata.Name, defaultValue, new ConfigDescription(metadata.Description));
+			ConfigurationManagerAttributes attributes = new ConfigurationManagerAttributes
+			{
+				Order = metadata.Order
+			};
+
+			ConfigEntry<T> configEntry = Config.Bind(metadata.Section, metadata.Name, defaultValue, new ConfigDescription(metadata.Description, null, attributes));
 			configEntry.SettingChanged += (_, __) => OnConfigChanged(metadata.Name);
 			return configEntry;
 		}
 
 		private static ConfigEntry<T> CreateServerOverride<T>(ConfigMetadata metadata, T defaultValue)
 		{
-			ConfigEntry<T> configEntry = Config.Bind(ConfigSections.ServerOverrides, metadata.Name, defaultValue, new ConfigDescription(metadata.Description));
+			ConfigurationManagerAttributes attributes = new ConfigurationManagerAttributes
+			{
+				Order = metadata.Order
+			};
+
+			ConfigEntry<T> configEntry = Config.Bind(metadata.Section, metadata.Name, defaultValue, new ConfigDescription(metadata.Description, null, attributes));
 
 			SyncedConfigEntry<T> syncedConfigEntry = configSync.AddConfigEntry(configEntry);
 			syncedConfigEntry.SynchronizedConfig = true;

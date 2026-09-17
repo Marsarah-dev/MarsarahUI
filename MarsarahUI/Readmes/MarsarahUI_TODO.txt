@@ -14,6 +14,8 @@ A. Updates / Fixes
 * Better Item Durability Bar
   - Fixed an incorrect durability display if an item was positioned in a quickslot that had empty quicklots before it. 
 
+* Upated config layout and grouped by categories. Added more server overrides options.
+
 B. New additions
 ------------------------
 * Status Effects Under Minimap:
@@ -144,7 +146,6 @@ B. New additions
   - Enemies in the boss category are all bosses and 4 minibosses
   - Added a config option to display the enemy detector at the top-middle of the screen
   - The Enemy Detector is now affected by the main Information Rail styles.
-
 
 ============================================================
 TO IMPLEMENT / VERIFY
