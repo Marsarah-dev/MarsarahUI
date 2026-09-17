@@ -23,7 +23,6 @@ namespace MarsarahUI.Managers
 	{
 		Fixed,
 		WeightGradient,
-		WarmWeightGradient,
 		SlotsGradient,
 		EnemyCountGradient,
 		SummonCountGradient
@@ -77,6 +76,9 @@ namespace MarsarahUI.Managers
 		// Colors
 		internal Color ValueTextColor;
 		internal Color WeightFillColor;
+		internal Color LabelTextColor;
+		internal Color SlotsTextColor;
+		internal Color EnemyTextColor;
 		internal Color ToughEnemyTextColor;
 		internal Color BossTextColor;
 		internal Color NeutralTextColor;
@@ -133,20 +135,23 @@ namespace MarsarahUI.Managers
 			SummonSize = new Vector2(49f, 30f),
 
 			// Colors
-			ValueTextColor = Color.white,
+			ValueTextColor = new Color(0.95f, 0.95f, 0.92f),
 			WeightFillColor = Color.green,
-			ToughEnemyTextColor = new Color(1f, 0.549019f, 0f),
-			BossTextColor = new Color(0.75f, 0.4f, 1f),
-			NeutralTextColor = new Color(1f, 0.75f, 0.2f),
-			SkillTextColor = new Color(1f, 0.75f, 0.2f),
-			SummonTextColor = Color.white,
+			LabelTextColor = Color.yellow,
+			SlotsTextColor = new Color(0.95f, 0.95f, 0.92f),
+			EnemyTextColor = new Color(0.95f, 0.95f, 0.92f),
+			ToughEnemyTextColor = new Color(0.95f, 0.95f, 0.92f),
+			BossTextColor = new Color(0.95f, 0.95f, 0.92f),
+			NeutralTextColor = new Color(0.95f, 0.95f, 0.92f),
+			SkillTextColor = new Color(0.95f, 0.95f, 0.92f),
+			SummonTextColor = new Color(0.95f, 0.95f, 0.92f),
 			WeightLabelColor = Color.yellow,
 
 			// Color Modes
 			WeightFillColorMode = InfoRailColorMode.WeightGradient,
-			SlotsTextColorMode = InfoRailColorMode.SlotsGradient,
-			EnemyTextColorMode = InfoRailColorMode.EnemyCountGradient,
-			SummonTextColorMode = InfoRailColorMode.SummonCountGradient
+			SlotsTextColorMode = InfoRailColorMode.Fixed,
+			EnemyTextColorMode = InfoRailColorMode.Fixed,
+			SummonTextColorMode = InfoRailColorMode.Fixed
 		};
 
 		private static readonly UIStyleDefinition style2 = new UIStyleDefinition
@@ -193,6 +198,9 @@ namespace MarsarahUI.Managers
 			// Colors
 			ValueTextColor = Color.white,
 			WeightFillColor = Color.green,
+			LabelTextColor = new Color(1f, 0.75f, 0.2f),
+			SlotsTextColor = Color.yellow,
+			EnemyTextColor = Color.red,
 			ToughEnemyTextColor = new Color(1f, 0.549019f, 0f),
 			BossTextColor = new Color(0.75f, 0.4f, 1f),
 			NeutralTextColor = new Color(1f, 0.75f, 0.2f),
@@ -201,7 +209,7 @@ namespace MarsarahUI.Managers
 			WeightLabelColor = Color.yellow,
 
 			// Color Modes
-			WeightFillColorMode = InfoRailColorMode.WarmWeightGradient,
+			WeightFillColorMode = InfoRailColorMode.WeightGradient,
 			SlotsTextColorMode = InfoRailColorMode.SlotsGradient,
 			EnemyTextColorMode = InfoRailColorMode.EnemyCountGradient,
 			SummonTextColorMode = InfoRailColorMode.SummonCountGradient
@@ -249,6 +257,9 @@ namespace MarsarahUI.Managers
 			// Colors
 			ValueTextColor = new Color(0.88f, 0.87f, 0.82f),
 			WeightFillColor = new Color(0.333f, 0.357f, 0.369f),
+			LabelTextColor = new Color(0.88f, 0.87f, 0.82f),
+			SlotsTextColor = new Color(0.88f, 0.87f, 0.82f),
+			EnemyTextColor = new Color(0.88f, 0.87f, 0.82f),
 			ToughEnemyTextColor = new Color(0.88f, 0.87f, 0.82f),
 			BossTextColor = new Color(0.88f, 0.87f, 0.82f),
 			NeutralTextColor = new Color(0.88f, 0.87f, 0.82f),
@@ -315,13 +326,11 @@ namespace MarsarahUI.Managers
 				case InfoRailColorMode.WeightGradient:
 					return GetUsageGradientColor(weightPercent);
 
-				case InfoRailColorMode.WarmWeightGradient:
-					return GetWarmWeightGradientColor(weightPercent);
-
 				default:
 					return Current.WeightFillColor;
 			}
 		}
+
 		internal static Color GetSlotsTextColor(float slotsUsedPercent)
 		{
 			switch (Current.SlotsTextColorMode)
@@ -330,7 +339,7 @@ namespace MarsarahUI.Managers
 					return GetUsageGradientColor(Mathf.Clamp01(slotsUsedPercent / 100f));
 
 				default:
-					return Current.ValueTextColor;
+					return Current.SlotsTextColor;
 			}
 		}
 
@@ -342,7 +351,7 @@ namespace MarsarahUI.Managers
 					return GetCountGradientColor(enemyCount);
 
 				default:
-					return Current.ValueTextColor;
+					return Current.EnemyTextColor;
 			}
 		}
 
@@ -370,27 +379,6 @@ namespace MarsarahUI.Managers
 			}
 
 			return Color.red;
-		}
-
-		private static Color GetWarmWeightGradientColor(float percent)
-		{
-			Color gold = new Color(0.85f, 0.65f, 0.22f);
-			Color orange = new Color(1f, 0.45f, 0.08f);
-			Color red = new Color(0.85f, 0.20f, 0.12f);
-
-			percent = Mathf.Clamp01(percent);
-
-			if (percent <= 0.66f)
-			{
-				return gold;
-			}
-
-			if (percent <= 0.90f)
-			{
-				return Color.Lerp(gold, orange, (percent - 0.66f) / 0.24f);
-			}
-
-			return Color.Lerp(orange, red, (percent - 0.90f) / 0.10f);
 		}
 
 		private static Color GetCountGradientColor(int count)
