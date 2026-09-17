@@ -9,7 +9,6 @@ namespace MarsarahUI.Patches.UI
 		private static readonly LogManager log = new LogManager("UI Enemy Detector", LogManager.LogLevel.Warning);
 
 		private const float DetectionRadius = 30f;
-		private const float BossDetectionRadius = 60f;
 
 		private static readonly HashSet<string> toughEnemyPrefabs = new HashSet<string>
 		{
@@ -70,28 +69,28 @@ namespace MarsarahUI.Patches.UI
 				int bosses = 0;
 				int neutralEnemies = 0;
 
-				bool separateToughEnemies =
-					ConfigManager.EffectiveEnemyDetectorChoice ==
-					ConfigManager.EnemyDetectorMode.SeparateToughEnemies;
+				bool splitEnemies =	ConfigManager.EffectiveEnemyDetectorChoice == ConfigManager.EnemyDetectorMode.Split;
 
 				List<Character> characters = new List<Character>();
-				Character.GetCharactersInRange(___m_localPlayer.transform.position, BossDetectionRadius, characters);
+				Character.GetCharactersInRange(___m_localPlayer.transform.position, DetectionRadius, characters);
 
 				foreach (Character character in characters)
 				{
 					if (ShouldIgnoreCharacter(character)) continue;
 
-					bool isBoss = IsBossOrMiniboss(character);
-
-					if (isBoss)
+					if (IsBossOrMiniboss(character))
 					{
-						bosses++;
+						if (splitEnemies)
+						{
+							bosses++;
+						}
+						else
+						{
+							enemies++;
+						}
+
 						continue;
 					}
-
-					float distanceSqr = (character.transform.position - ___m_localPlayer.transform.position).sqrMagnitude;
-
-					if (distanceSqr > DetectionRadius * DetectionRadius) continue;
 
 					if (IsNeutralEnemy(character))
 					{
@@ -99,7 +98,7 @@ namespace MarsarahUI.Patches.UI
 						continue;
 					}
 
-					if (separateToughEnemies && IsToughEnemy(character))
+					if (splitEnemies && IsToughEnemy(character))
 					{
 						toughEnemies++;
 						continue;

@@ -656,7 +656,7 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
-			bool separateToughEnemies = mode == ConfigManager.EnemyDetectorMode.SeparateToughEnemies;
+			bool splitEnemies = mode == ConfigManager.EnemyDetectorMode.Split;
 
 			int enemies = UIEnemyDetector.NumEnemies;
 			int toughEnemies = UIEnemyDetector.NumToughEnemies;
@@ -664,8 +664,8 @@ namespace MarsarahUI.Patches.UI
 			int neutralEnemies = UIEnemyDetector.NumNeutralEnemies;
 
 			SetElementVisible(ElementType.Enemies, enemies > 0);
-			SetElementVisible(ElementType.ToughEnemies, separateToughEnemies && toughEnemies > 0);
-			SetElementVisible(ElementType.Bosses, bosses > 0);
+			SetElementVisible(ElementType.ToughEnemies, splitEnemies && toughEnemies > 0);
+			SetElementVisible(ElementType.Bosses, splitEnemies && bosses > 0);
 			SetElementVisible(ElementType.NeutralEnemies, neutralEnemies > 0);
 
 			if (enemyText != null)
@@ -674,13 +674,13 @@ namespace MarsarahUI.Patches.UI
 				enemyText.color = UIStyleManager.GetEnemyTextColor(enemies);
 			}
 
-			if (separateToughEnemies && toughEnemies > 0 && toughEnemyText != null)
+			if (splitEnemies && toughEnemies > 0 && toughEnemyText != null)
 			{
 				toughEnemyText.text = toughEnemies.ToString();
 				toughEnemyText.color = UIStyleManager.Current.ToughEnemyTextColor;
 			}
 
-			if (bosses > 0 && bossText != null)
+			if (splitEnemies && bosses > 0 && bossText != null)
 			{
 				bossText.text = bosses.ToString();
 				bossText.color = UIStyleManager.Current.BossTextColor;

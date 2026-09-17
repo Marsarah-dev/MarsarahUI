@@ -67,7 +67,7 @@ namespace MarsarahUI.Managers
 		public enum EnemyDetectorMode
 		{
 			Consolidated,
-			SeparateToughEnemies,
+			Split,
 			Off
 		}
 
@@ -217,7 +217,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("00 - Information Rail Style", "Choose the visual style used by the information rail and summon counter.");
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("01 - Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.");
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.");
-			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Enemy Detector", "Choose whether nearby hostile enemies are consolidated into one counter, tougher enemies are shown separately, or enemy detection is disabled.");
+			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.");
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("04 - Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator");
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("05 - Show Current Day", "Shows the current day above the minimap.");
 			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("06 - Show Current Time", "Shows the current time above the minimap. Can choose between digital clock and day sections");
