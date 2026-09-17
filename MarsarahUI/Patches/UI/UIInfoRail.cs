@@ -168,7 +168,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static Text CreateRailLabel(string objectName, GameObject parent, string label, Vector2 position, Vector2 size)
 		{
-			Text text = CreateTextObject(objectName, parent, UIStyleManager.Current.WeightLabelColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, position, size);
+			Text text = CreateTextObject(objectName, parent, UIStyleManager.Current.LabelTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, position, size);
 			text.text = label;
 			return text;
 		}
@@ -817,7 +817,7 @@ namespace MarsarahUI.Patches.UI
 			if (bossText != null) bossText.color = style.BossTextColor;
 			if (neutralEnemyText != null) neutralEnemyText.color = style.NeutralTextColor;
 			if (skillText != null) skillText.color = style.SkillTextColor;
-			if (weightLabel != null) weightLabel.color = style.WeightLabelColor;
+			if (weightLabel != null) weightLabel.color = style.LabelTextColor;
 
 			if (weightBarFill != null)
 			{

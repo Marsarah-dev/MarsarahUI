@@ -84,7 +84,6 @@ namespace MarsarahUI.Managers
 		internal Color NeutralTextColor;
 		internal Color SkillTextColor;
 		internal Color SummonTextColor;
-		internal Color WeightLabelColor;
 
 		// Color Modes
 		internal InfoRailColorMode WeightFillColorMode;
@@ -136,8 +135,8 @@ namespace MarsarahUI.Managers
 
 			// Colors
 			ValueTextColor = new Color(0.95f, 0.95f, 0.92f),
-			WeightFillColor = Color.green,
-			LabelTextColor = Color.yellow,
+			WeightFillColor = new Color(1f, 0.7176471f, 0.3568628f),
+			LabelTextColor = new Color(1f, 0.7176471f, 0.3568628f),
 			SlotsTextColor = new Color(0.95f, 0.95f, 0.92f),
 			EnemyTextColor = new Color(0.95f, 0.95f, 0.92f),
 			ToughEnemyTextColor = new Color(0.95f, 0.95f, 0.92f),
@@ -145,10 +144,9 @@ namespace MarsarahUI.Managers
 			NeutralTextColor = new Color(0.95f, 0.95f, 0.92f),
 			SkillTextColor = new Color(0.95f, 0.95f, 0.92f),
 			SummonTextColor = new Color(0.95f, 0.95f, 0.92f),
-			WeightLabelColor = Color.yellow,
 
 			// Color Modes
-			WeightFillColorMode = InfoRailColorMode.WeightGradient,
+			WeightFillColorMode = InfoRailColorMode.Fixed,
 			SlotsTextColorMode = InfoRailColorMode.Fixed,
 			EnemyTextColorMode = InfoRailColorMode.Fixed,
 			SummonTextColorMode = InfoRailColorMode.Fixed
@@ -198,7 +196,7 @@ namespace MarsarahUI.Managers
 			// Colors
 			ValueTextColor = Color.white,
 			WeightFillColor = Color.green,
-			LabelTextColor = new Color(1f, 0.75f, 0.2f),
+			LabelTextColor = new Color(0.95f, 0.95f, 0.92f),
 			SlotsTextColor = Color.yellow,
 			EnemyTextColor = Color.red,
 			ToughEnemyTextColor = new Color(1f, 0.549019f, 0f),
@@ -206,7 +204,6 @@ namespace MarsarahUI.Managers
 			NeutralTextColor = new Color(1f, 0.75f, 0.2f),
 			SkillTextColor = new Color(1f, 0.75f, 0.2f),
 			SummonTextColor = Color.white,
-			WeightLabelColor = Color.yellow,
 
 			// Color Modes
 			WeightFillColorMode = InfoRailColorMode.WeightGradient,
@@ -265,7 +262,6 @@ namespace MarsarahUI.Managers
 			NeutralTextColor = new Color(0.88f, 0.87f, 0.82f),
 			SkillTextColor = new Color(0.88f, 0.87f, 0.82f),
 			SummonTextColor = new Color(0.88f, 0.87f, 0.82f),
-			WeightLabelColor = new Color(0.88f, 0.87f, 0.82f),
 
 			// Color Modes
 			WeightFillColorMode = InfoRailColorMode.Fixed,
