@@ -11,6 +11,9 @@ A. Updates / Fixes
   - Updated Weather Forecast to use Valheim 1.0's BiomeSector/AltBiome weather system.
   - Added proper AltBiome weather forecasting support, including Dark Meadows.
 
+* Better Item Durability Bar
+  - Fixed an incorrect durability display if an item was positioned in a quickslot that had empty quicklots before it. 
+
 B. New additions
 ------------------------
 * Status Effects Under Minimap:
@@ -128,6 +131,20 @@ B. New additions
   - Maximum 10 unique items, with "+N Others" for overflow.
   - Text mode now aligns quantities/names and adjusts for large numbers.
 
+* Information Rail Overhaul
+  - Overhauled the bottom-left imfo panel to better handle different information elements
+  - Added animation transitions for the temporary elements showing in the rail
+  - Added 3 visual styles for the information rail selectable from config, that affect the icons, text color display and borders
+  - Added a text option in place of icons that applies for all 3 styles
+ 
+* Enemy Detector
+  - Added an option for trasking enemies split by type
+  - The categories are: normal, tough and boss
+  - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Solder, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
+  - Enemies in the boss category are all bosses and 4 minibosses
+  - Added a config option to display the enemy detector at the top-middle of the screen
+  - The Enemy Detector is now affected by the main Information Rail styles.
+
 
 ============================================================
 TO IMPLEMENT / VERIFY
@@ -135,17 +152,13 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes
 ----------------------------------
-* Fix item durability bar at 0 durability in quickslots showin full instead.
 
 B. Existing UI Ideas
 --------------------
 * Current Time: visual day-progress line with a moving time indicator.
 * Weather Forecast: choose a better position when No Map is enabled.
 * Smelter hover: add a Bars display mode.
-* Container contents: replace text with item icons / add as an alternate to text.
-* Item durability bars: test thicker bars and optional durability text.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
-* Investigate using in-game icons for inventory weight and free slots. Same for the Online Players indicator and other relevant places.
 
 C. Online / Player Information
 ------------------------------
@@ -154,7 +167,6 @@ C. Online / Player Information
 
 D. New UI Features
 ------------------
-* Make custom UI elements draggable.
 * Smart Pins:
   - Admin defines allowed/predefined pins.
   - Players can place only the predefined pin types.
