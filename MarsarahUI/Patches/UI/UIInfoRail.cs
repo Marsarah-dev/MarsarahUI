@@ -60,21 +60,16 @@ namespace MarsarahUI.Patches.UI
 		private static Text weightLabel;
 		private static Text slotsText;
 		private static Image slotsIcon;
-		private static Text slotsLabel;
 
 		// Enemy Detector
 		private static Text enemyText;
 		private static Image enemyIcon;
-		private static Text enemyLabel;
 		private static Text neutralEnemyText;
 		private static Image neutralEnemyIcon;
-		private static Text neutralEnemyLabel;
 		private static Text toughEnemyText;
 		private static Image toughEnemyIcon;
-		private static Text toughEnemyLabel;
 		private static Text bossText;
 		private static Image bossIcon;
-		private static Text bossLabel;
 
 		// Skill Progress
 		private static Image skillIcon;
@@ -82,14 +77,27 @@ namespace MarsarahUI.Patches.UI
 
 		// Rail
 		private const float WeightWidth = 136f;
+		private const float WeightTextModeWidth = 168f;
+
+		private static readonly Vector2 WeightBarIconModePosition = new Vector2(80f, 0f);
+		private static readonly Vector2 WeightBarTextModePosition = new Vector2(96f, 0f);
+
+		private static readonly Vector2 WeightTextIconModePosition = new Vector2(15f, 0f);
+		private static readonly Vector2 WeightTextTextModePosition = new Vector2(31f, 0f);
+
 		private const float SlotsWidth = 52f;
+		private const float SlotsTextWidth = 70f;
 		private const float CounterIconWidth = 52f;
-		private const float CounterTextWidth = 78f;
 		private const float SkillWidth = 100f;
+		private const float EnemyTextWidth = 82f;
+		private const float ToughEnemyTextWidth = 72f;
+		private const float BossTextWidth = 65f;
+		private const float NeutralEnemyTextWidth = 78f;
 
 		private const float IconSize = 24f;
 		private const float CounterIconX = -13f;
 		private const float CounterTextX = 13f;
+		private const float CounterTextModeValueX = 30f;
 
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 8f;
@@ -99,6 +107,8 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject railBackground;
 		private static GameObject railBorder;
 		private static HorizontalLayoutGroup railLayoutGroup;
+
+		private static RectTransform weightBarRect;
 
 		private static readonly Dictionary<ElementType, RailElement> elements = new Dictionary<ElementType, RailElement>();
 
@@ -144,12 +154,6 @@ namespace MarsarahUI.Patches.UI
 				UpdateRailVisibility();
 			}
 		}
-
-		private static float GetCounterWidth()
-		{
-			return ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text ? CounterTextWidth : CounterIconWidth;
-		}
-
 		private static Image CreateRailIcon(string objectName, GameObject parent, string iconName, Vector2 position)
 		{
 			Image icon = CreateUIImageObject(objectName, parent, position, new Vector2(IconSize, IconSize));
@@ -213,16 +217,16 @@ namespace MarsarahUI.Patches.UI
 			CreateElement(ElementType.Slots, SlotsWidth);
 			CreateSeparator(ElementType.Slots);
 
-			CreateElement(ElementType.Enemies, GetCounterWidth());
+			CreateElement(ElementType.Enemies, CounterIconWidth);
 			CreateSeparator(ElementType.Enemies);
 
-			CreateElement(ElementType.ToughEnemies, GetCounterWidth());
+			CreateElement(ElementType.ToughEnemies, CounterIconWidth);
 			CreateSeparator(ElementType.ToughEnemies);
 
-			CreateElement(ElementType.Bosses, GetCounterWidth());
+			CreateElement(ElementType.Bosses, CounterIconWidth);
 			CreateSeparator(ElementType.Bosses);
 
-			CreateElement(ElementType.NeutralEnemies, GetCounterWidth());
+			CreateElement(ElementType.NeutralEnemies, CounterIconWidth);
 			CreateSeparator(ElementType.NeutralEnemies);
 
 			CreateElement(ElementType.Skill, SkillWidth);
@@ -235,6 +239,7 @@ namespace MarsarahUI.Patches.UI
 			UIStyleManager.StyleChanged += ApplyStyle;
 
 			ApplyStyle();
+			ApplyDisplayMode();
 
 			UIRail.SetActive(false);
 
@@ -555,12 +560,12 @@ namespace MarsarahUI.Patches.UI
 				fillArea.layer = 5;
 				fillArea.transform.SetParent(weightContent.transform, false);
 
-				RectTransform fillRect = fillArea.AddComponent<RectTransform>();
-				fillRect.anchorMin = new Vector2(0f, 0.5f);
-				fillRect.anchorMax = new Vector2(0f, 0.5f);
-				fillRect.pivot = new Vector2(0.5f, 0.5f);
-				fillRect.anchoredPosition = new Vector2(80f, 0f);
-				fillRect.sizeDelta = new Vector2(94f, 24f);
+				weightBarRect = fillArea.AddComponent<RectTransform>();
+				weightBarRect.anchorMin = new Vector2(0f, 0.5f);
+				weightBarRect.anchorMax = new Vector2(0f, 0.5f);
+				weightBarRect.pivot = new Vector2(0.5f, 0.5f);
+				weightBarRect.anchoredPosition = WeightBarIconModePosition;
+				weightBarRect.sizeDelta = new Vector2(94f, 24f);
 
 				weightBarFill = fillArea.AddComponent<Image>();
 				weightBarFill.sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(sprite => sprite.name == "bar_monster_hp_5");
@@ -571,7 +576,7 @@ namespace MarsarahUI.Patches.UI
 
 				weightIcon = CreateRailIcon("WeightIcon", weightContent, style.WeightIcon, new Vector2(-54f, 0f));
 				weightLabel = CreateRailLabel("WeightLabel", weightContent, "Weight", new Vector2(-50f, 0f), new Vector2(50f, UIStyleManager.Current.RailHeight));
-				weightText = CreateTextObject("WeightText", weightContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(15f, 0f), new Vector2(100f, UIStyleManager.Current.RailHeight));
+				weightText = CreateTextObject("WeightText", weightContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, WeightTextIconModePosition, new Vector2(100f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject slotsContent = GetElementContent(ElementType.Slots);
@@ -579,7 +584,6 @@ namespace MarsarahUI.Patches.UI
 			if (slotsContent != null)
 			{
 				slotsIcon = CreateRailIcon("SlotsIcon", slotsContent, style.SlotsIcon, new Vector2(CounterIconX, 0f));
-				slotsLabel = CreateRailLabel("SlotsLabel", slotsContent, "Slots", new Vector2(-10f, 0f), new Vector2(40f, UIStyleManager.Current.RailHeight));
 				slotsText = CreateTextObject("SlotsText", slotsContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 		}
@@ -593,7 +597,6 @@ namespace MarsarahUI.Patches.UI
 			if (enemyContent != null)
 			{
 				enemyIcon = CreateRailIcon("EnemyIcon", enemyContent, style.EnemyIcon, new Vector2(CounterIconX, 0f));
-				enemyLabel = CreateRailLabel("EnemyLabel", enemyContent, "Enemies", new Vector2(-13f, 0f), new Vector2(55f, UIStyleManager.Current.RailHeight));
 				enemyText = CreateTextObject("EnemyText", enemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 
@@ -602,7 +605,6 @@ namespace MarsarahUI.Patches.UI
 			if (toughEnemyContent != null)
 			{
 				toughEnemyIcon = CreateRailIcon("ToughEnemyIcon", toughEnemyContent, style.ToughEnemyIcon, new Vector2(CounterIconX, 0f));
-				toughEnemyLabel = CreateRailLabel("ToughEnemyLabel", toughEnemyContent, "Tough", new Vector2(-10f, 0f), new Vector2(42f, UIStyleManager.Current.RailHeight));
 				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 
@@ -611,7 +613,6 @@ namespace MarsarahUI.Patches.UI
 			if (bossContent != null)
 			{
 				bossIcon = CreateRailIcon("BossIcon", bossContent, style.BossIcon, new Vector2(CounterIconX, 0f));
-				bossLabel = CreateRailLabel("BossLabel", bossContent, "Boss", new Vector2(-10f, 0f), new Vector2(40f, UIStyleManager.Current.RailHeight));
 				bossText = CreateTextObject("BossText", bossContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 
@@ -620,7 +621,6 @@ namespace MarsarahUI.Patches.UI
 			if (neutralContent != null)
 			{
 				neutralEnemyIcon = CreateRailIcon("NeutralEnemyIcon", neutralContent, style.NeutralIcon, new Vector2(CounterIconX, 0f));
-				neutralEnemyLabel = CreateRailLabel("NeutralEnemyLabel", neutralContent, "Neutral", new Vector2(-12f, 0f), new Vector2(48f, UIStyleManager.Current.RailHeight));
 				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
 			}
 		}
@@ -663,7 +663,9 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (slotsText != null)
 				{
-					slotsText.text = UIInventoryWeightAndSlots.FreeSlots.ToString();
+					bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+
+					slotsText.text = useText ? $"Slots: {UIInventoryWeightAndSlots.FreeSlots}" : UIInventoryWeightAndSlots.FreeSlots.ToString();
 					slotsText.color = UIStyleManager.GetSlotsTextColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
 				}
 			}
@@ -684,6 +686,7 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			bool splitEnemies = mode == ConfigManager.EnemyDetectorMode.Split;
+			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
 
 			int enemies = UIEnemyDetector.NumEnemies;
 			int toughEnemies = UIEnemyDetector.NumToughEnemies;
@@ -697,25 +700,25 @@ namespace MarsarahUI.Patches.UI
 
 			if (enemyText != null)
 			{
-				enemyText.text = enemies.ToString();
+				enemyText.text = useText ? $"Enemies: {enemies}" : enemies.ToString();
 				enemyText.color = UIStyleManager.GetEnemyTextColor(enemies);
 			}
 
 			if (splitEnemies && toughEnemies > 0 && toughEnemyText != null)
 			{
-				toughEnemyText.text = toughEnemies.ToString();
+				toughEnemyText.text = useText ? $"Tough: {toughEnemies}" : toughEnemies.ToString();
 				toughEnemyText.color = UIStyleManager.Current.ToughEnemyTextColor;
 			}
 
 			if (splitEnemies && bosses > 0 && bossText != null)
 			{
-				bossText.text = bosses.ToString();
+				bossText.text = useText ? $"Boss: {bosses}" : bosses.ToString();
 				bossText.color = UIStyleManager.Current.BossTextColor;
 			}
 
 			if (neutralEnemies > 0 && neutralEnemyText != null)
 			{
-				neutralEnemyText.text = neutralEnemies.ToString();
+				neutralEnemyText.text = useText	? $"Neutral: {neutralEnemies}" : neutralEnemies.ToString();
 				neutralEnemyText.color = UIStyleManager.Current.NeutralTextColor;
 			}
 		}
@@ -789,11 +792,6 @@ namespace MarsarahUI.Patches.UI
 			if (neutralEnemyText != null) neutralEnemyText.color = style.NeutralTextColor;
 			if (skillText != null) skillText.color = style.SkillTextColor;
 			if (weightLabel != null) weightLabel.color = style.ValueTextColor;
-			if (slotsLabel != null) slotsLabel.color = style.ValueTextColor;
-			if (enemyLabel != null) enemyLabel.color = style.ValueTextColor;
-			if (toughEnemyLabel != null) toughEnemyLabel.color = style.ToughEnemyTextColor;
-			if (bossLabel != null) bossLabel.color = style.BossTextColor;
-			if (neutralEnemyLabel != null) neutralEnemyLabel.color = style.NeutralTextColor;
 
 			if (weightBarFill != null)
 			{
@@ -872,11 +870,6 @@ namespace MarsarahUI.Patches.UI
 			UpdateTextHeight(neutralEnemyText, railHeight);
 			UpdateTextHeight(skillText, railHeight);
 			UpdateTextHeight(weightLabel, railHeight);
-			UpdateTextHeight(slotsLabel, railHeight);
-			UpdateTextHeight(enemyLabel, railHeight);
-			UpdateTextHeight(toughEnemyLabel, railHeight);
-			UpdateTextHeight(bossLabel, railHeight);
-			UpdateTextHeight(neutralEnemyLabel, railHeight);
 		}
 
 		private static void UpdateTextHeight(Text text, float height)
@@ -892,18 +885,25 @@ namespace MarsarahUI.Patches.UI
 			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
 
 			SetDisplayMode(weightIcon, weightLabel, useText);
-			SetDisplayMode(slotsIcon, slotsLabel, useText);
-			SetDisplayMode(enemyIcon, enemyLabel, useText);
-			SetDisplayMode(toughEnemyIcon, toughEnemyLabel, useText);
-			SetDisplayMode(bossIcon, bossLabel, useText);
-			SetDisplayMode(neutralEnemyIcon, neutralEnemyLabel, useText);
+			ApplyWeightLayout(useText);
 
-			float counterWidth = useText ? CounterTextWidth : CounterIconWidth;
+			if (slotsIcon != null) slotsIcon.gameObject.SetActive(!useText);
+			if (enemyIcon != null) enemyIcon.gameObject.SetActive(!useText);
+			if (toughEnemyIcon != null) toughEnemyIcon.gameObject.SetActive(!useText);
+			if (bossIcon != null) bossIcon.gameObject.SetActive(!useText);
+			if (neutralEnemyIcon != null) neutralEnemyIcon.gameObject.SetActive(!useText);
 
-			SetElementWidth(ElementType.Enemies, counterWidth);
-			SetElementWidth(ElementType.ToughEnemies, counterWidth);
-			SetElementWidth(ElementType.Bosses, counterWidth);
-			SetElementWidth(ElementType.NeutralEnemies, counterWidth);
+			SetElementWidth(ElementType.Slots, useText ? SlotsTextWidth : SlotsWidth);
+			SetElementWidth(ElementType.Enemies, useText ? EnemyTextWidth : CounterIconWidth);
+			SetElementWidth(ElementType.ToughEnemies, useText ? ToughEnemyTextWidth : CounterIconWidth);
+			SetElementWidth(ElementType.Bosses, useText ? BossTextWidth : CounterIconWidth);
+			SetElementWidth(ElementType.NeutralEnemies, useText ? NeutralEnemyTextWidth : CounterIconWidth);
+
+			SetCounterTextLayout(slotsText, useText, SlotsTextWidth);
+			SetCounterTextLayout(enemyText, useText, EnemyTextWidth);
+			SetCounterTextLayout(toughEnemyText, useText, ToughEnemyTextWidth);
+			SetCounterTextLayout(bossText, useText, BossTextWidth);
+			SetCounterTextLayout(neutralEnemyText, useText, NeutralEnemyTextWidth);
 
 			RebuildLayout();
 		}
@@ -941,6 +941,39 @@ namespace MarsarahUI.Patches.UI
 
 			currentDisplayMode = mode;
 			ApplyDisplayMode();
+		}
+
+		private static void SetCounterTextLayout(Text text, bool useText, float elementWidth)
+		{
+			if (text == null) return;
+
+			RectTransform rect = text.rectTransform;
+
+			if (useText)
+			{
+				rect.anchoredPosition = Vector2.zero;
+				rect.sizeDelta = new Vector2(elementWidth, UIStyleManager.Current.RailHeight);
+			}
+			else
+			{
+				rect.anchoredPosition = new Vector2(CounterTextX, 0f);
+				rect.sizeDelta = new Vector2(IconSize, UIStyleManager.Current.RailHeight);
+			}
+		}
+
+		private static void ApplyWeightLayout(bool useText)
+		{
+			SetElementWidth(ElementType.Weight, useText ? WeightTextModeWidth : WeightWidth);
+
+			if (weightBarRect != null)
+			{
+				weightBarRect.anchoredPosition = useText ? WeightBarTextModePosition : WeightBarIconModePosition;
+			}
+
+			if (weightText != null)
+			{
+				weightText.rectTransform.anchoredPosition = useText ? WeightTextTextModePosition : WeightTextIconModePosition;
+			}
 		}
 	}
 } 
