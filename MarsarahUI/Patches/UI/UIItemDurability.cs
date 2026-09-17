@@ -23,7 +23,7 @@ namespace MarsarahUI.Patches.UI
 		private static readonly FieldInfo durabilityField;
 
 		private static readonly Sprite customSprite;
-		private static Sprite defaultSprite;
+		private static readonly Dictionary<Image, Sprite> originalSprites = new Dictionary<Image, Sprite>();
 
 		static UIItemDurability()
 		{
@@ -44,26 +44,11 @@ namespace MarsarahUI.Patches.UI
 
 			customSprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(sprite => sprite.name == "bar_stagger");
 
-			InitDefaultSprite();
-
 			if (hotkeyItemsField == null || hotkeyElementsField == null || hotkeyDurabilityField == null ||
 				inventoryField == null || elementsField == null || durabilityField == null)
 			{
 				log.Error("Failed to locate one or more fields required for item durability bars.");
 			}
-		}
-
-		private static void InitDefaultSprite()
-		{
-			if (defaultSprite != null) return;
-
-			GuiBar anyBar = Resources.FindObjectsOfTypeAll<GuiBar>().FirstOrDefault();
-			if (anyBar == null) return;
-
-			Image image = anyBar.m_bar?.GetComponent<Image>();
-			if (image == null) return;
-
-			defaultSprite = image.sprite;
 		}
 
 		[HarmonyPatch(typeof(HotkeyBar), "UpdateIcons")]
@@ -79,14 +64,14 @@ namespace MarsarahUI.Patches.UI
 
 				if (items == null || elements == null) return;
 
-				int count = Math.Min(items.Count, elements.Count);
-
-				for (int i = 0; i < count; i++)
+				foreach (ItemDrop.ItemData item in items)
 				{
-					ItemDrop.ItemData item = items[i];
 					if (item == null || !item.m_shared.m_useDurability) continue;
 
-					object elementData = elements[i];
+					int index = item.m_gridPos.x;
+					if (index < 0 || index >= elements.Count) continue;
+
+					object elementData = elements[index];
 					if (elementData == null) continue;
 
 					GuiBar durabilityBar = hotkeyDurabilityField.GetValue(elementData) as GuiBar;
@@ -137,9 +122,10 @@ namespace MarsarahUI.Patches.UI
 
 			if (!ConfigManager.EffectiveColoredItemDurabilityBar)
 			{
-				if (defaultSprite != null)
+				if (originalSprites.TryGetValue(barImage, out Sprite originalSprite))
 				{
-					barImage.sprite = defaultSprite;
+					barImage.sprite = originalSprite;
+					originalSprites.Remove(barImage);
 				}
 
 				return;
@@ -150,6 +136,11 @@ namespace MarsarahUI.Patches.UI
 
 			if (customSprite != null)
 			{
+				if (!originalSprites.ContainsKey(barImage))
+				{
+					originalSprites[barImage] = barImage.sprite;
+				}
+
 				barImage.sprite = customSprite;
 			}
 

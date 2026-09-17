@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIInfoRail : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Info Rail", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Info Rail", LogManager.LogLevel.Warning);
 
 		private static ConfigManager.InfoRailDisplayMode currentDisplayMode;
 		private static ConfigManager.EnemyDetectorPosition currentEnemyDetectorPosition;
@@ -76,7 +76,7 @@ namespace MarsarahUI.Patches.UI
 		private static Image skillIcon;
 		private static Text skillText;
 
-		// Rail
+		// Rail Layout
 		private const float WeightWidth = 136f;
 		private const float WeightTextModeWidth = 162f;
 
