@@ -12,6 +12,7 @@ namespace MarsarahUI.Patches.UI
 		private static readonly LogManager log = new LogManager("UI Info Rail", LogManager.LogLevel.Info);
 
 		private static ConfigManager.InfoRailDisplayMode currentDisplayMode;
+		private static ConfigManager.InfoRailPosition currentPosition;
 
 		internal enum ElementType
 		{
@@ -145,6 +146,7 @@ namespace MarsarahUI.Patches.UI
 				UpdateEnemyElements();
 				UpdateSkillElements();
 				UpdateDisplayMode();
+				UpdateRailPosition();
 
 				UpdateSeparatorTargets();
 				UpdateAnimations();
@@ -184,10 +186,6 @@ namespace MarsarahUI.Patches.UI
 			UIRail.transform.SetParent(hud.m_healthPanel.transform, false);
 
 			railRect = UIRail.AddComponent<RectTransform>();
-			railRect.anchorMin = new Vector2(1f, 1f);
-			railRect.anchorMax = new Vector2(1f, 1f);
-			railRect.pivot = new Vector2(0f, 0.5f);
-			railRect.anchoredPosition = new Vector2(-88f, -230f);
 			railRect.sizeDelta = new Vector2(0f, style.RailHeight);
 			railRect.localScale = Vector3.one;
 
@@ -237,6 +235,7 @@ namespace MarsarahUI.Patches.UI
 
 			ApplyStyle();
 			ApplyDisplayMode();
+			ApplyRailPosition(hud);
 
 			UIRail.SetActive(false);
 
@@ -542,7 +541,11 @@ namespace MarsarahUI.Patches.UI
 				break;
 			}
 
-			UIRail.SetActive(ShowUI && hasVisibleElement);
+			bool hudVisible = Hud.instance != null &&
+				Hud.instance.m_rootObject != null &&
+				Hud.instance.m_rootObject.activeInHierarchy;
+
+			UIRail.SetActive(ShowUI && hudVisible && hasVisibleElement);
 		}
 
 		private static void CreateInventoryElements()
@@ -1084,6 +1087,66 @@ namespace MarsarahUI.Patches.UI
 				rect.sizeDelta = new Vector2(64f, UIStyleManager.Current.RailHeight);
 				skillText.alignment = TextAnchor.MiddleCenter;
 			}
+		}
+
+		private static void ApplyRailPosition(Hud hud)
+		{
+			if (UIRail == null || railRect == null || hud == null) return;
+
+			ConfigManager.InfoRailPosition position = ConfigManager.EffectiveInfoRailPositionChoice;
+
+			switch (position)
+			{
+				case ConfigManager.InfoRailPosition.TopCenter:
+					UIRail.transform.SetParent(hud.m_rootObject.transform, false);
+
+					railRect.anchorMin = new Vector2(0.5f, 1f);
+					railRect.anchorMax = new Vector2(0.5f, 1f);
+					railRect.pivot = new Vector2(0.5f, 1f);
+					railRect.anchoredPosition = new Vector2(0f, -44f);
+					break;
+
+				case ConfigManager.InfoRailPosition.BottomLeft:
+				default:
+					UIRail.transform.SetParent(hud.m_healthPanel.transform, false);
+
+					railRect.anchorMin = new Vector2(1f, 1f);
+					railRect.anchorMax = new Vector2(1f, 1f);
+					railRect.pivot = new Vector2(0f, 0.5f);
+					railRect.anchoredPosition = new Vector2(-88f, -230f);
+					break;
+			}
+
+			railRect.localScale = Vector3.one;
+			currentPosition = position;
+
+			log.Info($"Information rail position changed to {position}.");
+		}
+
+		private static void UpdateRailPosition()
+		{
+			ConfigManager.InfoRailPosition position = ConfigManager.EffectiveInfoRailPositionChoice;
+
+			if (position == currentPosition) return;
+
+			ApplyRailPosition(Hud.instance);
+		}
+
+		private static bool IsHealthPanelVisible()
+		{
+			if (Hud.instance == null || Hud.instance.m_healthPanel == null) return false;
+
+			CanvasGroup[] canvasGroups = Hud.instance.m_healthPanel.GetComponentsInParent<CanvasGroup>(true);
+
+			foreach (CanvasGroup canvasGroup in canvasGroups)
+			{
+				if (canvasGroup.alpha <= 0.01f)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 } 
