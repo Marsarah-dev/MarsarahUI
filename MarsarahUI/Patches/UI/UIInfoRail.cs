@@ -138,7 +138,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static Image CreateRailIcon(string objectName, GameObject parent, string iconName, Vector2 position)
 		{
-			Image icon = CreateUIImageObject(objectName, parent, position, new Vector2(24f, 24f));
+			Image icon = CreateUIImageObject(objectName, parent, position, new Vector2(IconSize, IconSize));
 			icon.sprite = IconManager.LoadHudIcon(iconName);
 			icon.preserveAspect = true;
 			icon.color = Color.white;
@@ -171,7 +171,7 @@ namespace MarsarahUI.Patches.UI
 
 			railBackground = CreateStyledBackground("RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
 
-			railBorder = CreateStyledBorder("RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.RailSourceEndWidth, style.RailEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+			railBorder = CreateStyledBorder("RailBorder", UIRail, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			railLayoutGroup = UIRail.AddComponent<HorizontalLayoutGroup>();
 			railLayoutGroup.padding = style.RailPadding;
@@ -558,9 +558,8 @@ namespace MarsarahUI.Patches.UI
 
 			if (slotsContent != null)
 			{
-				slotsIcon = CreateRailIcon("SlotsIcon", slotsContent, style.SlotsIcon, new Vector2(-13f, 0f));
-
-				slotsText = CreateTextObject("SlotsText", slotsContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				slotsIcon = CreateRailIcon("SlotsIcon", slotsContent, style.SlotsIcon, new Vector2(CounterIconX, 0f));
+				slotsText = CreateTextObject("SlotsText", slotsContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 		}
 
@@ -572,32 +571,32 @@ namespace MarsarahUI.Patches.UI
 
 			if (enemyContent != null)
 			{
-				enemyIcon = CreateRailIcon("EnemyIcon", enemyContent, style.EnemyIcon, new Vector2(-13f, 0f));
-				enemyText = CreateTextObject("EnemyText", enemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				enemyIcon = CreateRailIcon("EnemyIcon", enemyContent, style.EnemyIcon, new Vector2(CounterIconX, 0f));
+				enemyText = CreateTextObject("EnemyText", enemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject toughEnemyContent = GetElementContent(ElementType.ToughEnemies);
 
 			if (toughEnemyContent != null)
 			{
-				toughEnemyIcon = CreateRailIcon("ToughEnemyIcon", toughEnemyContent, style.ToughEnemyIcon, new Vector2(-13f, 0f));
-				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				toughEnemyIcon = CreateRailIcon("ToughEnemyIcon", toughEnemyContent, style.ToughEnemyIcon, new Vector2(CounterIconX, 0f));
+				toughEnemyText = CreateTextObject("ToughEnemyText", toughEnemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject bossContent = GetElementContent(ElementType.Bosses);
 
 			if (bossContent != null)
 			{
-				bossIcon = CreateRailIcon("BossIcon", bossContent, style.BossIcon, new Vector2(-13f, 0f));
-				bossText = CreateTextObject("BossText", bossContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				bossIcon = CreateRailIcon("BossIcon", bossContent, style.BossIcon, new Vector2(CounterIconX, 0f));
+				bossText = CreateTextObject("BossText", bossContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 
 			GameObject neutralContent = GetElementContent(ElementType.NeutralEnemies);
 
 			if (neutralContent != null)
 			{
-				neutralEnemyIcon = CreateRailIcon("NeutralEnemyIcon", neutralContent, style.NeutralIcon, new Vector2(-13f, 0f));
-				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(13f, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
+				neutralEnemyIcon = CreateRailIcon("NeutralEnemyIcon", neutralContent, style.NeutralIcon, new Vector2(CounterIconX, 0f));
+				neutralEnemyText = CreateTextObject("NeutralEnemyText", neutralContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(24f, UIStyleManager.Current.RailHeight));
 			}
 		}
 
@@ -748,7 +747,7 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			railBackground = ReplaceStyledBackground(railBackground, "RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
-			railBorder = ReplaceStyledBorder(railBorder, "RailBorder", UIRail, style.BorderType, style.RailBorderAsset, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.RailSourceEndWidth, style.RailEndWidth, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+			railBorder = ReplaceStyledBorder(railBorder, "RailBorder", UIRail, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			ApplyIconStyle(weightIcon, style.WeightIcon);
 			ApplyIconStyle(slotsIcon, style.SlotsIcon);

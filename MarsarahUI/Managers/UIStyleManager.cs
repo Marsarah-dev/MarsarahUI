@@ -16,8 +16,7 @@ namespace MarsarahUI.Managers
 	{
 		None,
 		UnityBorder,
-		SideCapsSprite,
-		ThreePartSprite
+		SideCapsSprite
 	}
 
 	internal enum InfoRailColorMode
@@ -51,8 +50,6 @@ namespace MarsarahUI.Managers
 		// Border
 		internal InfoRailBorderType BorderType;
 		internal InfoRailBorderType SummonBorderType;
-		internal string RailBorderAsset;
-		internal string SummonBorderAsset;
 		internal string BorderCapAsset;
 		internal Color BorderColor;
 		internal Vector2 BorderCapSize;
@@ -70,8 +67,6 @@ namespace MarsarahUI.Managers
 		internal Color SeparatorColor;
 
 		internal float RailHeight;
-		internal float RailSourceEndWidth;
-		internal float RailEndWidth;
 		internal RectOffset RailPadding;
 
 		internal float SeparatorWidth;
@@ -79,8 +74,6 @@ namespace MarsarahUI.Managers
 		internal float SeparatorHeight;
 
 		internal Vector2 SummonSize;
-		internal float SummonSourceEndWidth;
-		internal float SummonEndWidth;
 
 		internal Color BorderOuterColor;
 		internal Color BorderInnerColor;
