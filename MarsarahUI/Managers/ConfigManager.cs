@@ -49,6 +49,12 @@ namespace MarsarahUI.Managers
 			Style3
 		}
 
+		public enum InfoRailDisplayMode
+		{
+			Icons,
+			Text
+		}
+
 		public enum TimeMode
 		{
 			DigitalClock,
@@ -215,6 +221,7 @@ namespace MarsarahUI.Managers
 		public static class Configs
 		{
 			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("00 - Information Rail Style", "Choose the visual style used by the information rail and summon counter.");
+			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("00a - Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.");
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("01 - Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.");
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("02 - Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.");
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("03 - Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.");
@@ -264,6 +271,7 @@ namespace MarsarahUI.Managers
 		}
 
 		public static ConfigEntry<InfoRailStyle> InfoRailStyleChoice;
+		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
 		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
 		public static ConfigEntry<EnemyDetectorMode> EnemyDetectorChoice;
@@ -313,6 +321,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> GlobalChatByDefaultOverride;
 
 		// Effective UI settings
+		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => InfoRailDisplayModeChoice.Value;
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
 		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
 
@@ -400,7 +409,7 @@ namespace MarsarahUI.Managers
 			// ===== Local UI Settings
 			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
 			UIStyleManager.Initialize(InfoRailStyleChoice);
-
+			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
 			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);
