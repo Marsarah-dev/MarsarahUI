@@ -17,7 +17,6 @@ namespace MarsarahUI.Patches.UI
 		private static readonly Vector2 VisiblePosition = new Vector2(38f, -85f);
 
 		private static GameObject UISummonArea;
-		private static Text summonLabel;
 		private static RectTransform summonAreaRect;
 		private static CanvasGroup summonCanvasGroup;
 		private static Text summonText;
@@ -30,14 +29,13 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject summonBackground;
 		private static GameObject summonBorder;
 
-		private static readonly Vector2 SummonIconModeSize = new Vector2(49f, 34f);
-		private static readonly Vector2 SummonTextModeSize = new Vector2(66f, 42f);
+		private static readonly Vector2 SummonTextModeSize = new Vector2(85f, 34f);
 
 		private static readonly Vector2 SummonIconModeIconPosition = new Vector2(-9f, 0f);
 		private static readonly Vector2 SummonIconModeTextPosition = new Vector2(-8f, 0f);
 
-		private static readonly Vector2 SummonTextModeLabelPosition = new Vector2(0f, 9f);
-		private static readonly Vector2 SummonTextModeValuePosition = new Vector2(0f, -8f);
+		private static readonly Vector2 SummonTextModeLabelPosition = new Vector2(0f, 11f);
+		private static readonly Vector2 SummonTextModeValuePosition = new Vector2(0f, -11f);
 
 		[HarmonyPatch(typeof(Hud), "Awake")]
 		private static class SummonDisplayHudAwakePatch
@@ -109,9 +107,6 @@ namespace MarsarahUI.Patches.UI
 
 			summonText = CreateTextObject("SummonText", UISummonArea, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, SummonIconModeTextPosition, areaSize);
 
-			summonLabel = CreateTextObject("SummonLabel", UISummonArea, style.SummonTextColor, "AveriaSansLibre-Bold", 13, TextAnchor.MiddleCenter, SummonTextModeLabelPosition, new Vector2(66f, 18f));
-			summonLabel.text = "Summons";
-
 			UIStyleManager.StyleChanged -= ApplyStyle;
 			UIStyleManager.StyleChanged += ApplyStyle;
 
@@ -139,12 +134,12 @@ namespace MarsarahUI.Patches.UI
 		private static void UpdateDisplay()
 		{
 			if (!targetVisible) return;
+			if (summonText == null) return;
 
-			if (summonText != null)
-			{
-				summonText.text = UISummonCounter.NumSummons.ToString();
-				summonText.color = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
-			}
+			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+
+			summonText.text = useText ? $"Summons: {UISummonCounter.NumSummons}" : UISummonCounter.NumSummons.ToString();
+			summonText.color = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
 		}
 
 		private static void UpdateAnimation()
@@ -214,8 +209,6 @@ namespace MarsarahUI.Patches.UI
 				summonText.rectTransform.sizeDelta = style.SummonSize;
 			}
 
-			if (summonLabel != null) summonLabel.color = style.SummonTextColor;
-
 			ApplyDisplayMode();
 
 			log.Info($"Applied information rail style '{ConfigManager.InfoRailStyleChoice.Value}' to summon display.");
@@ -231,11 +224,6 @@ namespace MarsarahUI.Patches.UI
 				summonIcon.gameObject.SetActive(!useText);
 			}
 
-			if (summonLabel != null)
-			{
-				summonLabel.gameObject.SetActive(useText);
-			}
-
 			if (summonAreaRect != null)
 			{
 				summonAreaRect.sizeDelta = useText ? SummonTextModeSize : style.SummonSize;
@@ -247,32 +235,18 @@ namespace MarsarahUI.Patches.UI
 
 				if (useText)
 				{
-					textRect.anchorMin = new Vector2(0.5f, 0.5f);
-					textRect.anchorMax = new Vector2(0.5f, 0.5f);
-					textRect.pivot = new Vector2(0.5f, 0.5f);
-					textRect.anchoredPosition = SummonTextModeValuePosition;
-					textRect.sizeDelta = new Vector2(66f, 18f);
+					textRect.anchoredPosition = Vector2.zero;
+					textRect.sizeDelta = SummonTextModeSize;
 					summonText.alignment = TextAnchor.MiddleCenter;
+					summonText.fontSize = 14;
 				}
 				else
 				{
-					textRect.anchorMin = new Vector2(0.5f, 0.5f);
-					textRect.anchorMax = new Vector2(0.5f, 0.5f);
-					textRect.pivot = new Vector2(0.5f, 0.5f);
 					textRect.anchoredPosition = SummonIconModeTextPosition;
 					textRect.sizeDelta = style.SummonSize;
 					summonText.alignment = TextAnchor.MiddleRight;
+					summonText.fontSize = 16;
 				}
-			}
-
-			if (summonLabel != null)
-			{
-				RectTransform labelRect = summonLabel.rectTransform;
-				labelRect.anchorMin = new Vector2(0.5f, 0.5f);
-				labelRect.anchorMax = new Vector2(0.5f, 0.5f);
-				labelRect.pivot = new Vector2(0.5f, 0.5f);
-				labelRect.anchoredPosition = SummonTextModeLabelPosition;
-				labelRect.sizeDelta = new Vector2(66f, 18f);
 			}
 
 			currentDisplayMode = ConfigManager.EffectiveInfoRailDisplayModeChoice;
