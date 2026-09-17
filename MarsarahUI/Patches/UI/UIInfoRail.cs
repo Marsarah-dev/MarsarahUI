@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 		private static readonly LogManager log = new LogManager("UI Info Rail", LogManager.LogLevel.Info);
 
 		private static ConfigManager.InfoRailDisplayMode currentDisplayMode;
-		private static ConfigManager.InfoRailPosition currentPosition;
+		private static ConfigManager.EnemyDetectorPosition currentEnemyDetectorPosition;
 
 		internal enum ElementType
 		{
@@ -99,14 +99,19 @@ namespace MarsarahUI.Patches.UI
 
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 8f;
+
 		private static GameObject UIRail;
 		private static RectTransform railRect;
-
 		private static GameObject railBackground;
 		private static GameObject railBorder;
 		private static HorizontalLayoutGroup railLayoutGroup;
-
 		private static RectTransform weightBarRect;
+
+		private static GameObject UIEnemyRail;
+		private static RectTransform enemyRailRect;
+		private static GameObject enemyRailBackground;
+		private static GameObject enemyRailBorder;
+		private static HorizontalLayoutGroup enemyRailLayoutGroup;
 
 		private static readonly Dictionary<ElementType, RailElement> elements = new Dictionary<ElementType, RailElement>();
 
@@ -146,8 +151,7 @@ namespace MarsarahUI.Patches.UI
 				UpdateEnemyElements();
 				UpdateSkillElements();
 				UpdateDisplayMode();
-				UpdateRailPosition();
-
+				UpdateEnemyDetectorPosition();
 				UpdateSeparatorTargets();
 				UpdateAnimations();
 				UpdateRailVisibility();
@@ -181,11 +185,16 @@ namespace MarsarahUI.Patches.UI
 
 			UIStyleDefinition style = UIStyleManager.Current;
 
+			// Info Rail
 			UIRail = new GameObject("InfoRail");
 			UIRail.layer = 5;
 			UIRail.transform.SetParent(hud.m_healthPanel.transform, false);
 
 			railRect = UIRail.AddComponent<RectTransform>();
+			railRect.anchorMin = new Vector2(1f, 1f);
+			railRect.anchorMax = new Vector2(1f, 1f);
+			railRect.pivot = new Vector2(0f, 0.5f);
+			railRect.anchoredPosition = new Vector2(-88f, -230f);
 			railRect.sizeDelta = new Vector2(0f, style.RailHeight);
 			railRect.localScale = Vector3.one;
 
@@ -206,6 +215,39 @@ namespace MarsarahUI.Patches.UI
 			sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
 			sizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
+			// Enemy Rail
+			UIEnemyRail = new GameObject("EnemyRail");
+			UIEnemyRail.layer = 5;
+			UIEnemyRail.transform.SetParent(hud.m_rootObject.transform, false);
+
+			enemyRailRect = UIEnemyRail.AddComponent<RectTransform>();
+			enemyRailRect.anchorMin = new Vector2(0.5f, 1f);
+			enemyRailRect.anchorMax = new Vector2(0.5f, 1f);
+			enemyRailRect.pivot = new Vector2(0.5f, 1f);
+			enemyRailRect.anchoredPosition = new Vector2(0f, -44f);
+			enemyRailRect.sizeDelta = new Vector2(0f, style.RailHeight);
+			enemyRailRect.localScale = Vector3.one;
+
+			enemyRailBackground = CreateStyledBackground("EnemyRailBackground", UIEnemyRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+
+			enemyRailBorder = CreateStyledBorder("EnemyRailBorder", UIEnemyRail, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+
+			enemyRailLayoutGroup = UIEnemyRail.AddComponent<HorizontalLayoutGroup>();
+			enemyRailLayoutGroup.padding = style.RailPadding;
+			enemyRailLayoutGroup.spacing = 0f;
+			enemyRailLayoutGroup.childAlignment = TextAnchor.MiddleLeft;
+			enemyRailLayoutGroup.childControlWidth = true;
+			enemyRailLayoutGroup.childControlHeight = true;
+			enemyRailLayoutGroup.childForceExpandWidth = false;
+			enemyRailLayoutGroup.childForceExpandHeight = true;
+
+			ContentSizeFitter enemySizeFitter = UIEnemyRail.AddComponent<ContentSizeFitter>();
+			enemySizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+			enemySizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+			UIEnemyRail.SetActive(false);
+
+			// Rail Elements
 			CreateElement(ElementType.Weight, WeightWidth);
 			CreateSeparator(ElementType.Weight);
 
@@ -235,7 +277,7 @@ namespace MarsarahUI.Patches.UI
 
 			ApplyStyle();
 			ApplyDisplayMode();
-			ApplyRailPosition(hud);
+			ApplyEnemyDetectorPosition();
 
 			UIRail.SetActive(false);
 
@@ -391,8 +433,7 @@ namespace MarsarahUI.Patches.UI
 
 				for (int j = i + 1; j < elementOrder.Length; j++)
 				{
-					if (elements.TryGetValue(elementOrder[j], out RailElement laterElement) &&
-						laterElement.TargetVisible)
+					if (elements.TryGetValue(elementOrder[j], out RailElement laterElement) && laterElement.TargetVisible && laterElement.Root.transform.parent == currentElement.Root.transform.parent)
 					{
 						hasVisibleElementAfter = true;
 						break;
@@ -522,30 +563,39 @@ namespace MarsarahUI.Patches.UI
 
 		private static void RebuildLayout()
 		{
-			if (railRect == null) return;
+			if (railRect != null)
+			{
+				LayoutRebuilder.ForceRebuildLayoutImmediate(railRect);
+			}
 
-			LayoutRebuilder.ForceRebuildLayoutImmediate(railRect);
+			if (enemyRailRect != null)
+			{
+				LayoutRebuilder.ForceRebuildLayoutImmediate(enemyRailRect);
+			}
 		}
 
 		private static void UpdateRailVisibility()
 		{
-			if (UIRail == null) return;
+			if (UIRail == null || UIEnemyRail == null) return;
 
-			bool hasVisibleElement = false;
+			bool infoRailVisible = HasVisibleElement(UIRail.transform);
+			bool enemyRailVisible = HasVisibleElement(UIEnemyRail.transform);
 
+			UIRail.SetActive(ShowUI && infoRailVisible);
+			UIEnemyRail.SetActive(ShowUI && enemyRailVisible);
+		}
+
+		private static bool HasVisibleElement(Transform rail)
+		{
 			foreach (RailElement element in elements.Values)
 			{
+				if (element.Root.transform.parent != rail) continue;
 				if (!element.Root.activeSelf) continue;
 
-				hasVisibleElement = true;
-				break;
+				return true;
 			}
 
-			bool hudVisible = Hud.instance != null &&
-				Hud.instance.m_rootObject != null &&
-				Hud.instance.m_rootObject.activeInHierarchy;
-
-			UIRail.SetActive(ShowUI && hudVisible && hasVisibleElement);
+			return false;
 		}
 
 		private static void CreateInventoryElements()
@@ -798,13 +848,26 @@ namespace MarsarahUI.Patches.UI
 				railRect.sizeDelta = new Vector2(railRect.sizeDelta.x, style.RailHeight);
 			}
 
+			if (enemyRailRect != null)
+			{
+				enemyRailRect.sizeDelta = new Vector2(enemyRailRect.sizeDelta.x, style.RailHeight);
+			}
+
 			if (railLayoutGroup != null)
 			{
 				railLayoutGroup.padding = style.RailPadding;
 			}
 
+			if (enemyRailLayoutGroup != null)
+			{
+				enemyRailLayoutGroup.padding = style.RailPadding;
+			}
+
 			railBackground = ReplaceStyledBackground(railBackground, "RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
 			railBorder = ReplaceStyledBorder(railBorder, "RailBorder", UIRail, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+
+			enemyRailBackground = ReplaceStyledBackground(enemyRailBackground, "EnemyRailBackground", UIEnemyRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+			enemyRailBorder = ReplaceStyledBorder(enemyRailBorder, "EnemyRailBorder", UIEnemyRail, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			ApplyIconStyle(weightIcon, style.WeightIcon);
 			ApplyIconStyle(slotsIcon, style.SlotsIcon);
@@ -1089,64 +1152,68 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		private static void ApplyRailPosition(Hud hud)
+		private static void ApplyEnemyDetectorPosition()
 		{
-			if (UIRail == null || railRect == null || hud == null) return;
+			if (UIRail == null || UIEnemyRail == null) return;
 
-			ConfigManager.InfoRailPosition position = ConfigManager.EffectiveInfoRailPositionChoice;
+			ConfigManager.EnemyDetectorPosition position = ConfigManager.EffectiveEnemyDetectorPositionChoice;
+			Transform targetParent = position == ConfigManager.EnemyDetectorPosition.TopCenter ? UIEnemyRail.transform : UIRail.transform;
 
-			switch (position)
+			MoveElementToRail(ElementType.Enemies, targetParent);
+			MoveElementToRail(ElementType.ToughEnemies, targetParent);
+			MoveElementToRail(ElementType.Bosses, targetParent);
+			MoveElementToRail(ElementType.NeutralEnemies, targetParent);
+
+			ReorderRailChildren(UIRail.transform);
+			ReorderRailChildren(UIEnemyRail.transform);
+
+			currentEnemyDetectorPosition = position;
+
+			UpdateSeparatorTargets();
+			RebuildLayout();
+			UpdateRailVisibility();
+
+			log.Info($"Enemy detector position changed to {position}.");
+		}
+
+		private static void MoveElementToRail(ElementType type, Transform targetParent)
+		{
+			if (elements.TryGetValue(type, out RailElement element))
 			{
-				case ConfigManager.InfoRailPosition.TopCenter:
-					UIRail.transform.SetParent(hud.m_rootObject.transform, false);
-
-					railRect.anchorMin = new Vector2(0.5f, 1f);
-					railRect.anchorMax = new Vector2(0.5f, 1f);
-					railRect.pivot = new Vector2(0.5f, 1f);
-					railRect.anchoredPosition = new Vector2(0f, -44f);
-					break;
-
-				case ConfigManager.InfoRailPosition.BottomLeft:
-				default:
-					UIRail.transform.SetParent(hud.m_healthPanel.transform, false);
-
-					railRect.anchorMin = new Vector2(1f, 1f);
-					railRect.anchorMax = new Vector2(1f, 1f);
-					railRect.pivot = new Vector2(0f, 0.5f);
-					railRect.anchoredPosition = new Vector2(-88f, -230f);
-					break;
+				element.Root.transform.SetParent(targetParent, false);
 			}
 
-			railRect.localScale = Vector3.one;
-			currentPosition = position;
-
-			log.Info($"Information rail position changed to {position}.");
-		}
-
-		private static void UpdateRailPosition()
-		{
-			ConfigManager.InfoRailPosition position = ConfigManager.EffectiveInfoRailPositionChoice;
-
-			if (position == currentPosition) return;
-
-			ApplyRailPosition(Hud.instance);
-		}
-
-		private static bool IsHealthPanelVisible()
-		{
-			if (Hud.instance == null || Hud.instance.m_healthPanel == null) return false;
-
-			CanvasGroup[] canvasGroups = Hud.instance.m_healthPanel.GetComponentsInParent<CanvasGroup>(true);
-
-			foreach (CanvasGroup canvasGroup in canvasGroups)
+			if (separators.TryGetValue(type, out RailSeparator separator))
 			{
-				if (canvasGroup.alpha <= 0.01f)
+				separator.Root.transform.SetParent(targetParent, false);
+			}
+		}
+
+		private static void UpdateEnemyDetectorPosition()
+		{
+			ConfigManager.EnemyDetectorPosition position = ConfigManager.EffectiveEnemyDetectorPositionChoice;
+
+			if (position == currentEnemyDetectorPosition) return;
+
+			ApplyEnemyDetectorPosition();
+		}
+
+		private static void ReorderRailChildren(Transform rail)
+		{
+			foreach (ElementType type in elementOrder)
+			{
+				if (elements.TryGetValue(type, out RailElement element) &&
+					element.Root.transform.parent == rail)
 				{
-					return false;
+					element.Root.transform.SetAsLastSibling();
+				}
+
+				if (separators.TryGetValue(type, out RailSeparator separator) &&
+					separator.Root.transform.parent == rail)
+				{
+					separator.Root.transform.SetAsLastSibling();
 				}
 			}
-
-			return true;
 		}
 	}
 } 
