@@ -268,7 +268,7 @@ namespace MarsarahUI.Managers
 
 		private static ConfigEntry<ConfigManager.InfoRailStyle> styleConfig;
 
-		internal static UIStyleDefinition Current { get; private set; } = style3;
+		internal static UIStyleDefinition Current { get; private set; } = style1;
 
 		internal static void Initialize(ConfigEntry<ConfigManager.InfoRailStyle> config)
 		{
@@ -294,15 +294,9 @@ namespace MarsarahUI.Managers
 
 		private static void RefreshStyle(bool notify)
 		{
-			ConfigManager.InfoRailStyle selectedStyle = styleConfig?.Value ?? ConfigManager.InfoRailStyle.Style3;
+			ConfigManager.InfoRailStyle selectedStyle = styleConfig?.Value ?? ConfigManager.InfoRailStyle.Style1;
 
-			if (!styles.TryGetValue(selectedStyle, out UIStyleDefinition style))
-			{
-				log.Warn($"UI style '{selectedStyle}' is not implemented yet. Falling back to Style3.");
-				style = style3;
-			}
-
-			Current = style;
+			Current = styles[selectedStyle];
 
 			if (notify)
 			{

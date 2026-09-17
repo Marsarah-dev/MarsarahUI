@@ -398,7 +398,7 @@ namespace MarsarahUI.Managers
 			Config = configFile;
 
 			// ===== Local UI Settings
-			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style3);
+			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
 			UIStyleManager.Initialize(InfoRailStyleChoice);
 
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
