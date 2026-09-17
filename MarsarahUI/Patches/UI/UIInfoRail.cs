@@ -661,9 +661,11 @@ namespace MarsarahUI.Patches.UI
 				if (slotsText != null)
 				{
 					bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+					Color valueColor = UIStyleManager.GetSlotsTextColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
+					string value = UIInventoryWeightAndSlots.FreeSlots.ToString();
 
-					slotsText.text = useText ? $"Slots: {UIInventoryWeightAndSlots.FreeSlots}" : UIInventoryWeightAndSlots.FreeSlots.ToString();
-					slotsText.color = UIStyleManager.GetSlotsTextColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
+					slotsText.text = useText ? CreateLabeledValue("Slots", value, valueColor) : value;
+					slotsText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
 				}
 			}
 		}
@@ -697,26 +699,38 @@ namespace MarsarahUI.Patches.UI
 
 			if (enemyText != null)
 			{
-				enemyText.text = useText ? $"Enemies: {enemies}" : enemies.ToString();
-				enemyText.color = UIStyleManager.GetEnemyTextColor(enemies);
+				Color valueColor = UIStyleManager.GetEnemyTextColor(enemies);
+				string value = enemies.ToString();
+
+				enemyText.text = useText ? CreateLabeledValue("Enemies", value, valueColor) : value;
+				enemyText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
 			}
 
 			if (splitEnemies && toughEnemies > 0 && toughEnemyText != null)
 			{
-				toughEnemyText.text = useText ? $"Tough: {toughEnemies}" : toughEnemies.ToString();
-				toughEnemyText.color = UIStyleManager.Current.ToughEnemyTextColor;
+				Color valueColor = UIStyleManager.Current.ToughEnemyTextColor;
+				string value = toughEnemies.ToString();
+
+				toughEnemyText.text = useText ? CreateLabeledValue("Tough", value, valueColor) : value;
+				toughEnemyText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
 			}
 
 			if (splitEnemies && bosses > 0 && bossText != null)
 			{
-				bossText.text = useText ? $"Boss: {bosses}" : bosses.ToString();
-				bossText.color = UIStyleManager.Current.BossTextColor;
+				Color valueColor = UIStyleManager.Current.BossTextColor;
+				string value = bosses.ToString();
+
+				bossText.text = useText ? CreateLabeledValue("Boss", value, valueColor) : value;
+				bossText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
 			}
 
 			if (neutralEnemies > 0 && neutralEnemyText != null)
 			{
-				neutralEnemyText.text = useText	? $"Neutral: {neutralEnemies}" : neutralEnemies.ToString();
-				neutralEnemyText.color = UIStyleManager.Current.NeutralTextColor;
+				Color valueColor = UIStyleManager.Current.NeutralTextColor;
+				string value = neutralEnemies.ToString();
+
+				neutralEnemyText.text = useText ? CreateLabeledValue("Neutral", value, valueColor) : value;
+				neutralEnemyText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
 			}
 		}
 
@@ -753,9 +767,12 @@ namespace MarsarahUI.Patches.UI
 
 			if (skillText != null)
 			{
-				skillText.text = useText
-					? $"{UISkillProgress.CurrentSkillName}: {UISkillProgress.CurrentDisplayText}"
-					: UISkillProgress.CurrentDisplayText;
+				Color valueColor = UIStyleManager.Current.SkillTextColor;
+				string value = UISkillProgress.CurrentDisplayText;
+
+				skillText.text = useText ? CreateLabeledValue(UISkillProgress.CurrentSkillName, value, valueColor) : value;
+
+				skillText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
 
 				if (useText)
 				{

@@ -138,8 +138,11 @@ namespace MarsarahUI.Patches.UI
 
 			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
 
-			summonText.text = useText ? $"Summons: {UISummonCounter.NumSummons}" : UISummonCounter.NumSummons.ToString();
-			summonText.color = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
+			Color valueColor = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
+			string value = UISummonCounter.NumSummons.ToString();
+
+			summonText.text = useText ? CreateLabeledValue("Summons", value, valueColor) : value;
+			summonText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
 		}
 
 		private static void UpdateAnimation()

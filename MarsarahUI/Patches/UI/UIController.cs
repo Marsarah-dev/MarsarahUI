@@ -366,5 +366,11 @@ namespace MarsarahUI.Patches.UI
 			image.color = color;
 			image.raycastTarget = false;
 		}
+
+		protected static string CreateLabeledValue(string label, string value, Color valueColor)
+		{
+			string colorHex = ColorUtility.ToHtmlStringRGB(valueColor);
+			return $"{label}: <color=#{colorHex}>{value}</color>";
+		}
 	}
 }
