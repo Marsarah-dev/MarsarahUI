@@ -1,4 +1,4 @@
-Marsarah UI v1.1.0
+Marsarah UI v1.1.1
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -606,6 +606,9 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.1.1
+- Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
+
 v1.1.0
 - Fixes / Updates:
   - Updated Weather Forecast for Valheim 1.0 BiomeSector / AltBiome weather behavior.

@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.1.0  
+**Version:** 1.1.1  
 **Author:** Marsarah
 
 ---

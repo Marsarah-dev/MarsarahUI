@@ -10,7 +10,7 @@ A. Fixes
 
 B. Updates
 ------------------------
-- Reorganized configuration entries to remove numbered setting names and use Configuration Manager ordering instead.
+- Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
 
 C. New additions
 ------------------------
