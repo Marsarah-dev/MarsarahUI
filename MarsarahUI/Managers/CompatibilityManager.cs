@@ -29,7 +29,7 @@ namespace MarsarahUI.Managers
 
 				ConfigFile tweaksConfig = pluginInfo.Instance.Config;
 
-				tweaksGearUpgradeUnlock = GetBoolConfig(tweaksConfig, "3 - Balance (Synced with Server)", "04 - Gear Upgrade Unlock");
+				tweaksGearUpgradeUnlock = GetBoolConfig(tweaksConfig, "3 - Balance (Synced with Server)", "Gear Upgrade Unlock");
 
 				Type progressionHaltType = pluginInfo.Instance.GetType().Assembly.GetType("MarsarahTweaks.Patches.Features.ProgressionHalt");
 				tweaksIsContainerSealedMethod = progressionHaltType?.GetMethod("IsContainerSealed", BindingFlags.Static | BindingFlags.NonPublic);

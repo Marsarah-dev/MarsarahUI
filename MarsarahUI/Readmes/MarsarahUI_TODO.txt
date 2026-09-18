@@ -5,163 +5,27 @@ MARSARAH UI TODO
 IMPLEMENTED - NOT RELEASED
 ============================================================
 
-A. Updates / Fixes
+A. Fixes
 ------------------------
-* Weather Forecast:
-  - Updated Weather Forecast to use Valheim 1.0's BiomeSector/AltBiome weather system.
-  - Added proper AltBiome weather forecasting support, including Dark Meadows.
 
-* Better Item Durability Bar
-  - Fixed an incorrect durability display if an item was positioned in a quickslot that had empty quicklots before it. 
-  - Fixed the vanilla sprite not restoring when this config was toggled off mid-game.
-
-* Configuration
-  - Upated config layout and grouped by categorie, currently having 5 in total. 
-  - Added Configuration Manager medatata for ordering of configs. 
-  - Removed the "xx - " from individual naming of configs, due to the new metadata.
-  - Added a server override option for the Information Rail display mode.
-
-B. New additions
+B. Updates
 ------------------------
-* Status Effects Under Minimap:
-  - Added a compact status-effects vertical layout below the minimap.
-  - Restores the vanilla layout automatically when No Map mode is active.
-  - Repositioned and resized the vanilla sailing wind indicator and sailing controls to the left of the minimap while this layout is enabled.
-  - All sailing UI positioning restores dynamically when the feature is disabled or No Map mode is active.
+- Reorganized configuration entries to remove numbered setting names and use Configuration Manager ordering instead.
 
-* Global Chat By Default:
-  - Added an option that makes normal chat input use global/Shout chat automatically.
-  - Preserves the player's original capitalization instead of vanilla Shout forcing messages to uppercase.
-  - Explicit chat commands such as /w, /say and /s remain available and are not redirected.
-  - Added a synced server override allowing servers to Force On, Force Off, or leave the feature to each player's preference.
-
-* Skill Progress Bar:
-  - Added a temporary full-width progress bar along the bottom edge of the screen when a skill crosses a whole percentage toward its next level.
-  - Displays the skill's actual in-game icon (if in icon style) together with its current level and progress percentage.
-  - Skill information is now displayed as a temporary element in the Information Rail and supports both Icons and Text display modes.
-  - Reserves space for the optional neutral Enemy Detector indicator so the Skill Progress widget does not move when neutral creatures appear or disappear.
-  - Excludes Run skill progress from triggering the display.
-  - New progress from the same or another skill updates the current display and resets its duration rather than stacking notifications.
-  - Leaves vanilla skill level-up notifications unchanged.
-  - Fades the progress bar and skill information out after a short display period.
-  - Added selectable progress-bar colors: Gold, White, Green, Blue, Cyan, Red and Purple.
-  - Added Off directly to the color dropdown to disable the feature without requiring a separate toggle.
-  - Bar color changes do not affect the skill icon or skill information text.
-
-* Logon Screen Character Statistics
-  - Added an optional Character Statistics panel to the character selection screen.
-  - The panel displays statistics and notable facts for the currently selected character. It is only visible on the character selection screen and automatically updates when switching between characters.
-  - Configuration: local UI setting only.
-  - Displays the following statistics: 
-    - Playtime: Total character playtime, calculated from TimeInBase + TimeOutOfBase.
-    - Foes Dispatched: Enemy kills.
-    - Bosses Demoted: Boss kills.
-    - Valhalla Rejections: Deaths.
-    - Longest Survival: Highest consecutive days survived.
-    - Arrows Liberated: Arrows fired.
-    - Walks of Shame: Own tombstones opened.
-    - Items Crafted: Items crafted.
-    - Items Upgraded: Items upgraded.
-    - Pieces Built: Build pieces placed.
-    - Rocks and Ores Brutally Smashed: Rocks/ore deposits mined.
-    - Trees Brutally Murdered: Trees felled.
-    - Creatures Tamed: Creatures tamed.
-    - Fish Acquired Legally: Fish caught.
-    - Time at Home: Time spent inside the player's base.
-    - Distance Traveled: Total distance traveled, displayed in kilometers.
-    - Distance Sailed: Total distance sailed, displayed in kilometers.
-    - Portals Used: Number of portal uses.
-    - Jumps: Number of jumps.
-  - Also disaplays a notable random fact about the character (not to be confused with vanilla game achievements)
-  - Facts only enter the random pool after their individual condition has been met. All eligible facts have an equal chance of being selected.
-  - The selected fact remains stable while viewing the same character. Switching characters selects a fact from the newly selected character's eligible pool.
-  - If a character has no qualifying notable facts the following is displayed: "The Saga Has Just Begun" - "No particularly notable exploits yet."
-  - List of facts:
-    - Unusual death facts:
-      - The Forest Remembers: Killed by a falling tree at least 1 time.
-      - Curiosity Won: Killed by the edge of the world at least 1 time.
-      - Occupational Hazard: Killed by a cart at least 1 time.
-      - Flight Test Failed: Killed by a catapult at least 1 time.
-      - Workplace Safety Violation: Killed by a drawbridge at least 1 time.
-      - Disposal Error: Killed by the obliterator at least 1 time.
-      - Security System Working as Intended: Killed by a turret at least 1 time.
-      - Captain Went Down With the Ship: Killed by a boat at least 1 time.
-      - The Floor Was Lava: Killed by Ashlands lava at least 1 time.
-      - Hostile Waters: Killed by the Ashlands ocean at least 1 time.
-    - Repeated death facts:
-      - Natural Enemy: Gravity: Died from falling at least 3 times.
-      - Swimming Lessons Recommended: Drowned at least 2 times.
-      - Ventilation Required: Died from smoke inhalation at least 2 times.
-      - Own Worst Enemy: Died by own hand at least 2 times.
-      - Fire Safety Optional: Burned to death at least 3 times.
-      - Should Have Packed a Cloak: Frozen to death at least 3 times.
-      - Poison Control: Died from poison at least 3 times.
-    - Activity & Events facts
-      - The Finishing Touch: Dealt the final blow to at least 5 bosses.
-      - The Ones That Got Away: Lost at least 10 fish.
-      - Odin's HR Has Been Notified: Hit a raven at least 5 times.
-      - Necromancy Is a Hobby: Summoned at least 250 skeletons.
-      - Retrieval Specialist: Opened at least 5 tombstones belonging to other players.
-      - Born in a Barn: At least 100 more doors opened than closed, with at least 10% of opened doors left unclosed.
-      - Thar She Blows: Caused at least 5 leviathans to sink.
-      - Treasure Hunter: Found at least 10 treasures from buried treasure and location treasure counters combined.
-        - Note: Dungeon treasure is intentionally excluded.
-      - Captain: Traveled at least 100 km while sailing at the helm.
-      - Measure Twice, Build Once? Built at least 100 pieces and removed at least 50% as many pieces as were built.
-    - Level 100 skill facts:
-      - Mountain Goat: Jump level 100.
-      - Still Faster Than a Boat: Swim level 100.
-      - You Were Never Here: Sneak level 100.
-      - The Forest Definitely Remembers: Wood Cutting level 100.
-      - Professional Rock Argument: Pickaxes level 100.
-      - Not Today: Blocking level 100.
-      - Cardio Is a Lifestyle: Run level 100.
-      - Fish Fear Me: Fishing level 100.
-      - Born in the Saddle: Ride level 100.
-      - Outstanding in the Field: Farming level 100.
-      - Yes, Chef: Cooking level 100.
-    - Master Skill fact:
-      - Master of Everything: Every vanilla skill has reached level 100.
-      - When Master of Everything qualifies, the individual level 100 skill facts are not added to the random pool. Master of Everything represents the achievement instead.
-
-* Container Contents Mode (renamed from Show Container Contents)
-  - Redesigned Container Contents with four modes:
-    - IconsHorizontal (default)
-    - IconsVertical
-    - Text
-    - Off
-  - Icon modes use actual vanilla/modded item icons with stack totals.
-  - Horizontal uses 5x2 layout; Vertical uses 2x5 layout.
-  - Multiple stacks of the same item are combined.
-  - Maximum 10 unique items, with "+N Others" for overflow.
-  - Text mode now aligns quantities/names and adjusts for large numbers.
-
-* Information Rail Overhaul
-  - Overhauled the bottom-left information panel to better handle different inforThar She Blowsmation elements.
-  - Inventory Weight/Free Slots, Enemy Detector and Skill Progress were consolidated into the rail.
-  - Temporary elements (enemies / skill levelups) animate in/out.
-  - Summons remains standalone but shares Information Rail style/display mode
-  - Added 3 visual styles for the information rail selectable from config, that affects the icons, text color display and borders
-  - Added a text option in place of icons that applies for all 3 styles
-  - Icons/Text is live-switchable, and can be server-overridden.
- 
-* Enemy Detector
-  - Added an option for traking enemies split by type (in addition to the normal detection method)
-  - Current selections are: Consoliated and Split.
-  - In Consolidated, bosses/minibosses contribute to the normal enemy count
-  - In Split, tough enemies and bosses get their own counters.
-  - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
-  - Enemies in the boss category are all bosses and 4 minibosses
-  - Added a config option to display the enemy detector at the top-middle of the screen
-  - The Enemy Detector is now affected by the main Information Rail styles
-  - The normal counter dissapears when there are no enemies detected.
+C. New additions
+------------------------
 
 ============================================================
 TO IMPLEMENT / VERIFY
 ============================================================
 
-A. Fixes
-----------------------------------
+A. Fixes / Compatibility
+--------------------
+* Look into StoreAndCraft chest renames / tags (they are hidden wth my Detailed Hover Information)
+
+B. Requests
+--------------------
+* Make detailed hovers toggle off individually.
 
 B. Existing UI Ideas
 --------------------
@@ -169,9 +33,6 @@ B. Existing UI Ideas
 * Weather Forecast: choose a better position when No Map is enabled.
 * Smelter hover: add a Bars display mode.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
-
-C. Online / Player Information
-------------------------------
 * Consider showing player HP and death count with Online Players.
 * Consider indicating Corpse Run status, for example by coloring the player name.
 

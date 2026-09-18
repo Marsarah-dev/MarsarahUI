@@ -130,6 +130,7 @@
     <None Include="ILRepack.targets" />
     <None Include="packages.config" />
     <None Include="Readmes\CHANGELOG.md" />
+    <None Include="Readmes\manifest.json" />
     <None Include="Readmes\MarsarahUI_DescriptionT.md" />
   </ItemGroup>
   <ItemGroup>
