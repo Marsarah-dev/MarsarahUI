@@ -103,7 +103,7 @@ B. New additions
       - Necromancy Is a Hobby: Summoned at least 250 skeletons.
       - Retrieval Specialist: Opened at least 5 tombstones belonging to other players.
       - Born in a Barn: At least 100 more doors opened than closed, with at least 10% of opened doors left unclosed.
-      - Thar She Blows:  Caused at least 5 leviathans to sink.
+      - Thar She Blows: Caused at least 5 leviathans to sink.
       - Treasure Hunter: Found at least 10 treasures from buried treasure and location treasure counters combined.
         - Note: Dungeon treasure is intentionally excluded.
       - Captain: Traveled at least 100 km while sailing at the helm.
@@ -137,7 +137,7 @@ B. New additions
   - Text mode now aligns quantities/names and adjusts for large numbers.
 
 * Information Rail Overhaul
-  - Overhauled the bottom-left information panel to better handle different information elements.
+  - Overhauled the bottom-left information panel to better handle different inforThar She Blowsmation elements.
   - Inventory Weight/Free Slots, Enemy Detector and Skill Progress were consolidated into the rail.
   - Temporary elements (enemies / skill levelups) animate in/out.
   - Summons remains standalone but shares Information Rail style/display mode
@@ -150,7 +150,7 @@ B. New additions
   - Current selections are: Consoliated and Split.
   - In Consolidated, bosses/minibosses contribute to the normal enemy count
   - In Split, tough enemies and bosses get their own counters.
-  - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Solder, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
+  - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
   - Enemies in the boss category are all bosses and 4 minibosses
   - Added a config option to display the enemy detector at the top-middle of the screen
   - The Enemy Detector is now affected by the main Information Rail styles

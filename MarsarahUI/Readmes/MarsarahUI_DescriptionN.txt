@@ -105,7 +105,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 [line]
 
-[size=5][b]⚡ Main Features[/b][/size]
+[size=5][b]⚡ General & HUD[/b][/size]
 
 [size=4][b]🔧 Better Loading Tips[/b][/size]
 - Replaces the vanilla loading-tip selection with a larger pool of more useful gameplay tips.
@@ -113,38 +113,10 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Intentionally leaves out several very basic vanilla tips.
 - Only applies to the [b]English[/b] localization.
 
-[size=4][b]🔧 Information Rail[/b][/size]
-- Adds a unified information area at the bottom-left of the HUD.
-- Inventory Weight, Free Slots, Enemy Detector and temporary Skill Progress information use the Information Rail.
-- Temporary elements animate smoothly into and out of the rail as they become relevant.
-- Includes [b]3 selectable visual styles[/b] with different backgrounds, borders, icons and colors.
-- Display Mode can use [b]Icons[/b] or [b]Text[/b].
-- The Enemy Detector can optionally be moved out of the rail to a separate top-center display.
-- The Summon Counter remains separate but follows the selected Information Rail style and Icons/Text mode.
-
-[size=4][b]🔧 Inventory Weight and Free Slots[/b][/size]
-- Displays inventory information inside the Information Rail.
-- Modes: [b]WeightAndFreeSlots, WeightOnly, FreeSlotsOnly, Off[/b].
-- Weight uses a filling bar and current/max weight display.
-- Free Slots shows remaining inventory slots.
-- Colors and presentation follow the selected Information Rail style.
-
-[size=4][b]🔧 Enemy Detector[/b][/size]
-- Counts nearby characters within [b]30 meters[/b].
-- Modes: [b]Consolidated, Split, Off[/b].
-- Consolidated combines hostile enemies into a single counter.
-- Split separates normal, tough and boss enemies into individual counters.
-- Bosses and minibosses count as normal enemies while using Consolidated mode.
-- Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
-- Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Solder, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
-- Can be displayed inside the Information Rail or moved to a separate top-center display.
-- Uses the selected Information Rail visual style and Icons/Text display mode.
-
 [size=4][b]🔧 Show Boat Speed[/b][/size]
 - Displays current ship speed while controlling a boat.
 - Reverse speed uses an [b]R[/b] prefix.
-- Repositions for [b]Minimal Status Effects[/b] and No Map worlds.
+- Repositions automatically when [b]Status Effects Under Minimap[/b] is enabled and accounts for No Map worlds.
 
 [size=4][b]🔧 Show Current Day[/b][/size]
 - Displays the current world day above the minimap and works in No Map worlds.
@@ -157,6 +129,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=4][b]🔧 Show Weather Forecast Indicator[/b][/size]
 - Displays the next scheduled weather using an embedded icon and countdown near the minimap.
 - If no different weather is scheduled in the forecast window, the current weather is shown with a [b]--:--[/b] timer.
+- Supports Valheim 1.0 alternative-biome forecasting, including [b]Dark Meadows[/b].
 - Includes mappings for weather used by Seasons and similar environment changes where supported.
 
 [size=4][b]🔧 Smart Biome Indicator[/b][/size]
@@ -166,21 +139,10 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Includes Bear, Vilebone and Lox Fur armor.
 - Accounts for [b]MarsarahTweaks Gear Upgrade Unlock[/b] when Tweaks is installed and the feature is enabled.
 
-[size=4][b]🔧 Show Summon Counter[/b][/size]
-- Displays active summoned skeletons from the Dead Raiser.
-- Summoned Trolls are not counted.
-- Appears only while summons are active.
-- Uses the selected Information Rail visual style and Icons/Text display mode.
-
 [size=4][b]🔧 Show Online Players[/b][/size]
 - Displays total online players and up to [b]20 player names[/b] at the bottom-right.
 - Hidden when only one player is online.
 - Press [b]Home[/b] to hide/show the names while retaining the total count.
-
-[size=4][b]🔧 Show Owned Resources In Build Menu[/b][/size]
-- Shows resource requirements as [b]required / owned[/b] in build and crafting displays.
-- Example: [b]2/20[/b].
-- Steps aside when [b]Craft From Containers[/b] is installed.
 
 [size=4][b]🔧 Show Boss Power Expiration Message[/b][/size]
 - Displays a center-screen message when a Forsaken Power expires.
@@ -199,14 +161,6 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Preserves the player's original capitalization.
 - Explicit commands such as [b]/w and /say[/b] continue to work normally.
 - Supports an optional synced server override.
-
-[size=4][b]🔧 Skill Progress Bar[/b][/size]
-- Displays a temporary progress bar along the bottom edge of the screen when a skill advances to a new whole percentage toward its next level.
-- Skill level and progress percentage appears temporarily in the Information Rail.
-- Icons mode uses the skill's actual in-game icon; Text mode displays the skill name.
-- Run skill progress is intentionally excluded.
-- Colors: [b]Gold, White, Green, Blue, Cyan, Red, Purple[/b].
-- Selecting [b]Off[/b] disables the feature.
 
 [size=4][b]🔧 Logon Screen Character Statistics[/b][/size]
 - Adds an optional statistics panel to the character selection screen.
@@ -233,13 +187,13 @@ My mods are and will always be free to use. If you'd like to support my work, yo
     - Should Have Packed a Cloak: Frozen to death at least 3 times.
     - Poison Control: Died from poison at least 3 times.
   - Activity & Events facts
-   - The Finishing Touch: Dealt the final blow to at least 5 bosses.
+    - The Finishing Touch: Dealt the final blow to at least 5 bosses.
     - The Ones That Got Away: Lost at least 10 fish.
     - Odin's HR Has Been Notified: Hit a raven at least 5 times.
     - Necromancy Is a Hobby: Summoned at least 250 skeletons.
     - Retrieval Specialist: Opened at least 5 tombstones belonging to other players.
     - Born in a Barn: At least 100 more doors opened than closed, with at least 10% of opened doors left unclosed.
-    - Thar She Blows:  Caused at least 5 leviathans to sink.
+    - Thar She Blows: Caused at least 5 leviathans to sink.
     - Treasure Hunter: Found at least 10 treasures from buried treasure and location treasure counters combined.
       - Note: Dungeon treasure is intentionally excluded.
     - Captain: Traveled at least 100 km while sailing at the helm.
@@ -260,6 +214,59 @@ My mods are and will always be free to use. If you'd like to support my work, yo
     - Master of Everything: Every vanilla skill has reached level 100.
     - When Master of Everything qualifies, the individual level 100 skill facts are not added to the random pool. Master of Everything represents the achievement instead.
 
+
+[size=5][b]⚡ Information Rail[/b][/size]
+
+[size=4][b]🔧 Information Rail[/b][/size]
+- Adds a unified information area at the bottom-left of the HUD.
+- Inventory Weight, Free Slots, Enemy Detector and temporary Skill Progress information use the Information Rail.
+- Temporary elements animate smoothly into and out of the rail as they become relevant.
+- Includes [b]3 selectable visual styles[/b] with different backgrounds, borders, icons and colors.
+- Display Mode can use [b]Icons[/b] or [b]Text[/b].
+- The Enemy Detector can optionally be moved out of the rail to a separate top-center display.
+- The Summon Counter remains separate but follows the selected Information Rail style and Icons/Text mode.
+
+[size=4][b]🔧 Inventory Weight and Free Slots[/b][/size]
+- Displays inventory information inside the Information Rail.
+- Modes: [b]WeightAndFreeSlots, WeightOnly, FreeSlotsOnly, Off[/b].
+- Weight uses a filling bar and current/max weight display.
+- Free Slots shows remaining inventory slots.
+- Colors and presentation follow the selected Information Rail style.
+
+[size=4][b]🔧 Enemy Detector[/b][/size]
+- Counts nearby characters within [b]30 meters[/b].
+- Modes: [b]Consolidated, Split, Off[/b].
+- Consolidated combines hostile enemies into a single counter.
+- Split separates normal, tough and boss enemies into individual counters.
+- Bosses and minibosses count as normal enemies while using Consolidated mode.
+- Neutral Dvergr are shown separately until aggravated.
+- Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
+- Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
+- Can be displayed inside the Information Rail or moved to a separate top-center display.
+- Uses the selected Information Rail visual style and Icons/Text display mode.
+
+[size=4][b]🔧 Show Summon Counter[/b][/size]
+- Displays active summoned skeletons from the Dead Raiser.
+- Summoned Trolls are not counted.
+- Appears only while summons are active.
+- Uses the selected Information Rail visual style and Icons/Text display mode.
+
+[size=4][b]🔧 Skill Progress Bar[/b][/size]
+- Displays a temporary progress bar along the bottom edge of the screen when a skill advances to a new whole percentage toward its next level.
+- Skill level and progress percentage appears temporarily in the Information Rail.
+- Icons mode uses the skill's actual in-game icon; Text mode displays the skill name.
+- Run skill progress is intentionally excluded.
+- Colors: [b]Gold, White, Green, Blue, Cyan, Red, Purple[/b].
+- Selecting [b]Off[/b] disables the feature.
+
+
+[size=5][b]⚡ Items & Interaction[/b][/size]
+
+[size=4][b]🔧 Show Owned Resources In Build Menu[/b][/size]
+- Shows resource requirements as [b]required / owned[/b] in build and crafting displays.
+- Example: [b]2/20[/b].
+- Steps aside when [b]Craft From Containers[/b] is installed.
+
 [size=4][b]🔧 Enemy Nameplate Mode[/b][/size]
 - Larger health bars, clearer colors and increased nameplate display distance.
 - Distinct colors for bosses, enemies, neutral/tamed characters, players and PVP-enabled players.
@@ -277,6 +284,9 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 [size=4][b]🔧 Better Item Durability Bar[/b][/size]
 - Uses a textured durability bar that transitions from green through yellow toward red as durability decreases.
+
+
+[size=5][b]⚡ Detailed Hovers[/b][/size]
 
 [size=4][b]🔧 Detailed Hover Information[/b][/size]
 - Adds information to Containers, Beehives, Plants, Fermenters, Cooking Stations/Ovens, Smelters/processing stations and Eggs.

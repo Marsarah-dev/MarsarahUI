@@ -178,11 +178,6 @@ MOD CONFIGS
   Day-phase text is color coded.
   The display also works in No Map worlds.
 
-► Server Override:
-  UserChoice, DigitalClock, DayPhases, or Off.
-
-► Default: DigitalClock
-
 
 -------------- [Show Weather Forecast Indicator] ---------------
 ► Description:
@@ -299,16 +294,16 @@ MOD CONFIGS
     - Ventilation Required: Died from smoke inhalation at least 2 times.
     - Own Worst Enemy: Died by own hand at least 2 times.
     - Fire Safety Optional: Burned to death at least 3 times.
-   - Should Have Packed a Cloak: Frozen to death at least 3 times.
+    - Should Have Packed a Cloak: Frozen to death at least 3 times.
     - Poison Control: Died from poison at least 3 times.
-  - Activity & Events facts
+  - Activity & Events facts:
     - The Finishing Touch: Dealt the final blow to at least 5 bosses.
     - The Ones That Got Away: Lost at least 10 fish.
     - Odin's HR Has Been Notified: Hit a raven at least 5 times.
     - Necromancy Is a Hobby: Summoned at least 250 skeletons.
     - Retrieval Specialist: Opened at least 5 tombstones belonging to other players.
     - Born in a Barn: At least 100 more doors opened than closed, with at least 10% of opened doors left unclosed.
-    - Thar She Blows:  Caused at least 5 leviathans to sink.
+    - Thar She Blows: Caused at least 5 leviathans to sink.
     - Treasure Hunter: Found at least 10 treasures from buried treasure and location treasure counters combined.
       - Note: Dungeon treasure is intentionally excluded.
     - Captain: Traveled at least 100 km while sailing at the helm.
@@ -347,7 +342,6 @@ MOD CONFIGS
 ---------------- [Information Rail Display Mode] ---------------
 ► Description:
   Selects whether Information Rail information and the Summon Counter are represented using icons or text labels.
-  Can be changed with a Server Override option.
 
 
 -------------- [Inventory Weight and Free Slots] ---------------
@@ -374,7 +368,7 @@ MOD CONFIGS
   Consolidated combines hostile enemies into a single counter.
   Split separates normal, tough and boss enemies into individual counters.
   Bosses and minibosses count as normal enemies while using Consolidated mode.
-  Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Solder, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
+  Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
   Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
   Neutral Dvergr use a separate counter until aggravated.
 
@@ -453,7 +447,7 @@ MOD CONFIGS
 
 
 
-------------------- [Item Quality Symbol] ---------------------
+----------------- [Symbol For Item Quality] -------------------
 ► Symbols:
   Star ★
   Circle ●
@@ -461,15 +455,13 @@ MOD CONFIGS
   Empty Diamond ◇
 
 ► Dependency: Item Quality Indicator Mode
-► Default: Star
 
 
--------------------- [Item Quality Color] ---------------------
+------------------ [Color For Item Quality] -------------------
 ► Colors:
   White, Yellow, Green, Red, Blue, Cyan
 
 ► Dependency: Item Quality Indicator Mode
-► Default: Yellow
 
 
 ----------------- [Better Item Durability Bar] ----------------
@@ -540,7 +532,7 @@ MOD CONFIGS
 ► Dependency: Detailed Hover Information
 
 
------------------- [CookingStation Hover Mode] ----------------
+------------------ [Cooking Station Hover Mode] ----------------
 ► Modes: RemainingTime, Percent, PercentAndTime
 ► Description:
   Shows progress for individual occupied cooking slots.

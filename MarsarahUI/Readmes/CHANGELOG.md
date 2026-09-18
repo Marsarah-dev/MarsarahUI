@@ -1,7 +1,17 @@
 ## <strong> 📜 Version History </strong>
 
 v1.1.0
-- **Information Rail and UI expansion update.**
+- **Fixes/Updates:**
+
+- **Better Item Durability Bar:**
+  - Fixed durability styling being applied to the wrong quickslot when empty quickslots appeared before an item.
+  - Fixed the original durability-bar sprite not being restored correctly when Better Item Durability Bar was disabled.
+  
+- **Weather Forecast:**
+  - Updated weather forecasting for Valheim 1.0's BiomeSector / AltBiome weather system.
+  - Added proper alternative-biome forecasting support, including Dark Meadows.
+
+- **New Features:**
 
 - **Information Rail:**
   - Reworked the bottom-left information area into a unified Information Rail.
@@ -20,14 +30,13 @@ v1.1.0
   - Neutral Dvergr continue to use their own counter until aggravated.
   - Added an option to move the Enemy Detector from the Information Rail to a separate top-center display.
   - The separate Enemy Detector display follows the selected Information Rail visual style and display mode.
-  - Changed that the normal enemy counter no longer remains visible when no enemies are nearby.
+  - The normal enemy counter no longer remains visible when no enemies are nearby.
 
 - **Status Effects Under Minimap:**
   - Added an optional compact vertical status-effect layout below the minimap.
   - Sailing wind and control UI is repositioned to the left of the minimap and resized while the layout is active.
   - Boat Speed automatically moves with the adjusted sailing UI.
   - The vanilla layout is restored when the feature is disabled or when playing with No Map enabled.
-  - Minimal Status Effects compativility removed.
 
 - **Global Chat By Default:**
   - Added an option that sends normal chat input globally by default.
@@ -37,7 +46,7 @@ v1.1.0
 
 - **Skill Progress Bar:**
   - Added a temporary full-width progress bar along the bottom edge of the screen when skill progress crosses a whole percentage toward the next level.
-  - Skill  skill level and progress percentage is displayed temporarily in the Information Rail.
+  - Skill level and progress percentage are displayed temporarily in the Information Rail.
   - Supports both Information Rail Icons and Text display modes.
   - Icon mode uses the skill's actual in-game icon.
   - Progress from the same or another skill refreshes the current display instead of stacking notifications.
@@ -62,14 +71,6 @@ v1.1.0
   - Improved Text mode alignment for item quantities and names.
   - Default mode is now IconsHorizontal.
   - MarsarahTweaks Progression Halt compatibility continues to prevent sealed chest contents from being revealed.
-
-- **Better Item Durability Bar:**
-  - Fixed durability styling being applied to the wrong quickslot when empty quickslots appeared before an item.
-  - Fixed the original durability-bar sprite not being restored correctly when Better Item Durability Bar was disabled.
-  
-- **Weather Forecast:**
-  - Updated weather forecasting for Valheim 1.0's BiomeSector / AltBiome weather system.
-  - Added proper alternative-biome forecasting support, including Dark Meadows.
 
 - **Configuration:**
   - Reorganized local settings into General & HUD, Information Rail, Items & Interaction and Detailed Hovers categories.
