@@ -30,12 +30,15 @@ namespace MarsarahUI.Patches.UI
 		private static readonly MethodInfo GetFuelMethod = typeof(Smelter).GetMethod("GetFuel", BindingFlags.NonPublic | BindingFlags.Instance);
 		private static readonly MethodInfo GetBakeTimerMethod = typeof(Smelter).GetMethod("GetBakeTimer", BindingFlags.NonPublic | BindingFlags.Instance);
 
+		private static readonly MethodInfo ContainerCheckAccessMethod = AccessTools.Method(typeof(Container), "CheckAccess", new Type[] { typeof(long) });
+
 		[HarmonyPatch(typeof(Container), nameof(Container.GetHoverText))]
 		internal static class DetailedHoverContainer_Patch
 		{
 			private static void Postfix(Container __instance, Inventory ___m_inventory, ref string __result)
 			{
 				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
+				if (!HasContainerAccess(__instance)) return;
 				if (___m_inventory == null || ___m_inventory.NrOfItems() == 0) return;
 
 				__result = GetContainerHover(__instance, ___m_inventory);
@@ -748,6 +751,19 @@ namespace MarsarahUI.Patches.UI
 			return bold
 				? $"<b>{colored}</b>"
 				: colored;
+		}
+
+		private static bool HasContainerAccess(Container container)
+		{
+			if (container == null || Player.m_localPlayer == null) return false;
+
+			if (ContainerCheckAccessMethod == null)
+			{
+				log.Warn("Could not find Container.CheckAccess.");
+				return false;
+			}
+
+			return (bool)ContainerCheckAccessMethod.Invoke(container, new object[] { Player.m_localPlayer.GetPlayerID() });
 		}
 	}
 }

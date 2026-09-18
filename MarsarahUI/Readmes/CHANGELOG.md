@@ -71,6 +71,8 @@ v1.1.0
   - Improved Text mode alignment for item quantities and names.
   - Default mode is now IconsHorizontal.
   - MarsarahTweaks Progression Halt compatibility continues to prevent sealed chest contents from being revealed.
+  - Added container access checks so custom hover information and contents are only shown when the local player has permission to access the container.
+  - Other players' Personal Chests retain their vanilla hover and do not reveal their contents.
 
 - **Configuration:**
   - Reorganized local settings into General & HUD, Information Rail, Items & Interaction and Detailed Hovers categories.

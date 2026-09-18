@@ -308,6 +308,8 @@ https://paypal.me/Marsarah9
 - Multiple stacks of the same item are combined.
 - Displays up to 10 different item types with **+N Others** for additional types.
 - If **MarsarahTweaks Progression Halt** seals a chest, its contents are hidden and replaced with **"This chest is sealed."**
+- Custom container information and contents are only shown when the local player has access to the container.
+- Other players' **Personal Chests** retain their vanilla hover and do not reveal their contents.
 
 ---
 

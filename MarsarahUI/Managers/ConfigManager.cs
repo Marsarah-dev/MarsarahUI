@@ -228,14 +228,6 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
-		public enum HoverInfoModeOverride
-		{
-			UserChoice,
-			ColoredText,
-			WhiteText,
-			Off
-		}
-
 		public enum InfoRailDisplayModeOverride
 		{
 			UserChoice,
@@ -300,7 +292,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideAshlandsHeat = new ConfigMetadata("Ashlands Heat Meter Override", "Overrides the player's local Ashlands Heat Meter setting.", ConfigSections.ServerOverrides, 60);
 			public static readonly ConfigMetadata OverrideEnemyNameplates = new ConfigMetadata("Enemy Nameplate Mode Override", "Overrides the player's local Enemy Nameplate Mode setting.", ConfigSections.ServerOverrides, 50);
 			public static readonly ConfigMetadata OverrideTamingProgress = new ConfigMetadata("Taming Progress Override", "Overrides the player's local Taming Progress setting.", ConfigSections.ServerOverrides, 40);
-			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("Detailed Hover Information Override", "Overrides the player's local Detailed Hover Information setting.", ConfigSections.ServerOverrides, 30);
+			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("Detailed Hover Information Override", "Choose whether Detailed Hover Information uses the player's local setting, is forced on, or is forced off.", ConfigSections.ServerOverrides, 30);
 			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("Container Contents Override", "Overrides the player's local Container Contents setting.", ConfigSections.ServerOverrides, 20);
 			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.", ConfigSections.ServerOverrides, 10);
 		}
@@ -353,7 +345,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> AshlandsHeatOverride;
 		public static ConfigEntry<EnemyNameplateModeOverride> EnemyNameplatesOverride;
 		public static ConfigEntry<BoolOverride> TamingProgressOverride;
-		public static ConfigEntry<HoverInfoModeOverride> DetailedHoversOverride;
+		public static ConfigEntry<BoolOverride> DetailedHoversOverride;
 		public static ConfigEntry<BoolOverride> ContainerContentsOverride;
 		public static ConfigEntry<BoolOverride> GlobalChatByDefaultOverride;
 
@@ -405,7 +397,28 @@ namespace MarsarahUI.Managers
 		public static ItemQualitySymbol EffectiveItemQualitySymbolChoice => ItemQualitySymbolChoice.Value;
 		public static ItemQualityColor EffectiveItemQualityColorChoice => ItemQualityColorChoice.Value;
 		public static bool EffectiveColoredItemDurabilityBar => ColoredItemDurabilityBar.Value;
-		public static HoverInfoMode EffectiveDetailedHoverInfoChoice => ResolveEnum(DetailedHoverInfoChoice, DetailedHoversOverride, HoverInfoModeOverride.UserChoice);
+		public static HoverInfoMode EffectiveDetailedHoverInfoChoice
+		{
+			get
+			{
+				if (!ServerOverridesEnabled.Value || DetailedHoversOverride.Value == BoolOverride.UserChoice)
+					return DetailedHoverInfoChoice.Value;
+
+				switch (DetailedHoversOverride.Value)
+				{
+					case BoolOverride.ForceOn:
+						return DetailedHoverInfoChoice.Value == HoverInfoMode.Off
+							? HoverInfoMode.ColoredText
+							: DetailedHoverInfoChoice.Value;
+
+					case BoolOverride.ForceOff:
+						return HoverInfoMode.Off;
+
+					default:
+						return DetailedHoverInfoChoice.Value;
+				}
+			}
+		}
 		public static ContainerContentsMode EffectiveContainerContentsChoice
 		{
 			get
@@ -501,7 +514,7 @@ namespace MarsarahUI.Managers
 			AshlandsHeatOverride = CreateServerOverride(Configs.OverrideAshlandsHeat, BoolOverride.UserChoice);
 			EnemyNameplatesOverride = CreateServerOverride(Configs.OverrideEnemyNameplates, EnemyNameplateModeOverride.UserChoice);
 			TamingProgressOverride = CreateServerOverride(Configs.OverrideTamingProgress, BoolOverride.UserChoice);
-			DetailedHoversOverride = CreateServerOverride(Configs.OverrideDetailedHovers, HoverInfoModeOverride.UserChoice);
+			DetailedHoversOverride = CreateServerOverride(Configs.OverrideDetailedHovers, BoolOverride.UserChoice);
 			ContainerContentsOverride = CreateServerOverride(Configs.OverrideContainerContents, BoolOverride.UserChoice);
 			GlobalChatByDefaultOverride = CreateServerOverride(Configs.OverrideGlobalChatByDefault, BoolOverride.UserChoice);
 

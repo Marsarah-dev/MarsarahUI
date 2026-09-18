@@ -303,6 +303,8 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Icon modes use actual vanilla or modded item icons and display combined stack totals.
 - Shows up to 10 different item types and then [b]+N Others[/b] for additional types.
 - If [b]MarsarahTweaks Progression Halt[/b] seals a chest, its contents are hidden and replaced with [b]"This chest is sealed."[/b]
+- Custom container information and contents are only shown when the local player has access to the container.
+- Other players' [b]Personal Chests[/b] retain their vanilla hover and do not reveal their contents.
 
 [line]
 

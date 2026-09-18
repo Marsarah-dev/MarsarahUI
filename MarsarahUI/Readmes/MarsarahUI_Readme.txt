@@ -498,6 +498,11 @@ MOD CONFIGS
   Up to 10 different item types are shown; additional types are summarized as +X Others.
   Has options to display contents as icons or text.
 
+► Container Access / Privacy:
+  Custom container hover information is only displayed when the local player has access to the container.
+  Personal Chests owned by other players retain their vanilla hover and do not reveal their contents.
+  The owner of a Personal Chest continues to receive the configured Detailed Hover and Container Contents information.
+
 ► MarsarahTweaks Compatibility:
   If Progression Halt seals a chest, its real contents are replaced with:
   "This chest is sealed."
