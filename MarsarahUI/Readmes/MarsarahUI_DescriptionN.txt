@@ -1,6 +1,6 @@
 [size=5][b]Marsarah UI[/b][/size]
 
-[b]Version:[/b] 1.0.0
+[b]Version:[/b] 1.1.0
 [b]Author:[/b] Marsarah
 
 [line]
@@ -65,12 +65,20 @@ If the server uses Marsarah UI Server Overrides, the mod must also be installed 
 A config file is generated on first launch:
 [i]Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg[/i]
 
-- [b]UI Settings (Local):[/b] Individual player preferences. These are not normally synced with the server.
-- [b]Server Overrides (Synced):[/b] Optional server-side controls for selected information-oriented features.
+Settings are organized into five categories:
+
+- [b]01 - General & HUD (Local):[/b] General interface and HUD features.
+- [b]02 - Information Rail (Local):[/b] Information Rail appearance, contents and related displays.
+- [b]03 - Items & Interaction (Local):[/b] Build-menu information, nameplates, taming and item indicators.
+- [b]04 - Detailed Hovers (Local):[/b] Detailed object-hover information and display modes.
+- [b]05 - Server Overrides (Synced):[/b] Optional server controls for selected information-oriented features.
+
+Normal UI preferences remain local to each player. Most settings can be changed while playing and update without requiring a restart.
 
 Server Overrides use [b]UserChoice[/b] by default. The server can use [b]ForceOn[/b], [b]ForceOff[/b], or a specific display mode where applicable. The master [b]Enable Server Overrides[/b] option can disable the override system entirely.
 
 [b]Server-overridable features:[/b]
+- Information Rail Display Mode
 - Enemy Detector
 - Current Day
 - Current Time
@@ -81,6 +89,10 @@ Server Overrides use [b]UserChoice[/b] by default. The server can use [b]ForceOn
 - Taming Progress
 - Detailed Hover Information
 - Container Contents
+- Global Chat By Default
+
+[b]Updating from v1.0.0:[/b]
+The configuration layout and setting keys were reorganized in v1.1.0. Existing selections from v1.0.0 may need to be configured again after updating.
 
 [b]Insert[/b] toggles many custom HUD widgets temporarily.
 [b]Home[/b] toggles the Online Players name list while keeping the online-player count visible.
@@ -101,15 +113,33 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Intentionally leaves out several very basic vanilla tips.
 - Only applies to the [b]English[/b] localization.
 
-[size=4][b]🔧 Show Inventory Weight and Free Slots[/b][/size]
-- Displays current/max carry weight near the bottom-left HUD using a filling, color-changing bar.
-- Displays remaining free inventory slots with color feedback.
+[size=4][b]🔧 Information Rail[/b][/size]
+- Adds a unified information area at the bottom-left of the HUD.
+- Inventory Weight, Free Slots, Enemy Detector and temporary Skill Progress information use the Information Rail.
+- Temporary elements animate smoothly into and out of the rail as they become relevant.
+- Includes [b]3 selectable visual styles[/b] with different backgrounds, borders, icons and colors.
+- Display Mode can use [b]Icons[/b] or [b]Text[/b].
+- The Enemy Detector can optionally be moved out of the rail to a separate top-center display.
+- The Summon Counter remains separate but follows the selected Information Rail style and Icons/Text mode.
 
-[size=4][b]🔧 Show Enemy Detector[/b][/size]
-- Counts nearby enemies within roughly [b]30 meters[/b].
-- Symbols and colors change as enemy count increases.
+[size=4][b]🔧 Inventory Weight and Free Slots[/b][/size]
+- Displays inventory information inside the Information Rail.
+- Modes: [b]WeightAndFreeSlots, WeightOnly, FreeSlotsOnly, Off[/b].
+- Weight uses a filling bar and current/max weight display.
+- Free Slots shows remaining inventory slots.
+- Colors and presentation follow the selected Information Rail style.
+
+[size=4][b]🔧 Enemy Detector[/b][/size]
+- Counts nearby characters within [b]30 meters[/b].
+- Modes: [b]Consolidated, Split, Off[/b].
+- Consolidated combines hostile enemies into a single counter.
+- Split separates normal, tough and boss enemies into individual counters.
+- Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
 - Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
+- Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Solder, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
+- Can be displayed inside the Information Rail or moved to a separate top-center display.
+- Uses the selected Information Rail visual style and Icons/Text display mode.
 
 [size=4][b]🔧 Show Boat Speed[/b][/size]
 - Displays current ship speed while controlling a boat.
@@ -139,6 +169,8 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=4][b]🔧 Show Summon Counter[/b][/size]
 - Displays active summoned skeletons from the Dead Raiser.
 - Summoned Trolls are not counted.
+- Appears only while summons are active.
+- Uses the selected Information Rail visual style and Icons/Text display mode.
 
 [size=4][b]🔧 Show Online Players[/b][/size]
 - Displays total online players and up to [b]20 player names[/b] at the bottom-right.
@@ -155,6 +187,78 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 [size=4][b]🔧 Show Heat Meter in Ashlands[/b][/size]
 - Displays a heat meter while relevant Ashlands water/lava heat mechanics are active.
+
+[size=4][b]🔧 Status Effects Under Minimap[/b][/size]
+- Moves status effects into a compact vertical layout below the minimap.
+- Repositions and resizes the sailing wind indicator and sailing controls to avoid overlap.
+- Boat Speed automatically moves with the adjusted sailing UI.
+- Automatically restores the vanilla layout when disabled or when No Map mode is active.
+
+[size=4][b]🔧 Global Chat By Default[/b][/size]
+- Makes normal chat messages global by default without requiring the player to manually select Shout.
+- Preserves the player's original capitalization.
+- Explicit commands such as [b]/w and /say[/b] continue to work normally.
+- Supports an optional synced server override.
+
+[size=4][b]🔧 Skill Progress Bar[/b][/size]
+- Displays a temporary progress bar along the bottom edge of the screen when a skill advances to a new whole percentage toward its next level.
+- Skill level and progress percentage appears temporarily in the Information Rail.
+- Icons mode uses the skill's actual in-game icon; Text mode displays the skill name.
+- Run skill progress is intentionally excluded.
+- Colors: [b]Gold, White, Green, Blue, Cyan, Red, Purple[/b].
+- Selecting [b]Off[/b] disables the feature.
+
+[size=4][b]🔧 Logon Screen Character Statistics[/b][/size]
+- Adds an optional statistics panel to the character selection screen.
+- Displays [b]19 character statistics[/b] covering playtime, combat, survival, crafting, homestead activities, travel and exploration.
+- Also displays a conditional notable fact based on the selected character's history. This is not to be confused with the vanilla achievements.
+- List of facts:
+  - Unusual death facts:
+    - The Forest Remembers: Killed by a falling tree at least 1 time.
+    - Curiosity Won: Killed by the edge of the world at least 1 time.
+    - Occupational Hazard: Killed by a cart at least 1 time.
+    - Flight Test Failed: Killed by a catapult at least 1 time.
+    - Workplace Safety Violation: Killed by a drawbridge at least 1 time.
+    - Disposal Error: Killed by the obliterator at least 1 time.
+    - Security System Working as Intended: Killed by a turret at least 1 time.
+    - Captain Went Down With the Ship: Killed by a boat at least 1 time.
+    - The Floor Was Lava: Killed by Ashlands lava at least 1 time.
+    - Hostile Waters: Killed by the Ashlands ocean at least 1 time.
+  - Repeated death facts:
+    - Natural Enemy: Gravity: Died from falling at least 3 times.
+    - Swimming Lessons Recommended: Drowned at least 2 times.
+    - Ventilation Required: Died from smoke inhalation at least 2 times.
+    - Own Worst Enemy: Died by own hand at least 2 times.
+    - Fire Safety Optional: Burned to death at least 3 times.
+    - Should Have Packed a Cloak: Frozen to death at least 3 times.
+    - Poison Control: Died from poison at least 3 times.
+  - Activity & Events facts
+   - The Finishing Touch: Dealt the final blow to at least 5 bosses.
+    - The Ones That Got Away: Lost at least 10 fish.
+    - Odin's HR Has Been Notified: Hit a raven at least 5 times.
+    - Necromancy Is a Hobby: Summoned at least 250 skeletons.
+    - Retrieval Specialist: Opened at least 5 tombstones belonging to other players.
+    - Born in a Barn: At least 100 more doors opened than closed, with at least 10% of opened doors left unclosed.
+    - Thar She Blows:  Caused at least 5 leviathans to sink.
+    - Treasure Hunter: Found at least 10 treasures from buried treasure and location treasure counters combined.
+      - Note: Dungeon treasure is intentionally excluded.
+    - Captain: Traveled at least 100 km while sailing at the helm.
+    - Measure Twice, Build Once? Built at least 100 pieces and removed at least 50% as many pieces as were built.
+  - Level 100 skill facts:
+    - Mountain Goat: Jump level 100.
+    - Still Faster Than a Boat: Swim level 100.
+    - You Were Never Here: Sneak level 100.
+    - The Forest Definitely Remembers: Wood Cutting level 100.
+    - Professional Rock Argument: Pickaxes level 100.
+    - Not Today: Blocking level 100.
+    - Cardio Is a Lifestyle: Run level 100.
+    - Fish Fear Me: Fishing level 100.
+    - Born in the Saddle: Ride level 100.
+    - Outstanding in the Field: Farming level 100.
+    - Yes, Chef: Cooking level 100.
+  - Master Skill fact:
+    - Master of Everything: Every vanilla skill has reached level 100.
+    - When Master of Everything qualifies, the individual level 100 skill facts are not added to the random pool. Master of Everything represents the achievement instead.
 
 [size=4][b]🔧 Enemy Nameplate Mode[/b][/size]
 - Larger health bars, clearer colors and increased nameplate display distance.
@@ -181,8 +285,13 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 [b]Container Hover Information:[/b]
 - Can show used/max slots, free slots, or percentage filled.
-- Optional [b]Show Container Contents[/b] lists combined item amounts directly in the hover.
-- Shows up to 10 different item types and then a count of additional types.
+- [b]Container Contents Mode[/b] supports:
+  - [b]IconsHorizontal[/b] - item icons in a 5x2 layout.
+  - [b]IconsVertical[/b] - item icons in a 2x5 layout.
+  - [b]Text[/b] - aligned item quantities and names.
+  - [b]Off[/b] - disables contents display.
+- Icon modes use actual vanilla or modded item icons and display combined stack totals.
+- Shows up to 10 different item types and then [b]+N Others[/b] for additional types.
 - If [b]MarsarahTweaks Progression Halt[/b] seals a chest, its contents are hidden and replaced with [b]"This chest is sealed."[/b]
 
 [line]
@@ -191,19 +300,16 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 [b]MarsarahTweaks[/b]
 - Optional soft dependency. Marsarah UI works without Tweaks.
-- Smart Biome accounts for Gear Upgrade Unlock.
-- Detailed Hovers respects Progression Halt and will not reveal sealed chest contents.
+- Smart Biome accounts for [b]Gear Upgrade Unlock[/b].
+- Detailed Hovers / Container Contents respects [b]Progression Halt[/b] and will not reveal sealed chest contents.
 
 [b]Craft From Containers[/b]
-- Marsarah UI lets Craft From Containers handle the Owned Resources display.
-
-[b]Minimal Status Effects[/b]
-- Boat Speed uses an alternate position to avoid overlap.
+- Marsarah UI lets Craft From Containers handle the Owned Resources display when detected.
 
 [line]
 
 [size=5][b]🔮 Future Plans[/b][/size]
-Future ideas include additional hover modes, skill progress information, improved player information, optional item icons for container contents, and additional status-effect/UI improvements.
+Future ideas include additional hover display modes, improved Online Players information, additional UI indicators, and other interface improvements.
 
 Deep North-specific UI changes will be reviewed after I have completed the biome myself.
 
@@ -217,6 +323,45 @@ Thanks for checking out Marsarah UI!
 Blaxxun-bloop - for ServerSync
 
 [size=5][b]📜 Version History[/b][/size]
+
+[size=4][b]v1.1.0[/b][/size]
+
+[b]Fixes / Updates:[/b]
+- Updated Weather Forecast for Valheim 1.0 BiomeSector / AltBiome weather behavior.
+- Fixed Better Item Durability Bar quickslot mapping when empty quickslots appear before an item, preserving broken-item flashing at zero durability.
+- Fixed restoration of the original durability-bar sprite when Better Item Durability Bar is disabled.
+
+[b]New UI Features:[/b]
+- Added Status Effects Under Minimap.
+- Added Global Chat By Default with server override support.
+- Added Skill Progress Bar and Information Rail skill display.
+- Added Logon Screen Character Statistics with character statistics and conditional notable facts.
+
+[b]Information Rail:[/b]
+- Reworked the bottom-left information area into a unified Information Rail.
+- Inventory Weight, Free Slots, Enemy Detector and Skill Progress now share the rail.
+- Added animated transitions for temporary information.
+- Added three selectable visual styles.
+- Added Icons and Text display modes.
+- Added optional top-center positioning for the Enemy Detector.
+- Summon Counter now follows Information Rail styling and display mode.
+
+[b]Enemy Detector:[/b]
+- Added Consolidated and Split modes.
+- Split mode separates normal, tough and boss enemies.
+- Fixed the normal enemy counter remaining visible at zero enemies.
+
+[b]Container Contents:[/b]
+- Added IconsHorizontal, IconsVertical, Text and Off modes.
+- Added actual item icons and combined stack totals.
+- Added 5x2 and 2x5 icon layouts.
+- Improved Text mode alignment.
+
+[b]Configuration:[/b]
+- Reorganized settings into General & HUD, Information Rail, Items & Interaction, Detailed Hovers and Server Overrides categories.
+- Added explicit setting ordering for compatible Configuration Manager mods without adding a dependency.
+- Added server overrides for Information Rail Display Mode and Global Chat By Default.
+- Config section/key names changed in v1.1.0, so users upgrading from v1.0.0 may need to configure their preferences again.
 
 [size=4][b]v1.0.0[/b][/size]
 - [b]Initial standalone release.[/b]

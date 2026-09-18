@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Author:** Marsarah
 
 ---
@@ -63,13 +63,20 @@ If the server uses Marsarah UI Server Overrides, the mod must also be installed 
 A config file is generated on first launch:  
 `Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg`
 
-The config is divided into two sections:
-- **UI Settings (Local):** Individual player preferences. These are not normally synced with the server.
-- **Server Overrides (Synced):** Optional server-side controls for selected information-oriented features.
+Settings are organized into five categories:
 
-Server Overrides use **UserChoice** by default, which means the player's local setting is respected. Server administrators can change supported options to **ForceOn**, **ForceOff**, or a specific display mode where applicable. The master **Enable Server Overrides** option can disable the override system entirely.
+- **01 - General & HUD (Local):** General interface and HUD features.
+- **02 - Information Rail (Local):** Information Rail appearance, contents and related displays.
+- **03 - Items & Interaction (Local):** Build-menu information, nameplates, taming and item indicators.
+- **04 - Detailed Hovers (Local):** Detailed object-hover information and display modes.
+- **05 - Server Overrides (Synced):** Optional server controls for selected information-oriented features.
+
+Normal UI preferences remain local to each player. Most settings can be changed while playing and update without requiring a restart.
+
+Server Overrides use **UserChoice** by default. Supported settings can be changed to **ForceOn**, **ForceOff**, or a specific display mode where applicable. The master **Enable Server Overrides** option disables the override system entirely when turned off.
 
 The following features support server overrides:
+- Information Rail Display Mode
 - Enemy Detector
 - Current Day
 - Current Time
@@ -80,9 +87,15 @@ The following features support server overrides:
 - Taming Progress
 - Detailed Hover Information
 - Container Contents
+- Global Chat By Default
 
-**Insert** toggles many of the custom HUD widgets on or off temporarily.  
+**Updating from v1.0.0:**  
+The configuration layout and setting keys were reorganized in v1.1.0. Existing selections from v1.0.0 may need to be configured again after updating.
+
+**Insert** toggles many custom HUD widgets temporarily.  
 **Home** toggles the Online Players name list while keeping its online-player count visible.
+
+---
 
 ---
 
@@ -101,16 +114,33 @@ https://paypal.me/Marsarah9
 - Intentionally leaves out several very basic vanilla tips in favor of more useful information.
 - Only applies when using the **English** localization.
 
-### <strong>🔧 Show Inventory Weight and Free Slots</strong>
-- Displays current carry weight and maximum carry weight near the bottom-left HUD.
-- Adds a filling weight bar that changes color as the player approaches the weight limit.
-- Displays the number of free inventory slots with color feedback.
+### <strong>🔧 Information Rail</strong>
+- Adds a unified information area at the bottom-left of the HUD.
+- Inventory Weight, Free Slots, Enemy Detector and temporary Skill Progress information use the Information Rail.
+- Temporary elements animate smoothly into and out of the rail as they become relevant.
+- Includes **3 selectable visual styles** with different backgrounds, borders, icons and colors.
+- Display Mode can use **Icons** or **Text**.
+- The Enemy Detector can optionally be moved out of the rail to a separate top-center display.
+- The Summon Counter remains separate but follows the selected Information Rail style and Icons/Text mode.
 
-### <strong>🔧 Show Enemy Detector</strong>
-- Displays the number of nearby enemies within roughly **30 meters**.
-- Uses different symbols and colors as the number of nearby enemies increases.
-- Neutral Dvergr are displayed separately until aggravated.
-- Does not count other players, Deer, Hare, summoned roots, or tamed creatures as enemies.
+### <strong>🔧 Inventory Weight and Free Slots</strong>
+- Displays inventory information inside the Information Rail.
+- Modes: **WeightAndFreeSlots, WeightOnly, FreeSlotsOnly, Off**.
+- Weight uses a filling bar and current/max weight display.
+- Free Slots shows remaining inventory slots.
+- Colors and presentation follow the selected Information Rail style.
+
+### <strong>🔧 Enemy Detector</strong>
+- Counts nearby characters within **30 meters**.
+- Modes: **Consolidated, Split, Off**.
+- Consolidated combines hostile enemies into a single counter.
+- Split separates normal, tough and boss enemies into individual counters.
+- Bosses and minibosses count as normal enemies while using Consolidated mode.
+- Neutral Dvergr are shown separately until aggravated.
+- Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
+- Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Solder, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
+- Can be displayed inside the Information Rail or moved to a separate top-center display.
+- Uses the selected Information Rail visual style and Icons/Text display mode.
 
 ### <strong>🔧 Show Boat Speed</strong>
 - Displays current ship speed while controlling a boat.
@@ -142,6 +172,8 @@ https://paypal.me/Marsarah9
 ### <strong>🔧 Show Summon Counter</strong>
 - Displays the number of active summoned skeletons created by the Dead Raiser.
 - Does not count summoned Trolls.
+- Appears only while summons are active.
+- Uses the selected Information Rail visual style and Icons/Text display mode.
 
 ### <strong>🔧 Show Online Players</strong>
 - Displays the total number of online players and up to **20 player names** at the bottom-right.
@@ -159,6 +191,78 @@ https://paypal.me/Marsarah9
 ### <strong>🔧 Show Heat Meter in Ashlands</strong>
 - Displays a heat meter at the top-center of the screen while relevant Ashlands water/lava heat mechanics are active.
 
+### <strong>🔧 Status Effects Under Minimap</strong>
+- Moves status effects into a compact vertical layout below the minimap.
+- Repositions and resizes the sailing wind indicator and sailing controls to avoid overlap.
+- Boat Speed automatically moves with the adjusted sailing UI.
+- Automatically restores the vanilla layout when disabled or when No Map mode is active.
+
+### <strong>🔧 Global Chat By Default</strong>
+- Makes normal chat messages global by default without requiring the player to manually select Shout.
+- Preserves the player's original capitalization.
+- Explicit commands such as [b]/w and /say[/b] continue to work normally.
+- Supports an optional synced server override.
+
+### <strong>🔧 Skill Progress Bar</strong>
+- Displays a temporary progress bar along the bottom edge of the screen when a skill advances to a new whole percentage toward its next level.
+- Skill level and progress percentage appears temporarily in the Information Rail.
+- Icons mode uses the skill's actual in-game icon; Text mode displays the skill name.
+- Run skill progress is intentionally excluded.
+- Colors: [b]Gold, White, Green, Blue, Cyan, Red, Purple[/b].
+- Selecting [b]Off[/b] disables the feature.
+
+### <strong>🔧 Logon Screen Character Statistics</strong>
+- Adds an optional statistics panel to the character selection screen.
+- Displays [b]19 character statistics[/b] covering playtime, combat, survival, crafting, homestead activities, travel and exploration.
+- Also displays a conditional notable fact based on the selected character's history. This is not to be confused with the vanilla achievements.
+- List of facts:
+  - Unusual death facts:
+    - The Forest Remembers: Killed by a falling tree at least 1 time.
+    - Curiosity Won: Killed by the edge of the world at least 1 time.
+    - Occupational Hazard: Killed by a cart at least 1 time.
+    - Flight Test Failed: Killed by a catapult at least 1 time.
+    - Workplace Safety Violation: Killed by a drawbridge at least 1 time.
+    - Disposal Error: Killed by the obliterator at least 1 time.
+    - Security System Working as Intended: Killed by a turret at least 1 time.
+    - Captain Went Down With the Ship: Killed by a boat at least 1 time.
+    - The Floor Was Lava: Killed by Ashlands lava at least 1 time.
+    - Hostile Waters: Killed by the Ashlands ocean at least 1 time.
+  - Repeated death facts:
+    - Natural Enemy: Gravity: Died from falling at least 3 times.
+    - Swimming Lessons Recommended: Drowned at least 2 times.
+    - Ventilation Required: Died from smoke inhalation at least 2 times.
+    - Own Worst Enemy: Died by own hand at least 2 times.
+    - Fire Safety Optional: Burned to death at least 3 times.
+    - Should Have Packed a Cloak: Frozen to death at least 3 times.
+    - Poison Control: Died from poison at least 3 times.
+  - Activity & Events facts
+    - The Finishing Touch: Dealt the final blow to at least 5 bosses.
+    - The Ones That Got Away: Lost at least 10 fish.
+    - Odin's HR Has Been Notified: Hit a raven at least 5 times.
+    - Necromancy Is a Hobby: Summoned at least 250 skeletons.
+    - Retrieval Specialist: Opened at least 5 tombstones belonging to other players.
+    - Born in a Barn: At least 100 more doors opened than closed, with at least 10% of opened doors left unclosed.
+    - Thar She Blows:  Caused at least 5 leviathans to sink.
+    - Treasure Hunter: Found at least 10 treasures from buried treasure and location treasure counters combined.
+      - Note: Dungeon treasure is intentionally excluded.
+    - Captain: Traveled at least 100 km while sailing at the helm.
+    - Measure Twice, Build Once? Built at least 100 pieces and removed at least 50% as many pieces as were built.
+  - Level 100 skill facts:
+    - Mountain Goat: Jump level 100.
+    - Still Faster Than a Boat: Swim level 100.
+    - You Were Never Here: Sneak level 100.
+    - The Forest Definitely Remembers: Wood Cutting level 100.
+    - Professional Rock Argument: Pickaxes level 100.
+    - Not Today: Blocking level 100.
+    - Cardio Is a Lifestyle: Run level 100.
+    - Fish Fear Me: Fishing level 100.
+    - Born in the Saddle: Ride level 100.
+    - Outstanding in the Field: Farming level 100.
+    - Yes, Chef: Cooking level 100.
+  - Master Skill fact:
+    - Master of Everything: Every vanilla skill has reached level 100.
+    - When Master of Everything qualifies, the individual level 100 skill facts are not added to the random pool. Master of Everything represents the achievement instead.
+ 
 ### <strong>🔧 Enemy Nameplate Mode</strong>
 - Reworks character nameplates with larger health bars, clearer colors and increased display distance.
 - Bosses, enemies, neutral/tamed characters, normal players and PVP-enabled players use distinct colors.
@@ -176,8 +280,7 @@ https://paypal.me/Marsarah9
 - Colors: **White, Yellow, Green, Red, Blue, Cyan**.
 
 ### <strong>🔧 Better Item Durability Bar</strong>
-- Replaces the flat durability appearance with a textured, gradually colored durability bar.
-- Transitions from green through yellow toward red as durability decreases.
+- Uses a textured durability bar that transitions from green through yellow toward red as durability decreases.
 
 ### <strong>🔧 Detailed Hover Information</strong>
 - Adds additional information to Containers, Beehives, Plants, Fermenters, Cooking Stations/Ovens, Smelters and similar processing stations, and Eggs.
@@ -185,9 +288,15 @@ https://paypal.me/Marsarah9
 - Most progress-based hovers support remaining time, percentage, or both.
 
 **Container Hover Information:**
+**Container Hover Information:**
 - Can show used/max slots, free slots, or percentage filled.
-- Optional **Show Container Contents** lists combined item stack amounts directly in the hover.
-- Displays up to 10 different item types, followed by a count of additional types when needed.
+- **Container Contents Mode** supports:
+  - **IconsHorizontal** - actual item icons in a 5x2 layout.
+  - **IconsVertical** - actual item icons in a 2x5 layout.
+  - **Text** - aligned item quantities and names.
+  - **Off** - disables contents display.
+- Multiple stacks of the same item are combined.
+- Displays up to 10 different item types with **+N Others** for additional types.
 - If **MarsarahTweaks Progression Halt** seals a chest, its contents are hidden and replaced with **"This chest is sealed."**
 
 ---
@@ -197,19 +306,16 @@ https://paypal.me/Marsarah9
 ### **MarsarahTweaks**
 - Optional soft dependency. Marsarah UI works without Tweaks.
 - Smart Biome accounts for **Gear Upgrade Unlock**.
-- Detailed Hovers respects **Progression Halt** and will not reveal sealed chest contents.
+- Detailed Hovers / Container Contents respects **Progression Halt** and will not reveal sealed chest contents.
 
 ### **Craft From Containers**
 - Marsarah UI steps aside and lets Craft From Containers handle the Owned Resources display.
-
-### **Minimal Status Effects**
-- Boat Speed uses an alternate position to avoid overlap.
 
 ---
 
 ## <strong> 🔮 Future Plans </strong>
 
-Future ideas include additional hover display modes, skill progress information, improved player information, optional item icons for container contents, and additional status-effect/UI improvements.
+Future ideas include additional hover display modes, improved Online Players information, additional UI indicators, and other interface improvements.
 
 Deep North-specific UI changes will be reviewed after I have completed the biome myself.
 

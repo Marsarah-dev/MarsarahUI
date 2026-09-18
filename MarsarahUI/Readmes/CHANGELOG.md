@@ -1,5 +1,85 @@
 ## <strong> 📜 Version History </strong>
 
+v1.1.0
+- **Information Rail and UI expansion update.**
+
+- **Information Rail:**
+  - Reworked the bottom-left information area into a unified Information Rail.
+  - Inventory Weight, Free Slots, Enemy Detector and Skill Progress information now share the rail.
+  - Added animated transitions as temporary elements appear and disappear.
+  - Added three selectable Information Rail visual styles with different backgrounds, borders, icons and colors.
+  - Added Icons and Text display modes.
+  - Summon Counter remains a separate display but now follows the selected Information Rail style and Icons/Text display mode.
+  - Added a server override for Information Rail Display Mode, allowing servers to use UserChoice, Icons or Text.
+
+- **Enemy Detector:**
+  - Added Consolidated and Split display modes.
+  - Consolidated mode counts nearby hostile enemies together.
+  - Split mode separates normal, tough and boss enemies into individual counters.
+  - Bosses and minibosses are included in the normal enemy count while using Consolidated mode.
+  - Neutral Dvergr continue to use their own counter until aggravated.
+  - Added an option to move the Enemy Detector from the Information Rail to a separate top-center display.
+  - The separate Enemy Detector display follows the selected Information Rail visual style and display mode.
+  - Changed that the normal enemy counter no longer remains visible when no enemies are nearby.
+
+- **Status Effects Under Minimap:**
+  - Added an optional compact vertical status-effect layout below the minimap.
+  - Sailing wind and control UI is repositioned to the left of the minimap and resized while the layout is active.
+  - Boat Speed automatically moves with the adjusted sailing UI.
+  - The vanilla layout is restored when the feature is disabled or when playing with No Map enabled.
+  - Minimal Status Effects compativility removed.
+
+- **Global Chat By Default:**
+  - Added an option that sends normal chat input globally by default.
+  - Preserves the player's original capitalization instead of converting Shout messages to uppercase.
+  - Explicit chat commands such as /w and /say continue to work normally.
+  - Added a synced server override with UserChoice, ForceOn and ForceOff.
+
+- **Skill Progress Bar:**
+  - Added a temporary full-width progress bar along the bottom edge of the screen when skill progress crosses a whole percentage toward the next level.
+  - Skill  skill level and progress percentage is displayed temporarily in the Information Rail.
+  - Supports both Information Rail Icons and Text display modes.
+  - Icon mode uses the skill's actual in-game icon.
+  - Progress from the same or another skill refreshes the current display instead of stacking notifications.
+  - Run skill progress is intentionally excluded.
+  - Added selectable bar colors: Gold, White, Green, Blue, Cyan, Red and Purple.
+  - Added Off directly to the color selection to disable the feature.
+
+- **Logon Screen Character Statistics:**
+  - Added an optional Character Statistics panel to the character selection screen.
+  - Displays playtime together with combat, survival, crafting, homestead, travel and exploration statistics for the selected character.
+  - Added a collection of conditional notable character facts based on unusual deaths, activities, events and mastered skills.
+  - These notable facts are not the same as the vanilla achievements. 
+  - Eligible facts are selected randomly when switching characters. 
+  - Individual level-100 skill facts are replaced by Master of Everything when every vanilla skill has reached level 100.
+
+- **Container Contents:**
+  - Renamed Show Container Contents to Container Contents Mode.
+  - Added IconsHorizontal, IconsVertical, Text and Off modes.
+  - Icon modes use actual vanilla or modded item icons with combined stack totals.
+  - Horizontal mode uses a 5x2 layout and Vertical mode uses a 2x5 layout.
+  - Displays up to 10 unique item types with +N Others for additional types.
+  - Improved Text mode alignment for item quantities and names.
+  - Default mode is now IconsHorizontal.
+  - MarsarahTweaks Progression Halt compatibility continues to prevent sealed chest contents from being revealed.
+
+- **Better Item Durability Bar:**
+  - Fixed durability styling being applied to the wrong quickslot when empty quickslots appeared before an item.
+  - Fixed the original durability-bar sprite not being restored correctly when Better Item Durability Bar was disabled.
+  
+- **Weather Forecast:**
+  - Updated weather forecasting for Valheim 1.0's BiomeSector / AltBiome weather system.
+  - Added proper alternative-biome forecasting support, including Dark Meadows.
+
+- **Configuration:**
+  - Reorganized local settings into General & HUD, Information Rail, Items & Interaction and Detailed Hovers categories.
+  - Server Overrides now use their own fifth synchronized category.
+  - Removed numeric prefixes from individual setting names while retaining ordered categories.
+  - Added Configuration Manager ordering metadata without requiring Configuration Manager as a dependency.
+  - Added Information Rail Display Mode to the available server overrides.
+  - Added Global Chat By Default to the available server overrides.
+  - Note for users updating from v1.0.0: config sections and setting keys were reorganized in v1.1.0, so previous selections will need to be configured again.
+
 v1.0.0
 - **Initial standalone release.**
 
