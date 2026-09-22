@@ -410,7 +410,7 @@ namespace MarsarahUI.Patches.UI
 			private static bool Prefix(CookingStation __instance, ZNetView ___m_nview, ref string __result)
 			{
 				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return true;
-				if (___m_nview == null || !___m_nview.IsOwner()) return true;
+				if (___m_nview == null || !___m_nview.IsValid()) return true;
 
 				bool isOven = __instance.m_useFuel && !__instance.m_requireFire;
 				if (isOven) return true;
