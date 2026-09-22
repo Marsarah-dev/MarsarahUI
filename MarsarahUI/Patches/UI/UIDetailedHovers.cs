@@ -38,6 +38,15 @@ namespace MarsarahUI.Patches.UI
 			private static void Postfix(Container __instance, Inventory ___m_inventory, ref string __result)
 			{
 				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
+
+				if (__instance.m_checkGuardStone &&
+					!PrivateArea.CheckAccess(__instance.transform.position, 0f, flash: false))
+				{
+					string localizedName = Localization.instance.Localize(__instance.m_name);
+					__result = $"{localizedName}\nContents hidden by ward.";
+					return;
+				}
+
 				if (!HasContainerAccess(__instance)) return;
 				if (___m_inventory == null || ___m_inventory.NrOfItems() == 0) return;
 
