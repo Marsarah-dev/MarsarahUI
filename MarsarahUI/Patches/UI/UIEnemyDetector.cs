@@ -117,6 +117,7 @@ namespace MarsarahUI.Patches.UI
 		private static bool ShouldIgnoreCharacter(Character character)
 		{
 			if (character == null) return true;
+			if (GetPrefabName(character) == "TrainingDummy") return true;
 
 			return character.m_name == "Human" ||
 				character.m_name == "$enemy_deer" ||
