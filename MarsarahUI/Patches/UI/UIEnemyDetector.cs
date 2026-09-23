@@ -117,12 +117,12 @@ namespace MarsarahUI.Patches.UI
 		private static bool ShouldIgnoreCharacter(Character character)
 		{
 			if (character == null) return true;
-			if (GetPrefabName(character) == "TrainingDummy") return true;
 
 			return character.m_name == "Human" ||
 				character.m_name == "$enemy_deer" ||
 				character.m_name == "$enemy_hare" ||
 				character.m_name == "$enemy_summonedroot" ||
+				character.m_name == "$piece_trainingdummy" ||
 				character.IsTamed();
 		}
 

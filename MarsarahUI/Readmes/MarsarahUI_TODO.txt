@@ -7,6 +7,9 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
+- Excluded T.W.I.G. training dummy from the Enemy Detector.
+- Fixed Cooking Station detailed hover timers for non-owner clients on dedicated servers.
+- Detailed hovers container contents are not shown when protected by another player's ward.
 
 B. Updates
 ------------------------
