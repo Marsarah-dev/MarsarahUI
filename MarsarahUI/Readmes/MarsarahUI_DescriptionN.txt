@@ -313,7 +313,7 @@ Thanks for checking out Marsarah UI!
 [size=5][b]🧑‍🤝‍🧑 Credits[/b][/size]
 Blaxxun-bloop - for ServerSync
 
-[size=5][b]📜 Version History[/b][/size]s
+[size=5][b]📜 Version History[/b][/size]
 
 [size=4][b]v1.1.1[/b][/size]
 

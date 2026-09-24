@@ -58,7 +58,7 @@ If the server uses Marsarah UI Server Overrides, the mod must also be installed 
 
 ---
 
-<strong> ⚙️ Configuration </strong>
+## <strong> ⚙️ Configuration </strong>
 
 A config file is generated on first launch:
 Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg
@@ -72,8 +72,6 @@ The configuration layout and setting keys were reorganized in v1.1.0. Existing s
 
 Insert temporarily toggles many custom HUD widgets.
 Home toggles the Online Players name list while keeping the online-player count visible.
-
----
 
 ---
 
