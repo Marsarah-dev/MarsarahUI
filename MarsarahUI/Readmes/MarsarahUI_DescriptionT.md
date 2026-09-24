@@ -58,42 +58,20 @@ If the server uses Marsarah UI Server Overrides, the mod must also be installed 
 
 ---
 
-## <strong> ⚙️ Configuration </strong>
+<strong> ⚙️ Configuration </strong>
 
-A config file is generated on first launch:  
-`Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg`
+A config file is generated on first launch:
+Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg
 
-Settings are organized into five categories:
+Most Marsarah UI settings are local and remain under each player's control. Settings can be changed through the config file or a compatible configuration manager, and most update during gameplay without requiring a restart.
 
-- **01 - General & HUD (Local):** General interface and HUD features.
-- **02 - Information Rail (Local):** Information Rail appearance, contents and related displays.
-- **03 - Items & Interaction (Local):** Build-menu information, nameplates, taming and item indicators.
-- **04 - Detailed Hovers (Local):** Detailed object-hover information and display modes.
-- **05 - Server Overrides (Synced):** Optional server controls for selected information-oriented features.
+Selected information-oriented features also support synchronized Server Overrides. These use UserChoice by default, allowing players to keep their local preferences unless a server administrator explicitly overrides them.
 
-Normal UI preferences remain local to each player. Most settings can be changed while playing and update without requiring a restart.
-
-Server Overrides use **UserChoice** by default. Supported settings can be changed to **ForceOn**, **ForceOff**, or a specific display mode where applicable. The master **Enable Server Overrides** option disables the override system entirely when turned off.
-
-The following features support server overrides:
-- Information Rail Display Mode
-- Enemy Detector
-- Current Day
-- Current Time
-- Weather Forecast
-- Smart Biome
-- Ashlands Heat Meter
-- Enemy Nameplate Mode
-- Taming Progress
-- Detailed Hover Information
-- Container Contents
-- Global Chat By Default
-
-**Updating from v1.0.0:**  
+Updating from v1.0.0:
 The configuration layout and setting keys were reorganized in v1.1.0. Existing selections from v1.0.0 may need to be configured again after updating.
 
-**Insert** toggles many custom HUD widgets temporarily.  
-**Home** toggles the Online Players name list while keeping its online-player count visible.
+Insert temporarily toggles many custom HUD widgets.
+Home toggles the Online Players name list while keeping the online-player count visible.
 
 ---
 
@@ -243,7 +221,7 @@ https://paypal.me/Marsarah9
 - Split separates normal, tough and boss enemies into individual counters.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
+- Other players, Deer, Hare, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
 - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
@@ -309,6 +287,7 @@ https://paypal.me/Marsarah9
 - Displays up to 10 different item types with **+N Others** for additional types.
 - If **MarsarahTweaks Progression Halt** seals a chest, its contents are hidden and replaced with **"This chest is sealed."**
 - Custom container information and contents are only shown when the local player has access to the container.
+- Containers protected by another player's Ward do not reveal their contents.
 - Other players' **Personal Chests** retain their vanilla hover and do not reveal their contents.
 
 ---

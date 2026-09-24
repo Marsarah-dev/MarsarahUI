@@ -65,36 +65,14 @@ If the server uses Marsarah UI Server Overrides, the mod must also be installed 
 A config file is generated on first launch:
 [i]Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg[/i]
 
-Settings are organized into five categories:
+Most Marsarah UI settings are local and remain under each player's control. Settings can be changed through the config file or a compatible configuration manager, and most update during gameplay without requiring a restart.
 
-- [b]01 - General & HUD (Local):[/b] General interface and HUD features.
-- [b]02 - Information Rail (Local):[/b] Information Rail appearance, contents and related displays.
-- [b]03 - Items & Interaction (Local):[/b] Build-menu information, nameplates, taming and item indicators.
-- [b]04 - Detailed Hovers (Local):[/b] Detailed object-hover information and display modes.
-- [b]05 - Server Overrides (Synced):[/b] Optional server controls for selected information-oriented features.
-
-Normal UI preferences remain local to each player. Most settings can be changed while playing and update without requiring a restart.
-
-Server Overrides use [b]UserChoice[/b] by default. The server can use [b]ForceOn[/b], [b]ForceOff[/b], or a specific display mode where applicable. The master [b]Enable Server Overrides[/b] option can disable the override system entirely.
-
-[b]Server-overridable features:[/b]
-- Information Rail Display Mode
-- Enemy Detector
-- Current Day
-- Current Time
-- Weather Forecast
-- Smart Biome
-- Ashlands Heat Meter
-- Enemy Nameplate Mode
-- Taming Progress
-- Detailed Hover Information
-- Container Contents
-- Global Chat By Default
+Selected information-oriented features also support synchronized [b]Server Overrides[/b]. These use [b]UserChoice[/b] by default, allowing players to keep their local preferences unless a server administrator explicitly overrides them.
 
 [b]Updating from v1.0.0:[/b]
 The configuration layout and setting keys were reorganized in v1.1.0. Existing selections from v1.0.0 may need to be configured again after updating.
 
-[b]Insert[/b] toggles many custom HUD widgets temporarily.
+[b]Insert[/b] temporarily toggles many custom HUD widgets.
 [b]Home[/b] toggles the Online Players name list while keeping the online-player count visible.
 
 [line]
@@ -240,7 +218,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Split separates normal, tough and boss enemies into individual counters.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
+- Other players, Deer, Hare, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
 - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
@@ -304,6 +282,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Shows up to 10 different item types and then [b]+N Others[/b] for additional types.
 - If [b]MarsarahTweaks Progression Halt[/b] seals a chest, its contents are hidden and replaced with [b]"This chest is sealed."[/b]
 - Custom container information and contents are only shown when the local player has access to the container.
+- Containers protected by another player's Ward do not reveal their contents.
 - Other players' [b]Personal Chests[/b] retain their vanilla hover and do not reveal their contents.
 
 [line]
@@ -334,11 +313,17 @@ Thanks for checking out Marsarah UI!
 [size=5][b]🧑‍🤝‍🧑 Credits[/b][/size]
 Blaxxun-bloop - for ServerSync
 
-[size=5][b]📜 Version History[/b][/size]
+[size=5][b]📜 Version History[/b][/size]s
 
 [size=4][b]v1.1.1[/b][/size]
 
-- Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
+[b]Fixes:[/b]
+- Excluded the T.W.I.G. training dummy from the Enemy Detector.
+- Fixed Cooking Station detailed-hover timers for non-owner clients on dedicated servers.
+- Detailed Hovers no longer reveal container contents when the container is protected by another player's Ward.
+
+[b]Compatibility:[/b]
+- Updated MarsarahTweaks compatibility to account for the reorganized Tweaks configuration naming and ordering.
 
 [size=4][b]v1.1.0[/b][/size]
 

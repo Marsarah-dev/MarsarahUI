@@ -64,64 +64,11 @@ CONFIGURATION
 The config file is automatically created on first launch:
 Valheim/BepInEx/config/Marsarah.MarsarahUI.cfg
 
-Settings are organized into five categories:
+Most Marsarah UI settings are local and remain under each player's control.
+Settings can be changed through the config file or a compatible configuration manager, and most update during gameplay without requiring a restart.
 
-01 - General & HUD (Local)
-  General interface and HUD features.
-
-02 - Information Rail (Local)
-  Information Rail appearance, contents and related displays.
-
-03 - Items & Interaction (Local)
-  Build-menu information, nameplates, taming and item indicators.
-
-04 - Detailed Hovers (Local)
-  Detailed object-hover information and display modes.
-
-05 - Server Overrides (Synced)
-  Optional server controls for selected information-oriented features.
-
-Local settings normally remain under each player's control.
-Most UI settings can be changed while playing and update without requiring a restart.
-
-
-SERVER OVERRIDES
-----------------------------------------------------------------
-- Lock Server Overrides
-  Default: On
-  Prevents non-admin players from changing synchronized override settings.
-  Local UI settings are not locked.
-
-- Enable Server Overrides
-  Default: On
-  Master switch for the override system.
-  Individual overrides default to UserChoice, so this does not force anything by itself.
-
-- Bool override options:
-  UserChoice - respect the player's local setting.
-  ForceOn    - force the feature on.
-  ForceOff   - force the feature off.
-
-- Mode-based overrides can force a specific display mode where applicable.
-
-Server-overridable features:
-  • Information Rail Display Mode
-  • Enemy Detector
-  • Current Day
-  • Current Time
-  • Weather Forecast
-  • Smart Biome
-  • Ashlands Heat Meter
-  • Enemy Nameplate Mode
-  • Taming Progress
-  • Detailed Hover Information
-  • Container Contents
-  • Global Chat By Default
-
-Information Rail Display Mode Override:
-  UserChoice
-  Icons
-  Text
+Selected information-oriented features also support synchronized Server Overrides.
+Overrides use UserChoice by default, allowing players to keep their local preferences unless a server administrator explicitly overrides them.
 
 NOTE FOR v1.0.0 USERS
 ----------------------------------------------------------------
@@ -500,6 +447,7 @@ MOD CONFIGS
 
 ► Container Access / Privacy:
   Custom container hover information is only displayed when the local player has access to the container.
+  Containers protected by another player's Ward do not reveal their contents.
   Personal Chests owned by other players retain their vanilla hover and do not reveal their contents.
   The owner of a Personal Chest continues to receive the configured Detailed Hover and Container Contents information.
 
@@ -607,7 +555,13 @@ Blaxxun-bloop - ServerSync
 VERSION HISTORY
 ================================================================
 v1.1.1
-- Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
+- Fixes/Updates:
+  - Excluded the T.W.I.G. training dummy from the Enemy Detector.
+  - Fixed Cooking Station detailed-hover timers for non-owner clients on dedicated servers.
+  - Detailed Hovers no longer reveal container contents when the container is protected by another player's Ward.
+
+- Compatibility:
+  - Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
 
 v1.1.0
 - Fixes / Updates:

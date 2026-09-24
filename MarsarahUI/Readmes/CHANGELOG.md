@@ -1,7 +1,13 @@
 ## <strong> 📜 Version History </strong>
 
 v1.1.1
-- Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
+- **Fixes/Updates:**
+  - Excluded the T.W.I.G. training dummy from the Enemy Detector.
+  - Fixed Cooking Station detailed-hover timers for non-owner clients on dedicated servers.
+  - Detailed Hovers no longer reveal container contents when the container is protected by another player's Ward.
+
+- **Compatibility:**
+  - Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
 
 v1.1.0
 - **Fixes/Updates:**

@@ -30,7 +30,7 @@ B. Requests
 --------------------
 * Make detailed hovers toggle off individually.
 
-B. Existing UI Ideas
+C. Existing UI Ideas
 --------------------
 * Current Time: visual day-progress line with a moving time indicator.
 * Weather Forecast: choose a better position when No Map is enabled.

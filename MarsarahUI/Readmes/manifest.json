@@ -1,6 +1,6 @@
 {
     "name": "MarsarahUI",
-    "version_number": "1.1.0",
+    "version_number": "1.1.1",
     "website_url": "https://www.nexusmods.com/valheim/mods/3710",
     "description": "UI enhancements with weather forecasts, smart biome indicators, enemy detection, day and time, inventory info, boat speed, online players, improved nameplates, detailed hovers, and more.",
     "dependencies": [
