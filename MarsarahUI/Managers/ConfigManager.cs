@@ -254,7 +254,7 @@ namespace MarsarahUI.Managers
 			// ===== Information Rail
 			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("Information Rail Style", "Choose the visual style used by the information rail and summon counter.", ConfigSections.InformationRail, 70);
 			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.", ConfigSections.InformationRail, 60);
-			public static readonly ConfigMetadata UIInfoRailAnimations = new ConfigMetadata("Information Rail Animations", "Animate information rail elements when they appear or disappear. Disable this if you experience UI-related performance issues.", ConfigSections.InformationRail, 55);
+			public static readonly ConfigMetadata UIInfoRailAnimations = new ConfigMetadata("Information Rail Animations", "Animate information rail elements and the summon counter when they appear or disappear. Disable this if you experience UI-related performance issues.", ConfigSections.InformationRail,	55);
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.", ConfigSections.InformationRail, 50);
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.", ConfigSections.InformationRail, 40);
 			public static readonly ConfigMetadata UIEnemyDetectorPosition = new ConfigMetadata("Enemy Detector Position", "Choose whether the enemy detector is displayed in the bottom-left information rail or separately at the top-center of the screen.", ConfigSections.InformationRail, 30);
@@ -636,6 +636,7 @@ namespace MarsarahUI.Managers
 			if (configName == Configs.UIInfoRailAnimations.Name)
 			{
 				UIInfoRail.ApplyAnimationSetting();
+				UISummonDisplay.ApplyAnimationSetting();
 			}
 		}
 	}

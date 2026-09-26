@@ -123,6 +123,26 @@ namespace MarsarahUI.Patches.UI
 			if (targetVisible == visible) return;
 
 			targetVisible = visible;
+
+			if (!ConfigManager.EffectiveInfoRailAnimations)
+			{
+				animationProgress = visible ? 1f : 0f;
+				animating = false;
+
+				if (summonCanvasGroup != null)
+				{
+					summonCanvasGroup.alpha = visible ? 1f : 0f;
+				}
+
+				if (summonAreaRect != null)
+				{
+					summonAreaRect.anchoredPosition = visible ? VisiblePosition : GetHiddenPosition();
+				}
+
+				UISummonArea.SetActive(visible);
+				return;
+			}
+
 			animating = true;
 
 			if (visible)
@@ -262,6 +282,29 @@ namespace MarsarahUI.Patches.UI
 			if (mode == currentDisplayMode) return;
 
 			ApplyDisplayMode();
+		}
+
+		internal static void ApplyAnimationSetting()
+		{
+			if (ConfigManager.EffectiveInfoRailAnimations) return;
+			if (UISummonArea == null) return;
+
+			animationProgress = targetVisible ? 1f : 0f;
+			animating = false;
+
+			if (summonCanvasGroup != null)
+			{
+				summonCanvasGroup.alpha = targetVisible ? 1f : 0f;
+			}
+
+			if (summonAreaRect != null)
+			{
+				summonAreaRect.anchoredPosition = targetVisible ? VisiblePosition : GetHiddenPosition();
+			}
+
+			UISummonArea.SetActive(targetVisible);
+
+			log.Info("Summon counter animation state finalized.");
 		}
 	}
 }
