@@ -24,6 +24,11 @@ A. Fixes
 
 B. Updates
 ------------------------
+- Added individual Off options for Detailed Hovers.
+- Added 12-hour digital clock option.
+- Added optional coloring for Day Phases.
+- Removed “Time” label from digital clocks.
+- Enemy Detector now ignores Kvastur.
 
 C. New additions
 ------------------------
@@ -34,14 +39,10 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
-* Ignore Kvastur from enemy counter
 * Look into StoreAndCraft chest renames / tags (they are hidden wth my Detailed Hover Information)
 
 B. Requests
 --------------------
-* Make detailed hovers toggle off individually.
-* Add toggle for 12h format for time of day.
-* Add color option for the fuzzy time of day (now it's always colored - add an option to remove the coloring)
 
 C. Existing UI Ideas
 --------------------
