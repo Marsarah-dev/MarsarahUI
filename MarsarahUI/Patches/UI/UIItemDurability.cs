@@ -44,8 +44,6 @@ namespace MarsarahUI.Patches.UI
 				durabilityField = AccessTools.Field(elementType, "m_durability");
 			}
 
-			customSprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(sprite => sprite.name == "bar_stagger");
-
 			if (hotkeyItemsField == null || hotkeyElementsField == null || hotkeyDurabilityField == null ||
 				inventoryField == null || elementsField == null || durabilityField == null)
 			{
@@ -148,30 +146,21 @@ namespace MarsarahUI.Patches.UI
 			Image barImage = durabilityBar.m_bar?.GetComponent<Image>();
 			if (barImage == null) return;
 
-			if (!ConfigManager.EffectiveColoredItemDurabilityBar)
-			{
-				if (originalSprites.TryGetValue(barImage, out Sprite originalSprite))
-				{
-					barImage.sprite = originalSprite;
-					originalSprites.Remove(barImage);
-				}
-
-				return;
-			}
-
 			float durabilityPercent = item.GetDurabilityPercentage();
 			durabilityBar.SetColor(GetDurabilityColor(durabilityPercent));
 
-			if (customSprite != null)
+			Sprite sprite = GetCustomSprite();
+
+			if (sprite != null)
 			{
 				if (!originalSprites.ContainsKey(barImage))
 				{
 					originalSprites[barImage] = barImage.sprite;
 				}
 
-				if (barImage.sprite != customSprite)
+				if (barImage.sprite != sprite)
 				{
-					barImage.sprite = customSprite;
+					barImage.sprite = sprite;
 				}
 			}
 

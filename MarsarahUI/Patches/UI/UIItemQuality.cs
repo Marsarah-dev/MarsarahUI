@@ -109,14 +109,7 @@ namespace MarsarahUI.Patches.UI
 				TMP_Text qualityText = qualityField.GetValue(element) as TMP_Text;
 				if (qualityText == null) continue;
 
-				if (ConfigManager.EffectiveItemQualityIndicatorChoice == ItemQualityMode.Off)
-				{
-					RestoreVanillaStyle(qualityText, item);
-				}
-				else
-				{
-					DrawSymbols(qualityText, item.m_quality);
-				}
+				DrawSymbols(qualityText, item.m_quality);
 			}
 		}
 
@@ -206,33 +199,6 @@ namespace MarsarahUI.Patches.UI
 			{
 				outline.enabled = false;
 			}
-		}
-
-		private static void RestoreVanillaStyle(TMP_Text textComponent, ItemDrop.ItemData item)
-		{
-			if (!originalStyles.TryGetValue(textComponent, out OriginalStyle originalStyle))
-			{
-				return;
-			}
-
-			textComponent.text = item.m_quality.ToString();
-			textComponent.fontSize = originalStyle.FontSize;
-			textComponent.color = originalStyle.Color;
-			textComponent.alignment = originalStyle.Alignment;
-			textComponent.rectTransform.pivot = originalStyle.Pivot;
-			textComponent.lineSpacing = originalStyle.LineSpacing;
-			textComponent.rectTransform.sizeDelta = originalStyle.SizeDelta;
-			textComponent.rectTransform.anchoredPosition = originalStyle.AnchoredPosition;
-			textComponent.textWrappingMode = originalStyle.WrappingMode;
-
-			Outline outline = textComponent.GetComponent<Outline>();
-
-			if (outline != null && originalStyle.OutlineEnabled.HasValue)
-			{
-				outline.enabled = originalStyle.OutlineEnabled.Value;
-			}
-
-			originalStyles.Remove(textComponent);
 		}
 
 		private static void RestoreAllVanillaStyles()

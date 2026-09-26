@@ -133,7 +133,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (!tamingCache.TryGetValue(hudData, out TextMeshProUGUI tamingText)) return;
 
-			if (!ConfigManager.EffectiveShowTamingProgress || !ShowUI)
+			if (!ShowUI)
 			{
 				tamingText.gameObject.SetActive(false);
 				return;

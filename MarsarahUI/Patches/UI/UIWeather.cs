@@ -172,6 +172,26 @@ namespace MarsarahUI.Patches.UI
 
 					return;
 				}
+
+				CreateUI(__instance);
+
+				bool showWeatherUI = ShouldShowWeatherUI();
+
+				if (UIForecastIcon != null)
+				{
+					UIForecastIcon.enabled = showWeatherUI && UIForecastIcon.sprite != null;
+				}
+
+				if (UINextWeatherTimerText != null)
+				{
+					UINextWeatherTimerText.enabled = showWeatherUI;
+
+					if (showWeatherUI)
+					{
+						UINextWeatherTimerText.text = UIForecastTimer;
+						UINextWeatherTimerText.color = Color.white;
+					}
+				}
 			}
 		}
 
