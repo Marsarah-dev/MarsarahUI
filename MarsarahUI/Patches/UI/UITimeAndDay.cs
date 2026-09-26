@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 using static MarsarahUI.Managers.ConfigManager;
@@ -17,6 +18,8 @@ namespace MarsarahUI.Patches.UI
 		private static Text UITimeText;
 		private static Text UIDayText;
 
+		private static readonly MethodInfo getCurrentDayMethod = AccessTools.Method(typeof(EnvMan), "GetCurrentDay");
+
 		[HarmonyPatch(typeof(EnvMan), "Update")]
 		private static class TimeAndDay_EnvManPatch
 		{
@@ -27,7 +30,10 @@ namespace MarsarahUI.Patches.UI
 
 				if (ConfigManager.EffectiveShowCurrentDay)
 				{
-					CurrentDay = Traverse.Create(EnvMan.instance).Method("GetCurrentDay", Array.Empty<object>()).GetValue<int>();
+					if (getCurrentDayMethod != null)
+					{
+						CurrentDay = (int)getCurrentDayMethod.Invoke(__instance, null);
+					}
 				}
 
 				if (ConfigManager.EffectiveTimeChoice != TimeMode.Off)

@@ -2,6 +2,7 @@
 using MarsarahUI.Managers;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,7 @@ namespace MarsarahUI.Patches.UI
 		private static EnvSetup _lastForecastEnv = null;
 		private static long _lastForecastPeriod = -1;
 		private static string _lastEnvironmentSignature = string.Empty;
+		private static readonly MethodInfo selectWeightedEnvironmentMethod = AccessTools.Method(typeof(EnvMan), "SelectWeightedEnvironment");
 
 		// Throttle
 		private const float ForecastUpdateInterval = 1f;
@@ -387,7 +389,10 @@ namespace MarsarahUI.Patches.UI
 					if (availableEnvironments != null && availableEnvironments.Count > 0)
 					{
 						// From the list of available weathers, select one based on weights
-						result = Traverse.Create(envMan).Method("SelectWeightedEnvironment", new object[] { availableEnvironments }).GetValue<EnvSetup>();
+						if (selectWeightedEnvironmentMethod != null)
+						{
+							result = selectWeightedEnvironmentMethod.Invoke(envMan, new object[] { availableEnvironments }) as EnvSetup;
+						}
 
 						// Apply Ashlands / DeepNorth overrides
 						foreach (EnvEntry entry in availableEnvironments)

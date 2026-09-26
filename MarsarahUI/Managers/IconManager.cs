@@ -13,6 +13,8 @@ namespace MarsarahUI.Managers
 		private static readonly Dictionary<string, Sprite> icons = new Dictionary<string, Sprite>();
 		private const string HudIconResourcePrefix = "MarsarahUI.Assets.Icons.HUD.";
 
+		private static readonly MethodInfo loadImageMethod = GetLoadImageMethod();
+
 		public static Sprite LoadHudIcon(string iconName)
 		{
 			if (string.IsNullOrEmpty(iconName)) return null;
@@ -62,7 +64,22 @@ namespace MarsarahUI.Managers
 		private static bool TryLoadImageBytes(Texture2D texture, byte[] data)
 		{
 			if (texture == null || data == null) return false;
+			if (loadImageMethod == null) return false;
 
+			try
+			{
+				object result = loadImageMethod.Invoke(null, new object[] { texture, data, false });
+				return result is bool success && success;
+			}
+			catch (Exception ex)
+			{
+				log.Error($"Failed to load image bytes: {ex}");
+				return false;
+			}
+		}
+
+		private static MethodInfo GetLoadImageMethod()
+		{
 			try
 			{
 				Assembly imageConversionAssembly = Assembly.Load("UnityEngine.ImageConversionModule");
@@ -71,24 +88,15 @@ namespace MarsarahUI.Managers
 				if (imageConversionType == null)
 				{
 					log.Error("Could not find UnityEngine.ImageConversion type.");
-					return false;
+					return null;
 				}
 
-				MethodInfo loadImage = imageConversionType.GetMethod("LoadImage", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Texture2D), typeof(byte[]), typeof(bool) }, null);
-
-				if (loadImage == null)
-				{
-					log.Error("Could not find ImageConversion.LoadImage method.");
-					return false;
-				}
-
-				object result = loadImage.Invoke(null, new object[] { texture, data, false });
-				return result is bool success && success;
+				return imageConversionType.GetMethod("LoadImage", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Texture2D), typeof(byte[]), typeof(bool) }, null);
 			}
 			catch (Exception ex)
 			{
-				log.Error($"Failed to load image bytes: {ex}");
-				return false;
+				log.Error($"Failed to locate ImageConversion.LoadImage: {ex}");
+				return null;
 			}
 		}
 	}
