@@ -34,13 +34,13 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
-* Fix fps stutter in high enemy density area
 * Look into StoreAndCraft chest renames / tags (they are hidden wth my Detailed Hover Information)
 
 B. Requests
 --------------------
 * Make detailed hovers toggle off individually.
 * Add toggle for 12h format for time of day.
+* Add color option for the fuzzy time of day (now it's always colored - add an option to remove the coloring)
 
 C. Existing UI Ideas
 --------------------

@@ -142,47 +142,54 @@ namespace MarsarahUI.Managers
 		{
 			CurrentPerMax,
 			AmountOfFreeSlots,
-			Percent
+			Percent,
+			Off
 		}
 
 		public enum BeeHoverMode
 		{
 			RemainingTime,
 			Percent,
-			PercentAndTime
+			PercentAndTime,
+			Off
 		}
 
 		public enum PlantHoverMode
 		{
 			RemainingTime,
 			Percent,
-			PercentAndTime
+			PercentAndTime,
+			Off
 		}
 
 		public enum FermenterHoverMode
 		{
 			RemainingTime,
 			Percent,
-			PercentAndTime
+			PercentAndTime,
+			Off
 		}
 
 		public enum CookingStationHoverMode
 		{
 			RemainingTime,
 			Percent,
-			PercentAndTime
+			PercentAndTime,
+			Off
 		}
 
 		public enum SmelterHoverMode
 		{
-			RemainingTime
+			RemainingTime,
+			Off
 		}
 
 		public enum EggHoverMode
 		{
 			RemainingTime,
 			Percent,
-			PercentAndTime
+			PercentAndTime,
+			Off
 		}
 
 		public enum SkillProgressBarColor
@@ -271,15 +278,15 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIItemDurabilityColor = new ConfigMetadata("Better Item Durability Bar", "Colors the item durability bar according to current durability and modifies the sprite texture.", ConfigSections.ItemsInteraction, 10);
 
 			// ===== Detailed Hovers
-			public static readonly ConfigMetadata UIHoverInfoMode = new ConfigMetadata("Detailed Hover Information", "Adds more information when hovering over objects. Master toggle for the hover information configs below.", ConfigSections.DetailedHovers, 90);
-			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("Container Contents Mode", "Choose how container contents are displayed when hovering: horizontal icons, vertical icons, text, or off. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 80);
-			public static readonly ConfigMetadata UIContainerHoverMode = new ConfigMetadata("Container Hover Mode", "Choose the method of displaying Container hover info. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 70);
-			public static readonly ConfigMetadata UIBeeHoverMode = new ConfigMetadata("Beehive Hover Mode", "Choose the method of displaying Beehive hover info. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 60);
-			public static readonly ConfigMetadata UIPlantHoverMode = new ConfigMetadata("Plant Hover Mode", "Choose the method of displaying Plant hover info. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 50);
-			public static readonly ConfigMetadata UIFermenterHoverMode = new ConfigMetadata("Fermenter Hover Mode", "Choose the method of displaying Fermenter hover info. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 40);
-			public static readonly ConfigMetadata UICookingStationHoverMode = new ConfigMetadata("Cooking Station Hover Mode", "Choose the method of displaying Cooking Station hover info. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 30);
-			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("Smelter Hover Mode", "Choose the method of displaying Smelter hover info. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 20);
-			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("Egg Hover Mode", "Choose the method of displaying Egg hatching hover info. Requires Detailed Hover Information.", ConfigSections.DetailedHovers, 10);
+			public static readonly ConfigMetadata UIHoverInfoMode = new ConfigMetadata("Detailed Hover Information", "Controls the style of detailed hover information, or disables all detailed hovers.", ConfigSections.DetailedHovers, 90);
+			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("Container Contents Mode", "Choose how container contents are displayed when hovering: horizontal icons, vertical icons, text, or off.", ConfigSections.DetailedHovers, 80);
+			public static readonly ConfigMetadata UIContainerHoverMode = new ConfigMetadata("Container Hover Mode", "Choose the method of displaying Container hover info, or Off to disable it.", ConfigSections.DetailedHovers, 70);
+			public static readonly ConfigMetadata UIBeeHoverMode = new ConfigMetadata("Beehive Hover Mode", "Choose the method of displaying Beehive hover info, or Off to disable it.", ConfigSections.DetailedHovers, 60);
+			public static readonly ConfigMetadata UIPlantHoverMode = new ConfigMetadata("Plant Hover Mode", "Choose the method of displaying Plant hover info, or Off to disable it.", ConfigSections.DetailedHovers, 50);
+			public static readonly ConfigMetadata UIFermenterHoverMode = new ConfigMetadata("Fermenter Hover Mode", "Choose the method of displaying Fermenter hover info, or Off to disable it.", ConfigSections.DetailedHovers, 40);
+			public static readonly ConfigMetadata UICookingStationHoverMode = new ConfigMetadata("Cooking Station Hover Mode", "Choose the method of displaying Cooking Station hover info, or Off to disable it.", ConfigSections.DetailedHovers, 30);
+			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("Smelter Hover Mode", "Choose the method of displaying Smelter hover info, or Off to disable it.", ConfigSections.DetailedHovers, 20);
+			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("Egg Hover Mode", "Choose the method of displaying Egg hatching hover info, or Off to disable it.", ConfigSections.DetailedHovers, 10);
 
 			// ===== Server Overrides
 			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.", ConfigSections.ServerOverrides, 130);

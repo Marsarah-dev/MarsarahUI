@@ -39,6 +39,11 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
 
+				bool showContainerInfo = ConfigManager.EffectiveContainerHoverModeChoice != ContainerHoverMode.Off;
+				bool showContainerContents = ConfigManager.EffectiveContainerContentsChoice != ContainerContentsMode.Off;
+
+				if (!showContainerInfo && !showContainerContents) return;
+
 				if (__instance.m_checkGuardStone &&
 					!PrivateArea.CheckAccess(__instance.transform.position, 0f, flash: false))
 				{
@@ -88,9 +93,11 @@ namespace MarsarahUI.Patches.UI
 				string useKeyColored = $"[{PaintText(Localization.instance.Localize("$KEY_Use"), Color.yellow)}]";
 				string containerItemsLine = UIContainerContents.GetContainerInventoryList(container, inventory);
 
+				string header = containerMode != ContainerHoverMode.Off ? $"{localizedName} ({containerText})" : localizedName;
+
 				return containerItemsLine != ""
-					? $"{localizedName} ({containerText})\n{useKeyColored} {localizedOpen} {localizedStack}\n\n{containerItemsLine}"
-					: $"{localizedName} ({containerText})\n{useKeyColored} {localizedOpen} {localizedStack}";
+					? $"{header}\n{useKeyColored} {localizedOpen} {localizedStack}\n\n{containerItemsLine}"
+					: $"{header}\n{useKeyColored} {localizedOpen} {localizedStack}";
 			}
 
 			private static Color GetInventoryRatioColor(int used, int max)
@@ -117,7 +124,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static bool Prefix(Beehive __instance, ZNetView ___m_nview, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return true;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveBeehiveHoverModeChoice == BeeHoverMode.Off) return true;
 
 				if (!PrivateArea.CheckAccess(__instance.transform.position, 0f, flash: false))
 				{
@@ -206,7 +213,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static bool Prefix(Plant __instance, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return true;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectivePlantHoverModeChoice == PlantHoverMode.Off) return true;
 
 				if (!PrivateArea.CheckAccess(__instance.transform.position, 0f, flash: false))
 				{
@@ -274,7 +281,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static bool Prefix(Fermenter __instance, bool ___m_exposed, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return true;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveFermenterHoverModeChoice == FermenterHoverMode.Off) return true;
 
 				if (!PrivateArea.CheckAccess(__instance.transform.position, 0f, flash: false))
 				{
@@ -374,7 +381,7 @@ namespace MarsarahUI.Patches.UI
 					{
 						string vanillaText = Localization.instance.Localize(GetHoverTextMethod.Invoke(__instance, null) as string);
 
-						if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off)
+						if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveCookingStationHoverModeChoice == CookingStationHoverMode.Off)
 						{
 							return vanillaText;
 						}
@@ -396,7 +403,7 @@ namespace MarsarahUI.Patches.UI
 					{
 						string vanillaText = Localization.instance.Localize(OnHoverFuelSwitchMethod.Invoke(__instance, null) as string);
 
-						if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off)
+						if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveCookingStationHoverModeChoice == CookingStationHoverMode.Off)
 						{
 							return vanillaText;
 						}
@@ -420,7 +427,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static bool Prefix(CookingStation __instance, ZNetView ___m_nview, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return true;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveCookingStationHoverModeChoice == CookingStationHoverMode.Off) return true;
 				if (___m_nview == null || !___m_nview.IsValid()) return true;
 
 				bool isOven = __instance.m_useFuel && !__instance.m_requireFire;
@@ -558,7 +565,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(Smelter __instance, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveSmelterHoverModeChoice == SmelterHoverMode.Off) return;
 
 				__result = GetSmelterHover(__instance, __result);
 			}
@@ -569,7 +576,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(Smelter __instance, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveSmelterHoverModeChoice == SmelterHoverMode.Off) return;
 
 				__result = GetSmelterHover(__instance, __result);
 			}
@@ -580,7 +587,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(Smelter __instance, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveSmelterHoverModeChoice == SmelterHoverMode.Off) return;
 
 				__result = GetSmelterHover(__instance, __result);
 			}
@@ -653,7 +660,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(EggGrow __instance, ZNetView ___m_nview, ref string __result)
 			{
-				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off || ConfigManager.EffectiveEggHoverModeChoice == EggHoverMode.Off) return;
 
 				__result = GetEggHover(__instance, ___m_nview, __result);
 			}
