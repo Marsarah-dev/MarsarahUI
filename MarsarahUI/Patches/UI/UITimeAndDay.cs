@@ -51,10 +51,25 @@ namespace MarsarahUI.Patches.UI
 					{
 						int hours = (int)(___m_smoothDayFraction * 24f);
 						int minutes = (int)((___m_smoothDayFraction * 24f - hours) * 60f);
-						string hoursString = hours < 10 ? "0" + hours : hours.ToString();
 						string minutesString = minutes < 10 ? "0" + minutes : minutes.ToString();
 
-						TimeString = "Time " + hoursString + ":" + minutesString;
+						if (ConfigManager.EffectiveTimeChoice == TimeMode.DigitalClock12Hour)
+						{
+							string period = hours >= 12 ? "PM" : "AM";
+							int displayHours = hours % 12;
+
+							if (displayHours == 0)
+							{
+								displayHours = 12;
+							}
+
+							TimeString = displayHours + ":" + minutesString + " " + period;
+						}
+						else
+						{
+							string hoursString = hours < 10 ? "0" + hours : hours.ToString();
+							TimeString = hoursString + ":" + minutesString;
+						}
 					}
 				}
 			}

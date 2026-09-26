@@ -70,6 +70,7 @@ namespace MarsarahUI.Managers
 		public enum TimeMode
 		{
 			DigitalClock,
+			DigitalClock12Hour,
 			DayPhases,
 			Off
 		}
@@ -221,6 +222,7 @@ namespace MarsarahUI.Managers
 		{
 			UserChoice,
 			DigitalClock,
+			DigitalClock12Hour,
 			DayPhases,
 			Off
 		}
@@ -248,7 +250,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator.", ConfigSections.GeneralHUD, 110);
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("Show Current Day", "Shows the current day above the minimap.", ConfigSections.GeneralHUD, 100);
-			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("Show Current Time", "Shows the current time above the minimap. Can choose between digital clock and day sections.", ConfigSections.GeneralHUD, 90);
+			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("Show Current Time", "Shows the current time above the minimap. Choose between 24-hour digital clock, 12-hour digital clock, day phases, or off.", ConfigSections.GeneralHUD, 90);
 			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.", ConfigSections.GeneralHUD, 80);
 			public static readonly ConfigMetadata UISmartBiome = new ConfigMetadata("Smart Biome Indicator", "Shows smart biome text on the minimap (colored according to worn armor relative to current biome).", ConfigSections.GeneralHUD, 70);
 			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.", ConfigSections.GeneralHUD, 60);

@@ -34,6 +34,7 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
+* Ignore Kvastur from enemy counter
 * Look into StoreAndCraft chest renames / tags (they are hidden wth my Detailed Hover Information)
 
 B. Requests
