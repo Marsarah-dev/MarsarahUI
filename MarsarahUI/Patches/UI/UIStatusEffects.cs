@@ -219,28 +219,27 @@ namespace MarsarahUI.Patches.UI
 
 				statusEffectObject.anchoredPosition = new Vector2(-4f - column * statusEffectSpacing, -row * statusEffectSpacing);
 
-				RectTransform name = statusEffectObject.Find("Name") as RectTransform;
-				if (name != null)
-				{
-					vanillaNameState.Apply(name);
+				StatusEffectRefs refs = GetStatusEffectRefs(statusEffectObject);
+				if (refs == null) continue;
 
-					TMP_Text nameText = name.GetComponent<TMP_Text>();
-					if (nameText != null)
+				if (refs.Name != null)
+				{
+					vanillaNameState.Apply(refs.Name);
+
+					if (refs.NameText != null)
 					{
-						vanillaNameTextState.Apply(nameText);
+						vanillaNameTextState.Apply(refs.NameText);
 					}
 				}
 
-				RectTransform icon = statusEffectObject.Find("Icon") as RectTransform;
-				if (icon != null)
+				if (refs.Icon != null)
 				{
-					vanillaIconState.Apply(icon);
+					vanillaIconState.Apply(refs.Icon);
 				}
 
-				RectTransform cooldown = statusEffectObject.Find("Cooldown") as RectTransform;
-				if (cooldown != null)
+				if (refs.Cooldown != null)
 				{
-					vanillaCooldownState.Apply(cooldown);
+					vanillaCooldownState.Apply(refs.Cooldown);
 				}
 			}
 		}
@@ -260,18 +259,20 @@ namespace MarsarahUI.Patches.UI
 
 			statusEffectObject.localPosition = new Vector3(0f, -EntrySpacing * index, 0f);
 
-			PositionName(statusEffect, statusEffectObject);
-			PositionIcon(statusEffectObject);
-			PositionCooldown(statusEffectObject);
+			StatusEffectRefs refs = GetStatusEffectRefs(statusEffectObject);
+			if (refs == null) return;
+
+			PositionName(statusEffect, refs);
+			PositionIcon(refs);
+			PositionCooldown(refs);
 		}
 
-		private static void PositionName(StatusEffect statusEffect, RectTransform statusEffectObject)
+		private static void PositionName(StatusEffect statusEffect, StatusEffectRefs refs)
 		{
-			RectTransform nameTransform = statusEffectObject.Find("Name") as RectTransform;
-			if (nameTransform == null) return;
+			if (refs?.Name == null || refs.NameText == null) return;
 
-			TMP_Text nameText = nameTransform.GetComponent<TMP_Text>();
-			if (nameText == null) return;
+			TMP_Text nameText = refs.NameText;
+			RectTransform nameTransform = refs.Name;
 
 			nameText.richText = true;
 			nameText.textWrappingMode = TextWrappingModes.Normal;
@@ -285,24 +286,29 @@ namespace MarsarahUI.Patches.UI
 			nameTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, IconSize + 20f);
 
 			string iconText = statusEffect.GetIconText();
-			Transform timeText = statusEffectObject.Find("TimeText");
 
 			if (!string.IsNullOrEmpty(iconText))
 			{
-				if (timeText != null)
+				if (refs.TimeText != null)
 				{
-					timeText.gameObject.SetActive(false);
+					refs.TimeText.gameObject.SetActive(false);
 				}
 
 				string displayName = Localization.instance.Localize(statusEffect.m_name);
-				nameText.text = $"{displayName} <color=#ffb75c>{iconText}</color>";
+				string text = $"{displayName} <color=#ffb75c>{iconText}</color>";
+
+				if (nameText.text != text)
+				{
+					nameText.text = text;
+				}
 			}
 		}
 
-		private static void PositionIcon(RectTransform statusEffectObject)
+		private static void PositionIcon(StatusEffectRefs refs)
 		{
-			RectTransform icon = statusEffectObject.Find("Icon") as RectTransform;
-			if (icon == null) return;
+			if (refs?.Icon == null) return;
+
+			RectTransform icon = refs.Icon;
 
 			icon.anchorMin = new Vector2(0.5f, 0.5f);
 			icon.anchorMax = new Vector2(0.5f, 0.5f);
@@ -311,10 +317,11 @@ namespace MarsarahUI.Patches.UI
 			icon.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, IconSize);
 		}
 
-		private static void PositionCooldown(RectTransform statusEffectObject)
+		private static void PositionCooldown(StatusEffectRefs refs)
 		{
-			RectTransform cooldown = statusEffectObject.Find("Cooldown") as RectTransform;
-			if (cooldown == null) return;
+			if (refs?.Cooldown == null) return;
+
+			RectTransform cooldown = refs.Cooldown;
 
 			cooldown.anchorMin = new Vector2(0.5f, 0.5f);
 			cooldown.anchorMax = new Vector2(0.5f, 0.5f);

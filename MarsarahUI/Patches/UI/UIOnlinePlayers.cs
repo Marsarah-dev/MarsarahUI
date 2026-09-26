@@ -65,7 +65,10 @@ namespace MarsarahUI.Patches.UI
 					!isLoadScreenActive &&
 					numPlayersTotal > 1;
 
-				UIPartyArea.SetActive(shouldShowArea);
+				if (UIPartyArea.activeSelf != shouldShowArea)
+				{
+					UIPartyArea.SetActive(shouldShowArea);
+				}
 
 				if (!shouldShowArea)
 				{
