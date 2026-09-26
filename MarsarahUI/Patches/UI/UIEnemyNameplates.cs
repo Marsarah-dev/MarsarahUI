@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using static MarsarahUI.Managers.ConfigManager;
+using System.Linq;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -36,6 +37,9 @@ namespace MarsarahUI.Patches.UI
 		private static readonly FieldInfo hud_m_name_Field;
 		private static readonly FieldInfo hud_m_alerted_Field;
 		private static readonly FieldInfo hud_m_aware_Field;
+
+		private static TMP_FontAsset hpFont;
+		private static Material hpFontMaterial;
 
 		private class HpTexts
 		{
@@ -98,10 +102,23 @@ namespace MarsarahUI.Patches.UI
 		[HarmonyPatch(typeof(EnemyHud), "ShowHud")]
 		private static class EnemyHud_ShowHud_CustomBar_Patch
 		{
-			private static void Postfix(EnemyHud __instance, Character c)
+			private static void Prefix(EnemyHud __instance, Character c, out bool __state)
+			{
+				__state = true;
+
+				if (ConfigManager.EffectiveEnemyNameplateChoice == EnemyNameplateMode.Off) return;
+				if (__instance == null || c == null || m_hudsField == null) return;
+
+				IDictionary huds = m_hudsField.GetValue(__instance) as IDictionary;
+
+				__state = huds != null && huds.Contains(c);
+			}
+
+			private static void Postfix(EnemyHud __instance, Character c, bool __state)
 			{
 				if (ConfigManager.EffectiveEnemyNameplateChoice == EnemyNameplateMode.Off) return;
-				if (c == null || m_hudsField == null) return;
+				if (__state) return;
+				if (__instance == null || c == null || m_hudsField == null) return;
 
 				IDictionary huds = m_hudsField.GetValue(__instance) as IDictionary;
 				if (huds == null || !huds.Contains(c)) return;
@@ -120,7 +137,13 @@ namespace MarsarahUI.Patches.UI
 				GuiBar fastFriendlyBar = hud_m_healthFastFriendly_Field?.GetValue(hudData) as GuiBar;
 
 				ApplyBarSettings(c, healthTransform, fastBar, slowBar, fastFriendlyBar, true);
-				AddHpText(hudData, healthTransform);
+
+				EnemyNameplateMode mode = ConfigManager.EffectiveEnemyNameplateChoice;
+
+				if (mode != EnemyNameplateMode.BarsOnly)
+				{
+					AddHpText(hudData, healthTransform);
+				}
 			}
 		}
 
@@ -266,12 +289,8 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (hpTextCache.TryGetValue(hudData, out _)) return;
 
-			string UITMPFontName = "Valheim-AveriaSansLibre";
-			Vector2 UITextAreaSize = new Vector2(100f, 14f);
-			int UITextFontSize = 11;
-
-			TextMeshProUGUI hpText = CreateTMPTextObject("HpText", healthTransform.gameObject, Color.white, UITMPFontName, UITextFontSize, TextAlignmentOptions.Center, Vector2.zero, UITextAreaSize, log);
-			TextMeshProUGUI hpPercentText = CreateTMPTextObject("HpPercentText", healthTransform.gameObject, Color.white, UITMPFontName, UITextFontSize, TextAlignmentOptions.Center, Vector2.zero, UITextAreaSize, log);
+			TextMeshProUGUI hpText = CreateHpTextObject("HpText", healthTransform.gameObject);
+			TextMeshProUGUI hpPercentText = CreateHpTextObject("HpPercentText", healthTransform.gameObject);
 
 			hpText.gameObject.SetActive(false);
 			hpPercentText.gameObject.SetActive(false);
@@ -460,6 +479,69 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			log.Info("Restored vanilla enemy nameplate state.");
+		}
+
+		private static TextMeshProUGUI CreateHpTextObject(string name, GameObject parent)
+		{
+			EnsureHpTextResources();
+
+			GameObject textObject = new GameObject(name);
+			textObject.layer = 5;
+			textObject.transform.SetParent(parent.transform, false);
+
+			RectTransform rectTransform = textObject.AddComponent<RectTransform>();
+			rectTransform.anchoredPosition = Vector2.zero;
+			rectTransform.sizeDelta = new Vector2(100f, 14f);
+			rectTransform.localScale = Vector3.one;
+
+			TextMeshProUGUI text = textObject.AddComponent<TextMeshProUGUI>();
+			text.color = Color.white;
+			text.font = hpFont;
+			text.fontSize = 11;
+			text.alignment = TextAlignmentOptions.Center;
+			text.text = "";
+			text.raycastTarget = false;
+
+			if (hpFontMaterial != null)
+			{
+				text.fontSharedMaterial = hpFontMaterial;
+			}
+
+			return text;
+		}
+
+		private static void EnsureHpTextResources()
+		{
+			if (hpFont == null)
+			{
+				hpFont = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().FirstOrDefault(font => font.name == "Valheim-AveriaSansLibre");
+
+				if (hpFont == null)
+				{
+					log.Warn("Could not find Valheim-AveriaSansLibre TMP font.");
+					return;
+				}
+			}
+
+			if (hpFontMaterial == null)
+			{
+				Material sourceMaterial = hpFont.material;
+
+				if (sourceMaterial == null)
+				{
+					log.Warn("Could not find material for Valheim-AveriaSansLibre TMP font.");
+					return;
+				}
+
+				hpFontMaterial = new Material(sourceMaterial);
+
+				if (hpFontMaterial.HasProperty(ShaderUtilities.ID_OutlineWidth) &&
+					hpFontMaterial.HasProperty(ShaderUtilities.ID_OutlineColor))
+				{
+					hpFontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.125f);
+					hpFontMaterial.SetColor(ShaderUtilities.ID_OutlineColor, Color.black);
+				}
+			}
 		}
 	}
 }
