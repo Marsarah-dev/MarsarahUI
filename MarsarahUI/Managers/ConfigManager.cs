@@ -251,6 +251,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator.", ConfigSections.GeneralHUD, 110);
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("Show Current Day", "Shows the current day above the minimap.", ConfigSections.GeneralHUD, 100);
 			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("Show Current Time", "Shows the current time above the minimap. Choose between 24-hour digital clock, 12-hour digital clock, day phases, or off.", ConfigSections.GeneralHUD, 90);
+			public static readonly ConfigMetadata UIColorDayPhases = new ConfigMetadata("Color Day Phases", "Colors the Day Phases time display based on the current phase of the day. Only applies when Show Current Time is set to DayPhases.", ConfigSections.GeneralHUD, 85);
 			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.", ConfigSections.GeneralHUD, 80);
 			public static readonly ConfigMetadata UISmartBiome = new ConfigMetadata("Smart Biome Indicator", "Shows smart biome text on the minimap (colored according to worn armor relative to current biome).", ConfigSections.GeneralHUD, 70);
 			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.", ConfigSections.GeneralHUD, 60);
@@ -317,6 +318,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ShowBoatSpeed;
 		public static ConfigEntry<bool> ShowCurrentDay;
 		public static ConfigEntry<TimeMode> TimeChoice;
+		public static ConfigEntry<bool> ColorDayPhases;
 		public static ConfigEntry<bool> ShowWeatherForecast;
 		public static ConfigEntry<bool> ShowSmartBiome;
 		public static ConfigEntry<bool> ShowSummonCounter;
@@ -396,6 +398,7 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
 		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
 		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
+		public static bool EffectiveColorDayPhases => ColorDayPhases.Value;
 		public static bool EffectiveShowWeatherForecast => ResolveBool(ShowWeatherForecast, WeatherForecastOverride);
 		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
 		public static bool EffectiveShowSummonCounter => ShowSummonCounter.Value;
@@ -474,6 +477,7 @@ namespace MarsarahUI.Managers
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
 			ShowCurrentDay = CreateConfig(Configs.UICurrentDay, true);
 			TimeChoice = CreateConfig(Configs.UITimeMode, TimeMode.DigitalClock);
+			ColorDayPhases = CreateConfig(Configs.UIColorDayPhases, true);
 			ShowWeatherForecast = CreateConfig(Configs.UIWeatherForecast, true);
 			ShowSmartBiome = CreateConfig(Configs.UISmartBiome, true);
 			ShowOnlinePlayers = CreateConfig(Configs.UIOnlinePlayers, true);
