@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIItemDurability : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Item Durability", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Item Durability", LogManager.LogLevel.Info);
 
 		private static readonly FieldInfo hotkeyItemsField;
 		private static readonly FieldInfo hotkeyElementsField;
@@ -22,8 +22,10 @@ namespace MarsarahUI.Patches.UI
 		private static readonly FieldInfo elementsField;
 		private static readonly FieldInfo durabilityField;
 
-		private static readonly Sprite customSprite;
+		private static Sprite customSprite;
 		private static readonly Dictionary<Image, Sprite> originalSprites = new Dictionary<Image, Sprite>();
+
+		private static bool wasEnabled;
 
 		static UIItemDurability()
 		{
@@ -56,6 +58,19 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(HotkeyBar __instance, Player player)
 			{
+				if (!ConfigManager.EffectiveColoredItemDurabilityBar)
+				{
+					if (wasEnabled)
+					{
+						RestoreOriginalSprites();
+						wasEnabled = false;
+					}
+
+					return;
+				}
+
+				wasEnabled = true;
+
 				if (!player || player.IsDead()) return;
 				if (hotkeyItemsField == null || hotkeyElementsField == null || hotkeyDurabilityField == null) return;
 
@@ -87,6 +102,19 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(InventoryGrid __instance)
 			{
+				if (!ConfigManager.EffectiveColoredItemDurabilityBar)
+				{
+					if (wasEnabled)
+					{
+						RestoreOriginalSprites();
+						wasEnabled = false;
+					}
+
+					return;
+				}
+
+				wasEnabled = true;
+
 				if (inventoryField == null || elementsField == null || durabilityField == null) return;
 
 				Inventory inventory = inventoryField.GetValue(__instance) as Inventory;
@@ -171,6 +199,35 @@ namespace MarsarahUI.Patches.UI
 			Color color = barImage.color;
 			color.a = 0.5f + 0.5f * Mathf.Sin(Time.time * 10f);
 			barImage.color = color;
+		}
+
+		private static void RestoreOriginalSprites()
+		{
+			foreach (KeyValuePair<Image, Sprite> pair in originalSprites)
+			{
+				if (pair.Key != null)
+				{
+					pair.Key.sprite = pair.Value;
+				}
+			}
+
+			originalSprites.Clear();
+
+			log.Info("Restored vanilla durability bar sprites.");
+		}
+
+		private static Sprite GetCustomSprite()
+		{
+			if (customSprite != null) return customSprite;
+
+			customSprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(sprite => sprite.name == "bar_stagger");
+
+			if (customSprite == null)
+			{
+				log.Warn("Could not find custom durability bar sprite.");
+			}
+
+			return customSprite;
 		}
 	}
 }

@@ -12,10 +12,11 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIItemQuality : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Item Quality", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Item Quality", LogManager.LogLevel.Info);
 
 		private class OriginalStyle
 		{
+			public string Text;
 			public float FontSize;
 			public Color Color;
 			public TextAlignmentOptions Alignment;
@@ -55,12 +56,28 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(InventoryGrid __instance)
 			{
+				if (ConfigManager.EffectiveItemQualityIndicatorChoice == ItemQualityMode.Off)
+				{
+					if (originalStyles.Count > 0)
+					{
+						RestoreAllVanillaStyles();
+					}
+
+					return;
+				}
+
 				UpdateGrid(__instance);
 			}
 		}
 
 		public static void UpdateSymbols()
 		{
+			if (ConfigManager.EffectiveItemQualityIndicatorChoice == ItemQualityMode.Off)
+			{
+				RestoreAllVanillaStyles();
+				return;
+			}
+
 			foreach (InventoryGrid grid in Object.FindObjectsByType<InventoryGrid>(FindObjectsSortMode.None))
 			{
 				UpdateGrid(grid);
@@ -113,6 +130,7 @@ namespace MarsarahUI.Patches.UI
 
 				originalStyles[textComponent] = new OriginalStyle
 				{
+					Text = textComponent.text,
 					FontSize = textComponent.fontSize,
 					Color = textComponent.color,
 					Alignment = textComponent.alignment,
@@ -215,6 +233,38 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			originalStyles.Remove(textComponent);
+		}
+
+		private static void RestoreAllVanillaStyles()
+		{
+			foreach (KeyValuePair<TMP_Text, OriginalStyle> pair in originalStyles)
+			{
+				TMP_Text textComponent = pair.Key;
+				OriginalStyle originalStyle = pair.Value;
+
+				if (textComponent == null) continue;
+
+				textComponent.text = originalStyle.Text;
+				textComponent.fontSize = originalStyle.FontSize;
+				textComponent.color = originalStyle.Color;
+				textComponent.alignment = originalStyle.Alignment;
+				textComponent.rectTransform.pivot = originalStyle.Pivot;
+				textComponent.lineSpacing = originalStyle.LineSpacing;
+				textComponent.rectTransform.sizeDelta = originalStyle.SizeDelta;
+				textComponent.rectTransform.anchoredPosition = originalStyle.AnchoredPosition;
+				textComponent.textWrappingMode = originalStyle.WrappingMode;
+
+				Outline outline = textComponent.GetComponent<Outline>();
+
+				if (outline != null && originalStyle.OutlineEnabled.HasValue)
+				{
+					outline.enabled = originalStyle.OutlineEnabled.Value;
+				}
+			}
+
+			originalStyles.Clear();
+
+			log.Info("Restored vanilla item quality indicators.");
 		}
 	}
 }

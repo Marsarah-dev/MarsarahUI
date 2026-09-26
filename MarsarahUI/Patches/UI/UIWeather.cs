@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIWeather : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Weather", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Weather", LogManager.LogLevel.Info);
 
 		// UI data
 		private static string UIForecastTimer;
@@ -115,9 +115,9 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
+				if (!ConfigManager.EffectiveShowWeatherForecast) return;
 				if (Player.m_localPlayer == null || WorldGenerator.instance == null) return;
 				if (!ShouldShowWeatherUI()) return;
-				if (!ConfigManager.EffectiveShowWeatherForecast) return;
 
 				if (Time.unscaledTime < nextForecastUpdateTime) return;
 
@@ -150,30 +150,27 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
 
-				if (ConfigManager.EffectiveShowWeatherForecast)
+				if (!ConfigManager.EffectiveShowWeatherForecast)
 				{
-					CreateUI(__instance);
-
-					bool showWeatherUI = ShouldShowWeatherUI();
-					UIForecastIcon.enabled = showWeatherUI && UIForecastIcon.sprite != null;
-					UINextWeatherTimerText.enabled = showWeatherUI;
-
-					if (showWeatherUI)
+					if (UINextWeatherTimerText != null && UINextWeatherTimerText.enabled)
 					{
-						UINextWeatherTimerText.text = UIForecastTimer;
-						UINextWeatherTimerText.color = Color.white;
-					}
-				}
-				else
-				{
-					if (UINextWeatherTimerText != null)
 						UINextWeatherTimerText.enabled = false;
+					}
 
 					if (UIForecastIcon != null)
 					{
-						UIForecastIcon.sprite = null;
-						UIForecastIcon.enabled = false;
+						if (UIForecastIcon.enabled)
+						{
+							UIForecastIcon.enabled = false;
+						}
+
+						if (UIForecastIcon.sprite != null)
+						{
+							UIForecastIcon.sprite = null;
+						}
 					}
+
+					return;
 				}
 			}
 		}

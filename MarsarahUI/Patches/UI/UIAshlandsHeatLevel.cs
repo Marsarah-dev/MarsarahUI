@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIAshlandsHeatLevel : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Ashlands Heat", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Ashlands Heat", LogManager.LogLevel.Info);
 
 		private static Image heatBarFill;
 		private static Image heatBarBackground;
@@ -46,7 +46,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (!ConfigManager.EffectiveShowHeatLevelInAshlands)
 				{
-					if (UIHeatBarArea != null)
+					if (UIHeatBarArea != null && UIHeatBarArea.activeSelf)
 					{
 						UIHeatBarArea.SetActive(false);
 					}

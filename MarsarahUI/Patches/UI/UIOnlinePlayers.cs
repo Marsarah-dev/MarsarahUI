@@ -20,6 +20,8 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject UIPartyArea;
 		private static readonly List<Text> UIPlayerTexts = new List<Text>();
 
+		private static bool wasEnabled;
+
 		[HarmonyPatch(typeof(ZNet), "Update")]
 		private static class OnlinePartyIndicator_Patch
 		{
@@ -44,10 +46,23 @@ namespace MarsarahUI.Patches.UI
 
 				if (!ConfigManager.EffectiveShowOnlinePlayers)
 				{
-					UIPartyArea?.SetActive(false);
-					HidePlayerTexts();
+					if (wasEnabled)
+					{
+						if (UIPartyArea != null && UIPartyArea.activeSelf)
+						{
+							UIPartyArea.SetActive(false);
+						}
+
+						HidePlayerTexts();
+						wasEnabled = false;
+
+						log.Info("Online players UI hidden.");
+					}
+
 					return;
 				}
+
+				wasEnabled = true;
 
 				CreateUI(__instance);
 

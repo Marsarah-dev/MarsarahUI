@@ -361,8 +361,10 @@ namespace MarsarahUI.Patches.UI
 		internal static class CookingStation_AddFoodSwitchHoverPatch
 		{
 			private static void Postfix(CookingStation __instance)
-			{
+			{				
 				if (__instance == null) return;
+				// If I add this I need to handle live config somehow. Skipping for the moment.
+				//if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
 
 				if (__instance.m_addFoodSwitch != null &&
 					__instance.m_addFoodSwitch.m_onHover == null &&

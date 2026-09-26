@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIStatusEffects : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Status Effects", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Status Effects", LogManager.LogLevel.Info);
 
 		private static readonly Vector2 StatusListPosition = new Vector2(-230f, -290f);
 
@@ -44,6 +44,10 @@ namespace MarsarahUI.Patches.UI
 		private static Vector3 vanillaWindScale;
 		private static Vector2 vanillaControlsPosition;
 		private static Vector3 vanillaControlsScale;
+
+		// Other
+		private static bool customLayoutApplied;
+		private static bool customSailingLayoutApplied;
 
 		private class StatusEffectRefs
 		{
@@ -109,6 +113,23 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(List<StatusEffect> statusEffects, List<RectTransform> ___m_statusEffects, RectTransform ___m_statusEffectListRoot, RectTransform ___m_statusEffectTemplate, float ___m_statusEffectSpacing, int ___m_effectsPerRow)
 			{
+				bool enabled = ConfigManager.EffectiveStatusEffectsUnderMinimap && !Game.m_noMap;
+
+				if (!enabled)
+				{
+					if (customLayoutApplied &&
+						___m_statusEffects != null &&
+						___m_statusEffectListRoot != null)
+					{
+						RestoreVanillaLayout(___m_statusEffects, ___m_statusEffectListRoot, ___m_statusEffectSpacing, ___m_effectsPerRow);
+						customLayoutApplied = false;
+
+						log.Info("Restored vanilla status effect layout.");
+					}
+
+					return;
+				}
+
 				if (statusEffects == null || ___m_statusEffects == null || ___m_statusEffectListRoot == null || ___m_statusEffectTemplate == null)
 				{
 					if (!layoutWarningLogged)
@@ -120,18 +141,10 @@ namespace MarsarahUI.Patches.UI
 					return;
 				}
 
-				if (!CaptureVanillaLayout(___m_statusEffectListRoot, ___m_statusEffectTemplate))
-				{
-					return;
-				}
+				if (!CaptureVanillaLayout(___m_statusEffectListRoot, ___m_statusEffectTemplate)) return;
 
 				layoutWarningLogged = false;
-
-				if (!ConfigManager.EffectiveStatusEffectsUnderMinimap || Game.m_noMap)
-				{
-					RestoreVanillaLayout(___m_statusEffects, ___m_statusEffectListRoot, ___m_statusEffectSpacing, ___m_effectsPerRow);
-					return;
-				}
+				customLayoutApplied = true;
 
 				PositionStatusEffectList(___m_statusEffectListRoot);
 
@@ -149,20 +162,39 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(Hud __instance)
 			{
-				if (__instance == null || __instance.m_shipWindIndicatorRoot == null || __instance.m_rudder == null) return;
+				bool enabled = ConfigManager.EffectiveStatusEffectsUnderMinimap && !Game.m_noMap;
 
-				RectTransform sailingControls = __instance.m_rudder.transform.parent as RectTransform;
-				if (sailingControls == null) return;
-
-				CaptureVanillaSailingLayout(__instance.m_shipWindIndicatorRoot, sailingControls);
-
-				if (!ConfigManager.EffectiveStatusEffectsUnderMinimap || Game.m_noMap)
+				if (!enabled)
 				{
-					RestoreVanillaSailingLayout(__instance.m_shipWindIndicatorRoot, sailingControls);
+					if (customSailingLayoutApplied &&
+						__instance != null &&
+						__instance.m_shipWindIndicatorRoot != null &&
+						__instance.m_rudder != null)
+					{
+						RectTransform sailingControls = __instance.m_rudder.transform.parent as RectTransform;
+
+						if (sailingControls != null)
+						{
+							RestoreVanillaSailingLayout(__instance.m_shipWindIndicatorRoot, sailingControls);
+						}
+
+						customSailingLayoutApplied = false;
+
+						log.Info("Restored vanilla sailing HUD layout.");
+					}
+
 					return;
 				}
 
-				PositionSailingHud(__instance.m_shipWindIndicatorRoot, sailingControls);
+				if (__instance == null || __instance.m_shipWindIndicatorRoot == null || __instance.m_rudder == null) return;
+
+				RectTransform controls = __instance.m_rudder.transform.parent as RectTransform;
+				if (controls == null) return;
+
+				CaptureVanillaSailingLayout(__instance.m_shipWindIndicatorRoot, controls);
+				PositionSailingHud(__instance.m_shipWindIndicatorRoot, controls);
+
+				customSailingLayoutApplied = true;
 			}
 		}
 

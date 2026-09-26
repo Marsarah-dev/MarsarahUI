@@ -71,7 +71,7 @@ namespace MarsarahUI.Patches.UI
 			private static void Postfix(Localization __instance, string language)
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
-
+				if (!ConfigManager.EffectiveBetterLoadingTipsEnabled) return;
 				if (__instance == null) return;
 
 				localizationLanguage = language;

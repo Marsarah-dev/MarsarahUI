@@ -7,7 +7,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UISummonDisplay : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Summon Display", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Summon Display", LogManager.LogLevel.Info);
 
 		private static ConfigManager.InfoRailDisplayMode currentDisplayMode;
 
@@ -44,6 +44,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
+				if (!ConfigManager.EffectiveShowSummonCounter) return;
 
 				CreateUI(__instance);
 			}
@@ -52,14 +53,28 @@ namespace MarsarahUI.Patches.UI
 		[HarmonyPatch(typeof(Hud), "Update")]
 		private static class SummonDisplayHudUpdatePatch
 		{
-			private static void Postfix()
+			private static void Postfix(Hud __instance)
 			{
+				if (!ConfigManager.EffectiveShowSummonCounter)
+				{
+					if (UISummonArea != null && UISummonArea.activeSelf)
+					{
+						targetVisible = false;
+						animating = false;
+						UISummonArea.SetActive(false);
+					}
+
+					return;
+				}
+
+				if (UISummonArea == null)
+				{
+					CreateUI(__instance);
+				}
+
 				if (UISummonArea == null) return;
 
-				bool visible =
-					ConfigManager.EffectiveShowSummonCounter &&
-					ShowUI &&
-					UISummonCounter.NumSummons > 0;
+				bool visible = ShowUI && UISummonCounter.NumSummons > 0;
 
 				SetVisible(visible);
 				UpdateDisplay();

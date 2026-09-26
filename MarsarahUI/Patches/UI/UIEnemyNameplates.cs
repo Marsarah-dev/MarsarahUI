@@ -13,7 +13,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIEnemyNameplates : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Enemy Nameplates", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Enemy Nameplates", LogManager.LogLevel.Info);
 
 		private const float BarHeight = 14f;
 		private const float BarHeightBoss = 18f;
@@ -21,6 +21,8 @@ namespace MarsarahUI.Patches.UI
 		private static float defaultDistance = -1f;
 		private static float defaultBarHeight = -1f;
 		private static float defaultBarHeightBoss = -1f;
+
+		private static bool wasEnabled;
 
 		private static readonly Dictionary<object, float> lastBarHeight = new Dictionary<object, float>();
 
@@ -82,6 +84,7 @@ namespace MarsarahUI.Patches.UI
 			private static void Postfix(EnemyHud __instance)
 			{
 				if (__instance == null) return;
+				if (ConfigManager.EffectiveEnemyNameplateChoice == EnemyNameplateMode.Off) return;
 
 				if (defaultDistance < 0f)
 				{
@@ -97,6 +100,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(EnemyHud __instance, Character c)
 			{
+				if (ConfigManager.EffectiveEnemyNameplateChoice == EnemyNameplateMode.Off) return;
 				if (c == null || m_hudsField == null) return;
 
 				IDictionary huds = m_hudsField.GetValue(__instance) as IDictionary;
@@ -115,9 +119,7 @@ namespace MarsarahUI.Patches.UI
 				GuiBar slowBar = hud_m_healthSlow_Field?.GetValue(hudData) as GuiBar;
 				GuiBar fastFriendlyBar = hud_m_healthFastFriendly_Field?.GetValue(hudData) as GuiBar;
 
-				bool enabled = ConfigManager.EffectiveEnemyNameplateChoice != EnemyNameplateMode.Off;
-
-				ApplyBarSettings(c, healthTransform, fastBar, slowBar, fastFriendlyBar, enabled);
+				ApplyBarSettings(c, healthTransform, fastBar, slowBar, fastFriendlyBar, true);
 				AddHpText(hudData, healthTransform);
 			}
 		}
@@ -127,14 +129,32 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(EnemyHud __instance)
 			{
+				bool enabled = ConfigManager.EffectiveEnemyNameplateChoice != EnemyNameplateMode.Off;
+
+				if (!enabled)
+				{
+					if (wasEnabled)
+					{
+						RestoreVanillaState(__instance);
+						wasEnabled = false;
+					}
+
+					return;
+				}
+
+				wasEnabled = true;
+
 				if (m_hudsField == null) return;
+
+				if (defaultDistance < 0f)
+				{
+					defaultDistance = __instance.m_maxShowDistance;
+				}
 
 				UpdateDisplayDistance(__instance);
 
 				IDictionary huds = m_hudsField.GetValue(__instance) as IDictionary;
 				if (huds == null) return;
-
-				bool enabled = ConfigManager.EffectiveEnemyNameplateChoice != EnemyNameplateMode.Off;
 
 				foreach (DictionaryEntry entry in huds)
 				{
@@ -398,6 +418,48 @@ namespace MarsarahUI.Patches.UI
 
 			fastBar?.SetColor(color);
 			fastFriendlyBar?.SetColor(color);
+		}
+
+		private static void RestoreVanillaState(EnemyHud enemyHud)
+		{
+			if (enemyHud == null) return;
+
+			if (defaultDistance >= 0f)
+			{
+				enemyHud.m_maxShowDistance = defaultDistance;
+			}
+
+			if (m_hudsField == null) return;
+
+			IDictionary huds = m_hudsField.GetValue(enemyHud) as IDictionary;
+			if (huds == null) return;
+
+			foreach (DictionaryEntry entry in huds)
+			{
+				object hudData = entry.Value;
+				if (hudData == null) continue;
+
+				Character character = hud_m_character_Field?.GetValue(hudData) as Character;
+				GameObject guiObject = hud_m_gui_Field?.GetValue(hudData) as GameObject;
+				RectTransform healthTransform = guiObject?.transform.Find("Health") as RectTransform;
+
+				GuiBar fastBar = hud_m_healthFast_Field?.GetValue(hudData) as GuiBar;
+				GuiBar slowBar = hud_m_healthSlow_Field?.GetValue(hudData) as GuiBar;
+				GuiBar fastFriendlyBar = hud_m_healthFastFriendly_Field?.GetValue(hudData) as GuiBar;
+
+				if (character != null && healthTransform != null)
+				{
+					ApplyBarSettings(character, healthTransform, fastBar, slowBar, fastFriendlyBar, false);
+				}
+
+				if (hpTextCache.TryGetValue(hudData, out HpTexts hpTexts))
+				{
+					hpTexts.HP.gameObject.SetActive(false);
+					hpTexts.HPPercent.gameObject.SetActive(false);
+				}
+			}
+
+			log.Info("Restored vanilla enemy nameplate state.");
 		}
 	}
 }

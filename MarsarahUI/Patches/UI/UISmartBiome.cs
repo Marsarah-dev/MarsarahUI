@@ -50,13 +50,21 @@ namespace MarsarahUI.Patches.UI
 			private static void Prefix(ref Text ___m_biomeNameSmall, ref Player player)
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
+				if (!ConfigManager.EffectiveShowSmartBiome)
+				{
+					if (___m_biomeNameSmall != null && !___m_biomeNameSmall.enabled)
+					{
+						___m_biomeNameSmall.enabled = true;
+					}
+
+					return;
+				}
+
 				if (___m_biomeNameSmall == null || player == null) return;
 
-				bool showSmartBiome = ConfigManager.EffectiveShowSmartBiome && ShowUI;
+				___m_biomeNameSmall.enabled = !ShowUI;
 
-				___m_biomeNameSmall.enabled = !showSmartBiome;
-
-				if (showSmartBiome)
+				if (ShowUI)
 				{
 					currentBiome = player.GetCurrentBiome().ToString();
 				}

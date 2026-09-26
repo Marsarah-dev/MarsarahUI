@@ -25,10 +25,15 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Prefix(EnvMan __instance, ref float ___m_smoothDayFraction)
 			{
+				bool dayEnabled = ConfigManager.EffectiveShowCurrentDay;
+				bool timeEnabled = ConfigManager.EffectiveTimeChoice != TimeMode.Off;
+
+				if (!dayEnabled && !timeEnabled) return;
+
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
 
-				if (ConfigManager.EffectiveShowCurrentDay)
+				if (dayEnabled)
 				{
 					if (getCurrentDayMethod != null)
 					{
@@ -36,7 +41,7 @@ namespace MarsarahUI.Patches.UI
 					}
 				}
 
-				if (ConfigManager.EffectiveTimeChoice != TimeMode.Off)
+				if (timeEnabled)
 				{
 					if (ConfigManager.EffectiveTimeChoice == TimeMode.DayPhases)
 					{

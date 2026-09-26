@@ -10,7 +10,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UISkillProgress : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Skill Progress", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Skill Progress", LogManager.LogLevel.Info);
 
 		private static readonly MethodInfo getSkillMethod = AccessTools.Method(typeof(Skills), "GetSkill", new Type[] { typeof(SkillType) });
 		private static readonly MethodInfo getNextLevelRequirementMethod = AccessTools.Method(typeof(Skills.Skill), "GetNextLevelRequirement");
@@ -90,6 +90,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
+				if (ConfigManager.EffectiveSkillProgressBarChoice == ConfigManager.SkillProgressBarColor.Off) return;
 
 				CreateUI(__instance);
 			}
@@ -98,17 +99,27 @@ namespace MarsarahUI.Patches.UI
 		[HarmonyPatch(typeof(Hud), "Update")]
 		private static class SkillProgressHudUpdatePatch
 		{
-			private static void Postfix()
+			private static void Postfix(Hud __instance)
 			{
-				if (UISkillProgressArea == null) return;
-
 				if (ConfigManager.EffectiveSkillProgressBarChoice == ConfigManager.SkillProgressBarColor.Off)
 				{
 					displayTimer = 0f;
 					IsDisplaying = false;
-					UISkillProgressArea.SetActive(false);
+
+					if (UISkillProgressArea != null && UISkillProgressArea.activeSelf)
+					{
+						UISkillProgressArea.SetActive(false);
+					}
+
 					return;
 				}
+
+				if (UISkillProgressArea == null)
+				{
+					CreateUI(__instance);
+				}
+
+				if (UISkillProgressArea == null) return;
 
 				if (!ShowUI)
 				{

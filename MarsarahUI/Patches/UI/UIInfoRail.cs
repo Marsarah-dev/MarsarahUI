@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIInfoRail : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Info Rail", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Info Rail", LogManager.LogLevel.Info);
 
 		private static ConfigManager.InfoRailDisplayMode currentDisplayMode;
 		private static ConfigManager.EnemyDetectorPosition currentEnemyDetectorPosition;
@@ -135,6 +135,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
+				if (!HasEnabledRailFeature()) return;
 
 				CreateUI(__instance);
 			}
@@ -143,8 +144,28 @@ namespace MarsarahUI.Patches.UI
 		[HarmonyPatch(typeof(Hud), "Update")]
 		private static class InfoRailHudUpdatePatch
 		{
-			private static void Postfix()
+			private static void Postfix(Hud __instance)
 			{
+				if (!HasEnabledRailFeature())
+				{
+					if (UIRail != null && UIRail.activeSelf)
+					{
+						UIRail.SetActive(false);
+					}
+
+					if (UIEnemyRail != null && UIEnemyRail.activeSelf)
+					{
+						UIEnemyRail.SetActive(false);
+					}
+
+					return;
+				}
+
+				if (UIRail == null)
+				{
+					CreateUI(__instance);
+				}
+
 				if (UIRail == null) return;
 
 				if (!ShowUI)
@@ -1329,6 +1350,13 @@ namespace MarsarahUI.Patches.UI
 			UpdateRailVisibility();
 
 			log.Info("Information rail animations disabled and active animations finalized.");
+		}
+
+		private static bool HasEnabledRailFeature()
+		{
+			return ConfigManager.EffectiveInventoryDisplayChoice != ConfigManager.InventoryDisplayMode.Off ||
+				ConfigManager.EffectiveEnemyDetectorChoice != ConfigManager.EnemyDetectorMode.Off ||
+				ConfigManager.EffectiveSkillProgressBarChoice != ConfigManager.SkillProgressBarColor.Off;
 		}
 	}
 } 

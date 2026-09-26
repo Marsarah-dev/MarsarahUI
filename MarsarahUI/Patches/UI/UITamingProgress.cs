@@ -2,6 +2,7 @@
 using MarsarahUI.Managers;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using TMPro;
@@ -11,13 +12,16 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UITamingProgress : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Taming Progress", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Taming Progress", LogManager.LogLevel.Info);
 
 		private static readonly FieldInfo hudsField;
 		private static readonly Type hudDataType;
 		private static readonly FieldInfo hudGuiField;
 		private static readonly FieldInfo hudCharacterField;
 		private static readonly MethodInfo getTamenessMethod;
+
+		private static bool wasEnabled;
+		private static readonly List<TextMeshProUGUI> tamingTexts = new List<TextMeshProUGUI>();
 
 		private static readonly ConditionalWeakTable<object, TextMeshProUGUI> tamingCache = new ConditionalWeakTable<object, TextMeshProUGUI>();
 
@@ -47,6 +51,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(EnemyHud __instance, Character c)
 			{
+				if (!ConfigManager.EffectiveShowTamingProgress) return;
 				if (c == null || hudsField == null) return;
 
 				IDictionary huds = hudsField.GetValue(__instance) as IDictionary;
@@ -70,6 +75,19 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(EnemyHud __instance)
 			{
+				if (!ConfigManager.EffectiveShowTamingProgress)
+				{
+					if (wasEnabled)
+					{
+						HideAllTamingTexts();
+						wasEnabled = false;
+					}
+
+					return;
+				}
+
+				wasEnabled = true;
+
 				if (hudsField == null) return;
 
 				IDictionary huds = hudsField.GetValue(__instance) as IDictionary;
@@ -108,6 +126,7 @@ namespace MarsarahUI.Patches.UI
 			tamingRect.anchoredPosition = new Vector2(-3f, -14f);
 
 			tamingCache.Add(hudData, tamingText);
+			tamingTexts.Add(tamingText);
 		}
 
 		private static void UpdateTamingText(Character character, object hudData)
@@ -146,6 +165,19 @@ namespace MarsarahUI.Patches.UI
 				"$hud_tamefrightened" => Color.red,
 				_ => Color.cyan
 			};
+		}
+
+		private static void HideAllTamingTexts()
+		{
+			foreach (TextMeshProUGUI tamingText in tamingTexts)
+			{
+				if (tamingText != null && tamingText.gameObject.activeSelf)
+				{
+					tamingText.gameObject.SetActive(false);
+				}
+			}
+
+			log.Info("Taming progress UI hidden.");
 		}
 	}
 }

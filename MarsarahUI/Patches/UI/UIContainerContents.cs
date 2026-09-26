@@ -10,7 +10,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIContainerContents : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Container Contents", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Container Contents", LogManager.LogLevel.Info);
 
 		private static GameObject containerContentsArea;
 		private static readonly List<Image> itemIcons = new List<Image>();
@@ -50,6 +50,9 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Prefix()
 			{
+				if (ConfigManager.EffectiveDetailedHoverInfoChoice == HoverInfoMode.Off) return;
+				if (ConfigManager.EffectiveContainerContentsChoice == ContainerContentsMode.Off) return;
+
 				HideIcons();
 			}
 		}
@@ -327,6 +330,11 @@ namespace MarsarahUI.Patches.UI
 			if (containerContentsArea == null) return;
 
 			containerContentsArea.SetActive(false);
+		}
+
+		internal static void HideContainerContents()
+		{
+			HideIcons();
 		}
 	}
 }

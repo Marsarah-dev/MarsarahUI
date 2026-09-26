@@ -67,7 +67,11 @@ namespace MarsarahUI.Patches.UI
 
 				if (!ConfigManager.EffectiveShowBoatSpeed)
 				{
-					UIBoatArea?.SetActive(false);
+					if (UIBoatArea != null && UIBoatArea.activeSelf)
+					{
+						UIBoatArea.SetActive(false);
+					}
+
 					return;
 				}
 

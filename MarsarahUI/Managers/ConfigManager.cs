@@ -638,6 +638,15 @@ namespace MarsarahUI.Managers
 				UIInfoRail.ApplyAnimationSetting();
 				UISummonDisplay.ApplyAnimationSetting();
 			}
+
+			if (configName == Configs.UIHoverInfoMode.Name ||
+				configName == Configs.UIContainerContents.Name ||
+				configName == Configs.OverrideDetailedHovers.Name ||
+				configName == Configs.OverrideContainerContents.Name ||
+				configName == Configs.EnableServerOverrides.Name)
+			{
+				UIContainerContents.HideContainerContents();
+			}
 		}
 	}
 }
