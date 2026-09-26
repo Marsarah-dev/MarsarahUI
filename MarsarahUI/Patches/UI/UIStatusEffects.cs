@@ -45,6 +45,17 @@ namespace MarsarahUI.Patches.UI
 		private static Vector2 vanillaControlsPosition;
 		private static Vector3 vanillaControlsScale;
 
+		private class StatusEffectRefs
+		{
+			internal RectTransform Name;
+			internal TMP_Text NameText;
+			internal RectTransform Icon;
+			internal RectTransform Cooldown;
+			internal Transform TimeText;
+		}
+
+		private static readonly Dictionary<int, StatusEffectRefs> statusEffectRefs = new Dictionary<int, StatusEffectRefs>();
+
 		private struct RectTransformState
 		{
 			internal Vector2 AnchorMin;
@@ -346,6 +357,36 @@ namespace MarsarahUI.Patches.UI
 
 			sailingControls.anchoredPosition = vanillaControlsPosition;
 			sailingControls.localScale = vanillaControlsScale;
+		}
+
+		private static StatusEffectRefs GetStatusEffectRefs(RectTransform statusEffectObject)
+		{
+			if (statusEffectObject == null) return null;
+
+			int instanceId = statusEffectObject.GetInstanceID();
+
+			if (statusEffectRefs.TryGetValue(instanceId, out StatusEffectRefs refs))
+			{
+				return refs;
+			}
+
+			RectTransform name = statusEffectObject.Find("Name") as RectTransform;
+			RectTransform icon = statusEffectObject.Find("Icon") as RectTransform;
+			RectTransform cooldown = statusEffectObject.Find("Cooldown") as RectTransform;
+			Transform timeText = statusEffectObject.Find("TimeText");
+
+			refs = new StatusEffectRefs
+			{
+				Name = name,
+				NameText = name?.GetComponent<TMP_Text>(),
+				Icon = icon,
+				Cooldown = cooldown,
+				TimeText = timeText
+			};
+
+			statusEffectRefs[instanceId] = refs;
+
+			return refs;
 		}
 	}
 }

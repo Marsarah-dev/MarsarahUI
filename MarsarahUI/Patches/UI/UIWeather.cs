@@ -309,7 +309,7 @@ namespace MarsarahUI.Patches.UI
 				string normalizedCurrentName = NormalizeWeatherName(currentBiome, currentEnv.m_name);
 
 				// Debug: print the next 50 deterministic weather periods.
-				StringBuilder sequenceLog = new StringBuilder();
+				/*StringBuilder sequenceLog = new StringBuilder();
 				sequenceLog.AppendLine("Next 50 forecast environments:");
 
 				for (int i = 1; i <= 50; i++)
@@ -331,7 +331,7 @@ namespace MarsarahUI.Patches.UI
 
 				log.Info(sequenceLog.ToString());
 				log.Info($"Current weather: {currentEnv.m_name} (normalized: {normalizedCurrentName}), biome={currentBiome}");
-				log.Info($"Next forecast: {forecastEnv.m_name} (normalized: {normalizedForecastName}), ETA {timerStr}");
+				log.Info($"Next forecast: {forecastEnv.m_name} (normalized: {normalizedForecastName}), ETA {timerStr}");*/
 			}
 
 			_lastForecastEnv = forecastEnv;

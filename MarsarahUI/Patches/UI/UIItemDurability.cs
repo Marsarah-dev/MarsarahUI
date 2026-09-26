@@ -141,7 +141,10 @@ namespace MarsarahUI.Patches.UI
 					originalSprites[barImage] = barImage.sprite;
 				}
 
-				barImage.sprite = customSprite;
+				if (barImage.sprite != customSprite)
+				{
+					barImage.sprite = customSprite;
+				}
 			}
 
 			FlashDurabilityBarAtZero(durabilityBar, item);

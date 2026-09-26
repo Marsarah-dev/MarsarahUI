@@ -20,6 +20,7 @@ namespace MarsarahUI.Patches.UI
 		private static TextMeshProUGUI UIBoatEmojiTMP;
 
 		private static readonly MethodInfo haveControllingPlayerMethod = AccessTools.Method(typeof(Ship), "HaveControllingPlayer");
+		private static RectTransform boatAreaTransform;
 
 		[HarmonyPatch(typeof(Ship), "GetSpeed")]
 		private static class ShowBoatSpeed_Patch
@@ -34,7 +35,10 @@ namespace MarsarahUI.Patches.UI
 					boatSpeed = Vector3.Dot(___m_body.linearVelocity, __instance.transform.forward);
 				}
 
-				showBoatSpeedUI = Traverse.Create(__instance).Method("HaveControllingPlayer", Array.Empty<object>()).GetValue<bool>();
+				if (haveControllingPlayerMethod != null)
+				{
+					showBoatSpeedUI = (bool)haveControllingPlayerMethod.Invoke(__instance, null);
+				}
 			}
 		}
 
@@ -116,7 +120,7 @@ namespace MarsarahUI.Patches.UI
 			UIBoatArea.layer = 5;
 			UIBoatArea.transform.SetParent(hud.m_rootObject.transform);
 
-			RectTransform boatAreaTransform = UIBoatArea.AddComponent<RectTransform>();
+			boatAreaTransform = UIBoatArea.AddComponent<RectTransform>();
 			boatAreaTransform.anchorMin = new Vector2(1f, 1f);
 			boatAreaTransform.anchorMax = new Vector2(1f, 1f);
 			boatAreaTransform.anchoredPosition = new Vector2(xOffset, yOffset);
@@ -129,9 +133,6 @@ namespace MarsarahUI.Patches.UI
 
 		private static void UpdateBoatSpeedPosition()
 		{
-			if (UIBoatArea == null) return;
-
-			RectTransform boatAreaTransform = UIBoatArea.GetComponent<RectTransform>();
 			if (boatAreaTransform == null) return;
 
 			if (ConfigManager.EffectiveStatusEffectsUnderMinimap && !Game.m_noMap)
