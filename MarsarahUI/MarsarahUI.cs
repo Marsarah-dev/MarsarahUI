@@ -10,7 +10,7 @@ namespace MarsarahUI
 	public class MarsarahUI : BaseUnityPlugin
 	{
 		internal const string ModName = "MarsarahUI";
-		internal const string ModVersion = "1.1.1";
+		internal const string ModVersion = "1.1.2";
 		internal const string Author = "Marsarah";
 		public const string ModGUID = Author + "." + ModName;
 

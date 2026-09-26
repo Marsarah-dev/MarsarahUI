@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -9,6 +10,9 @@ namespace MarsarahUI.Patches.UI
 		private static readonly LogManager log = new LogManager("UI Enemy Detector", LogManager.LogLevel.Warning);
 
 		private const float DetectionRadius = 30f;
+		private const float UpdateInterval = 0.2f;
+
+		private static float nextUpdateTime;
 
 		private static readonly HashSet<string> toughEnemyPrefabs = new HashSet<string>
 		{
@@ -67,15 +71,15 @@ namespace MarsarahUI.Patches.UI
 				if (!ConfigManager.EffectiveShowEnemyDetector) return;
 				if (!UIController.ShowUI) return;
 
+				if (Time.unscaledTime < nextUpdateTime) return;
+				nextUpdateTime = Time.unscaledTime + UpdateInterval;
+
 				int enemies = 0;
 				int toughEnemies = 0;
 				int bosses = 0;
 				int neutralEnemies = 0;
 
 				bool splitEnemies = ConfigManager.EffectiveEnemyDetectorChoice == ConfigManager.EnemyDetectorMode.Split;
-
-				/*List<Character> characters = new List<Character>();
-				Character.GetCharactersInRange(___m_localPlayer.transform.position, DetectionRadius, characters);*/
 
 				characters.Clear();
 				Character.GetCharactersInRange(___m_localPlayer.transform.position, DetectionRadius, characters);
