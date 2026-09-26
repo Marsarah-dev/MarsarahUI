@@ -131,6 +131,7 @@ namespace MarsarahUI.Patches.UI
 			return character.m_name == "Human" ||
 				character.m_name == "$enemy_deer" ||
 				character.m_name == "$enemy_hare" ||
+				character.m_name == "$enemy_kvastur" ||
 				character.m_name == "$enemy_summonedroot" ||
 				character.m_name == "$piece_trainingdummy" ||
 				character.IsTamed();
