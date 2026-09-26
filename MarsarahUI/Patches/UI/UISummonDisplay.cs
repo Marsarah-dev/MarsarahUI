@@ -7,7 +7,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UISummonDisplay : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Summon Display", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Summon Display", LogManager.LogLevel.Warning);
 
 		private static ConfigManager.InfoRailDisplayMode currentDisplayMode;
 

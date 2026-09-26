@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIItemDurability : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Item Durability", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Item Durability", LogManager.LogLevel.Warning);
 
 		private static readonly FieldInfo hotkeyItemsField;
 		private static readonly FieldInfo hotkeyElementsField;

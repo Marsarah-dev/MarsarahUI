@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,13 +9,12 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using static MarsarahUI.Managers.ConfigManager;
-using System.Linq;
 
 namespace MarsarahUI.Patches.UI
 {
 	internal class UIEnemyNameplates : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Enemy Nameplates", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Enemy Nameplates", LogManager.LogLevel.Warning);
 
 		private const float BarHeight = 14f;
 		private const float BarHeightBoss = 18f;
@@ -218,19 +218,19 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (character == null || health == null) return;
 
-			if (!character.IsBoss() && defaultBarHeight < 0f)
+			bool isBoss = character.IsBoss();
+
+			if (!isBoss && defaultBarHeight < 0f)
 			{
 				defaultBarHeight = health.sizeDelta.y;
 			}
 
-			if (character.IsBoss() && defaultBarHeightBoss < 0f)
+			if (isBoss && defaultBarHeightBoss < 0f)
 			{
 				defaultBarHeightBoss = health.sizeDelta.y;
 			}
 
-			float targetHeight = enabled
-				? character.IsBoss() ? BarHeightBoss : BarHeight
-				: character.IsBoss() ? defaultBarHeightBoss : defaultBarHeight;
+			float targetHeight = enabled ? isBoss ? BarHeightBoss : BarHeight : isBoss ? defaultBarHeightBoss : defaultBarHeight;
 
 			if (targetHeight >= 0f &&
 				(!lastBarHeight.TryGetValue(health, out float lastHeight) || lastHeight != targetHeight))

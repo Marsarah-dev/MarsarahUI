@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIWeather : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Weather", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Weather", LogManager.LogLevel.Warning);
 
 		// UI data
 		private static string UIForecastTimer;

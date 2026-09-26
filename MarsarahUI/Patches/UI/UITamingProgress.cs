@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UITamingProgress : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Taming Progress", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Taming Progress", LogManager.LogLevel.Warning);
 
 		private static readonly FieldInfo hudsField;
 		private static readonly Type hudDataType;

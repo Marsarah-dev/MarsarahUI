@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIStatusEffects : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Status Effects", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Status Effects", LogManager.LogLevel.Warning);
 
 		private static readonly Vector2 StatusListPosition = new Vector2(-230f, -290f);
 

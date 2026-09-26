@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIItemQuality : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Item Quality", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Item Quality", LogManager.LogLevel.Warning);
 
 		private class OriginalStyle
 		{

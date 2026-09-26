@@ -10,7 +10,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIContainerContents : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Container Contents", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Container Contents", LogManager.LogLevel.Warning);
 
 		private static GameObject containerContentsArea;
 		private static readonly List<Image> itemIcons = new List<Image>();

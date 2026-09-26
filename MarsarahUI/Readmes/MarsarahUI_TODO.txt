@@ -7,6 +7,20 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
+* Enemy Nameplates:
+  - Fixed Enemy Nameplates causing periodic stutters around nearby creatures.
+  - Optimized enemy nameplate HP text creation to avoid repeated font searches and material creation.
+  - Removed forced TMP mesh rebuilds when creating enemy nameplate HP text.
+  - Cached the enemy nameplate font and outline material for reuse.
+  - Prevented duplicate Enemy Nameplate setup for already-existing HUD entries.
+  - Prevented unnecessary HP text objects from being created in Bars Only mode.
+  - Improved Enemy Nameplates config-off behavior so disabled nameplates stop doing ongoing processing.
+
+* Optimizations
+  - Optimized the following UI features to stop unnecessary background processing when disabled:
+    -Taming Progress, Status Effects, Item Durability, Item Quality, Summon Display, Skill Progress, Information Rail, Container Contents, Weather Forecast, Online Players, Smart Biome, Ashlands Heat Meter, Boat Speed, and Current Day/Time.
+  - Cached frequently used reflection lookups across several UI modules.
+  - Reduced repeated UI creation and cleanup work across multiple features.
 
 B. Updates
 ------------------------
