@@ -50,6 +50,8 @@ namespace MarsarahUI.Patches.UI
 			"Charred_Melee_Dyrnwyn"
 		};
 
+		private static readonly List<Character> characters = new List<Character>();
+
 		internal static int NumEnemies { get; private set; }
 		internal static int NumToughEnemies { get; private set; }
 		internal static int NumNeutralEnemies { get; private set; }
@@ -63,6 +65,7 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (___m_localPlayer == null) return;
 				if (!ConfigManager.EffectiveShowEnemyDetector) return;
+				if (!UIController.ShowUI) return;
 
 				int enemies = 0;
 				int toughEnemies = 0;
@@ -71,7 +74,10 @@ namespace MarsarahUI.Patches.UI
 
 				bool splitEnemies = ConfigManager.EffectiveEnemyDetectorChoice == ConfigManager.EnemyDetectorMode.Split;
 
-				List<Character> characters = new List<Character>();
+				/*List<Character> characters = new List<Character>();
+				Character.GetCharactersInRange(___m_localPlayer.transform.position, DetectionRadius, characters);*/
+
+				characters.Clear();
 				Character.GetCharactersInRange(___m_localPlayer.transform.position, DetectionRadius, characters);
 
 				foreach (Character character in characters)
@@ -128,9 +134,11 @@ namespace MarsarahUI.Patches.UI
 
 		private static bool IsNeutralEnemy(Character character)
 		{
-			return character.GetFaction() == Character.Faction.Dverger &&
-				character.GetBaseAI() != null &&
-				!character.GetBaseAI().IsAggravated();
+			if (character.GetFaction() != Character.Faction.Dverger) return false;
+
+			BaseAI baseAI = character.GetBaseAI();
+
+			return baseAI != null && !baseAI.IsAggravated();
 		}
 
 		private static bool IsBossOrMiniboss(Character character)

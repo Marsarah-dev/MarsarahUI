@@ -7,13 +7,9 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
-- Excluded T.W.I.G. training dummy from the Enemy Detector.
-- Fixed Cooking Station detailed hover timers for non-owner clients on dedicated servers.
-- Detailed hovers container contents are not shown when protected by another player's ward.
 
 B. Updates
 ------------------------
-- Updated compatibility with Marsarah Tweaks mod to account for the new configuration naming and ordering.
 
 C. New additions
 ------------------------
@@ -24,11 +20,13 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
+* Fix fps stutter in high enemy density area
 * Look into StoreAndCraft chest renames / tags (they are hidden wth my Detailed Hover Information)
 
 B. Requests
 --------------------
 * Make detailed hovers toggle off individually.
+* Add toggle for 12h format for time of day.
 
 C. Existing UI Ideas
 --------------------

@@ -19,14 +19,34 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (___m_localPlayer == null) return;
-				if (ConfigManager.EffectiveInventoryDisplayChoice == ConfigManager.InventoryDisplayMode.Off) return;
+				if (!UIController.ShowUI) return;
+
+				ConfigManager.InventoryDisplayMode mode = ConfigManager.EffectiveInventoryDisplayChoice;
+
+				if (mode == ConfigManager.InventoryDisplayMode.Off) return;
 
 				Inventory inventory = ___m_localPlayer.GetInventory();
+				if (inventory == null) return;
 
-				CurrentWeight = inventory.GetTotalWeight();
-				MaxWeight = ___m_localPlayer.GetMaxCarryWeight();
-				FreeSlots = inventory.GetEmptySlots();
-				SlotsUsedPercent = inventory.SlotsUsedPercentage();
+				bool showWeight =
+					mode == ConfigManager.InventoryDisplayMode.WeightAndFreeSlots ||
+					mode == ConfigManager.InventoryDisplayMode.WeightOnly;
+
+				bool showSlots =
+					mode == ConfigManager.InventoryDisplayMode.WeightAndFreeSlots ||
+					mode == ConfigManager.InventoryDisplayMode.FreeSlotsOnly;
+
+				if (showWeight)
+				{
+					CurrentWeight = inventory.GetTotalWeight();
+					MaxWeight = ___m_localPlayer.GetMaxCarryWeight();
+				}
+
+				if (showSlots)
+				{
+					FreeSlots = inventory.GetEmptySlots();
+					SlotsUsedPercent = inventory.SlotsUsedPercentage();
+				}
 			}
 		}
 	}

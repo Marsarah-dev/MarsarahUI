@@ -147,6 +147,21 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (UIRail == null) return;
 
+				if (!ShowUI)
+				{
+					if (UIRail.activeSelf)
+					{
+						UIRail.SetActive(false);
+					}
+
+					if (UIEnemyRail != null && UIEnemyRail.activeSelf)
+					{
+						UIEnemyRail.SetActive(false);
+					}
+
+					return;
+				}
+
 				UpdateInventoryElements();
 				UpdateEnemyElements();
 				UpdateSkillElements();
@@ -449,7 +464,7 @@ namespace MarsarahUI.Patches.UI
 		private static void SetSeparatorVisible(ElementType afterElement, bool visible)
 		{
 			if (!separators.TryGetValue(afterElement, out RailSeparator separator)) return;
-			if (separator.TargetVisible == visible && !separator.Animating) return;
+			if (separator.TargetVisible == visible) return;
 
 			separator.TargetVisible = visible;
 
@@ -471,7 +486,7 @@ namespace MarsarahUI.Patches.UI
 		internal static void SetElementVisible(ElementType type, bool visible, bool animate = true)
 		{
 			if (!elements.TryGetValue(type, out RailElement element)) return;
-			if (element.TargetVisible == visible && !element.Animating) return;
+			if (element.TargetVisible == visible && (animate || !element.Animating)) return;
 
 			element.TargetVisible = visible;
 

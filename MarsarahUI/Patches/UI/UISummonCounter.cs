@@ -19,6 +19,7 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (___m_localPlayer == null) return;
 				if (!ConfigManager.EffectiveShowSummonCounter) return;
+				if (!UIController.ShowUI) return;
 
 				List<Character> allCharacters = Character.GetAllCharacters();
 				int numSummonedSkeletons = 0;
@@ -26,6 +27,7 @@ namespace MarsarahUI.Patches.UI
 				foreach (Character character in allCharacters)
 				{
 					if (!character.IsTamed()) continue;
+					if (!character.name.Contains("Skeleton_Friendly")) continue;
 
 					MonsterAI monsterAI = character.GetComponent<MonsterAI>();
 					if (monsterAI == null) continue;
@@ -34,13 +36,9 @@ namespace MarsarahUI.Patches.UI
 					if (followTarget == null) continue;
 
 					Player targetPlayer = followTarget.GetComponent<Player>();
-					if (targetPlayer == null) continue;
+					if (targetPlayer != ___m_localPlayer) continue;
 
-					if (targetPlayer.GetPlayerName() == ___m_localPlayer.GetPlayerName() &&
-						character.name.Contains("Skeleton_Friendly"))
-					{
-						numSummonedSkeletons++;
-					}
+					numSummonedSkeletons++;
 				}
 
 				NumSummons = numSummonedSkeletons;
