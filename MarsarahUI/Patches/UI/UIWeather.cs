@@ -25,6 +25,10 @@ namespace MarsarahUI.Patches.UI
 		private static long _lastForecastPeriod = -1;
 		private static string _lastEnvironmentSignature = string.Empty;
 
+		// Throttle
+		private const float ForecastUpdateInterval = 1f;
+		private static float nextForecastUpdateTime;
+
 		private static readonly Dictionary<(Heightmap.Biome, string), string> WeatherIcons = new Dictionary<(Heightmap.Biome, string), string>()
 		{
 			// Meadows
@@ -111,12 +115,13 @@ namespace MarsarahUI.Patches.UI
 				if (__instance == null) return;
 				if (Player.m_localPlayer == null || WorldGenerator.instance == null) return;
 				if (!ShouldShowWeatherUI()) return;
+				if (!ConfigManager.EffectiveShowWeatherForecast) return;
 
-				if (ConfigManager.EffectiveShowWeatherForecast)
-				{
-					// Forecast
-					UpdateForecastData(__instance, ___m_currentEnv, ___m_environmentPeriod, ___m_totalSeconds);
-				}
+				if (Time.unscaledTime < nextForecastUpdateTime) return;
+
+				nextForecastUpdateTime = Time.unscaledTime + ForecastUpdateInterval;
+
+				UpdateForecastData(__instance, ___m_currentEnv, ___m_environmentPeriod, ___m_totalSeconds);
 			}
 		}
 

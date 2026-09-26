@@ -14,6 +14,9 @@ namespace MarsarahUI.Patches.UI
 
 		private static Text UIBiomeText;
 
+		private const float ArmorUpdateInterval = 0.5f;
+		private static float nextArmorUpdateTime;
+
 		private struct BiomeWeights
 		{
 			public BiomeWeights(int min, int max)
@@ -34,18 +37,10 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (___m_localPlayer == null) return;
 				if (!ConfigManager.EffectiveShowSmartBiome || !ShowUI) return;
+				if (Time.unscaledTime < nextArmorUpdateTime) return;
 
-				Inventory inventory = ___m_localPlayer.GetInventory();
-				if (inventory == null) return;
-
-				playerArmorWeight = 0;
-
-				foreach (ItemDrop.ItemData equippedItem in inventory.GetEquippedItems())
-				{
-					if (equippedItem?.m_shared == null) continue;
-
-					playerArmorWeight = GearProgressionManager.GetEquippedArmorWeight(___m_localPlayer);
-				}
+				nextArmorUpdateTime = Time.unscaledTime + ArmorUpdateInterval;
+				playerArmorWeight = GearProgressionManager.GetEquippedArmorWeight(___m_localPlayer);
 			}
 		}
 

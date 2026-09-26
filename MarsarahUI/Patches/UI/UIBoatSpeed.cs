@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,8 @@ namespace MarsarahUI.Patches.UI
 		internal static GameObject UIBoatArea;
 		private static Text UIBoatText;
 		private static TextMeshProUGUI UIBoatEmojiTMP;
+
+		private static readonly MethodInfo haveControllingPlayerMethod = AccessTools.Method(typeof(Ship), "HaveControllingPlayer");
 
 		[HarmonyPatch(typeof(Ship), "GetSpeed")]
 		private static class ShowBoatSpeed_Patch

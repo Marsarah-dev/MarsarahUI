@@ -16,7 +16,10 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject UIHeatBarArea;
 		private static Text heatBarText;
 		private static TextMeshProUGUI heatBarEmojiTMP;
-		
+
+		private static readonly AccessTools.FieldRef<Player, float> lavaHeatLevelRef = AccessTools.FieldRefAccess<Player, float>("m_lavaHeatLevel");
+		private static readonly AccessTools.FieldRef<Player, float> ashlandsOceanHeatLevelRef =	AccessTools.FieldRefAccess<Player, float>("m_ashlandsOceanHeatLevel");
+
 
 		[HarmonyPatch(typeof(Hud), "Awake")]
 		private static class HeatLevel_HUDAwakePatch
@@ -59,10 +62,8 @@ namespace MarsarahUI.Patches.UI
 				float heatThreshold = player.m_heatLevelFirstDamageThreshold;
 				if (heatThreshold <= 0f) return;
 
-				Traverse playerTraverse = Traverse.Create(player);
-
-				float lavaHeatLevel = playerTraverse.Field("m_lavaHeatLevel").GetValue<float>();
-				float ashlandsOceanHeatLevel = playerTraverse.Field("m_ashlandsOceanHeatLevel").GetValue<float>();
+				float lavaHeatLevel = lavaHeatLevelRef(player);
+				float ashlandsOceanHeatLevel = ashlandsOceanHeatLevelRef(player);
 
 				bool inAshlandsWater = player.InWater() && WorldGenerator.GetAshlandsOceanGradient(player.transform.position) >= 0f;
 
