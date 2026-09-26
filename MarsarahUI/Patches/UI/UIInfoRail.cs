@@ -468,6 +468,18 @@ namespace MarsarahUI.Patches.UI
 
 			separator.TargetVisible = visible;
 
+			if (!ConfigManager.EffectiveInfoRailAnimations)
+			{
+				separator.Progress = visible ? 1f : 0f;
+				separator.Layout.preferredWidth = visible ? UIStyleManager.Current.SeparatorWidth : 0f;
+				separator.CanvasGroup.alpha = visible ? 1f : 0f;
+				separator.Animating = false;
+				separator.Root.SetActive(visible);
+
+				RebuildLayout();
+				return;
+			}
+
 			if (visible)
 			{
 				separator.Root.SetActive(true);
@@ -486,6 +498,9 @@ namespace MarsarahUI.Patches.UI
 		internal static void SetElementVisible(ElementType type, bool visible, bool animate = true)
 		{
 			if (!elements.TryGetValue(type, out RailElement element)) return;
+
+			animate = animate && ConfigManager.EffectiveInfoRailAnimations;
+
 			if (element.TargetVisible == visible && (animate || !element.Animating)) return;
 
 			element.TargetVisible = visible;
@@ -1285,6 +1300,35 @@ namespace MarsarahUI.Patches.UI
 			if (image == null || Mathf.Approximately(image.fillAmount, value)) return;
 
 			image.fillAmount = value;
+		}
+
+		internal static void ApplyAnimationSetting()
+		{
+			if (ConfigManager.EffectiveInfoRailAnimations) return;
+
+			foreach (RailElement element in elements.Values)
+			{
+				element.Progress = element.TargetVisible ? 1f : 0f;
+				element.Layout.preferredWidth = element.TargetVisible ? element.PreferredWidth : 0f;
+				element.CanvasGroup.alpha = element.TargetVisible ? 1f : 0f;
+				element.ContentRect.anchoredPosition = Vector2.zero;
+				element.Animating = false;
+				element.Root.SetActive(element.TargetVisible);
+			}
+
+			foreach (RailSeparator separator in separators.Values)
+			{
+				separator.Progress = separator.TargetVisible ? 1f : 0f;
+				separator.Layout.preferredWidth = separator.TargetVisible ? UIStyleManager.Current.SeparatorWidth : 0f;
+				separator.CanvasGroup.alpha = separator.TargetVisible ? 1f : 0f;
+				separator.Animating = false;
+				separator.Root.SetActive(separator.TargetVisible);
+			}
+
+			RebuildLayout();
+			UpdateRailVisibility();
+
+			log.Info("Information rail animations disabled and active animations finalized.");
 		}
 	}
 } 

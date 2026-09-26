@@ -254,6 +254,7 @@ namespace MarsarahUI.Managers
 			// ===== Information Rail
 			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("Information Rail Style", "Choose the visual style used by the information rail and summon counter.", ConfigSections.InformationRail, 70);
 			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.", ConfigSections.InformationRail, 60);
+			public static readonly ConfigMetadata UIInfoRailAnimations = new ConfigMetadata("Information Rail Animations", "Animate information rail elements when they appear or disappear. Disable this if you experience UI-related performance issues.", ConfigSections.InformationRail, 55);
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.", ConfigSections.InformationRail, 50);
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.", ConfigSections.InformationRail, 40);
 			public static readonly ConfigMetadata UIEnemyDetectorPosition = new ConfigMetadata("Enemy Detector Position", "Choose whether the enemy detector is displayed in the bottom-left information rail or separately at the top-center of the screen.", ConfigSections.InformationRail, 30);
@@ -299,6 +300,7 @@ namespace MarsarahUI.Managers
 
 		public static ConfigEntry<InfoRailStyle> InfoRailStyleChoice;
 		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
+		public static ConfigEntry<bool> InfoRailAnimationsEnabled;
 		public static ConfigEntry<EnemyDetectorPosition> EnemyDetectorPositionChoice;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
 		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
@@ -351,6 +353,7 @@ namespace MarsarahUI.Managers
 
 		// Effective UI settings
 		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
+		public static bool EffectiveInfoRailAnimations => InfoRailAnimationsEnabled.Value;
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
 		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
 		public static EnemyDetectorPosition EffectiveEnemyDetectorPositionChoice => EnemyDetectorPositionChoice.Value;
@@ -475,6 +478,7 @@ namespace MarsarahUI.Managers
 			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
 			UIStyleManager.Initialize(InfoRailStyleChoice);
 			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
+			InfoRailAnimationsEnabled = CreateConfig(Configs.UIInfoRailAnimations, true);
 			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
 			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);
 			EnemyDetectorPositionChoice = CreateConfig(Configs.UIEnemyDetectorPosition, EnemyDetectorPosition.InfoRail);
@@ -627,6 +631,11 @@ namespace MarsarahUI.Managers
 				configName == Configs.UIItemQualityColor.Name)
 			{
 				UIItemQuality.UpdateSymbols();
+			}
+
+			if (configName == Configs.UIInfoRailAnimations.Name)
+			{
+				UIInfoRail.ApplyAnimationSetting();
 			}
 		}
 	}
