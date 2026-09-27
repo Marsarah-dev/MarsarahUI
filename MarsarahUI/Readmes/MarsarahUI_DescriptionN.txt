@@ -1,6 +1,6 @@
 [size=5][b]Marsarah UI[/b][/size]
 
-[b]Version:[/b] 1.1.1
+[b]Version:[/b] 1.2.0
 [b]Author:[/b] Marsarah
 
 [line]
@@ -100,8 +100,11 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Displays the current world day above the minimap and works in No Map worlds.
 
 [size=4][b]🔧 Show Current Time[/b][/size]
-- Modes: [b]DigitalClock, DayPhases, Off[/b].
-- DayPhases uses Night, Dawn, Morning, Day, Afternoon, Evening and Dusk.
+- Modes: [b]DigitalClock, DigitalClock12Hour, DayPhases, Off[/b].
+- [b]DigitalClock[/b] uses a 24-hour clock.
+- [b]DigitalClock12Hour[/b] uses a 12-hour clock with AM/PM.
+- [b]DayPhases[/b] uses Night, Dawn, Morning, Day, Afternoon, Evening and Dusk.
+- Day Phase coloring can be enabled or disabled independently.
 - Works in No Map worlds.
 
 [size=4][b]🔧 Show Weather Forecast Indicator[/b][/size]
@@ -218,7 +221,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Split separates normal, tough and boss enemies into individual counters.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+- Other players, Deer, Hare, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
 - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
@@ -269,6 +272,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=4][b]🔧 Detailed Hover Information[/b][/size]
 - Adds information to Containers, Beehives, Plants, Fermenters, Cooking Stations/Ovens, Smelters/processing stations and Eggs.
 - Master modes: [b]ColoredText, WhiteText, Off[/b].
+- Each supported hover type can also be disabled individually.
 - Most progress hovers support remaining time, percentage, or both.
 
 [b]Container Hover Information:[/b]
@@ -284,6 +288,10 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Custom container information and contents are only shown when the local player has access to the container.
 - Containers protected by another player's Ward do not reveal their contents.
 - Other players' [b]Personal Chests[/b] retain their vanilla hover and do not reveal their contents.
+
+- [b]Conflicts:[/b] 
+  - StoreAndCraft chest labels may be missing with the chest container mode on. Set Container Hover Mode to Off if this is the case.
+  - Icon-based Container Contents can overlap StoreAndCraft's additional hover text. Use Text or Off for Container Contents if needed.
 
 [line]
 
@@ -314,6 +322,21 @@ Thanks for checking out Marsarah UI!
 Blaxxun-bloop - for ServerSync
 
 [size=5][b]📜 Version History[/b][/size]
+
+[size=4][b]v1.2.0[/b][/size]
+
+[b]Fixes / Optimizations:[/b]
+- Fixed periodic stutters caused by Enemy Nameplates around nearby creatures.
+- Optimized Enemy Nameplate text creation, caching and disabled-state processing.
+- Reduced unnecessary background processing across multiple UI features when disabled.
+- Cached frequently used reflection lookups and reduced repeated UI creation/cleanup work.
+
+[b]Updates:[/b]
+- Added a 12-hour digital clock mode with AM/PM.
+- Added optional Day Phases coloring.
+- Removed the "Time" label from digital clock displays.
+- Added individual Off options for each Detailed Hover type.
+- Enemy Detector now ignores Kvastur.
 
 [size=4][b]v1.1.1[/b][/size]
 

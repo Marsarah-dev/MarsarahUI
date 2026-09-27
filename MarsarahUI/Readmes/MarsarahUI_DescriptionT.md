@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.1.1  
+**Version:** 1.2.0  
 **Author:** Marsarah
 
 ---
@@ -100,8 +100,11 @@ https://paypal.me/Marsarah9
 
 ### <strong>🔧 Show Current Time</strong>
 - Displays the current time above the minimap.
-- Modes: **DigitalClock**, **DayPhases**, **Off**.
-- DayPhases uses Night, Dawn, Morning, Day, Afternoon, Evening and Dusk.
+- Modes: **DigitalClock**, **DigitalClock12Hour**, **DayPhases**, **Off**.
+- **DigitalClock** uses a 24-hour clock.
+- **DigitalClock12Hour** uses a 12-hour clock with AM/PM.
+- **DayPhases** uses Night, Dawn, Morning, Day, Afternoon, Evening and Dusk.
+- Day Phase coloring can be enabled or disabled independently.
 - Continues to work in No Map worlds.
 
 ### <strong>🔧 Show Weather Forecast Indicator</strong>
@@ -219,7 +222,7 @@ https://paypal.me/Marsarah9
 - Split separates normal, tough and boss enemies into individual counters.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+- Other players, Deer, Hare, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
 - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
@@ -272,10 +275,11 @@ https://paypal.me/Marsarah9
 ### <strong>🔧 Detailed Hover Information</strong>
 - Adds additional information to Containers, Beehives, Plants, Fermenters, Cooking Stations/Ovens, Smelters and similar processing stations, and Eggs.
 - Master modes: **ColoredText, WhiteText, Off**.
+- Each supported hover type can also be disabled individually.
 - Most progress-based hovers support remaining time, percentage, or both.
 
 **Container Hover Information:**
-- Can show used/max slots, free slots, or percentage filled.
+- Can show used/max slots, free slots, percentage filled, or be disabled independently.
 - **Container Contents Mode** supports:
   - **IconsHorizontal** - actual item icons in a 5x2 layout.
   - **IconsVertical** - actual item icons in a 2x5 layout.
@@ -287,6 +291,10 @@ https://paypal.me/Marsarah9
 - Custom container information and contents are only shown when the local player has access to the container.
 - Containers protected by another player's Ward do not reveal their contents.
 - Other players' **Personal Chests** retain their vanilla hover and do not reveal their contents.
+
+- ** Conflicts:**
+  - StoreAndCraft chest labels may be missing with the chest container mode on. Set Container Hover Mode to Off if this is the case.
+  - Icon-based Container Contents can overlap StoreAndCraft's additional hover text. Use Text or Off for Container Contents if needed.
 
 ---
 

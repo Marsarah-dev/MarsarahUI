@@ -1,4 +1,4 @@
-Marsarah UI v1.1.1
+Marsarah UI v1.2.0
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -118,11 +118,14 @@ MOD CONFIGS
 
 ----------------------- [Show Current Time] --------------------
 ► Modes:
-  DigitalClock - 24-hour HH:MM display.
-  DayPhases    - Night, Dawn, Morning, Day, Afternoon, Evening, Dusk.
-  Off          - disables the time display.
+  DigitalClock       - 24-hour HH:MM display.
+  DigitalClock12Hour - 12-hour display with AM/PM.
+  DayPhases          - Night, Dawn, Morning, Day, Afternoon, Evening, Dusk.
+  Off                - disables the time display.
 
-  Day-phase text is color coded.
+► Day Phase Coloring:
+  Day-phase text can be color coded or displayed in white.
+
   The display also works in No Map worlds.
 
 
@@ -316,7 +319,7 @@ MOD CONFIGS
   Split separates normal, tough and boss enemies into individual counters.
   Bosses and minibosses count as normal enemies while using Consolidated mode.
   Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
-  Other players, Deer, Hare, summoned roots and tamed creatures are excluded from the hostile count.
+  Other players, Deer, Hare, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
   Neutral Dvergr use a separate counter until aggravated.
 
 
@@ -422,6 +425,7 @@ MOD CONFIGS
 ----------------- [Detailed Hover Information] -----------------
 ► Description:
   Master setting for additional information shown while hovering supported objects.
+  Individual supported hover types can also be disabled separately.
 
 ► Modes:
   ColoredText - progress/context colors are used.
@@ -455,6 +459,11 @@ MOD CONFIGS
   If Progression Halt seals a chest, its real contents are replaced with:
   "This chest is sealed."
 
+► StoreAndCraft Compatibility:
+  StoreAndCraft can add additional lines to container hover text.
+  Icon-based Container Contents may overlap this additional text.
+  Use Text or Off for Container Contents if needed.
+
 ► Dependency: Detailed Hover Information
 
 
@@ -463,30 +472,35 @@ MOD CONFIGS
   CurrentPerMax       - used slots / total slots.
   AmountOfFreeSlots   - remaining free slots.
   Percent             - percentage of slots used.
+  Off                 - disables additional container hover information.
+
+► StoreAndCraft Compatibility:
+  StoreAndCraft chest names and tags are preserved.
+  Set Container Hover Mode to Off if you prefer StoreAndCraft's chest presentation without additional Marsarah UI container information.
 
 ► Dependency: Detailed Hover Information
 
 
 ---------------------- [Beehive Hover Mode] --------------------
-► Modes: RemainingTime, Percent, PercentAndTime
+► Modes: RemainingTime, Percent, PercentAndTime, Off
 ► Description: Shows honey production progress and current honey amount where applicable.
 ► Dependency: Detailed Hover Information
 
 
 ----------------------- [Plant Hover Mode] ---------------------
-► Modes: RemainingTime, Percent, PercentAndTime
+► Modes: RemainingTime, Percent, PercentAndTime, Off
 ► Description: Shows plant growth progress until ready.
 ► Dependency: Detailed Hover Information
 
 
 --------------------- [Fermenter Hover Mode] -------------------
-► Modes: RemainingTime, Percent, PercentAndTime
+► Modes: RemainingTime, Percent, PercentAndTime, Off
 ► Description: Shows fermentation progress and current contents while fermenting.
 ► Dependency: Detailed Hover Information
 
 
 ------------------ [Cooking Station Hover Mode] ----------------
-► Modes: RemainingTime, Percent, PercentAndTime
+► Modes: RemainingTime, Percent, PercentAndTime, Off
 ► Description:
   Shows progress for individual occupied cooking slots.
   Ready/overcooking states are handled separately.
@@ -496,7 +510,7 @@ MOD CONFIGS
 
 
 --------------------- [Smelter Hover Mode] ---------------------
-► Current Mode: RemainingTime
+► Modes: RemainingTime, Off
 ► Description:
   Shows remaining processing time together with relevant queue/fuel information where supported.
 
@@ -504,7 +518,7 @@ MOD CONFIGS
 
 
 ----------------------- [Egg Hover Mode] -----------------------
-► Modes: RemainingTime, Percent, PercentAndTime
+► Modes: RemainingTime, Percent, PercentAndTime, Off
 ► Description: Shows hatching progress for supported eggs.
 ► Dependency: Detailed Hover Information
 
@@ -554,6 +568,20 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.2.0
+- Fixes / Optimizations:
+  - Fixed periodic stutters caused by Enemy Nameplates around nearby creatures.
+  - Optimized Enemy Nameplate text creation, caching and disabled-state processing.
+  - Reduced unnecessary background processing across multiple UI features when disabled.
+  - Cached frequently used reflection lookups and reduced repeated UI creation/cleanup work.
+
+- Updates:
+  - Added a 12-hour digital clock mode with AM/PM.
+  - Added optional Day Phases coloring.
+  - Removed the "Time" label from digital clock displays.
+  - Added individual Off options for each Detailed Hover type.
+  - Enemy Detector now ignores Kvastur.
+
 v1.1.1
 - Fixes/Updates:
   - Excluded the T.W.I.G. training dummy from the Enemy Detector.

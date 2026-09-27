@@ -1,5 +1,27 @@
 ## <strong> 📜 Version History </strong>
 
+v1.2.0
+- **Fixes/Optimizations:**
+  - Fixed Enemy Nameplates causing periodic stutters around nearby creatures.
+  - Optimized Enemy Nameplate HP text creation by caching reused font and material resources and avoiding unnecessary mesh rebuilds.
+  - Prevented duplicate Enemy Nameplate setup and unnecessary HP text creation in Bars Only mode.
+  - Improved Enemy Nameplates config-off behavior so disabled nameplates stop unnecessary processing.
+  - Reduced unnecessary background processing across multiple UI features when they are disabled.
+  - Cached frequently used reflection lookups across several UI modules.
+  - Reduced repeated UI creation and cleanup work.
+
+- **Current Time:**
+  - Added a 12-hour digital clock mode with AM/PM.
+  - Added an option to disable Day Phases coloring.
+  - Removed the "Time" label from digital clock displays for a cleaner layout.
+
+- **Detailed Hovers:**
+  - Added individual Off options for Container, Beehive, Plant, Fermenter, Cooking Station, Smelter and Egg hover information.
+  - Detailed Hover Information remains available as the global master setting.
+
+- **Enemy Detector:**
+  - Kvastur is now excluded from the nearby enemy count.
+
 v1.1.1
 - **Fixes/Updates:**
   - Excluded the T.W.I.G. training dummy from the Enemy Detector.
