@@ -125,7 +125,7 @@ namespace MarsarahUI.Patches.UI
 
 					if (showTimeAndDayUI)
 					{
-						UITimeText.color = ConfigManager.EffectiveTimeChoice == TimeMode.DayPhases && ConfigManager.EffectiveColorDayPhases	? GetColorFromString(TimeString) : Color.white;
+						UITimeText.color = ConfigManager.EffectiveTimeChoice == TimeMode.DayPhases && ConfigManager.EffectiveColorDayPhases ? GetColorFromString(TimeString) : Color.white;
 						UIDayText.color = Color.white;
 
 						UITimeText.text = TimeString;

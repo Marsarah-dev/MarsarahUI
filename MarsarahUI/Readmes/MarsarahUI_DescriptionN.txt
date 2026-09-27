@@ -276,7 +276,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Most progress hovers support remaining time, percentage, or both.
 
 [b]Container Hover Information:[/b]
-- Can show used/max slots, free slots, or percentage filled.
+- Can show used/max slots, free slots, percentage filled, or be disabled independently.
 - [b]Container Contents Mode[/b] supports:
   - [b]IconsHorizontal[/b] - item icons in a 5x2 layout.
   - [b]IconsVertical[/b] - item icons in a 2x5 layout.

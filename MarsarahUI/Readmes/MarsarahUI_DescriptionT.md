@@ -141,7 +141,7 @@ https://paypal.me/Marsarah9
 ### <strong>🔧 Global Chat By Default</strong>
 - Makes normal chat messages global by default without requiring the player to manually select Shout.
 - Preserves the player's original capitalization.
-- Explicit commands such as **/w and /say**
+- Explicit commands such as **/w and /say** continue to work normally.
 - Supports an optional synced server override.
 
 ### <strong>🔧 Logon Screen Character Statistics</strong>
@@ -292,7 +292,7 @@ https://paypal.me/Marsarah9
 - Containers protected by another player's Ward do not reveal their contents.
 - Other players' **Personal Chests** retain their vanilla hover and do not reveal their contents.
 
-- ** Conflicts:**
+- **Conflicts:**
   - StoreAndCraft chest labels may be missing with the chest container mode on. Set Container Hover Mode to Off if this is the case.
   - Icon-based Container Contents can overlap StoreAndCraft's additional hover text. Use Text or Off for Container Contents if needed.
 

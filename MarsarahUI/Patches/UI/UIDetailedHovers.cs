@@ -637,11 +637,6 @@ namespace MarsarahUI.Patches.UI
 				remainingSeconds /= power;
 			}
 
-			if (ConfigManager.EffectiveSmelterHoverModeChoice != SmelterHoverMode.RemainingTime)
-			{
-				return result;
-			}
-
 			string hover = "";
 
 			if (smelter.m_windmill != null)
