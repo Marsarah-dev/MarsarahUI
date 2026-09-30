@@ -47,7 +47,7 @@ namespace MarsarahUI.Patches.UI
 		private static CraftingTab selectedTab = CraftingTab.All;
 		private static InventoryGui currentInventoryGui;
 		private static RectTransform craftingContentRoot;
-		private static bool craftingVisualsAdjusted;
+		private static bool craftingLayoutExpanded;
 
 		[HarmonyPatch(typeof(InventoryGui), "UpdateRecipeList")]
 		private static class UpdateRecipeList_Patch
@@ -56,11 +56,27 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs) return;
 				if (__instance == null || recipes == null) return;
-				if (!__instance.InCraftTab()) return;
+
+				if (!__instance.InCraftTab())
+				{
+					selectedTab = CraftingTab.All;
+					SetBiomeTabsVisible(false);
+					SetCraftingLayout(false, __instance);
+					return;
+				}
+
+				SetCraftingLayout(true, __instance);
 
 				int originalCount = recipes.Count;
 
 				UpdateAvailableTabs(recipes);
+
+				if (!availableTabs.Contains(selectedTab))
+				{
+					log.Info($"Selected crafting tab {selectedTab} is not available at this station. Resetting to All.");
+					selectedTab = CraftingTab.All;
+				}
+
 				UpdateBiomeTabs(__instance);
 
 				log.Info($"Available crafting tabs: {string.Join(", ", availableTabs)}");
@@ -82,7 +98,56 @@ namespace MarsarahUI.Patches.UI
 			if (!BiomeCraftingManager.TryGetClassification(recipe, out BiomeCraftingManager.RecipeClassification classification))
 				return false;
 
-			return selectedTab.ToString() == classification.Biome.ToString();
+			if (!TryGetBiomeForTab(selectedTab, out BiomeCraftingManager.CraftingBiome biome))
+				return false;
+
+			return classification.Biome == biome;
+		}
+
+		private static bool TryGetBiomeForTab(CraftingTab tab, out BiomeCraftingManager.CraftingBiome biome)
+		{
+			switch (tab)
+			{
+				case CraftingTab.Meadows:
+					biome = BiomeCraftingManager.CraftingBiome.Meadows;
+					return true;
+
+				case CraftingTab.BlackForest:
+					biome = BiomeCraftingManager.CraftingBiome.BlackForest;
+					return true;
+
+				case CraftingTab.Swamp:
+					biome = BiomeCraftingManager.CraftingBiome.Swamp;
+					return true;
+
+				case CraftingTab.Mountain:
+					biome = BiomeCraftingManager.CraftingBiome.Mountain;
+					return true;
+
+				case CraftingTab.Plains:
+					biome = BiomeCraftingManager.CraftingBiome.Plains;
+					return true;
+
+				case CraftingTab.Ocean:
+					biome = BiomeCraftingManager.CraftingBiome.Ocean;
+					return true;
+
+				case CraftingTab.Mistlands:
+					biome = BiomeCraftingManager.CraftingBiome.Mistlands;
+					return true;
+
+				case CraftingTab.Ashlands:
+					biome = BiomeCraftingManager.CraftingBiome.Ashlands;
+					return true;
+
+				case CraftingTab.DeepNorth:
+					biome = BiomeCraftingManager.CraftingBiome.DeepNorth;
+					return true;
+
+				default:
+					biome = default;
+					return false;
+			}
 		}
 
 		private static void UpdateAvailableTabs(List<Recipe> recipes)
@@ -224,6 +289,9 @@ namespace MarsarahUI.Patches.UI
 				{
 					button.onClick = new Button.ButtonClickedEvent();
 
+					CraftingTab capturedTab = tab;
+					button.onClick.AddListener(() => OnBiomeTabClicked(capturedTab));
+
 					Navigation navigation = button.navigation;
 					navigation.mode = Navigation.Mode.None;
 					button.navigation = navigation;
@@ -241,11 +309,45 @@ namespace MarsarahUI.Patches.UI
 			log.Info("Created biome crafting tab objects.");
 		}
 
+		private static void OnBiomeTabClicked(CraftingTab tab)
+		{
+			if (currentInventoryGui == null)
+				return;
+
+			if (!availableTabs.Contains(tab))
+				return;
+
+			if (selectedTab == tab)
+				return;
+
+			selectedTab = tab;
+			UpdateTabSelectionVisuals();
+
+			log.Info($"Selected crafting tab: {selectedTab}");
+
+			RefreshCraftingPanel(currentInventoryGui);
+		}
+
+		private static void RefreshCraftingPanel(InventoryGui inventoryGui)
+		{
+			if (inventoryGui == null)
+				return;
+
+			var updateCraftingPanel = AccessTools.Method(typeof(InventoryGui), "UpdateCraftingPanel", new[] { typeof(bool) });
+
+			if (updateCraftingPanel == null)
+			{
+				log.Error("Could not find InventoryGui.UpdateCraftingPanel.");
+				return;
+			}
+
+			updateCraftingPanel.Invoke(inventoryGui, new object[] { false });
+		}
+
 		private static void UpdateBiomeTabs(InventoryGui inventoryGui)
 		{
 			CreateBiomeTabs(inventoryGui);
 			CreateCraftingContentRoot(inventoryGui);
-			AdjustCraftingVisuals(inventoryGui);
 
 			if (tabObjects.Count == 0)
 				return;
@@ -281,6 +383,8 @@ namespace MarsarahUI.Patches.UI
 
 				visibleIndex++;
 			}
+
+			UpdateTabSelectionVisuals();
 		}
 
 		private static void CreateCraftingContentRoot(InventoryGui inventoryGui)
@@ -329,33 +433,6 @@ namespace MarsarahUI.Patches.UI
 			log.Info("Created biome crafting content container and moved crafting content down.");
 		}
 
-		private static void AdjustCraftingVisuals(InventoryGui inventoryGui)
-		{
-			if (craftingVisualsAdjusted)
-				return;
-
-			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
-
-			if (craftingRoot == null)
-			{
-				log.Error("Could not find crafting root.");
-				return;
-			}
-
-			const float tabRowHeight = 40f;
-
-			ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, tabRowHeight);
-			ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, tabRowHeight);
-			ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, tabRowHeight);
-
-			MoveRectDown(GetInventoryGuiObject(inventoryGui, "m_repairButton")?.GetComponent<RectTransform>(), tabRowHeight);
-			MoveRectDown(GetInventoryGuiObject(inventoryGui, "m_repairPanel")?.GetComponent<RectTransform>(), tabRowHeight);
-
-			craftingVisualsAdjusted = true;
-
-			log.Info("Extended crafting background and moved repair UI for biome tabs.");
-		}
-
 		private static void MoveRectDown(RectTransform rect, float amount)
 		{
 			if (rect == null)
@@ -375,6 +452,66 @@ namespace MarsarahUI.Patches.UI
 
 			rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, originalHeight + amount);
 			rect.anchoredPosition = originalPosition - new Vector2(0f, positionAdjustment);
+		}
+
+		private static void UpdateTabSelectionVisuals()
+		{
+			foreach (KeyValuePair<CraftingTab, GameObject> entry in tabObjects)
+			{
+				Button button = entry.Value.GetComponentInChildren<Button>(true);
+
+				if (button != null)
+					button.interactable = entry.Key != selectedTab;
+			}
+		}
+
+		private static void SetBiomeTabsVisible(bool visible)
+		{
+			foreach (GameObject tabObject in tabObjects.Values)
+			{
+				if (tabObject != null)
+					tabObject.SetActive(visible);
+			}
+		}
+
+		private static void SetCraftingLayout(bool expanded, InventoryGui inventoryGui)
+		{
+			if (expanded == craftingLayoutExpanded)
+				return;
+
+			const float tabRowHeight = 40f;
+
+			if (craftingContentRoot != null)
+				craftingContentRoot.anchoredPosition = expanded ? new Vector2(0f, -tabRowHeight) : Vector2.zero;
+
+			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
+
+			if (craftingRoot == null)
+				return;
+
+			RectTransform repairButton = GetInventoryGuiObject(inventoryGui, "m_repairButton")?.GetComponent<RectTransform>();
+			RectTransform repairPanel = GetInventoryGuiObject(inventoryGui, "m_repairPanel")?.GetComponent<RectTransform>();
+
+			if (expanded)
+			{
+				ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, tabRowHeight);
+				ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, tabRowHeight);
+				ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, tabRowHeight);
+
+				MoveRectDown(repairButton, tabRowHeight);
+				MoveRectDown(repairPanel, tabRowHeight);
+			}
+			else
+			{
+				ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, -tabRowHeight);
+				ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, -tabRowHeight);
+				ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, -tabRowHeight);
+
+				MoveRectDown(repairButton, -tabRowHeight);
+				MoveRectDown(repairPanel, -tabRowHeight);
+			}
+
+			craftingLayoutExpanded = expanded;
 		}
 	}
 }
