@@ -47,11 +47,11 @@ namespace MarsarahUI.Patches.UI
 		private static CraftingTab selectedTab = CraftingTab.All;
 		private static InventoryGui currentInventoryGui;
 		private static RectTransform craftingContentRoot;
-		private static bool craftingLayoutExpanded;
+		private static float currentCraftingExtraHeight;
 
-		private const float TabWidth = 85f;
+		private const float TabWidth = 90f;
 		private const float TabSpacing = 2f;
-		private const float TabRowHeight = 34f;
+		private const float TabRowHeight = 32f;
 
 		[HarmonyPatch(typeof(InventoryGui), "UpdateRecipeList")]
 		private static class UpdateRecipeList_Patch
@@ -64,7 +64,7 @@ namespace MarsarahUI.Patches.UI
 				{
 					selectedTab = CraftingTab.All;
 					SetBiomeTabsVisible(false);
-					SetCraftingLayout(false, __instance);
+					SetCraftingLayout(0, __instance);
 					return;
 				}
 
@@ -72,15 +72,16 @@ namespace MarsarahUI.Patches.UI
 				{
 					selectedTab = CraftingTab.All;
 					SetBiomeTabsVisible(false);
-					SetCraftingLayout(false, __instance);
+					SetCraftingLayout(0, __instance);
 					return;
 				}
-
-				SetCraftingLayout(true, __instance);
 
 				int originalCount = recipes.Count;
 
 				UpdateAvailableTabs(recipes);
+
+				int tabRows = GetRequiredTabRows();
+				SetCraftingLayout(tabRows, __instance);
 
 				if (!availableTabs.Contains(selectedTab))
 				{
@@ -214,21 +215,22 @@ namespace MarsarahUI.Patches.UI
 						availableTabs.Add(CraftingTab.DeepNorth);
 						break;
 				}
-
-				availableTabs.Add(CraftingTab.Meadows);
-				availableTabs.Add(CraftingTab.BlackForest);
-				availableTabs.Add(CraftingTab.Swamp);
-				availableTabs.Add(CraftingTab.Mountain);
-				availableTabs.Add(CraftingTab.Plains);
-				availableTabs.Add(CraftingTab.Ocean);
-				availableTabs.Add(CraftingTab.Mistlands);
-				availableTabs.Add(CraftingTab.Ashlands);
-				availableTabs.Add(CraftingTab.DeepNorth);
-				availableTabs.Add(CraftingTab.Other);
 			}
 
 			if (hasOther)
 				availableTabs.Add(CraftingTab.Other);
+
+			// TEMP: Force all tabs visible for two-row layout testing.
+			availableTabs.Add(CraftingTab.Meadows);
+			availableTabs.Add(CraftingTab.BlackForest);
+			availableTabs.Add(CraftingTab.Swamp);
+			availableTabs.Add(CraftingTab.Mountain);
+			availableTabs.Add(CraftingTab.Plains);
+			availableTabs.Add(CraftingTab.Ocean);
+			availableTabs.Add(CraftingTab.Mistlands);
+			availableTabs.Add(CraftingTab.Ashlands);
+			availableTabs.Add(CraftingTab.DeepNorth);
+			availableTabs.Add(CraftingTab.Other);
 		}
 
 		private static GameObject GetInventoryGuiObject(InventoryGui inventoryGui, string fieldName)
@@ -386,13 +388,12 @@ namespace MarsarahUI.Patches.UI
 				tabObject.SetActive(false);
 			}
 
-			float startX = craftRect.anchoredPosition.x;
+			const float tabRowLeftOffset = 32f;
+			float startX = craftRect.anchoredPosition.x - tabRowLeftOffset;
 			float currentX = startX;
 			float currentY = craftRect.anchoredPosition.y - craftRect.rect.height - 4f;
 
-			float maxWidth = 560f;
-
-			int row = 0;
+			const float maxWidth = 560f;
 
 			foreach (CraftingTab tab in tabDisplayOrder)
 			{
@@ -403,16 +404,8 @@ namespace MarsarahUI.Patches.UI
 
 				tabObject.SetActive(true);
 
-				if (tab == CraftingTab.All)
+				if (currentX + TabWidth > startX + maxWidth && currentX > startX)
 				{
-					PositionBiomeTab(tabObject, currentX, currentY);
-					currentX += TabWidth + TabSpacing;
-					continue;
-				}
-
-				if (currentX + TabWidth > startX + maxWidth)
-				{
-					row++;
 					currentX = startX;
 					currentY -= TabRowHeight;
 				}
@@ -512,44 +505,38 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		private static void SetCraftingLayout(bool expanded, InventoryGui inventoryGui)
+		private static void SetCraftingLayout(int tabRows, InventoryGui inventoryGui)
 		{
-			if (expanded == craftingLayoutExpanded)
+			CreateCraftingContentRoot(inventoryGui);
+
+			float targetExtraHeight = tabRows > 0 ? 40f + ((tabRows - 1) * TabRowHeight) : 0f;
+
+			if (Mathf.Approximately(targetExtraHeight, currentCraftingExtraHeight))
 				return;
-
-			const float tabRowHeight = 40f;
-
-			if (craftingContentRoot != null)
-				craftingContentRoot.anchoredPosition = expanded ? new Vector2(0f, -tabRowHeight) : Vector2.zero;
 
 			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
 
 			if (craftingRoot == null)
 				return;
 
+			float difference = targetExtraHeight - currentCraftingExtraHeight;
+
+			if (craftingContentRoot != null)
+				craftingContentRoot.anchoredPosition = new Vector2(0f, -targetExtraHeight);
+
+			ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, difference);
+			ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, difference);
+			ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, difference);
+
 			RectTransform repairButton = GetInventoryGuiObject(inventoryGui, "m_repairButton")?.GetComponent<RectTransform>();
 			RectTransform repairPanel = GetInventoryGuiObject(inventoryGui, "m_repairPanel")?.GetComponent<RectTransform>();
 
-			if (expanded)
-			{
-				ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, tabRowHeight);
-				ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, tabRowHeight);
-				ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, tabRowHeight);
+			MoveRectDown(repairButton, difference);
+			MoveRectDown(repairPanel, difference);
 
-				MoveRectDown(repairButton, tabRowHeight);
-				MoveRectDown(repairPanel, tabRowHeight);
-			}
-			else
-			{
-				ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, -tabRowHeight);
-				ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, -tabRowHeight);
-				ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, -tabRowHeight);
+			currentCraftingExtraHeight = targetExtraHeight;
 
-				MoveRectDown(repairButton, -tabRowHeight);
-				MoveRectDown(repairPanel, -tabRowHeight);
-			}
-
-			craftingLayoutExpanded = expanded;
+			log.Info($"Crafting layout adjusted for {tabRows} biome tab row(s), extra height {targetExtraHeight}px.");
 		}
 
 		private static void EnsureSelectedRecipeVisible(InventoryGui inventoryGui)
@@ -585,36 +572,6 @@ namespace MarsarahUI.Patches.UI
 				ensureVisible.CenterOnItem(recipeRect);
 		}
 
-		private static List<CraftingTab> GetAvailableBiomeTabs()
-		{
-			List<CraftingTab> tabs = new List<CraftingTab>();
-
-			foreach (CraftingTab tab in tabDisplayOrder)
-			{
-				if (tab == CraftingTab.All || tab == CraftingTab.Other)
-					continue;
-
-				if (availableTabs.Contains(tab))
-					tabs.Add(tab);
-			}
-
-			return tabs;
-		}
-
-		private static void PositionTab(GameObject tabObject, float x, float y, float width)
-		{
-			if (tabObject == null)
-				return;
-
-			RectTransform rect = tabObject.GetComponent<RectTransform>();
-
-			if (rect == null)
-				return;
-
-			rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
-			rect.anchoredPosition = new Vector2(x, y);
-		}
-
 		private static void PositionBiomeTab(GameObject tabObject, float x, float y)
 		{
 			if (tabObject == null)
@@ -627,6 +584,34 @@ namespace MarsarahUI.Patches.UI
 
 			rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, TabWidth);
 			rect.anchoredPosition = new Vector2(x, y);
+		}
+
+		private static int GetRequiredTabRows()
+		{
+			const float maxWidth = 560f;
+
+			float currentWidth = 0f;
+			int rows = 1;
+
+			foreach (CraftingTab tab in tabDisplayOrder)
+			{
+				if (!availableTabs.Contains(tab))
+					continue;
+
+				float requiredWidth = currentWidth == 0f ? TabWidth : TabSpacing + TabWidth;
+
+				if (currentWidth > 0f && currentWidth + requiredWidth > maxWidth)
+				{
+					rows++;
+					currentWidth = TabWidth;
+				}
+				else
+				{
+					currentWidth += requiredWidth;
+				}
+			}
+
+			return rows;
 		}
 	}
 }
