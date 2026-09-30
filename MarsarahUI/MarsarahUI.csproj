@@ -98,6 +98,7 @@
     <Compile Include="Managers\UIStyleManager.cs" />
     <Compile Include="MarsarahUI.cs" />
     <Compile Include="Patches\UI\UIAshlandsHeatLevel.cs" />
+    <Compile Include="Patches\UI\UIBiomeCraftingTabs.cs" />
     <Compile Include="Patches\UI\UIBoatSpeed.cs" />
     <Compile Include="Patches\UI\UIBossPowerExpiration.cs" />
     <Compile Include="Patches\UI\UICharacterStatistics.cs" />

@@ -4,7 +4,7 @@ namespace MarsarahUI.Managers
 {
 	internal static class BiomeCraftingManager
 	{
-		private static readonly LogManager log = new LogManager("Biome Crafting", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("Biome Crafting", LogManager.LogLevel.Info);
 
 		internal enum CraftingBiome
 		{
@@ -76,6 +76,11 @@ namespace MarsarahUI.Managers
 				return false;
 
 			return recipeClassifications.TryGetValue(recipe.name, out classification);
+		}
+
+		internal static bool IsRecipeInBiome(Recipe recipe, CraftingBiome biome)
+		{
+			return TryGetClassification(recipe, out RecipeClassification classification) && classification.Biome == biome;
 		}
 	}
 }
