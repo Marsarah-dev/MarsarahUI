@@ -46,6 +46,30 @@ namespace MarsarahUI.Patches.UI
 
 		private static CraftingTab selectedTab = CraftingTab.All;
 		private static InventoryGui currentInventoryGui;
+		private static RectTransform craftingContentRoot;
+		private static bool craftingVisualsAdjusted;
+
+		[HarmonyPatch(typeof(InventoryGui), "UpdateRecipeList")]
+		private static class UpdateRecipeList_Patch
+		{
+			private static void Prefix(InventoryGui __instance, List<Recipe> recipes)
+			{
+				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs) return;
+				if (__instance == null || recipes == null) return;
+				if (!__instance.InCraftTab()) return;
+
+				int originalCount = recipes.Count;
+
+				UpdateAvailableTabs(recipes);
+				UpdateBiomeTabs(__instance);
+
+				log.Info($"Available crafting tabs: {string.Join(", ", availableTabs)}");
+
+				recipes.RemoveAll(recipe => !RecipeMatchesSelectedTab(recipe));
+
+				log.Info($"{selectedTab} crafting filter: {originalCount} -> {recipes.Count} recipes");
+			}
+		}
 
 		private static bool RecipeMatchesSelectedTab(Recipe recipe)
 		{
@@ -198,7 +222,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (button != null)
 				{
-					button.onClick.RemoveAllListeners();
+					button.onClick = new Button.ButtonClickedEvent();
 
 					Navigation navigation = button.navigation;
 					navigation.mode = Navigation.Mode.None;
@@ -211,6 +235,7 @@ namespace MarsarahUI.Patches.UI
 					text.text = GetTabLabel(tab);
 
 				tabObjects[tab] = tabObject;
+				tabObject.transform.SetAsLastSibling();
 			}
 
 			log.Info("Created biome crafting tab objects.");
@@ -219,6 +244,8 @@ namespace MarsarahUI.Patches.UI
 		private static void UpdateBiomeTabs(InventoryGui inventoryGui)
 		{
 			CreateBiomeTabs(inventoryGui);
+			CreateCraftingContentRoot(inventoryGui);
+			AdjustCraftingVisuals(inventoryGui);
 
 			if (tabObjects.Count == 0)
 				return;
@@ -229,8 +256,8 @@ namespace MarsarahUI.Patches.UI
 			if (craftRect == null)
 				return;
 
-			const float tabWidth = 100f;
-			const float tabSpacing = 4f;
+			const float tabWidth = 85f;
+			const float tabSpacing = 2f;
 			float rowY = craftRect.anchoredPosition.y - craftRect.rect.height - 4f;
 			int visibleIndex = 0;
 
@@ -256,26 +283,98 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		[HarmonyPatch(typeof(InventoryGui), "UpdateRecipeList")]
-		private static class UpdateRecipeList_Patch
+		private static void CreateCraftingContentRoot(InventoryGui inventoryGui)
 		{
-			private static void Prefix(InventoryGui __instance, List<Recipe> recipes)
+			if (craftingContentRoot != null)
+				return;
+
+			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
+
+			if (craftingRoot == null)
 			{
-				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs) return;
-				if (__instance == null || recipes == null) return;
-				if (!__instance.InCraftTab()) return;
-
-				int originalCount = recipes.Count;
-
-				UpdateAvailableTabs(recipes);
-				UpdateBiomeTabs(__instance);
-
-				log.Info($"Available crafting tabs: {string.Join(", ", availableTabs)}");
-
-				recipes.RemoveAll(recipe => !RecipeMatchesSelectedTab(recipe));
-
-				log.Info($"{selectedTab} crafting filter: {originalCount} -> {recipes.Count} recipes");
+				log.Error("Could not find crafting root.");
+				return;
 			}
+
+			GameObject contentObject = new GameObject("MarsarahBiomeCraftingContent", typeof(RectTransform));
+			craftingContentRoot = contentObject.GetComponent<RectTransform>();
+			craftingContentRoot.SetParent(craftingRoot, false);
+
+			craftingContentRoot.anchorMin = Vector2.zero;
+			craftingContentRoot.anchorMax = Vector2.one;
+			craftingContentRoot.offsetMin = Vector2.zero;
+			craftingContentRoot.offsetMax = Vector2.zero;
+
+			string[] contentChildren =
+			{
+				"RecipeList",
+				"Decription"
+			};
+
+			foreach (string childName in contentChildren)
+			{
+				Transform child = craftingRoot.Find(childName);
+
+				if (child == null)
+				{
+					log.Info($"Crafting child '{childName}' was not found.");
+					continue;
+				}
+
+				child.SetParent(craftingContentRoot, true);
+			}
+
+			craftingContentRoot.anchoredPosition = new Vector2(0f, -40f);
+
+			log.Info("Created biome crafting content container and moved crafting content down.");
+		}
+
+		private static void AdjustCraftingVisuals(InventoryGui inventoryGui)
+		{
+			if (craftingVisualsAdjusted)
+				return;
+
+			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
+
+			if (craftingRoot == null)
+			{
+				log.Error("Could not find crafting root.");
+				return;
+			}
+
+			const float tabRowHeight = 40f;
+
+			ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, tabRowHeight);
+			ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, tabRowHeight);
+			ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, tabRowHeight);
+
+			MoveRectDown(GetInventoryGuiObject(inventoryGui, "m_repairButton")?.GetComponent<RectTransform>(), tabRowHeight);
+			MoveRectDown(GetInventoryGuiObject(inventoryGui, "m_repairPanel")?.GetComponent<RectTransform>(), tabRowHeight);
+
+			craftingVisualsAdjusted = true;
+
+			log.Info("Extended crafting background and moved repair UI for biome tabs.");
+		}
+
+		private static void MoveRectDown(RectTransform rect, float amount)
+		{
+			if (rect == null)
+				return;
+
+			rect.anchoredPosition -= new Vector2(0f, amount);
+		}
+
+		private static void ExtendRectDown(RectTransform rect, float amount)
+		{
+			if (rect == null)
+				return;
+
+			Vector2 originalPosition = rect.anchoredPosition;
+			float originalHeight = rect.rect.height;
+			float positionAdjustment = amount * (1f - rect.pivot.y);
+
+			rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, originalHeight + amount);
+			rect.anchoredPosition = originalPosition - new Vector2(0f, positionAdjustment);
 		}
 	}
 }
