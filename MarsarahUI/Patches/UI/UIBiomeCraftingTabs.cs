@@ -49,6 +49,11 @@ namespace MarsarahUI.Patches.UI
 		private static RectTransform craftingContentRoot;
 		private static bool craftingLayoutExpanded;
 
+		private const int MaxVisibleBiomeTabs = 4;
+		private static int biomeTabOffset;
+		private static GameObject previousTabButton;
+		private static GameObject nextTabButton;
+
 		[HarmonyPatch(typeof(InventoryGui), "UpdateRecipeList")]
 		private static class UpdateRecipeList_Patch
 		{
@@ -210,6 +215,17 @@ namespace MarsarahUI.Patches.UI
 						availableTabs.Add(CraftingTab.DeepNorth);
 						break;
 				}
+
+				availableTabs.Add(CraftingTab.Meadows);
+				availableTabs.Add(CraftingTab.BlackForest);
+				availableTabs.Add(CraftingTab.Swamp);
+				availableTabs.Add(CraftingTab.Mountain);
+				availableTabs.Add(CraftingTab.Plains);
+				availableTabs.Add(CraftingTab.Ocean);
+				availableTabs.Add(CraftingTab.Mistlands);
+				availableTabs.Add(CraftingTab.Ashlands);
+				availableTabs.Add(CraftingTab.DeepNorth);
+				availableTabs.Add(CraftingTab.Other);
 			}
 
 			if (hasOther)
@@ -314,6 +330,26 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			log.Info("Created biome crafting tab objects.");
+
+			previousTabButton = CreateNavigationButton(upgradeTab, "<", () =>
+			{
+				if (biomeTabOffset <= 0)
+					return;
+
+				biomeTabOffset--;
+				UpdateBiomeTabs(currentInventoryGui);
+			});
+
+			nextTabButton = CreateNavigationButton(upgradeTab, ">", () =>
+			{
+				List<CraftingTab> biomeTabs = GetAvailableBiomeTabs();
+
+				if (biomeTabOffset >= biomeTabs.Count - MaxVisibleBiomeTabs)
+					return;
+
+				biomeTabOffset++;
+				UpdateBiomeTabs(currentInventoryGui);
+			});
 		}
 
 		private static void OnBiomeTabClicked(CraftingTab tab)
@@ -368,30 +404,76 @@ namespace MarsarahUI.Patches.UI
 				return;
 
 			const float tabWidth = 85f;
+			const float arrowWidth = 32f;
 			const float tabSpacing = 2f;
+
+			List<CraftingTab> biomeTabs = GetAvailableBiomeTabs();
+			bool hasOther = availableTabs.Contains(CraftingTab.Other);
+			bool needsScrolling = biomeTabs.Count > MaxVisibleBiomeTabs;
+
+			int maxOffset = Mathf.Max(0, biomeTabs.Count - MaxVisibleBiomeTabs);
+			biomeTabOffset = Mathf.Clamp(biomeTabOffset, 0, maxOffset);
+
+			foreach (GameObject tabObject in tabObjects.Values)
+				tabObject.SetActive(false);
+
+			if (previousTabButton != null)
+				previousTabButton.SetActive(false);
+
+			if (nextTabButton != null)
+				nextTabButton.SetActive(false);
+
+			float currentX = craftRect.anchoredPosition.x;
 			float rowY = craftRect.anchoredPosition.y - craftRect.rect.height - 4f;
-			int visibleIndex = 0;
 
-			foreach (CraftingTab tab in tabDisplayOrder)
+			PositionTab(tabObjects[CraftingTab.All], currentX, rowY, tabWidth);
+			tabObjects[CraftingTab.All].SetActive(true);
+			currentX += tabWidth + tabSpacing;
+
+			if (needsScrolling)
 			{
-				GameObject tabObject = tabObjects[tab];
-				bool visible = availableTabs.Contains(tab);
+				PositionTab(previousTabButton, currentX, rowY, arrowWidth);
+				previousTabButton.SetActive(true);
 
-				tabObject.SetActive(visible);
+				Button previousButton = previousTabButton.GetComponentInChildren<Button>(true);
+				if (previousButton != null)
+					previousButton.interactable = biomeTabOffset > 0;
 
-				if (!visible)
-					continue;
-
-				RectTransform tabRect = tabObject.GetComponent<RectTransform>();
-
-				if (tabRect != null)
-				{
-					tabRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tabWidth);
-					tabRect.anchoredPosition = new Vector2(craftRect.anchoredPosition.x + visibleIndex * (tabWidth + tabSpacing), rowY);
-				}
-
-				visibleIndex++;
+				currentX += arrowWidth + tabSpacing;
 			}
+
+			int visibleBiomeCount = Mathf.Min(MaxVisibleBiomeTabs, biomeTabs.Count - biomeTabOffset);
+
+			for (int i = 0; i < visibleBiomeCount; i++)
+			{
+				CraftingTab tab = biomeTabs[biomeTabOffset + i];
+				GameObject tabObject = tabObjects[tab];
+
+				tabObject.SetActive(true);
+				PositionTab(tabObject, currentX, rowY, tabWidth);
+
+				currentX += tabWidth + tabSpacing;
+			}
+
+			if (needsScrolling)
+			{
+				PositionTab(nextTabButton, currentX, rowY, arrowWidth);
+				nextTabButton.SetActive(true);
+
+				Button nextButton = nextTabButton.GetComponentInChildren<Button>(true);
+				if (nextButton != null)
+					nextButton.interactable = biomeTabOffset < maxOffset;
+
+				currentX += arrowWidth + tabSpacing;
+			}
+
+			if (hasOther)
+			{
+				tabObjects[CraftingTab.Other].SetActive(true);
+				PositionTab(tabObjects[CraftingTab.Other], currentX, rowY, tabWidth);
+			}
+
+			UpdateTabSelectionVisuals();
 
 			UpdateTabSelectionVisuals();
 		}
@@ -554,6 +636,63 @@ namespace MarsarahUI.Patches.UI
 
 			if (ensureVisible != null && recipeRect != null)
 				ensureVisible.CenterOnItem(recipeRect);
+		}
+
+		private static List<CraftingTab> GetAvailableBiomeTabs()
+		{
+			List<CraftingTab> tabs = new List<CraftingTab>();
+
+			foreach (CraftingTab tab in tabDisplayOrder)
+			{
+				if (tab == CraftingTab.All || tab == CraftingTab.Other)
+					continue;
+
+				if (availableTabs.Contains(tab))
+					tabs.Add(tab);
+			}
+
+			return tabs;
+		}
+
+		private static GameObject CreateNavigationButton(GameObject template, string label, UnityEngine.Events.UnityAction action)
+		{
+			GameObject buttonObject = Object.Instantiate(template, template.transform.parent);
+			buttonObject.name = label == "<" ? "MarsarahBiomeTabsPrevious" : "MarsarahBiomeTabsNext";
+
+			Button button = buttonObject.GetComponentInChildren<Button>(true);
+
+			if (button != null)
+			{
+				button.onClick = new Button.ButtonClickedEvent();
+				button.onClick.AddListener(action);
+
+				Navigation navigation = button.navigation;
+				navigation.mode = Navigation.Mode.None;
+				button.navigation = navigation;
+			}
+
+			TMP_Text text = buttonObject.GetComponentInChildren<TMP_Text>(true);
+
+			if (text != null)
+				text.text = label;
+
+			buttonObject.transform.SetAsLastSibling();
+
+			return buttonObject;
+		}
+
+		private static void PositionTab(GameObject tabObject, float x, float y, float width)
+		{
+			if (tabObject == null)
+				return;
+
+			RectTransform rect = tabObject.GetComponent<RectTransform>();
+
+			if (rect == null)
+				return;
+
+			rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+			rect.anchoredPosition = new Vector2(x, y);
 		}
 	}
 }
