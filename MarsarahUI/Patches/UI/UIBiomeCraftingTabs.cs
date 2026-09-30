@@ -54,8 +54,15 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Prefix(InventoryGui __instance, List<Recipe> recipes)
 			{
-				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs) return;
 				if (__instance == null || recipes == null) return;
+
+				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
+				{
+					selectedTab = CraftingTab.All;
+					SetBiomeTabsVisible(false);
+					SetCraftingLayout(false, __instance);
+					return;
+				}
 
 				if (!__instance.InCraftTab())
 				{
@@ -342,6 +349,8 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			updateCraftingPanel.Invoke(inventoryGui, new object[] { false });
+
+			EnsureSelectedRecipeVisible(inventoryGui);
 		}
 
 		private static void UpdateBiomeTabs(InventoryGui inventoryGui)
@@ -512,6 +521,39 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			craftingLayoutExpanded = expanded;
+		}
+
+		private static void EnsureSelectedRecipeVisible(InventoryGui inventoryGui)
+		{
+			if (inventoryGui == null)
+				return;
+
+			var getSelectedRecipeIndex = AccessTools.Method(typeof(InventoryGui), "GetSelectedRecipeIndex", new[] { typeof(bool) });
+			var availableRecipesField = AccessTools.Field(typeof(InventoryGui), "m_availableRecipes");
+			var ensureVisibleField = AccessTools.Field(typeof(InventoryGui), "m_recipeEnsureVisible");
+
+			if (getSelectedRecipeIndex == null || availableRecipesField == null || ensureVisibleField == null)
+				return;
+
+			int selectedIndex = (int)getSelectedRecipeIndex.Invoke(inventoryGui, new object[] { true });
+
+			if (!(availableRecipesField.GetValue(inventoryGui) is System.Collections.IList availableRecipes))
+				return;
+
+			if (selectedIndex < 0 || selectedIndex >= availableRecipes.Count)
+				return;
+
+			object recipeData = availableRecipes[selectedIndex];
+			GameObject interfaceElement = AccessTools.Property(recipeData.GetType(), "InterfaceElement")?.GetValue(recipeData) as GameObject;
+
+			if (interfaceElement == null)
+				return;
+
+			ScrollRectEnsureVisible ensureVisible = ensureVisibleField.GetValue(inventoryGui) as ScrollRectEnsureVisible;
+			RectTransform recipeRect = interfaceElement.GetComponent<RectTransform>();
+
+			if (ensureVisible != null && recipeRect != null)
+				ensureVisible.CenterOnItem(recipeRect);
 		}
 	}
 }
