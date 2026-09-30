@@ -272,6 +272,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.", ConfigSections.InformationRail, 10);
 
 			// ===== Items & Interaction
+			public static readonly ConfigMetadata UIBiomeSortedCraftingTabs = new ConfigMetadata("Biome-Sorted Crafting Tabs", "Organizes crafting recipes into biome tabs and sorts recipes by item type within each biome.", ConfigSections.ItemsInteraction, 80);
 			public static readonly ConfigMetadata UIShowOwnedResources = new ConfigMetadata("Show Owned Resources In Build Menu", "Displays the total amount of resources in the player's inventory in addition to the required resource amount for the selected piece or recipe in the build or crafting menu.", ConfigSections.ItemsInteraction, 70);
 			public static readonly ConfigMetadata UIEnemyNameplateMode = new ConfigMetadata("Enemy Nameplate Mode", "Changes the way enemy nameplates are displayed by changing bar style and colors and alerted/aggravated status. Has different ways of showing HP.", ConfigSections.ItemsInteraction, 60);
 			public static readonly ConfigMetadata UITamingProgress = new ConfigMetadata("Show Taming Progress", "Displays current taming percentage of animals that are acclimatizing under the HP bar. This is independent of Enemy Nameplate Mode.", ConfigSections.ItemsInteraction, 50);
@@ -323,6 +324,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ShowSmartBiome;
 		public static ConfigEntry<bool> ShowSummonCounter;
 		public static ConfigEntry<bool> ShowOnlinePlayers;
+		public static ConfigEntry<bool> BiomeSortedCraftingTabsEnabled;
 		public static ConfigEntry<bool> ShowOwnedResources;
 		public static ConfigEntry<bool> ShowBossExpirationMessage;
 		public static ConfigEntry<bool> ShowHeatLevelInAshlands;
@@ -403,6 +405,7 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
 		public static bool EffectiveShowSummonCounter => ShowSummonCounter.Value;
 		public static bool EffectiveShowOnlinePlayers => ShowOnlinePlayers.Value;
+		public static bool EffectiveBiomeSortedCraftingTabs => BiomeSortedCraftingTabsEnabled.Value;
 		public static bool EffectiveShowOwnedResources => ShowOwnedResources.Value;
 		public static bool EffectiveShowBossExpirationMessage => ShowBossExpirationMessage.Value;
 		public static bool EffectiveShowHeatLevelInAshlands => ResolveBool(ShowHeatLevelInAshlands, AshlandsHeatOverride);
@@ -499,6 +502,7 @@ namespace MarsarahUI.Managers
 			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
 
 			// ===== Items & Interaction
+			BiomeSortedCraftingTabsEnabled = CreateConfig(Configs.UIBiomeSortedCraftingTabs, true);
 			ShowOwnedResources = CreateConfig(Configs.UIShowOwnedResources, true);
 			EnemyNameplateChoice = CreateConfig(Configs.UIEnemyNameplateMode, EnemyNameplateMode.BarsWithHealth);
 			ShowTamingProgress = CreateConfig(Configs.UITamingProgress, true);

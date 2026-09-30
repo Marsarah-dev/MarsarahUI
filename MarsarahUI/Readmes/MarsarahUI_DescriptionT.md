@@ -293,7 +293,7 @@ https://paypal.me/Marsarah9
 - Other players' **Personal Chests** retain their vanilla hover and do not reveal their contents.
 
 - **Conflicts:**
-  - StoreAndCraft chest labels may be missing with the chest container mode on. Set Container Hover Mode to Off if this is the case.
+  - StoreAndCraft chest labels or tags may not display as expected with Container Hover Mode enabled. If this occurs, set Container Hover Mode to Off.
   - Icon-based Container Contents can overlap StoreAndCraft's additional hover text. Use Text or Off for Container Contents if needed.
 
 ---
