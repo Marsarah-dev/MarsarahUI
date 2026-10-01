@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace MarsarahUI.Patches.UI
 {
-	internal class UIBiomeCraftingTabs
+	internal class UICraftingTabs
 	{
 		private static readonly LogManager log = new LogManager("UI Biome Crafting Tabs", LogManager.LogLevel.Info);
 
