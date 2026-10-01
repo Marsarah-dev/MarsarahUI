@@ -845,6 +845,15 @@ namespace MarsarahUI.Patches.UI
 			EnsureSelectedRecipeVisible(inventoryGui);
 		}
 
+		internal static void RefreshFromConfig()
+		{
+			if (currentInventoryGui == null) return;
+
+			RefreshCraftingPanel(currentInventoryGui);
+
+			log.Info($"Refreshed crafting tabs using effective mode {ConfigManager.EffectiveBiomeCraftingTabsChoice}.");
+		}
+
 		private static void UpdateCraftingTabs(InventoryGui inventoryGui)
 		{
 			switch (ConfigManager.EffectiveBiomeCraftingTabsChoice)

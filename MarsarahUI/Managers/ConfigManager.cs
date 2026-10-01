@@ -253,6 +253,14 @@ namespace MarsarahUI.Managers
 			Text
 		}
 
+		public enum BiomeCraftingTabsModeOverride
+		{
+			UserChoice,
+			Scrolling,
+			MultipleRows,
+			Off
+		}
+
 		public static class Configs
 		{
 			// ===== General & HUD
@@ -310,6 +318,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.", ConfigSections.ServerOverrides, 120);
 			public static readonly ConfigMetadata OverrideInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode Override", "Overrides the player's local Information Rail Display Mode setting.", ConfigSections.ServerOverrides, 115);
 			public static readonly ConfigMetadata OverrideEnemyDetector = new ConfigMetadata("Enemy Detector Override", "Overrides the player's local Enemy Detector setting.", ConfigSections.ServerOverrides, 110);
+			public static readonly ConfigMetadata OverrideBiomeCraftingTabs = new ConfigMetadata("Biome-Sorted Crafting Tabs Override", "Overrides the player's local Biome-Sorted Crafting Tabs setting.", ConfigSections.ServerOverrides, 105);
 			public static readonly ConfigMetadata OverrideCurrentDay = new ConfigMetadata("Current Day Override", "Overrides the player's local Current Day setting.", ConfigSections.ServerOverrides, 100);
 			public static readonly ConfigMetadata OverrideCurrentTime = new ConfigMetadata("Current Time Override", "Overrides the player's local Current Time setting.", ConfigSections.ServerOverrides, 90);
 			public static readonly ConfigMetadata OverrideWeatherForecast = new ConfigMetadata("Weather Forecast Override", "Overrides the player's local Weather Forecast setting.", ConfigSections.ServerOverrides, 80);
@@ -370,6 +379,7 @@ namespace MarsarahUI.Managers
 
 		public static ConfigEntry<InfoRailDisplayModeOverride> InfoRailDisplayModeOverrideChoice;
 		public static ConfigEntry<BoolOverride> EnemyDetectorOverride;
+		public static ConfigEntry<BiomeCraftingTabsModeOverride> BiomeCraftingTabsOverrideChoice;
 		public static ConfigEntry<BoolOverride> CurrentDayOverride;
 		public static ConfigEntry<TimeModeOverride> CurrentTimeOverride;
 		public static ConfigEntry<BoolOverride> WeatherForecastOverride;
@@ -422,7 +432,7 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
 		public static bool EffectiveShowSummonCounter => ShowSummonCounter.Value;
 		public static bool EffectiveShowOnlinePlayers => ShowOnlinePlayers.Value;
-		public static BiomeCraftingTabsMode EffectiveBiomeCraftingTabsChoice => BiomeCraftingTabsChoice.Value;
+		public static BiomeCraftingTabsMode EffectiveBiomeCraftingTabsChoice => ResolveEnum(BiomeCraftingTabsChoice, BiomeCraftingTabsOverrideChoice, BiomeCraftingTabsModeOverride.UserChoice);
 		public static bool EffectiveBiomeSortedCraftingTabs => EffectiveBiomeCraftingTabsChoice != BiomeCraftingTabsMode.Off;
 		public static bool EffectiveShowOwnedResources => ShowOwnedResources.Value;
 		public static bool EffectiveShowBossExpirationMessage => ShowBossExpirationMessage.Value;
@@ -550,6 +560,7 @@ namespace MarsarahUI.Managers
 			ServerOverridesEnabled = CreateServerOverride(Configs.EnableServerOverrides, true);
 			InfoRailDisplayModeOverrideChoice = CreateServerOverride(Configs.OverrideInfoRailDisplayMode, InfoRailDisplayModeOverride.UserChoice);
 			EnemyDetectorOverride = CreateServerOverride(Configs.OverrideEnemyDetector, BoolOverride.UserChoice);
+			BiomeCraftingTabsOverrideChoice = CreateServerOverride(Configs.OverrideBiomeCraftingTabs, BiomeCraftingTabsModeOverride.UserChoice);
 			CurrentDayOverride = CreateServerOverride(Configs.OverrideCurrentDay, BoolOverride.UserChoice);
 			CurrentTimeOverride = CreateServerOverride(Configs.OverrideCurrentTime, TimeModeOverride.UserChoice);
 			WeatherForecastOverride = CreateServerOverride(Configs.OverrideWeatherForecast, BoolOverride.UserChoice);
@@ -688,6 +699,13 @@ namespace MarsarahUI.Managers
 			{
 				UIInfoRail.ApplyAnimationSetting();
 				UISummonDisplay.ApplyAnimationSetting();
+			}
+
+			if (configName == Configs.UIBiomeSortedCraftingTabs.Name ||
+				configName == Configs.OverrideBiomeCraftingTabs.Name ||
+				configName == Configs.EnableServerOverrides.Name)
+			{
+				UICraftingTabs.RefreshFromConfig();
 			}
 
 			if (configName == Configs.UIHoverInfoMode.Name ||

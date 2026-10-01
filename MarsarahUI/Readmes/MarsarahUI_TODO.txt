@@ -10,6 +10,8 @@ A. Fixes
 
 B. Updates
 ------------------------
+* Added the ability to reposition and scale the information rail (need to do the same for summon counter)
+* Made enemy detector sit on top by default
 
 C. New additions
 ------------------------
@@ -26,11 +28,9 @@ TO IMPLEMENT / VERIFY
 A. Fixes / Compatibility
 --------------------
 * Add override option for the crafting tabs
-* Make enemy detector sit on top by default
 
 B. Requests
 --------------------
-* Add the ability to reposition the information rail
 
 C. Existing UI Ideas
 --------------------
