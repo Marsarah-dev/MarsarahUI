@@ -290,6 +290,8 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIEnemyRailPosition = new ConfigMetadata("Enemy Rail X/Y Position", "Sets the exact X and Y position of the top-center enemy rail.", ConfigSections.InformationRail, 29);
 			public static readonly ConfigMetadata UIEnemyRailScale = new ConfigMetadata("Enemy Rail Scale", "Sets the scale of the top-center enemy rail as a percentage. 100 is the default size.", ConfigSections.InformationRail, 28);
 			public static readonly ConfigMetadata UISummonCounter = new ConfigMetadata("Show Summon Counter", "Shows number of summoned skeletons from the Dead Raiser.", ConfigSections.InformationRail, 20);
+			public static readonly ConfigMetadata UISummonCounterPosition = new ConfigMetadata("Summon Counter X/Y Position", "Sets the exact X and Y position of the summon counter.", ConfigSections.InformationRail, 19);
+			public static readonly ConfigMetadata UISummonCounterScale = new ConfigMetadata("Summon Counter Scale", "Sets the scale of the summon counter as a percentage. 100 is the default size.", ConfigSections.InformationRail, 18);
 			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.", ConfigSections.InformationRail, 10);
 
 			// ===== Items & Interaction
@@ -342,6 +344,8 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
 		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
 		public static ConfigEntry<EnemyDetectorMode> EnemyDetectorChoice;
+		public static ConfigEntry<Vector2> SummonCounterPosition;
+		public static ConfigEntry<int> SummonCounterScale;
 		public static ConfigEntry<bool> ShowBoatSpeed;
 		public static ConfigEntry<bool> ShowCurrentDay;
 		public static ConfigEntry<TimeMode> TimeChoice;
@@ -531,6 +535,8 @@ namespace MarsarahUI.Managers
 			EnemyRailPosition = CreateConfig(Configs.UIEnemyRailPosition, new Vector2(0f, -44f));
 			EnemyRailScale = CreateConfig(Configs.UIEnemyRailScale, 100);
 			ShowSummonCounter = CreateConfig(Configs.UISummonCounter, true);
+			SummonCounterPosition = CreateConfig(Configs.UISummonCounterPosition, new Vector2(38f, -85f));
+			SummonCounterScale = CreateConfig(Configs.UISummonCounterScale, 100);
 			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
 
 			// ===== Items & Interaction
@@ -699,6 +705,12 @@ namespace MarsarahUI.Managers
 			{
 				UIInfoRail.ApplyAnimationSetting();
 				UISummonDisplay.ApplyAnimationSetting();
+			}
+
+			if (configName == Configs.UISummonCounterPosition.Name ||
+				configName == Configs.UISummonCounterScale.Name)
+			{
+				UISummonDisplay.ApplySummonCounterTransform();
 			}
 
 			if (configName == Configs.UIBiomeSortedCraftingTabs.Name ||

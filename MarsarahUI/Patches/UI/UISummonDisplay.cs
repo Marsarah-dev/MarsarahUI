@@ -98,9 +98,9 @@ namespace MarsarahUI.Patches.UI
 			summonAreaRect = UISummonArea.AddComponent<RectTransform>();
 			summonAreaRect.anchorMin = new Vector2(1f, 1f);
 			summonAreaRect.anchorMax = new Vector2(1f, 1f);
-			summonAreaRect.anchoredPosition = GetHiddenPosition();
 			summonAreaRect.sizeDelta = areaSize;
-			summonAreaRect.localScale = Vector3.one;
+
+			ApplySummonCounterTransform();
 
 			summonBackground = CreateStyledBackground("SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
 			summonBorder = CreateStyledBorder("SummonBorder", UISummonArea, style.SummonBorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
@@ -151,7 +151,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (summonAreaRect != null)
 				{
-					summonAreaRect.anchoredPosition = visible ? VisiblePosition : GetHiddenPosition();
+					summonAreaRect.anchoredPosition = visible ? GetVisiblePosition() : GetHiddenPosition();
 				}
 
 				UISummonArea.SetActive(visible);
@@ -197,7 +197,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (summonAreaRect != null)
 			{
-				summonAreaRect.anchoredPosition = Vector2.Lerp(GetHiddenPosition(), VisiblePosition, easedProgress);
+				summonAreaRect.anchoredPosition = Vector2.Lerp(GetHiddenPosition(), GetVisiblePosition(), easedProgress);
 			}
 
 			if (!Mathf.Approximately(animationProgress, target)) return;
@@ -210,9 +210,14 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
+		private static Vector2 GetVisiblePosition()
+		{
+			return ConfigManager.SummonCounterPosition.Value;
+		}
+
 		private static Vector2 GetHiddenPosition()
 		{
-			return VisiblePosition + new Vector2(0f, SlideDistance);
+			return GetVisiblePosition() + new Vector2(0f, SlideDistance);
 		}
 
 		internal static void ApplyStyle()
@@ -250,6 +255,27 @@ namespace MarsarahUI.Patches.UI
 			ApplyDisplayMode();
 
 			log.Info($"Applied information rail style '{ConfigManager.InfoRailStyleChoice.Value}' to summon display.");
+		}
+
+		internal static void ApplySummonCounterTransform()
+		{
+			if (summonAreaRect == null) return;
+
+			float scale = ConfigManager.SummonCounterScale.Value / 100f;
+
+			summonAreaRect.localScale = new Vector3(scale, scale, 1f);
+
+			if (animating)
+			{
+				float easedProgress = Mathf.SmoothStep(0f, 1f, animationProgress);
+				summonAreaRect.anchoredPosition = Vector2.Lerp(GetHiddenPosition(), GetVisiblePosition(), easedProgress);
+			}
+			else
+			{
+				summonAreaRect.anchoredPosition = targetVisible ? GetVisiblePosition() : GetHiddenPosition();
+			}
+
+			log.Info($"Applied summon counter transform: position {ConfigManager.SummonCounterPosition.Value}, scale {ConfigManager.SummonCounterScale.Value}%.");
 		}
 
 		private static void ApplyDisplayMode()
@@ -314,7 +340,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (summonAreaRect != null)
 			{
-				summonAreaRect.anchoredPosition = targetVisible ? VisiblePosition : GetHiddenPosition();
+				summonAreaRect.anchoredPosition = targetVisible ? GetVisiblePosition() : GetHiddenPosition();
 			}
 
 			UISummonArea.SetActive(targetVisible);
