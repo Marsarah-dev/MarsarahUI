@@ -230,9 +230,9 @@ namespace MarsarahUI.Patches.UI
 			railRect.anchorMin = new Vector2(1f, 1f);
 			railRect.anchorMax = new Vector2(1f, 1f);
 			railRect.pivot = new Vector2(0f, 0.5f);
-			railRect.anchoredPosition = new Vector2(-88f, -230f);
 			railRect.sizeDelta = new Vector2(0f, style.RailHeight);
-			railRect.localScale = Vector3.one;
+
+			ApplyInfoRailTransform();
 
 			railBackground = CreateStyledBackground("RailBackground", UIRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
 
@@ -260,9 +260,9 @@ namespace MarsarahUI.Patches.UI
 			enemyRailRect.anchorMin = new Vector2(0.5f, 1f);
 			enemyRailRect.anchorMax = new Vector2(0.5f, 1f);
 			enemyRailRect.pivot = new Vector2(0.5f, 1f);
-			enemyRailRect.anchoredPosition = new Vector2(0f, -44f);
 			enemyRailRect.sizeDelta = new Vector2(0f, style.RailHeight);
-			enemyRailRect.localScale = Vector3.one;
+
+			ApplyEnemyRailTransform();
 
 			enemyRailBackground = CreateStyledBackground("EnemyRailBackground", UIEnemyRail, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
 
@@ -318,6 +318,30 @@ namespace MarsarahUI.Patches.UI
 			UIRail.SetActive(false);
 
 			log.Info("Created information rail.");
+		}
+
+		internal static void ApplyInfoRailTransform()
+		{
+			if (railRect == null) return;
+
+			float scale = ConfigManager.InfoRailScale.Value / 100f;
+
+			railRect.anchoredPosition = ConfigManager.InfoRailPosition.Value;
+			railRect.localScale = new Vector3(scale, scale, 1f);
+
+			log.Info($"Applied information rail transform: position {ConfigManager.InfoRailPosition.Value}, scale {ConfigManager.InfoRailScale.Value}%.");
+		}
+
+		internal static void ApplyEnemyRailTransform()
+		{
+			if (enemyRailRect == null) return;
+
+			float scale = ConfigManager.EnemyRailScale.Value / 100f;
+
+			enemyRailRect.anchoredPosition = ConfigManager.EnemyRailPosition.Value;
+			enemyRailRect.localScale = new Vector3(scale, scale, 1f);
+
+			log.Info($"Applied enemy rail transform: position {ConfigManager.EnemyRailPosition.Value}, scale {ConfigManager.EnemyRailScale.Value}%.");
 		}
 
 		private static void CreateElement(ElementType type, float preferredWidth)

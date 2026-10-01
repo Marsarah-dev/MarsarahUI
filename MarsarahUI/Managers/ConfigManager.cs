@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using System;
 using System.IO;
 using ServerSync;
+using UnityEngine;
 
 using MarsarahUI.Patches.UI;
 
@@ -207,10 +208,18 @@ namespace MarsarahUI.Managers
 
 		public enum EnemyDetectorPosition
 		{
-			InfoRail,
-			TopCenter
+			TopCenter,
+			InfoRail			
 		}
 
+		public enum BiomeCraftingTabsMode
+		{
+			Scrolling,
+			MultipleRows,
+			Off
+		}
+
+		// Overrides
 		public enum BoolOverride
 		{
 			UserChoice,
@@ -244,13 +253,6 @@ namespace MarsarahUI.Managers
 			Text
 		}
 
-		public enum BiomeCraftingTabsMode
-		{
-			Scrolling,
-			MultipleRows,
-			Off
-		}
-
 		public static class Configs
 		{
 			// ===== General & HUD
@@ -272,9 +274,13 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("Information Rail Style", "Choose the visual style used by the information rail and summon counter.", ConfigSections.InformationRail, 70);
 			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.", ConfigSections.InformationRail, 60);
 			public static readonly ConfigMetadata UIInfoRailAnimations = new ConfigMetadata("Information Rail Animations", "Animate information rail elements and the summon counter when they appear or disappear. Disable this if you experience UI-related performance issues.", ConfigSections.InformationRail, 55);
+			public static readonly ConfigMetadata UIInfoRailPosition = new ConfigMetadata("Information Rail X/Y Position", "Sets the exact X and Y position of the information rail.", ConfigSections.InformationRail, 54);
+			public static readonly ConfigMetadata UIInfoRailScale = new ConfigMetadata("Information Rail Scale", "Sets the scale of the information rail as a percentage. 100 is the default size.", ConfigSections.InformationRail, 53);
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.", ConfigSections.InformationRail, 50);
 			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.", ConfigSections.InformationRail, 40);
 			public static readonly ConfigMetadata UIEnemyDetectorPosition = new ConfigMetadata("Enemy Detector Position", "Choose whether the enemy detector is displayed in the bottom-left information rail or separately at the top-center of the screen.", ConfigSections.InformationRail, 30);
+			public static readonly ConfigMetadata UIEnemyRailPosition = new ConfigMetadata("Enemy Rail X/Y Position", "Sets the exact X and Y position of the top-center enemy rail.", ConfigSections.InformationRail, 29);
+			public static readonly ConfigMetadata UIEnemyRailScale = new ConfigMetadata("Enemy Rail Scale", "Sets the scale of the top-center enemy rail as a percentage. 100 is the default size.", ConfigSections.InformationRail, 28);
 			public static readonly ConfigMetadata UISummonCounter = new ConfigMetadata("Show Summon Counter", "Shows number of summoned skeletons from the Dead Raiser.", ConfigSections.InformationRail, 20);
 			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.", ConfigSections.InformationRail, 10);
 
@@ -319,7 +325,11 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<InfoRailStyle> InfoRailStyleChoice;
 		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
 		public static ConfigEntry<bool> InfoRailAnimationsEnabled;
+		public static ConfigEntry<Vector2> InfoRailPosition;
+		public static ConfigEntry<int> InfoRailScale;
 		public static ConfigEntry<EnemyDetectorPosition> EnemyDetectorPositionChoice;
+		public static ConfigEntry<Vector2> EnemyRailPosition;
+		public static ConfigEntry<int> EnemyRailScale;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
 		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
 		public static ConfigEntry<EnemyDetectorMode> EnemyDetectorChoice;
@@ -503,9 +513,13 @@ namespace MarsarahUI.Managers
 			UIStyleManager.Initialize(InfoRailStyleChoice);
 			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
 			InfoRailAnimationsEnabled = CreateConfig(Configs.UIInfoRailAnimations, true);
+			InfoRailPosition = CreateConfig(Configs.UIInfoRailPosition, new Vector2(-88f, -230f));
+			InfoRailScale = CreateConfig(Configs.UIInfoRailScale, 100);
 			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
 			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);
-			EnemyDetectorPositionChoice = CreateConfig(Configs.UIEnemyDetectorPosition, EnemyDetectorPosition.InfoRail);
+			EnemyDetectorPositionChoice = CreateConfig(Configs.UIEnemyDetectorPosition, EnemyDetectorPosition.TopCenter);
+			EnemyRailPosition = CreateConfig(Configs.UIEnemyRailPosition, new Vector2(0f, -44f));
+			EnemyRailScale = CreateConfig(Configs.UIEnemyRailScale, 100);
 			ShowSummonCounter = CreateConfig(Configs.UISummonCounter, true);
 			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
 
@@ -656,6 +670,18 @@ namespace MarsarahUI.Managers
 				configName == Configs.UIItemQualityColor.Name)
 			{
 				UIItemQuality.UpdateSymbols();
+			}
+
+			if (configName == Configs.UIInfoRailPosition.Name ||
+				configName == Configs.UIInfoRailScale.Name)
+			{
+				UIInfoRail.ApplyInfoRailTransform();
+			}
+
+			if (configName == Configs.UIEnemyRailPosition.Name ||
+				configName == Configs.UIEnemyRailScale.Name)
+			{
+				UIInfoRail.ApplyEnemyRailTransform();
 			}
 
 			if (configName == Configs.UIInfoRailAnimations.Name)
