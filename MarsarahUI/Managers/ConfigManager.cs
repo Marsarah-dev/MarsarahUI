@@ -246,8 +246,8 @@ namespace MarsarahUI.Managers
 
 		public enum BiomeCraftingTabsMode
 		{
-			MultipleRows,
 			Scrolling,
+			MultipleRows,
 			Off
 		}
 
@@ -510,7 +510,7 @@ namespace MarsarahUI.Managers
 			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
 
 			// ===== Items & Interaction
-			BiomeCraftingTabsChoice = CreateConfig(Configs.UIBiomeSortedCraftingTabs, BiomeCraftingTabsMode.MultipleRows);
+			BiomeCraftingTabsChoice = CreateConfig(Configs.UIBiomeSortedCraftingTabs, BiomeCraftingTabsMode.Scrolling);
 			ShowOwnedResources = CreateConfig(Configs.UIShowOwnedResources, true);
 			EnemyNameplateChoice = CreateConfig(Configs.UIEnemyNameplateMode, EnemyNameplateMode.BarsWithHealth);
 			ShowTamingProgress = CreateConfig(Configs.UITamingProgress, true);

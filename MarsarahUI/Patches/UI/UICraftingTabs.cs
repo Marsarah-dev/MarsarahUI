@@ -1002,7 +1002,7 @@ namespace MarsarahUI.Patches.UI
 					biomeScrollBar.navigation = navigation;
 
 					biomeScrollRect.horizontalScrollbar = biomeScrollBar;
-					biomeScrollRect.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+					biomeScrollRect.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
 				}
 			}
 
@@ -1097,7 +1097,7 @@ namespace MarsarahUI.Patches.UI
 			biomeScrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, contentWidth);
 			biomeScrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, craftRect.rect.height);
 
-			bool needsScrolling = contentWidth > scrollWidth;
+			bool needsScrolling = NeedsHorizontalTabScrolling();
 
 			if (biomeScrollBar != null)
 			{
@@ -1229,8 +1229,10 @@ namespace MarsarahUI.Patches.UI
 
 			float targetExtraHeight = tabRows > 0 ? 40f + ((tabRows - 1) * TabRowHeight) : 0f;
 
-			if (tabRows > 0 && ConfigManager.EffectiveBiomeCraftingTabsChoice == ConfigManager.BiomeCraftingTabsMode.Scrolling)
+			if (tabRows > 0 && ConfigManager.EffectiveBiomeCraftingTabsChoice == ConfigManager.BiomeCraftingTabsMode.Scrolling && NeedsHorizontalTabScrolling())
+			{
 				targetExtraHeight += ScrollBarHeight + ScrollBarSpacing;
+			}
 
 			if (Mathf.Approximately(targetExtraHeight, currentCraftingExtraHeight))
 				return;
@@ -1351,6 +1353,27 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			return CraftingTabProfile.Biomes;
+		}
+
+		private static bool NeedsHorizontalTabScrolling()
+		{
+			int visibleScrollableTabs = 0;
+
+			foreach (CraftingTab tab in tabDisplayOrder)
+			{
+				if (tab == CraftingTab.All || !availableTabs.Contains(tab))
+					continue;
+
+				visibleScrollableTabs++;
+			}
+
+			if (visibleScrollableTabs == 0)
+				return false;
+
+			float contentWidth = (visibleScrollableTabs * TabWidth) + ((visibleScrollableTabs - 1) * TabSpacing);
+			float scrollWidth = TabRowWidth - TabWidth - TabSpacing - ScrollRightInset;
+
+			return contentWidth > scrollWidth;
 		}
 
 		private static void DumpCurrentRecipes()
