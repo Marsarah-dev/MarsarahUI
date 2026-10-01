@@ -63,12 +63,16 @@ namespace MarsarahUI.Patches.UI
 		private const float ScrollBarSpacing = 4f;
 		private const float ScrollRightInset = 10f;
 
+		private static bool recipeDumpLogged;
+
 		[HarmonyPatch(typeof(InventoryGui), "UpdateRecipeList")]
 		private static class UpdateRecipeList_Patch
 		{
 			private static void Prefix(InventoryGui __instance, List<Recipe> recipes)
 			{
 				if (__instance == null || recipes == null) return;
+
+				//DumpCurrentRecipes();
 
 				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
 				{
@@ -229,21 +233,6 @@ namespace MarsarahUI.Patches.UI
 
 			if (hasOther)
 				availableTabs.Add(CraftingTab.Other);
-
-			// TEMP: Force all biome tabs for scrolling layout testing.
-			if (ConfigManager.EffectiveBiomeCraftingTabsChoice == ConfigManager.BiomeCraftingTabsMode.Scrolling)
-			{
-				availableTabs.Add(CraftingTab.Meadows);
-				availableTabs.Add(CraftingTab.BlackForest);
-				availableTabs.Add(CraftingTab.Swamp);
-				availableTabs.Add(CraftingTab.Mountain);
-				availableTabs.Add(CraftingTab.Plains);
-				availableTabs.Add(CraftingTab.Ocean);
-				availableTabs.Add(CraftingTab.Mistlands);
-				availableTabs.Add(CraftingTab.Ashlands);
-				availableTabs.Add(CraftingTab.DeepNorth);
-				availableTabs.Add(CraftingTab.Other);
-			}
 		}
 
 		private static GameObject GetInventoryGuiObject(InventoryGui inventoryGui, string fieldName)
@@ -705,9 +694,10 @@ namespace MarsarahUI.Patches.UI
 				child.SetParent(craftingContentRoot, true);
 			}
 
-			craftingContentRoot.anchoredPosition = new Vector2(0f, -40f);
+			craftingContentRoot.anchoredPosition = Vector2.zero;
+			currentCraftingExtraHeight = 0f;
 
-			log.Info("Created biome crafting content container and moved crafting content down.");
+			log.Info("Created biome crafting content container.");
 		}
 
 		private static void MoveRectDown(RectTransform rect, float amount)
@@ -868,6 +858,32 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			return rows;
+		}
+
+		private static void DumpCurrentRecipes()
+		{
+			if (recipeDumpLogged || ObjectDB.instance == null || ObjectDB.instance.m_recipes == null)
+				return;
+
+			recipeDumpLogged = true;
+
+			log.Info($"===== CURRENT RECIPE DUMP: {ObjectDB.instance.m_recipes.Count} recipes =====");
+
+			foreach (Recipe recipe in ObjectDB.instance.m_recipes)
+			{
+				if (recipe == null)
+					continue;
+
+				string itemName = recipe.m_item != null ? recipe.m_item.name : "<none>";
+				string stationName = recipe.m_craftingStation != null ? recipe.m_craftingStation.name : "<none>";
+
+				ItemDrop itemDrop = recipe.m_item != null ? recipe.m_item.GetComponent<ItemDrop>() : null;
+				string itemType = itemDrop != null ? itemDrop.m_itemData.m_shared.m_itemType.ToString() : "<none>";
+
+				log.Info($"{recipe.name} | Item: {itemName} | Type: {itemType} | Station: {stationName}");
+			}
+
+			log.Info("===== END CURRENT RECIPE DUMP =====");
 		}
 	}
 }
