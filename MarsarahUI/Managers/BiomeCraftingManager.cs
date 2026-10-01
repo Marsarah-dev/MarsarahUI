@@ -34,7 +34,6 @@ namespace MarsarahUI.Managers
 			Ammo,
 			Trinkets,
 			Food,
-			Mead,
 			Misc
 		}
 
@@ -334,6 +333,7 @@ namespace MarsarahUI.Managers
 			AddRecipes(CraftingBiome.Ocean, RecipeCategory.Food,
 				"Recipe_SerpentStew",
 				"Recipe_FeastOceans");
+
 
 			// Mistlands
 			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Tools, 

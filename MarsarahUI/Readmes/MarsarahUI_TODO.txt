@@ -13,6 +13,11 @@ B. Updates
 
 C. New additions
 ------------------------
+* Biome-sorted Crafting Tabs
+  - Added configurable crafting tabs with scrolling or multi-row layouts.
+  - Added biome and station-specific recipe categories, including Deep North.
+  - Added custom recipe sorting and OTHER fallback for unclassified/modded recipes.
+  - Added Tweaks compatibility for Fine Cape progression.
 
 ============================================================
 TO IMPLEMENT / VERIFY

@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UICraftingTabs
 	{
-		private static readonly LogManager log = new LogManager("UI Biome Crafting Tabs", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Crafting Tabs", LogManager.LogLevel.Info);
 
 		private enum CraftingTab
 		{
@@ -109,7 +109,7 @@ namespace MarsarahUI.Patches.UI
 				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
 				{
 					selectedTab = CraftingTab.All;
-					SetBiomeTabsVisible(false);
+					SetCraftingTabsVisible(false);
 					SetCraftingLayout(0, __instance);
 					return;
 				}
@@ -117,7 +117,7 @@ namespace MarsarahUI.Patches.UI
 				if (!__instance.InCraftTab())
 				{
 					selectedTab = CraftingTab.All;
-					SetBiomeTabsVisible(false);
+					SetCraftingTabsVisible(false);
 					SetCraftingLayout(0, __instance);
 					return;
 				}
@@ -136,7 +136,7 @@ namespace MarsarahUI.Patches.UI
 					selectedTab = CraftingTab.All;
 				}
 
-				UpdateBiomeTabs(__instance);
+				UpdateCraftingTabs(__instance);
 
 				log.Info($"Available crafting tabs: {string.Join(", ", availableTabs)}");
 
@@ -752,7 +752,7 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		private static void CreateBiomeTabs(InventoryGui inventoryGui)
+		private static void CreateCraftingTabs(InventoryGui inventoryGui)
 		{
 			GameObject craftTab = GetInventoryGuiObject(inventoryGui, "m_tabCraft");
 			GameObject upgradeTab = GetInventoryGuiObject(inventoryGui, "m_tabUpgrade");
@@ -845,7 +845,7 @@ namespace MarsarahUI.Patches.UI
 			EnsureSelectedRecipeVisible(inventoryGui);
 		}
 
-		private static void UpdateBiomeTabs(InventoryGui inventoryGui)
+		private static void UpdateCraftingTabs(InventoryGui inventoryGui)
 		{
 			switch (ConfigManager.EffectiveBiomeCraftingTabsChoice)
 			{
@@ -858,7 +858,7 @@ namespace MarsarahUI.Patches.UI
 					break;
 
 				case ConfigManager.BiomeCraftingTabsMode.Off:
-					SetBiomeTabsVisible(false);
+					SetCraftingTabsVisible(false);
 					break;
 			}
 		}
@@ -880,7 +880,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static void UpdateMultipleRowTabs(InventoryGui inventoryGui)
 		{
-			CreateBiomeTabs(inventoryGui);
+			CreateCraftingTabs(inventoryGui);
 			GameObject craftTab = GetInventoryGuiObject(inventoryGui, "m_tabCraft");
 
 			if (craftTab == null)
@@ -1016,7 +1016,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static void UpdateScrollingTabs(InventoryGui inventoryGui)
 		{
-			CreateBiomeTabs(inventoryGui);
+			CreateCraftingTabs(inventoryGui);
 
 			GameObject craftTab = GetInventoryGuiObject(inventoryGui, "m_tabCraft");
 
@@ -1205,7 +1205,7 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		private static void SetBiomeTabsVisible(bool visible)
+		private static void SetCraftingTabsVisible(bool visible)
 		{
 			foreach (GameObject tabObject in tabObjects.Values)
 			{
