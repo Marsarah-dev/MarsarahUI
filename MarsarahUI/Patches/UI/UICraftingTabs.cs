@@ -62,13 +62,15 @@ namespace MarsarahUI.Patches.UI
 			internal Recipe Recipe { get; }
 			internal RectTransform Rect { get; }
 			internal int OriginalIndex { get; }
+			internal bool CanCraft { get; }
 
-			internal RecipeSortEntry(object recipeData, Recipe recipe, RectTransform rect, int originalIndex)
+			internal RecipeSortEntry(object recipeData, Recipe recipe, RectTransform rect, int originalIndex, bool canCraft)
 			{
 				RecipeData = recipeData;
 				Recipe = recipe;
 				Rect = rect;
 				OriginalIndex = originalIndex;
+				CanCraft = canCraft;
 			}
 		}
 
@@ -191,13 +193,13 @@ namespace MarsarahUI.Patches.UI
 				Recipe recipe = GetRecipeFromRecipeData(recipeData);
 				RectTransform rect = GetRecipeRectFromRecipeData(recipeData);
 
-				if (recipe == null || rect == null)
+				if (recipe == null || rect == null || !TryGetCanCraftFromRecipeData(recipeData, out bool canCraft))
 				{
 					log.Warn("Could not read recipe data while applying crafting recipe sorting.");
 					return;
 				}
 
-				entries.Add(new RecipeSortEntry(recipeData, recipe, rect, i));
+				entries.Add(new RecipeSortEntry(recipeData, recipe, rect, i, canCraft));
 				slotPositions.Add(rect.anchoredPosition);
 			}
 
@@ -245,6 +247,9 @@ namespace MarsarahUI.Patches.UI
 
 		private static int CompareRecipeEntries(RecipeSortEntry a, RecipeSortEntry b)
 		{
+			if (a.CanCraft != b.CanCraft)
+				return a.CanCraft ? -1 : 1;
+
 			switch (currentTabProfile)
 			{
 				case CraftingTabProfile.MeadKettle:
@@ -492,6 +497,22 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			return selectedTab == CraftingTab.Other;
+		}
+
+		private static bool TryGetCanCraftFromRecipeData(object recipeData, out bool canCraft)
+		{
+			canCraft = false;
+
+			if (recipeData == null)
+				return false;
+
+			var property = AccessTools.Property(recipeData.GetType(), "CanCraft");
+
+			if (property == null)
+				return false;
+
+			canCraft = (bool)property.GetValue(recipeData);
+			return true;
 		}
 
 		private static bool TryGetBiomeForTab(CraftingTab tab, out BiomeCraftingManager.CraftingBiome biome)
