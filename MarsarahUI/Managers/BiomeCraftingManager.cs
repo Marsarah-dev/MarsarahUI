@@ -21,6 +21,7 @@ namespace MarsarahUI.Managers
 
 		internal enum RecipeCategory
 		{
+			Materials,
 			Tools,
 			Torches,
 			Armor,
@@ -34,7 +35,6 @@ namespace MarsarahUI.Managers
 			Trinkets,
 			Food,
 			Mead,
-			Materials,
 			Misc
 		}
 
