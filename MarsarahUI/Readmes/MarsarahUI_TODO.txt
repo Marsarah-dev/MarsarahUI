@@ -10,8 +10,8 @@ A. Fixes
 
 B. Updates
 ------------------------
-* Added the ability to reposition and scale the information rail (need to do the same for summon counter)
-* Made enemy detector sit on top by default
+* Added the ability to reposition and scale the information rail, enemy counter, and summon counter
+* Changed the default location for the enemy detector to be on the top-center. Can still be placed inside the information rail in the config. 
 
 C. New additions
 ------------------------
@@ -20,6 +20,7 @@ C. New additions
   - Added biome and station-specific recipe categories, including Deep North.
   - Added custom recipe sorting and OTHER fallback for unclassified/modded recipes.
   - Added Tweaks compatibility for Fine Cape progression.
+  - Can be overridden by the server override option.
 
 ============================================================
 TO IMPLEMENT / VERIFY
@@ -27,7 +28,6 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
-* Add override option for the crafting tabs
 
 B. Requests
 --------------------
@@ -36,7 +36,7 @@ C. Existing UI Ideas
 --------------------
 * Current Time: visual day-progress line with a moving time indicator.
 * Weather Forecast: choose a better position when No Map is enabled.
-* Smelter hover: add a Bars display mode.
+* Smelter hover: add a progress bar display mode.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
 * Consider showing player HP and death count with Online Players.
 * Consider indicating Corpse Run status, for example by coloring the player name.
