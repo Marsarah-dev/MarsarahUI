@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Author:** Marsarah
 
 ---
@@ -198,6 +198,9 @@ https://paypal.me/Marsarah9
 
 
 ## <strong> ⚡ Information Rail </strong>
+- The Information Rail can be repositioned using exact **X/Y coordinates** and scaled independently.
+- The separate top-center Enemy Rail can also be repositioned and scaled independently.
+- The Enemy Detector now defaults to **TopCenter** for new configurations.
 
 ### <strong>🔧 Information Rail</strong>
 - Adds a unified information area at the bottom-left of the HUD.
@@ -232,6 +235,7 @@ https://paypal.me/Marsarah9
 - Does not count summoned Trolls.
 - Appears only while summons are active.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
+- Can be repositioned using exact **X/Y coordinates** and scaled independently.
 
 ### <strong>🔧 Skill Progress Bar</strong>
 - Displays a temporary progress bar along the bottom edge of the screen when a skill advances to a new whole percentage toward its next level.
@@ -243,6 +247,18 @@ https://paypal.me/Marsarah9
 
 
 ## <strong> ⚡ Items & Interaction</strong>
+
+### <strong>🔧 Biome-Sorted Crafting Tabs</strong>
+- Organizes crafting recipes into contextual tabs.
+- Modes: **Scrolling, MultipleRows, Off**.
+- Standard crafting stations organize recipes by biome.
+- The Mead Kettle uses **Recovery, Resist and Utility** categories.
+- The Food Preparation Table uses biome categories together with a separate **Feasts** category.
+- Only tabs containing available recipes are shown.
+- Unclassified and modded recipes remain available under **Other**.
+- Includes Deep North recipe categorization.
+- When MarsarahTweaks **Early Linen Cape** is enabled, the Linen Cape is categorized under Swamp to match the modified progression.
+- Includes a synchronized server override with **UserChoice, Scrolling, MultipleRows and Off**.
 
 ### <strong>🔧 Show Owned Resources In Build Menu</strong>
 - Displays resource requirements as **required / owned** values in build and crafting requirement displays.

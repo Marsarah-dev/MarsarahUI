@@ -1,4 +1,4 @@
-Marsarah UI v1.2.0
+Marsarah UI v1.3.0
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -11,7 +11,7 @@ Marsarah UI also includes ServerSync support for selected gameplay/information-o
 DEVELOPMENT NOTES
 ================================================================
 DEEP NORTH / SPOILER NOTE:
-Deep North-specific UI integration is intentionally limited for now. I want to experience the new biome and progression myself before digging through its mechanics in detail so I can play through it without spoiling the experience for myself.
+Beyond recipe categorization used by Biome-Sorted Crafting Tabs, Deep North-specific UI integration is intentionally limited for now. I want to experience the new biome and progression myself before digging through its mechanics in detail so I can play through it without spoiling the experience for myself.
 
 After completing the Deep North, I plan to review new gear for Smart Biome and check whether any new mechanics would benefit from additional indicators or hover information.
 
@@ -294,6 +294,29 @@ MOD CONFIGS
   Selects whether Information Rail information and the Summon Counter are represented using icons or text labels.
 
 
+---------------- [Information Rail Animations] -----------------
+► Description:
+  Enables or disables the animated transitions used when Information Rail elements and the Summon Counter appear or disappear.
+
+
+--------------- [Information Rail X/Y Position] ----------------
+► Description:
+  Sets the exact X and Y position of the Information Rail.
+  Values are absolute UI positions rather than offsets from the default position.
+
+► Default:
+  X: -88
+  Y: -230
+
+
+------------------ [Information Rail Scale] --------------------
+► Description:
+  Scales the entire Information Rail, including its icons, text, background, borders and separators.
+
+► Default:
+  100
+
+
 -------------- [Inventory Weight and Free Slots] ---------------
 ► Description:
   Shows current weight / maximum carry weight in a filling bar near the bottom-left HUD.
@@ -328,8 +351,27 @@ MOD CONFIGS
   Selects where Enemy Detector information is displayed.
 
 ► Modes:
+  TopCenter - displays enemy information in a separate top-center rail.
   InfoRail  - displays enemy information inside the bottom-left Information Rail.
-  TopCenter - moves enemy information to a separate top-center rail.
+
+
+------------------- [Enemy Rail X/Y Position] ------------------
+► Description:
+  Sets the exact X and Y position of the separate top-center Enemy Rail.
+  Only applies when Enemy Detector Position is set to TopCenter.
+
+► Default:
+  X: 0
+  Y: -44
+
+
+---------------------- [Enemy Rail Scale] ----------------------
+► Description:
+  Scales the separate top-center Enemy Rail.
+  Only applies when Enemy Detector Position is set to TopCenter.
+
+► Default:
+  100
 
 
 ---------------------- [Show Summon Counter] --------------------
@@ -337,6 +379,24 @@ MOD CONFIGS
   Shows the number of active skeletons summoned by the Dead Raiser.
   Summoned Trolls are not counted.
   Counter color changes with active summon count.
+  Uses the selected Information Rail style and Icons/Text display mode.
+
+
+------------------ [Summon Counter X/Y Position] ---------------
+► Description:
+  Sets the exact X and Y position of the Summon Counter.
+
+► Default:
+  X: 38
+  Y: -85
+
+
+--------------------- [Summon Counter Scale] -------------------
+► Description:
+  Scales the entire Summon Counter, including its icon/text, background and border.
+
+► Default:
+  100
 
 
 ----------------------- [Skill Progress Bar] --------------------
@@ -358,6 +418,29 @@ MOD CONFIGS
 
 
 ================== [03 - Items & Interaction] ==================
+
+---------------- [Biome-Sorted Crafting Tabs] ------------------
+► Description:
+  Organizes crafting recipes into contextual tabs to make large recipe lists easier to navigate.
+
+  Standard crafting stations organize recipes by biome.
+  The Mead Kettle uses Recovery, Resist and Utility categories.
+  The Food Preparation Table uses biome categories together with a separate Feasts category.
+  Only categories containing available recipes are displayed.
+  Unclassified or modded recipes are placed under Other so they remain accessible.
+  The All tab always displays the complete recipe list.
+
+► Modes:
+  Scrolling    - displays one row of tabs with horizontal scrolling when needed.
+  MultipleRows - displays all available tabs across multiple rows.
+  Off          - disables Biome-Sorted Crafting Tabs.
+
+► MarsarahTweaks Compatibility:
+  If MarsarahTweaks is installed and Early Linen Cape is enabled, the Linen Cape is categorized under Swamp to match the modified progression.
+
+► Server Override:
+  Servers can override this setting with UserChoice, Scrolling, MultipleRows or Off.
+
 
 ------------- [Show Owned Resources In Build Menu] ------------
 ► Description:
@@ -568,6 +651,25 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.3.0
+- New Features:
+  - Added Biome-Sorted Crafting Tabs.
+  - Added Scrolling and MultipleRows tab layouts, with Off available to disable the feature.
+  - Standard crafting stations organize recipes by biome.
+  - Added specialized categories for the Mead Kettle and Food Preparation Table.
+  - Added Deep North recipe categorization and an Other fallback for unclassified or modded recipes.
+  - Added custom recipe sorting within the new crafting-tab system.
+
+- Information Rail / HUD Layout:
+  - Added configurable X/Y positioning and scaling for the Information Rail.
+  - Added configurable X/Y positioning and scaling for the separate top-center Enemy Rail.
+  - Added configurable X/Y positioning and scaling for the Summon Counter.
+  - Enemy Detector now defaults to TopCenter for new configurations. Existing saved configurations retain their previous selection.
+
+- Server Overrides / Compatibility:
+  - Added a synchronized Biome-Sorted Crafting Tabs override with UserChoice, Scrolling, MultipleRows and Off.
+  - Added MarsarahTweaks Early Linen Cape compatibility so crafting-tab progression matches the Tweaks setting.
+
 v1.2.0
 - Fixes / Optimizations:
   - Fixed periodic stutters caused by Enemy Nameplates around nearby creatures.

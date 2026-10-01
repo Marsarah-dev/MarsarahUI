@@ -41,7 +41,7 @@ namespace MarsarahUI.Managers
 					log.Warn("Could not find MarsarahTweaks Progression Halt container compatibility method.");
 				}
 
-				log.Info("MarsarahTweaks detected. Smart Biome will account for Gear Upgrade Unlock.");
+				log.Info("MarsarahTweaks detected. Compatibility features initialized.");
 			}
 
 			CraftFromContainersLoaded = Chainloader.PluginInfos.ContainsKey(CraftFromContainersGUID);

@@ -1,6 +1,6 @@
 [size=5][b]Marsarah UI[/b][/size]
 
-[b]Version:[/b] 1.2.0
+[b]Version:[/b] 1.3.0
 [b]Author:[/b] Marsarah
 
 [line]
@@ -197,6 +197,9 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 
 [size=5][b]⚡ Information Rail[/b][/size]
+- The Information Rail can be repositioned using exact [b]X/Y coordinates[/b] and scaled independently.
+- The separate top-center Enemy Rail can also be repositioned and scaled independently.
+- The Enemy Detector now defaults to the [b]TopCenter[/b] position for new configurations.
 
 [size=4][b]🔧 Information Rail[/b][/size]
 - Adds a unified information area at the bottom-left of the HUD.
@@ -231,6 +234,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Summoned Trolls are not counted.
 - Appears only while summons are active.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
+- Can be repositioned using exact [b]X/Y coordinates[/b] and scaled independently.
 
 [size=4][b]🔧 Skill Progress Bar[/b][/size]
 - Displays a temporary progress bar along the bottom edge of the screen when a skill advances to a new whole percentage toward its next level.
@@ -242,6 +246,18 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 
 [size=5][b]⚡ Items & Interaction[/b][/size]
+
+[size=4][b]🔧 Biome-Sorted Crafting Tabs[/b][/size]
+- Organizes crafting recipes into contextual tabs.
+- Modes: [b]Scrolling, MultipleRows, Off[/b].
+- Standard crafting stations organize recipes by biome.
+- The Mead Kettle uses [b]Recovery, Resist and Utility[/b] categories.
+- The Food Preparation Table uses biome categories together with a separate [b]Feasts[/b] category.
+- Only tabs containing available recipes are shown.
+- Unclassified and modded recipes remain available under [b]Other[/b].
+- Includes Deep North recipe categorization.
+- When MarsarahTweaks [b]Early Linen Cape[/b] is enabled, the Linen Cape is categorized under Swamp to match the modified progression.
+- Includes a synchronized server override with [b]UserChoice, Scrolling, MultipleRows and Off[/b].
 
 [size=4][b]🔧 Show Owned Resources In Build Menu[/b][/size]
 - Shows resource requirements as [b]required / owned[/b] in build and crafting displays.
@@ -322,6 +338,26 @@ Thanks for checking out Marsarah UI!
 Blaxxun-bloop - for ServerSync
 
 [size=5][b]📜 Version History[/b][/size]
+
+[size=4][b]v1.3.0[/b][/size]
+
+[b]New Features:[/b]
+- Added Biome-Sorted Crafting Tabs.
+- Added Scrolling and MultipleRows tab layouts, with Off available to disable the feature.
+- Standard crafting stations organize recipes by biome.
+- Added specialized categories for the Mead Kettle and Food Preparation Table.
+- Added Deep North recipe categorization and an Other fallback for unclassified or modded recipes.
+- Added custom recipe sorting within the new crafting-tab system.
+
+[b]Information Rail / HUD Layout:[/b]
+- Added configurable X/Y positioning and scaling for the Information Rail.
+- Added configurable X/Y positioning and scaling for the separate top-center Enemy Rail.
+- Added configurable X/Y positioning and scaling for the Summon Counter.
+- Enemy Detector now defaults to TopCenter for new configurations. Existing saved configurations retain their previous selection.
+
+[b]Server Overrides / Compatibility:[/b]
+- Added a synchronized Biome-Sorted Crafting Tabs override with UserChoice, Scrolling, MultipleRows and Off.
+- Added MarsarahTweaks Early Linen Cape compatibility so crafting-tab progression matches the Tweaks setting.
 
 [size=4][b]v1.2.0[/b][/size]
 

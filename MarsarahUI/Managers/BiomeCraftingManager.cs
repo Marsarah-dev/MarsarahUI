@@ -4,7 +4,7 @@ namespace MarsarahUI.Managers
 {
 	internal static class BiomeCraftingManager
 	{
-		private static readonly LogManager log = new LogManager("Biome Crafting", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("Biome Crafting", LogManager.LogLevel.Warning);
 
 		internal enum CraftingBiome
 		{

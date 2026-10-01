@@ -1,5 +1,27 @@
 ## <strong> 📜 Version History </strong>
 
+v1.3.0
+- **New Features:**
+  - Added Biome-Sorted Crafting Tabs.
+  - Added Scrolling and MultipleRows layouts, with Off available to disable the feature.
+  - Standard crafting stations organize recipes by biome.
+  - Added specialized Mead Kettle categories for Recovery, Resist and Utility.
+  - Added biome and Feasts categories for the Food Preparation Table.
+  - Added Deep North recipe categorization.
+  - Added an Other fallback so unclassified and modded recipes remain accessible.
+  - Added custom recipe sorting within the crafting-tab system.
+
+- **Information Rail / HUD Layout:**
+  - Added configurable X/Y positioning and scaling for the Information Rail.
+  - Added configurable X/Y positioning and scaling for the separate top-center Enemy Rail.
+  - Added configurable X/Y positioning and scaling for the Summon Counter.
+  - Enemy Detector now defaults to TopCenter for new configurations.
+  - Existing saved Enemy Detector Position selections are preserved.
+
+- **Server Overrides / Compatibility:**
+  - Added a synchronized Biome-Sorted Crafting Tabs override with UserChoice, Scrolling, MultipleRows and Off.
+  - Added MarsarahTweaks Early Linen Cape compatibility so the Linen Cape is categorized according to the modified progression.
+
 v1.2.0
 - **Fixes/Optimizations:**
   - Fixed Enemy Nameplates causing periodic stutters around nearby creatures.

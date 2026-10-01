@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UICraftingTabs
 	{
-		private static readonly LogManager log = new LogManager("UI Crafting Tabs", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Crafting Tabs", LogManager.LogLevel.Warning);
 
 		private enum CraftingTab
 		{
