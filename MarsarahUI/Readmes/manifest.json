@@ -2,7 +2,7 @@
     "name": "MarsarahUI",
     "version_number": "1.3.0",
     "website_url": "https://www.nexusmods.com/valheim/mods/3710",
-    "description": "UI enhancements with weather forecasts, smart biome indicators, enemy detection, day and time, inventory info, boat speed, online players, improved nameplates, detailed hovers, and more.",
+    "description": "UI enhancements with biome-sorted crafting tabs, customizable HUD information, weather forecasts, smart biome indicators, enemy detection, improved nameplates, detailed hovers, and more.",
     "dependencies": [
         "denikson-BepInExPack_Valheim-5.4.2350"
     ]

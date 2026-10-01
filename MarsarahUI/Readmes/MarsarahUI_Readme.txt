@@ -618,6 +618,9 @@ Smart Biome:
 Detailed Hovers / Container Contents:
   Checks MarsarahTweaks Progression Halt. Progression-sealed chests do not reveal their real contents.
 
+Biome-Sorted Crafting Tabs:
+  Accounts for MarsarahTweaks Early Linen Cape by categorizing the Linen Cape under Swamp when enabled.
+
 Craft From Containers
 ----------------------------------------------------------------
 If detected, Marsarah UI does not alter the Owned Resources requirement display and lets Craft From Containers handle it instead.

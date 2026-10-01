@@ -18,7 +18,7 @@ Marsarah UI also includes **ServerSync** support for selected gameplay/informati
 
 ## **Development Notes**
 
-**Deep North / Spoiler Note:** Deep North-specific UI integration is intentionally limited for now.  
+**Deep North / Spoiler Note:** Beyond recipe categorization used by Biome-Sorted Crafting Tabs, Deep North-specific UI integration is intentionally limited for now.  
 I want to experience the new biome and progression myself before digging through its mechanics in detail, so I can play through it without spoiling the experience for myself.  
 After completing the Deep North, I plan to review new gear for Smart Biome and check whether any new mechanics would benefit from additional indicators or hover information.
 
@@ -319,6 +319,7 @@ https://paypal.me/Marsarah9
 ### **MarsarahTweaks**
 - Optional soft dependency. Marsarah UI works without Tweaks.
 - Smart Biome accounts for **Gear Upgrade Unlock**.
+- Biome-Sorted Crafting Tabs accounts for **Early Linen Cape** by categorizing the Linen Cape under Swamp when enabled.
 - Detailed Hovers / Container Contents respects **Progression Halt** and will not reveal sealed chest contents.
 
 ### **Craft From Containers**
