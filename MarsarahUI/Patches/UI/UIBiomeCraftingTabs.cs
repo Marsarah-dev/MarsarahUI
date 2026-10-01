@@ -23,7 +23,18 @@ namespace MarsarahUI.Patches.UI
 			Mistlands,
 			Ashlands,
 			DeepNorth,
+			Feasts,
+			Recovery,
+			Resist,
+			Utility,
 			Other
+		}
+
+		private enum CraftingTabProfile
+		{
+			Biomes,
+			MeadKettle,
+			FoodPreparation
 		}
 
 		private static readonly CraftingTab[] tabDisplayOrder =
@@ -38,6 +49,10 @@ namespace MarsarahUI.Patches.UI
 			CraftingTab.Mistlands,
 			CraftingTab.Ashlands,
 			CraftingTab.DeepNorth,
+			CraftingTab.Feasts,
+			CraftingTab.Recovery,
+			CraftingTab.Resist,
+			CraftingTab.Utility,
 			CraftingTab.Other
 		};
 
@@ -45,6 +60,7 @@ namespace MarsarahUI.Patches.UI
 		private static readonly Dictionary<CraftingTab, GameObject> tabObjects = new Dictionary<CraftingTab, GameObject>();
 
 		private static CraftingTab selectedTab = CraftingTab.All;
+		private static CraftingTabProfile currentTabProfile = CraftingTabProfile.Biomes;
 		private static InventoryGui currentInventoryGui;
 		private static RectTransform craftingContentRoot;
 		private static float currentCraftingExtraHeight;
@@ -92,6 +108,7 @@ namespace MarsarahUI.Patches.UI
 
 				int originalCount = recipes.Count;
 
+				currentTabProfile = GetCraftingTabProfile(recipes);
 				UpdateAvailableTabs(recipes);
 
 				int tabRows = GetRequiredLayoutRows();
@@ -118,6 +135,21 @@ namespace MarsarahUI.Patches.UI
 			if (selectedTab == CraftingTab.All)
 				return true;
 
+			switch (currentTabProfile)
+			{
+				case CraftingTabProfile.MeadKettle:
+					return RecipeMatchesMeadKettleTab(recipe);
+
+				case CraftingTabProfile.FoodPreparation:
+					return RecipeMatchesFoodPreparationTab(recipe);
+
+				default:
+					return RecipeMatchesBiomeTab(recipe);
+			}
+		}
+
+		private static bool RecipeMatchesBiomeTab(Recipe recipe)
+		{
 			if (selectedTab == CraftingTab.Other)
 				return !BiomeCraftingManager.TryGetClassification(recipe, out _);
 
@@ -128,6 +160,50 @@ namespace MarsarahUI.Patches.UI
 				return false;
 
 			return classification.Biome == biome;
+		}
+
+		private static bool RecipeMatchesMeadKettleTab(Recipe recipe)
+		{
+			if (!BiomeCraftingManager.TryGetSpecialGroup(recipe, out BiomeCraftingManager.SpecialRecipeGroup group))
+				return selectedTab == CraftingTab.Other;
+
+			switch (selectedTab)
+			{
+				case CraftingTab.Recovery:
+					return group == BiomeCraftingManager.SpecialRecipeGroup.MeadRecovery;
+
+				case CraftingTab.Resist:
+					return group == BiomeCraftingManager.SpecialRecipeGroup.MeadResistance;
+
+				case CraftingTab.Utility:
+					return group == BiomeCraftingManager.SpecialRecipeGroup.MeadUtility;
+
+				case CraftingTab.Other:
+					return group != BiomeCraftingManager.SpecialRecipeGroup.MeadRecovery &&
+						group != BiomeCraftingManager.SpecialRecipeGroup.MeadResistance &&
+						group != BiomeCraftingManager.SpecialRecipeGroup.MeadUtility;
+
+				default:
+					return false;
+			}
+		}
+
+		private static bool RecipeMatchesFoodPreparationTab(Recipe recipe)
+		{
+			if (BiomeCraftingManager.TryGetSpecialGroup(recipe, out BiomeCraftingManager.SpecialRecipeGroup group) &&
+				group == BiomeCraftingManager.SpecialRecipeGroup.Feast)
+			{
+				return selectedTab == CraftingTab.Feasts;
+			}
+
+			if (BiomeCraftingManager.TryGetClassification(recipe, out BiomeCraftingManager.RecipeClassification classification) &&
+				TryGetTabForBiome(classification.Biome, out CraftingTab tab) &&
+				IsFoodPreparationBiomeTab(tab))
+			{
+				return selectedTab == tab;
+			}
+
+			return selectedTab == CraftingTab.Other;
 		}
 
 		private static bool TryGetBiomeForTab(CraftingTab tab, out BiomeCraftingManager.CraftingBiome biome)
@@ -176,59 +252,160 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
+		private static bool TryGetTabForBiome(BiomeCraftingManager.CraftingBiome biome, out CraftingTab tab)
+		{
+			switch (biome)
+			{
+				case BiomeCraftingManager.CraftingBiome.Meadows:
+					tab = CraftingTab.Meadows;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.BlackForest:
+					tab = CraftingTab.BlackForest;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.Swamp:
+					tab = CraftingTab.Swamp;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.Mountain:
+					tab = CraftingTab.Mountain;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.Plains:
+					tab = CraftingTab.Plains;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.Ocean:
+					tab = CraftingTab.Ocean;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.Mistlands:
+					tab = CraftingTab.Mistlands;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.Ashlands:
+					tab = CraftingTab.Ashlands;
+					return true;
+
+				case BiomeCraftingManager.CraftingBiome.DeepNorth:
+					tab = CraftingTab.DeepNorth;
+					return true;
+
+				default:
+					tab = default;
+					return false;
+			}
+		}
+
+		private static bool IsFoodPreparationBiomeTab(CraftingTab tab)
+		{
+			return tab == CraftingTab.Plains ||
+				tab == CraftingTab.Mistlands ||
+				tab == CraftingTab.Ashlands ||
+				tab == CraftingTab.DeepNorth;
+		}
+
 		private static void UpdateAvailableTabs(List<Recipe> recipes)
 		{
 			availableTabs.Clear();
 			availableTabs.Add(CraftingTab.All);
 
+			switch (currentTabProfile)
+			{
+				case CraftingTabProfile.MeadKettle:
+					UpdateMeadKettleTabs(recipes);
+					break;
+
+				case CraftingTabProfile.FoodPreparation:
+					UpdateFoodPreparationTabs(recipes);
+					break;
+
+				default:
+					UpdateBiomeAvailableTabs(recipes);
+					break;
+			}
+		}
+
+		private static void UpdateBiomeAvailableTabs(List<Recipe> recipes)
+		{
 			bool hasOther = false;
 
 			foreach (Recipe recipe in recipes)
 			{
-				if (!BiomeCraftingManager.TryGetClassification(recipe, out BiomeCraftingManager.RecipeClassification classification))
+				if (BiomeCraftingManager.TryGetClassification(recipe, out BiomeCraftingManager.RecipeClassification classification) &&
+					TryGetTabForBiome(classification.Biome, out CraftingTab tab))
+				{
+					availableTabs.Add(tab);
+				}
+				else
+				{
+					hasOther = true;
+				}
+			}
+
+			if (hasOther)
+				availableTabs.Add(CraftingTab.Other);
+		}
+
+		private static void UpdateMeadKettleTabs(List<Recipe> recipes)
+		{
+			bool hasOther = false;
+
+			foreach (Recipe recipe in recipes)
+			{
+				if (!BiomeCraftingManager.TryGetSpecialGroup(recipe, out BiomeCraftingManager.SpecialRecipeGroup group))
 				{
 					hasOther = true;
 					continue;
 				}
 
-				switch (classification.Biome)
+				switch (group)
 				{
-					case BiomeCraftingManager.CraftingBiome.Meadows:
-						availableTabs.Add(CraftingTab.Meadows);
+					case BiomeCraftingManager.SpecialRecipeGroup.MeadRecovery:
+						availableTabs.Add(CraftingTab.Recovery);
 						break;
 
-					case BiomeCraftingManager.CraftingBiome.BlackForest:
-						availableTabs.Add(CraftingTab.BlackForest);
+					case BiomeCraftingManager.SpecialRecipeGroup.MeadResistance:
+						availableTabs.Add(CraftingTab.Resist);
 						break;
 
-					case BiomeCraftingManager.CraftingBiome.Swamp:
-						availableTabs.Add(CraftingTab.Swamp);
+					case BiomeCraftingManager.SpecialRecipeGroup.MeadUtility:
+						availableTabs.Add(CraftingTab.Utility);
 						break;
 
-					case BiomeCraftingManager.CraftingBiome.Mountain:
-						availableTabs.Add(CraftingTab.Mountain);
-						break;
-
-					case BiomeCraftingManager.CraftingBiome.Plains:
-						availableTabs.Add(CraftingTab.Plains);
-						break;
-
-					case BiomeCraftingManager.CraftingBiome.Ocean:
-						availableTabs.Add(CraftingTab.Ocean);
-						break;
-
-					case BiomeCraftingManager.CraftingBiome.Mistlands:
-						availableTabs.Add(CraftingTab.Mistlands);
-						break;
-
-					case BiomeCraftingManager.CraftingBiome.Ashlands:
-						availableTabs.Add(CraftingTab.Ashlands);
-						break;
-
-					case BiomeCraftingManager.CraftingBiome.DeepNorth:
-						availableTabs.Add(CraftingTab.DeepNorth);
+					default:
+						hasOther = true;
 						break;
 				}
+			}
+
+			if (hasOther)
+				availableTabs.Add(CraftingTab.Other);
+		}
+
+		private static void UpdateFoodPreparationTabs(List<Recipe> recipes)
+		{
+			bool hasOther = false;
+
+			foreach (Recipe recipe in recipes)
+			{
+				if (BiomeCraftingManager.TryGetSpecialGroup(recipe, out BiomeCraftingManager.SpecialRecipeGroup group) &&
+					group == BiomeCraftingManager.SpecialRecipeGroup.Feast)
+				{
+					availableTabs.Add(CraftingTab.Feasts);
+					continue;
+				}
+
+				if (BiomeCraftingManager.TryGetClassification(recipe, out BiomeCraftingManager.RecipeClassification classification) &&
+					TryGetTabForBiome(classification.Biome, out CraftingTab tab) &&
+					IsFoodPreparationBiomeTab(tab))
+				{
+					availableTabs.Add(tab);
+					continue;
+				}
+
+				hasOther = true;
 			}
 
 			if (hasOther)
@@ -274,6 +451,14 @@ namespace MarsarahUI.Patches.UI
 					return "DEEP NORTH";
 				case CraftingTab.Other:
 					return "OTHER";
+				case CraftingTab.Feasts:
+					return "FEASTS";
+				case CraftingTab.Recovery:
+					return "RECOVERY";
+				case CraftingTab.Resist:
+					return "RESIST";
+				case CraftingTab.Utility:
+					return "UTILITY";
 				default:
 					return tab.ToString().ToUpperInvariant();
 			}
@@ -858,6 +1043,26 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			return rows;
+		}
+
+		private static CraftingTabProfile GetCraftingTabProfile(List<Recipe> recipes)
+		{
+			foreach (Recipe recipe in recipes)
+			{
+				if (recipe?.m_craftingStation == null)
+					continue;
+
+				switch (recipe.m_craftingStation.name)
+				{
+					case "piece_MeadCauldron":
+						return CraftingTabProfile.MeadKettle;
+
+					case "piece_preptable":
+						return CraftingTabProfile.FoodPreparation;
+				}
+			}
+
+			return CraftingTabProfile.Biomes;
 		}
 
 		private static void DumpCurrentRecipes()
