@@ -1,4 +1,4 @@
-Marsarah UI v1.3.0
+Marsarah UI v1.3.1
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -429,6 +429,7 @@ MOD CONFIGS
   Only categories containing available recipes are displayed.
   Unclassified or modded recipes are placed under Other so they remain accessible.
   The All tab always displays the complete recipe list.
+  Craftable recipes are prioritized at the top while preserving the configured recipe order within craftable and unavailable groups.
 
 ► Modes:
   Scrolling    - displays one row of tabs with horizontal scrolling when needed.
@@ -654,6 +655,10 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.3.1
+- Fixes:
+  - Fixed Biome-Sorted Crafting Tabs overriding vanilla craftable-first recipe priority. Craftable recipes are now shown first while retaining the custom recipe sorting.
+
 v1.3.0
 - New Features:
   - Added Biome-Sorted Crafting Tabs.

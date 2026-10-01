@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.3.0  
+**Version:** 1.3.1  
 **Author:** Marsarah
 
 ---
@@ -259,6 +259,7 @@ https://paypal.me/Marsarah9
 - Includes Deep North recipe categorization.
 - When MarsarahTweaks **Early Linen Cape** is enabled, the Linen Cape is categorized under Swamp to match the modified progression.
 - Includes a synchronized server override with **UserChoice, Scrolling, MultipleRows and Off**.
+- Craftable recipes are prioritized at the top while retaining the configured recipe sorting.
 
 ### <strong>🔧 Show Owned Resources In Build Menu</strong>
 - Displays resource requirements as **required / owned** values in build and crafting requirement displays.

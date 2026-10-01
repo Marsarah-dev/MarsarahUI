@@ -1,4 +1,7 @@
 ## <strong> 📜 Version History </strong>
+v1.3.1
+- **Fixes:**
+  - Fixed Biome-Sorted Crafting Tabs overriding vanilla craftable-first recipe priority. Craftable recipes are now shown first while retaining the custom recipe sorting.
 
 v1.3.0
 - **New Features:**
