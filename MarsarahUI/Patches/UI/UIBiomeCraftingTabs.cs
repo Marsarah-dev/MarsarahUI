@@ -80,7 +80,7 @@ namespace MarsarahUI.Patches.UI
 
 				UpdateAvailableTabs(recipes);
 
-				int tabRows = GetRequiredTabRows();
+				int tabRows = GetRequiredLayoutRows();
 				SetCraftingLayout(tabRows, __instance);
 
 				if (!availableTabs.Contains(selectedTab))
@@ -219,18 +219,6 @@ namespace MarsarahUI.Patches.UI
 
 			if (hasOther)
 				availableTabs.Add(CraftingTab.Other);
-
-			// TEMP: Force all tabs visible for two-row layout testing.
-			availableTabs.Add(CraftingTab.Meadows);
-			availableTabs.Add(CraftingTab.BlackForest);
-			availableTabs.Add(CraftingTab.Swamp);
-			availableTabs.Add(CraftingTab.Mountain);
-			availableTabs.Add(CraftingTab.Plains);
-			availableTabs.Add(CraftingTab.Ocean);
-			availableTabs.Add(CraftingTab.Mistlands);
-			availableTabs.Add(CraftingTab.Ashlands);
-			availableTabs.Add(CraftingTab.DeepNorth);
-			availableTabs.Add(CraftingTab.Other);
 		}
 
 		private static GameObject GetInventoryGuiObject(InventoryGui inventoryGui, string fieldName)
@@ -371,6 +359,39 @@ namespace MarsarahUI.Patches.UI
 		}
 
 		private static void UpdateBiomeTabs(InventoryGui inventoryGui)
+		{
+			switch (ConfigManager.EffectiveBiomeCraftingTabsChoice)
+			{
+				case ConfigManager.BiomeCraftingTabsMode.MultipleRows:
+					UpdateMultipleRowTabs(inventoryGui);
+					break;
+
+				case ConfigManager.BiomeCraftingTabsMode.Scrolling:
+					UpdateMultipleRowTabs(inventoryGui);
+					break;
+
+				case ConfigManager.BiomeCraftingTabsMode.Off:
+					SetBiomeTabsVisible(false);
+					break;
+			}
+		}
+
+		private static int GetRequiredLayoutRows()
+		{
+			switch (ConfigManager.EffectiveBiomeCraftingTabsChoice)
+			{
+				case ConfigManager.BiomeCraftingTabsMode.MultipleRows:
+					return GetRequiredTabRows();
+
+				case ConfigManager.BiomeCraftingTabsMode.Scrolling:
+					return GetRequiredTabRows();
+
+				default:
+					return 0;
+			}
+		}
+
+		private static void UpdateMultipleRowTabs(InventoryGui inventoryGui)
 		{
 			CreateBiomeTabs(inventoryGui);
 			GameObject craftTab = GetInventoryGuiObject(inventoryGui, "m_tabCraft");
