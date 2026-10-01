@@ -306,6 +306,305 @@ namespace MarsarahUI.Managers
 			AddRecipes(CraftingBiome.Ocean, RecipeCategory.Ammo,
 				"Recipe_FishingBaitOcean");
 
+			// Mistlands
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Tools, 
+				"Recipe_Demister", 
+				"Recipe_GrapplingHook");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Torches, 
+				"Recipe_TorchMist");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Armor, 
+				"Recipe_HelmetMage", 
+				"Recipe_ArmorMageChest", 
+				"Recipe_ArmorMageLegs", 
+				"Recipe_HelmetCarapace", 
+				"Recipe_ArmorCarapaceChest", 
+				"Recipe_ArmorCarapaceLegs");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Capes, 
+				"Recipe_CapeFeather");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Trinkets, 
+				"Recipe_TrinketCarapaceEitr", 
+				"Recipe_TrinketScaleStaminaDamage");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.OneHandedWeapons, 
+				"Recipe_SpearCarapace", 
+				"Recipe_SwordMistwalker", 
+				"Recipe_AxeJotunBane");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.TwoHandedWeapons, 
+				"Recipe_KnifeSkollAndHati", 
+				"Recipe_AtgeirHimminAfl", 
+				"Recipe_SwordKrom", 
+				"Recipe_SledgeDemolisher");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Shields, 
+				"Recipe_ShieldCarapaceBuckler", 
+				"Recipe_ShieldCarapace");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Bows, 
+				"Recipe_CrossbowArbalest", 
+				"Recipe_BowSpineSnap");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Magic, 
+				"Recipe_StaffFireball", 
+				"Recipe_StaffIceShards", 
+				"Recipe_StaffShield", 
+				"Recipe_StaffSkeleton");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Ammo, 
+				"Recipe_ArrowCarapace", 
+				"Recipe_BoltBone", 
+				"Recipe_BoltIron", 
+				"Recipe_BoltBlackmetal", 
+				"Recipe_BoltCarapace", 
+				"Recipe_TurretBoltWood", 
+				"Recipe_TurretBolt", 
+				"Recipe_FishingBaitMistlands");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Food, 
+				"Recipe_CookedEgg", 
+				"Recipe_MushroomOmelette", 
+				"Recipe_Salad", 
+				"Recipe_SeekerAspic", 
+				"Recipe_YggdrasilPorridge", 
+				"Recipe_HoneyGlazedChicken", 
+				"Recipe_MagicallyStuffedShroom", 
+				"Recipe_MeatPlatter", 
+				"Recipe_MisthareSupreme", 
+				"Recipe_FeastMistlands");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Materials, 
+				"Recipe_CeramicPlate", 
+				"Recipe_MechanicalSpring", 
+				"Recipe_ShieldCore");
+
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Misc, 
+				"Recipe_DvergrKey");
+
+
+			// Ashlands
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Armor, 
+				"Recipe_HelmetMage_Ashlands", 
+				"Recipe_ArmorMageChest_Ashlands", 
+				"Recipe_ArmorMageLegs_Ashlands", 
+				"Recipe_HelmetMedium_Ashlands", 
+				"Recipe_ArmorMediumChest_Ashlands", 
+				"Recipe_ArmorMediumLegs_Ashlands", 
+				"Recipe_HelmetFlametal", 
+				"Recipe_ArmorFlametalChest", 
+				"Recipe_ArmorFlametalLegs");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Capes, 
+				"Recipe_CapeAsh", 
+				"Recipe_CapeAsksvin");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Trinkets, 
+				"Recipe_TrinketFlametalEitr", 
+				"Recipe_TrinketFlametalStaminaHealth");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.OneHandedWeapons, 
+				"Recipe_SpearSplitner", 
+				"Recipe_SpearSplitner_Blood", 
+				"Recipe_SpearSplitner_Lightning", 
+				"Recipe_SpearSplitner_Nature", 
+				"Recipe_SwordFire", 
+				"Recipe_SwordNiedhogg", 
+				"Recipe_SwordNiedhogg_Blood", 
+				"Recipe_SwordNiedhogg_Lightning", 
+				"Recipe_SwordNiedhogg_Nature", 
+				"Recipe_MaceEldner", 
+				"Recipe_MaceEldner_Blood", 
+				"Recipe_MaceEldner_Lightning", 
+				"Recipe_MaceEldner_Nature");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.TwoHandedWeapons, 
+				"Recipe_AxeBerzerkr", 
+				"Recipe_AxeBerzerkr_Blood", 
+				"Recipe_AxeBerzerkr_Lightning", 
+				"Recipe_AxeBerzerkr_Nature", 
+				"Recipe_SwordSlayer", 
+				"Recipe_SwordSlayer_Blood", 
+				"Recipe_SwordSlayer_Lightning", 
+				"Recipe_SwordSlayer_Nature");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Shields, 
+				"Recipe_ShieldFlametal", 
+				"Recipe_ShieldFlametalTower");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Bows, 
+				"Recipe_BowAshlands", 
+				"Recipe_BowAshlands_Blood", 
+				"Recipe_BowAshlands_Lightning", 
+				"Recipe_BowAshlands_Nature", 
+				"Recipe_CrossbowRipper", 
+				"Recipe_CrossbowRipper_Blood", 
+				"Recipe_CrossbowRipper_Lightning", 
+				"Recipe_CrossbowRipper_Nature");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Magic, 
+				"Recipe_StaffClusterbomb", 
+				"Recipe_StaffLightning", 
+				"Recipe_StaffGreenRoots", 
+				"Recipe_StaffRedTroll");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Ammo, 
+				"Recipe_ArrowCharred", 
+				"Recipe_BoltCharred", 
+				"Recipe_TurretBoltFlametal", 
+				"Recipe_CatapultPayload_Grausten", 
+				"Recipe_FishingBaitAshlands");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Food, 
+				"Recipe_MashedMeat", 
+				"Recipe_FierySvinstew", 
+				"Recipe_ScorchingMedley", 
+				"Recipe_SpiceInducedMarmalade", 
+				"Recipe_MarinatedGreens", 
+				"Recipe_SizzlingBerryBroth", 
+				"Recipe_SparklingShroomshake", 
+				"Recipe_PiquantPie", 
+				"Recipe_RoastedCrustPie", 
+				"Recipe_FeastAshlands");
+
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Misc, 
+				"Recipe_SaddleAsksvin");
+
+
+			// Deep North
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Tools, 
+				"Recipe_SnowShovel");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Armor, 
+				"Recipe_HelmetGoldMage", 
+				"Recipe_ArmorGoldMageChest", 
+				"Recipe_ArmorGoldMageLegs", 
+				"Recipe_HelmetGoldMedium", 
+				"Recipe_ArmorGoldMediumChest", 
+				"Recipe_ArmorGoldMediumLegs", 
+				"Recipe_HelmetGold", 
+				"Recipe_ArmorGoldChest", 
+				"Recipe_ArmorGoldLegs");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Capes, 
+				"Recipe_CapeDeepNorth", 
+				"Recipe_CapeDeepNorthMage");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Trinkets, 
+				"Recipe_TrinketBloodGoldHealth", 
+				"Recipe_TrinketBloodGoldStamina");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.OneHandedWeapons, 
+				"Recipe_KnifeGold", 
+				"Recipe_KnifeGold_BloodLightning", 
+				"Recipe_KnifeGold_FrostFire", 
+				"Recipe_SpearGold", 
+				"Recipe_SpearGold_BloodLightning", 
+				"Recipe_SpearGold_FrostFire", 
+				"Recipe_SwordGold", 
+				"Recipe_SwordGold_BloodLightning", 
+				"Recipe_SwordGold_FrostFire", 
+				"Recipe_MaceGold", 
+				"Recipe_MaceGold_BloodLightning", 
+				"Recipe_MaceGold_FrostFire", 
+				"Recipe_AxeGold", 
+				"Recipe_AxeGold_BloodLightning", 
+				"Recipe_AxeGold_FrostFire");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.TwoHandedWeapons, 
+				"Recipe_AtgeirGold", 
+				"Recipe_AtgeirGold_BloodLightning", 
+				"Recipe_AtgeirGold_FrostFire", 
+				"Recipe_BattleaxeGold", 
+				"Recipe_BattleaxeGold_BloodLightning", 
+				"Recipe_BattleaxeGold_FrostFire", 
+				"Recipe_FistweaponGold", 
+				"Recipe_FistGold_BloodLightning", 
+				"Recipe_FistGold_FrostFire", 
+				"Recipe_SledgeGold", 
+				"Recipe_SledgeGold_BloodLightning", 
+				"Recipe_SledgeGold_FrostFire", 
+				"Recipe_THSwordGold", 
+				"Recipe_THSwordGold_BloodLightning", 
+				"Recipe_THSwordGold_FrostFire");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Shields, 
+				"Recipe_ShieldBucklerGold", 
+				"Recipe_ShieldRoundGold", 
+				"Recipe_ShieldTowerGold");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Bows, 
+				"Recipe_BowGold", 
+				"Recipe_BowGold_BloodLightning", 
+				"Recipe_BowGold_FrostFire", 
+				"Recipe_CrossbowGold", 
+				"Recipe_CrossbowGold_BloodLightning", 
+				"Recipe_CrossbowGold_FrostFire");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Magic, 
+				"Recipe_StaffFrostOrbs_Upgrade", 
+				"Recipe_StaffOrbOfAhri_Upgrade", 
+				"Recipe_StaffSpiritCaller_Upgrade", 
+				"Recipe_StaffThunderBlood_Upgrade");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Ammo, 
+				"Recipe_ArrowBloodGold", 
+				"Recipe_BoltBloodGold", 
+				"Recipe_Catapult_Ammo_BloodGold", 
+				"Recipe_TurretBoltBloodGold", 
+				"Recipe_FishingBaitDeepNorth");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Food, 
+				"Recipe_BakedPoteitr", 
+				"Recipe_KaleChips", 
+				"Recipe_LingonDricka", 
+				"Recipe_MeatballsMashedPoteitr", 
+				"Recipe_MooseKebab", 
+				"Recipe_OatmealLingonberryJam", 
+				"Recipe_OatMilk", 
+				"Recipe_OvenPancake", 
+				"Recipe_Pancakes", 
+				"Recipe_SealSoup", 
+				"Recipe_SmokedFish", 
+				"Recipe_SmokedMooseMeat", 
+				"Recipe_FeastDeepNorth");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Materials, 
+				"Recipe_ArmorGoldChestUncooked", 
+				"Recipe_ArmorGoldLegsUncooked", 
+				"Recipe_HelmetGoldUncooked", 
+				"Recipe_ArmorGoldMediumChestUncooked", 
+				"Recipe_ArmorGoldMediumLegsUncooked", 
+				"Recipe_HelmetGoldMediumUncooked", 
+				"Recipe_ArmorGoldMageChestUncooked", 
+				"Recipe_ArmorGoldMageLegsUncooked", 
+				"Recipe_HelmetGoldMageUncooked", 
+				"Recipe_KnifeGoldUncooked", 
+				"Recipe_SpearGoldUncooked", 
+				"Recipe_SwordGoldUncooked", 
+				"Recipe_MaceGoldUncooked", 
+				"Recipe_AxeGoldUncooked", 
+				"Recipe_AtgeirGoldUncooked", 
+				"Recipe_BattleaxeGoldUncooked", 
+				"Recipe_FistweaponGoldUncooked", 
+				"Recipe_SledgeGoldUncooked", 
+				"Recipe_THSwordGoldUncooked", 
+				"Recipe_ShieldBucklerGoldUncooked", 
+				"Recipe_ShieldRoundGoldUncooked", 
+				"Recipe_ShieldTowerGoldUncooked", 
+				"Recipe_BowGoldUncooked", 
+				"Recipe_CrossbowGoldUncooked", 
+				"Recipe_StaffFrostOrbs", 
+				"Recipe_StaffOrbOfAhri", 
+				"Recipe_StaffSpiritCaller", 
+				"Recipe_StaffThunderBlood", 
+				"Recipe_BloodGoldKeyUncooked");
+
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Misc, 
+				"Recipe_SaddleMoose");
+
 			log.Info($"Loaded {recipeClassifications.Count} biome crafting recipe classifications.");
 		}
 
