@@ -13,13 +13,14 @@ namespace MarsarahUI.Managers
 		private const string CraftFromContainersGUID = "aedenthorn.CraftFromContainers";
 
 		private static ConfigEntry<bool> tweaksGearUpgradeUnlock;
+		private static ConfigEntry<bool> tweaksEarlyLinenCape;
 		private static MethodInfo tweaksIsContainerSealedMethod;
 
 		internal static bool MarsarahTweaksLoaded { get; private set; }
 		internal static bool CraftFromContainersLoaded { get; private set; }
 
-		internal static bool TweaksGearUpgradeUnlockEnabled =>
-			MarsarahTweaksLoaded && tweaksGearUpgradeUnlock?.Value == true;
+		internal static bool TweaksGearUpgradeUnlockEnabled => MarsarahTweaksLoaded && tweaksGearUpgradeUnlock?.Value == true;
+		internal static bool TweaksEarlyLinenCapeEnabled => MarsarahTweaksLoaded && tweaksEarlyLinenCape?.Value == true;
 
 		internal static void Initialize()
 		{
@@ -30,6 +31,7 @@ namespace MarsarahUI.Managers
 				ConfigFile tweaksConfig = pluginInfo.Instance.Config;
 
 				tweaksGearUpgradeUnlock = GetBoolConfig(tweaksConfig, "3 - Balance (Synced with Server)", "Gear Upgrade Unlock");
+				tweaksEarlyLinenCape = GetBoolConfig(tweaksConfig, "3 - Balance (Synced with Server)", "Early Linen Cape");
 
 				Type progressionHaltType = pluginInfo.Instance.GetType().Assembly.GetType("MarsarahTweaks.Patches.Features.ProgressionHalt");
 				tweaksIsContainerSealedMethod = progressionHaltType?.GetMethod("IsContainerSealed", BindingFlags.Static | BindingFlags.NonPublic);

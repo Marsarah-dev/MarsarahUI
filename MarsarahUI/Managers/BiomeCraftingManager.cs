@@ -38,6 +38,14 @@ namespace MarsarahUI.Managers
 			Misc
 		}
 
+		internal enum SpecialRecipeGroup
+		{
+			Feast,
+			MeadRecovery,
+			MeadResistance,
+			MeadUtility
+		}
+
 		internal sealed class RecipeClassification
 		{
 			public CraftingBiome Biome { get; }
@@ -53,6 +61,7 @@ namespace MarsarahUI.Managers
 		}
 
 		private static readonly Dictionary<string, RecipeClassification> recipeClassifications = new Dictionary<string, RecipeClassification>();
+		private static readonly Dictionary<string, SpecialRecipeGroup> specialRecipeGroups = new Dictionary<string, SpecialRecipeGroup>();
 
 		static BiomeCraftingManager()
 		{
@@ -82,6 +91,9 @@ namespace MarsarahUI.Managers
 				"Recipe_KnifeFlint",
 				"Recipe_SpearFlint");
 
+			AddRecipes(CraftingBiome.Meadows, RecipeCategory.TwoHandedWeapons,
+				"Recipe_AxeEarly");
+
 			AddRecipes(CraftingBiome.Meadows, RecipeCategory.Shields,
 				"Recipe_ShieldWood",
 				"Recipe_ShieldWoodTower");
@@ -105,6 +117,9 @@ namespace MarsarahUI.Managers
 				"Recipe_HelmetTrollLeather",
 				"Recipe_ArmorTrollLeatherChest",
 				"Recipe_ArmorTrollLeatherLegs",
+				"Recipe_HelmetBerserker",
+				"Recipe_ArmorBerserkerChest",
+				"Recipe_ArmorBerserkerLegs",
 				"Recipe_HelmetBronze",
 				"Recipe_ArmorBronzeChest",
 				"Recipe_ArmorBronzeLegs");
@@ -125,6 +140,7 @@ namespace MarsarahUI.Managers
 				"Recipe_AxeBronze");
 
 			AddRecipes(CraftingBiome.BlackForest, RecipeCategory.TwoHandedWeapons,
+				"Recipe_FistBjornClaw",
 				"Recipe_AtgeirBronze",
 				"Recipe_SledgeStagbreaker",
 				"Recipe_PickaxeBronze");
@@ -146,6 +162,7 @@ namespace MarsarahUI.Managers
 				"Recipe_DeerStew",
 				"Recipe_MinceMeatSauce",
 				"Recipe_QueensJam",
+				"Recipe_PulledBear",
 				"Recipe_FeastBlackforest");
 
 			AddRecipes(CraftingBiome.BlackForest, RecipeCategory.Materials,
@@ -183,13 +200,17 @@ namespace MarsarahUI.Managers
 				"Recipe_ShieldIronSquare",
 				"Recipe_ShieldIronBuckler",
 				"Recipe_ShieldBanded",
-				"Recipe_ShieldIronTower");
+				"Recipe_ShieldIronTower",
+				"Recipe_ShieldRoots");
 
 			AddRecipes(CraftingBiome.Swamp, RecipeCategory.Bows,
 				"Recipe_BowHuntsman");
 
 			AddRecipes(CraftingBiome.Swamp, RecipeCategory.Ammo,
-				"Recipe_ArrowIron");
+				"Recipe_ArrowIron",
+				"Recipe_BombOoze",
+				"Recipe_BombBlob_Poison",
+				"Recipe_BombBlob_PoisonElite");
 
 			AddRecipes(CraftingBiome.Swamp, RecipeCategory.Food,
 				"Recipe_Blacksoup",
@@ -238,7 +259,8 @@ namespace MarsarahUI.Managers
 				"Recipe_ArrowObsidian",
 				"Recipe_ArrowPoison",
 				"Recipe_ArrowFrost",
-				"Recipe_ArrowSilver");
+				"Recipe_ArrowSilver",
+				"Recipe_BombBlob_Frost");
 
 			AddRecipes(CraftingBiome.Mountain, RecipeCategory.Food,
 				"Recipe_Eyescream",
@@ -252,7 +274,13 @@ namespace MarsarahUI.Managers
 			AddRecipes(CraftingBiome.Plains, RecipeCategory.Armor,
 				"Recipe_HelmetPadded",
 				"Recipe_ArmorPaddedCuirass",
-				"Recipe_ArmorPaddedGreaves");
+				"Recipe_ArmorPaddedGreaves",
+				"Recipe_HelmetLox",
+				"Recipe_ArmorLoxChest",
+				"Recipe_ArmorLoxLegs",
+				"Recipe_HelmetBerserkerUndead",
+				"Recipe_ArmorBerserkerUndeadChest",
+				"Recipe_ArmorBerserkerUndeadLegs");
 
 			AddRecipes(CraftingBiome.Plains, RecipeCategory.Capes,
 				"Recipe_CapeLox",
@@ -270,6 +298,8 @@ namespace MarsarahUI.Managers
 
 			AddRecipes(CraftingBiome.Plains, RecipeCategory.TwoHandedWeapons,
 				"Recipe_AtgeirBlackmetal",
+				"Recipe_Battleaxe_Blackmetal",
+				"Recipe_FistUnbjornClaw",
 				"Recipe_PickaxeBlackMetal");
 
 			AddRecipes(CraftingBiome.Plains, RecipeCategory.Shields,
@@ -277,7 +307,8 @@ namespace MarsarahUI.Managers
 				"Recipe_ShieldBlackmetalTower");
 
 			AddRecipes(CraftingBiome.Plains, RecipeCategory.Ammo,
-				"Recipe_ArrowNeedle");
+				"Recipe_ArrowNeedle",
+				"Recipe_BombBlob_Tar");
 
 			AddRecipes(CraftingBiome.Plains, RecipeCategory.Food,
 				"Recipe_BloodPudding",
@@ -285,6 +316,7 @@ namespace MarsarahUI.Managers
 				"Recipe_Bread",
 				"Recipe_FishAndBread",
 				"Recipe_LoxPie",
+				"Recipe_VikingCupcake",
 				"Recipe_FeastPlains");
 
 
@@ -302,9 +334,6 @@ namespace MarsarahUI.Managers
 			AddRecipes(CraftingBiome.Ocean, RecipeCategory.Food,
 				"Recipe_SerpentStew",
 				"Recipe_FeastOceans");
-
-			AddRecipes(CraftingBiome.Ocean, RecipeCategory.Ammo,
-				"Recipe_FishingBaitOcean");
 
 			// Mistlands
 			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Tools, 
@@ -334,10 +363,11 @@ namespace MarsarahUI.Managers
 				"Recipe_SwordMistwalker", 
 				"Recipe_AxeJotunBane");
 
-			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.TwoHandedWeapons, 
-				"Recipe_KnifeSkollAndHati", 
-				"Recipe_AtgeirHimminAfl", 
-				"Recipe_SwordKrom", 
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.TwoHandedWeapons,
+				"Recipe_KnifeSkollAndHati",
+				"Recipe_AtgeirHimminAfl",
+				"Recipe_SwordKrom",
+				"Recipe_Battleaxe_SkullSplittur",
 				"Recipe_SledgeDemolisher");
 
 			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Shields, 
@@ -354,15 +384,15 @@ namespace MarsarahUI.Managers
 				"Recipe_StaffShield", 
 				"Recipe_StaffSkeleton");
 
-			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Ammo, 
-				"Recipe_ArrowCarapace", 
-				"Recipe_BoltBone", 
-				"Recipe_BoltIron", 
-				"Recipe_BoltBlackmetal", 
-				"Recipe_BoltCarapace", 
-				"Recipe_TurretBoltWood", 
-				"Recipe_TurretBolt", 
-				"Recipe_FishingBaitMistlands");
+			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Ammo,
+				"Recipe_ArrowCarapace",
+				"Recipe_BoltBone",
+				"Recipe_BoltIron",
+				"Recipe_BoltBlackmetal",
+				"Recipe_BoltCarapace",
+				"Recipe_TurretBoltWood",
+				"Recipe_TurretBolt",
+				"Recipe_BombBile");
 
 			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Food, 
 				"Recipe_CookedEgg", 
@@ -381,8 +411,9 @@ namespace MarsarahUI.Managers
 				"Recipe_MechanicalSpring", 
 				"Recipe_ShieldCore");
 
-			AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Misc, 
-				"Recipe_DvergrKey");
+			// MC: Keeping this here commented. 
+			//AddRecipes(CraftingBiome.Mistlands, RecipeCategory.Misc, 
+			//	"Recipe_DvergrKey");
 
 
 			// Ashlands
@@ -450,12 +481,15 @@ namespace MarsarahUI.Managers
 				"Recipe_StaffGreenRoots", 
 				"Recipe_StaffRedTroll");
 
-			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Ammo, 
-				"Recipe_ArrowCharred", 
-				"Recipe_BoltCharred", 
-				"Recipe_TurretBoltFlametal", 
-				"Recipe_CatapultPayload_Grausten", 
-				"Recipe_FishingBaitAshlands");
+			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Ammo,
+				"Recipe_ArrowCharred",
+				"Recipe_BoltCharred",
+				"Recipe_TurretBoltFlametal",
+				"Recipe_BombBlob_Lava",
+				"Recipe_BombLava",
+				"Recipe_BombSmoke",
+				"Recipe_BombSiege",
+				"Recipe_CatapultPayload_Grausten");
 
 			AddRecipes(CraftingBiome.Ashlands, RecipeCategory.Food, 
 				"Recipe_MashedMeat", 
@@ -477,16 +511,17 @@ namespace MarsarahUI.Managers
 			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Tools, 
 				"Recipe_SnowShovel");
 
-			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Armor, 
-				"Recipe_HelmetGoldMage", 
-				"Recipe_ArmorGoldMageChest", 
-				"Recipe_ArmorGoldMageLegs", 
-				"Recipe_HelmetGoldMedium", 
-				"Recipe_ArmorGoldMediumChest", 
-				"Recipe_ArmorGoldMediumLegs", 
-				"Recipe_HelmetGold", 
-				"Recipe_ArmorGoldChest", 
-				"Recipe_ArmorGoldLegs");
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Armor,
+				"Recipe_HelmetGoldMage",
+				"Recipe_ArmorGoldMageChest",
+				"Recipe_ArmorGoldMageLegs",
+				"Recipe_HelmetGoldMedium",
+				"Recipe_ArmorGoldMediumChest",
+				"Recipe_ArmorGoldMediumLegs",
+				"Recipe_HelmetGold",
+				"Recipe_ArmorGoldChest",
+				"Recipe_ArmorGoldLegs",
+				"Recipe_HelmetCrownOfValheim");
 
 			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Capes, 
 				"Recipe_CapeDeepNorth", 
@@ -549,12 +584,13 @@ namespace MarsarahUI.Managers
 				"Recipe_StaffSpiritCaller_Upgrade", 
 				"Recipe_StaffThunderBlood_Upgrade");
 
-			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Ammo, 
-				"Recipe_ArrowBloodGold", 
-				"Recipe_BoltBloodGold", 
-				"Recipe_Catapult_Ammo_BloodGold", 
-				"Recipe_TurretBoltBloodGold", 
-				"Recipe_FishingBaitDeepNorth");
+			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Ammo,
+				"Recipe_ArrowBloodGold",
+				"Recipe_BoltBloodGold",
+				"Recipe_Catapult_Ammo_BloodGold",
+				"Recipe_TurretBoltBloodGold",
+				"Recipe_BombBlob_Morkhalla",
+				"Recipe_BombDynamite");
 
 			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Food, 
 				"Recipe_BakedPoteitr", 
@@ -568,7 +604,8 @@ namespace MarsarahUI.Managers
 				"Recipe_Pancakes", 
 				"Recipe_SealSoup", 
 				"Recipe_SmokedFish", 
-				"Recipe_SmokedMooseMeat", 
+				"Recipe_SmokedMooseMeat",
+				"Recipe_FishSoup",
 				"Recipe_FeastDeepNorth");
 
 			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Materials, 
@@ -605,6 +642,43 @@ namespace MarsarahUI.Managers
 			AddRecipes(CraftingBiome.DeepNorth, RecipeCategory.Misc, 
 				"Recipe_SaddleMoose");
 
+			AddSpecialRecipes(SpecialRecipeGroup.Feast,
+				"Recipe_FeastMeadows",
+				"Recipe_FeastBlackforest",
+				"Recipe_FeastSwamps",
+				"Recipe_FeastMountains",
+				"Recipe_FeastOceans",
+				"Recipe_FeastPlains",
+				"Recipe_FeastMistlands",
+				"Recipe_FeastAshlands",
+				"Recipe_FeastDeepNorth");
+
+			AddSpecialRecipes(SpecialRecipeGroup.MeadRecovery,
+				"Recipe_MeadBaseHealthMinor",
+				"Recipe_MeadBaseHealthMedium",
+				"Recipe_MeadBaseHealthMajor",
+				"Recipe_MeadBaseHealthLingering",
+				"Recipe_MeadBaseStaminaMinor",
+				"Recipe_MeadBaseStaminaMedium",
+				"Recipe_MeadBaseStaminaLingering",
+				"Recipe_MeadBaseEitrMinor",
+				"Recipe_MeadBaseEitrLingering");
+
+			AddSpecialRecipes(SpecialRecipeGroup.MeadResistance,
+				"Recipe_BarleyWineBase",
+				"Recipe_MeadBaseFrostResist",
+				"Recipe_MeadBasePoisonResist",
+				"Recipe_MeadBaseBugRepellent");
+
+			AddSpecialRecipes(SpecialRecipeGroup.MeadUtility,
+				"Recipe_MeadBaseBzerker",
+				"Recipe_MeadBaseHasty",
+				"Recipe_MeadBaseLightFoot",
+				"Recipe_MeadBaseStrength",
+				"Recipe_MeadBaseSwimmer",
+				"Recipe_MeadBaseTamer",
+				"Recipe_MeadBaseTasty");
+
 			log.Info($"Loaded {recipeClassifications.Count} biome crafting recipe classifications.");
 		}
 
@@ -614,6 +688,12 @@ namespace MarsarahUI.Managers
 
 			if (recipe == null)
 				return false;
+
+			if (recipe.name == "Recipe_CapeLinen" && CompatibilityManager.TweaksEarlyLinenCapeEnabled)
+			{
+				classification = new RecipeClassification(CraftingBiome.Swamp, RecipeCategory.Capes, 10);
+				return true;
+			}
 
 			return recipeClassifications.TryGetValue(recipe.name, out classification);
 		}
@@ -631,6 +711,30 @@ namespace MarsarahUI.Managers
 
 				recipeClassifications.Add(recipeName, new RecipeClassification(biome, category, (i + 1) * 10));
 			}
+		}
+
+		private static void AddSpecialRecipes(SpecialRecipeGroup group, params string[] recipeNames)
+		{
+			foreach (string recipeName in recipeNames)
+			{
+				if (specialRecipeGroups.ContainsKey(recipeName))
+				{
+					log.Warn($"Duplicate special crafting classification for recipe '{recipeName}'.");
+					continue;
+				}
+
+				specialRecipeGroups.Add(recipeName, group);
+			}
+		}
+
+		internal static bool TryGetSpecialGroup(Recipe recipe, out SpecialRecipeGroup group)
+		{
+			group = default;
+
+			if (recipe == null)
+				return false;
+
+			return specialRecipeGroups.TryGetValue(recipe.name, out group);
 		}
 	}
 }
