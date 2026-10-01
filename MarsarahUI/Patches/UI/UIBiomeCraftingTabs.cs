@@ -48,10 +48,20 @@ namespace MarsarahUI.Patches.UI
 		private static InventoryGui currentInventoryGui;
 		private static RectTransform craftingContentRoot;
 		private static float currentCraftingExtraHeight;
+		private static GameObject biomeScrollViewportObject;
+		private static RectTransform biomeScrollViewport;
+		private static RectTransform biomeScrollContent;
+		private static ScrollRect biomeScrollRect;
+		private static Scrollbar biomeScrollBar;
 
 		private const float TabWidth = 90f;
 		private const float TabSpacing = 2f;
 		private const float TabRowHeight = 32f;
+		private const float TabRowWidth = 560f;
+		private const float TabRowLeftOffset = 32f;
+		private const float ScrollBarHeight = 10f;
+		private const float ScrollBarSpacing = 4f;
+		private const float ScrollRightInset = 10f;
 
 		[HarmonyPatch(typeof(InventoryGui), "UpdateRecipeList")]
 		private static class UpdateRecipeList_Patch
@@ -219,6 +229,21 @@ namespace MarsarahUI.Patches.UI
 
 			if (hasOther)
 				availableTabs.Add(CraftingTab.Other);
+
+			// TEMP: Force all biome tabs for scrolling layout testing.
+			if (ConfigManager.EffectiveBiomeCraftingTabsChoice == ConfigManager.BiomeCraftingTabsMode.Scrolling)
+			{
+				availableTabs.Add(CraftingTab.Meadows);
+				availableTabs.Add(CraftingTab.BlackForest);
+				availableTabs.Add(CraftingTab.Swamp);
+				availableTabs.Add(CraftingTab.Mountain);
+				availableTabs.Add(CraftingTab.Plains);
+				availableTabs.Add(CraftingTab.Ocean);
+				availableTabs.Add(CraftingTab.Mistlands);
+				availableTabs.Add(CraftingTab.Ashlands);
+				availableTabs.Add(CraftingTab.DeepNorth);
+				availableTabs.Add(CraftingTab.Other);
+			}
 		}
 
 		private static GameObject GetInventoryGuiObject(InventoryGui inventoryGui, string fieldName)
@@ -367,7 +392,7 @@ namespace MarsarahUI.Patches.UI
 					break;
 
 				case ConfigManager.BiomeCraftingTabsMode.Scrolling:
-					UpdateMultipleRowTabs(inventoryGui);
+					UpdateScrollingTabs(inventoryGui);
 					break;
 
 				case ConfigManager.BiomeCraftingTabsMode.Off:
@@ -384,7 +409,7 @@ namespace MarsarahUI.Patches.UI
 					return GetRequiredTabRows();
 
 				case ConfigManager.BiomeCraftingTabsMode.Scrolling:
-					return GetRequiredTabRows();
+					return 1;
 
 				default:
 					return 0;
@@ -404,17 +429,20 @@ namespace MarsarahUI.Patches.UI
 			if (craftRect == null)
 				return;
 
+			if (biomeScrollViewportObject != null)
+				biomeScrollViewportObject.SetActive(false);
+
+			if (biomeScrollBar != null)
+				biomeScrollBar.gameObject.SetActive(false);
+
 			foreach (GameObject tabObject in tabObjects.Values)
 			{
 				tabObject.SetActive(false);
 			}
 
-			const float tabRowLeftOffset = 32f;
-			float startX = craftRect.anchoredPosition.x - tabRowLeftOffset;
+			float startX = craftRect.anchoredPosition.x - TabRowLeftOffset;
 			float currentX = startX;
 			float currentY = craftRect.anchoredPosition.y - craftRect.rect.height - 4f;
-
-			const float maxWidth = 560f;
 
 			foreach (CraftingTab tab in tabDisplayOrder)
 			{
@@ -423,9 +451,19 @@ namespace MarsarahUI.Patches.UI
 
 				GameObject tabObject = tabObjects[tab];
 
+				RectTransform rect = tabObject.GetComponent<RectTransform>();
+
+				tabObject.transform.SetParent(craftTab.transform.parent, false);
+
+				rect.anchorMin = craftRect.anchorMin;
+				rect.anchorMax = craftRect.anchorMax;
+				rect.pivot = craftRect.pivot;
+				rect.localScale = Vector3.one;
+				rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, craftRect.rect.height);
+
 				tabObject.SetActive(true);
 
-				if (currentX + TabWidth > startX + maxWidth && currentX > startX)
+				if (currentX + TabWidth > startX + TabRowWidth && currentX > startX)
 				{
 					currentX = startX;
 					currentY -= TabRowHeight;
@@ -435,6 +473,193 @@ namespace MarsarahUI.Patches.UI
 
 				currentX += TabWidth + TabSpacing;
 			}
+
+			UpdateTabSelectionVisuals();
+		}
+
+		private static void CreateBiomeScrollArea(InventoryGui inventoryGui, RectTransform craftRect)
+		{
+			if (biomeScrollViewportObject != null)
+				return;
+
+			GameObject craftTab = GetInventoryGuiObject(inventoryGui, "m_tabCraft");
+			Scrollbar recipeScrollBar = AccessTools.Field(typeof(InventoryGui), "m_recipeListScroll")?.GetValue(inventoryGui) as Scrollbar;
+
+			if (craftTab == null)
+			{
+				log.Error("Could not create biome tab scroll area because the Craft tab was not found.");
+				return;
+			}
+
+			Transform parent = craftTab.transform.parent;
+
+			biomeScrollViewportObject = new GameObject("MarsarahBiomeTabScrollViewport", typeof(RectTransform), typeof(Image), typeof(RectMask2D), typeof(ScrollRect));
+			biomeScrollViewport = biomeScrollViewportObject.GetComponent<RectTransform>();
+			biomeScrollViewport.SetParent(parent, false);
+
+			biomeScrollViewport.anchorMin = craftRect.anchorMin;
+			biomeScrollViewport.anchorMax = craftRect.anchorMax;
+			biomeScrollViewport.pivot = new Vector2(0f, craftRect.pivot.y);
+			biomeScrollViewport.localScale = Vector3.one;
+
+			Image viewportImage = biomeScrollViewportObject.GetComponent<Image>();
+			viewportImage.color = new Color(0f, 0f, 0f, 0f);
+			viewportImage.raycastTarget = true;
+
+			GameObject contentObject = new GameObject("Content", typeof(RectTransform));
+			biomeScrollContent = contentObject.GetComponent<RectTransform>();
+			biomeScrollContent.SetParent(biomeScrollViewport, false);
+			biomeScrollContent.anchorMin = new Vector2(0f, 0.5f);
+			biomeScrollContent.anchorMax = new Vector2(0f, 0.5f);
+			biomeScrollContent.pivot = new Vector2(0f, 0.5f);
+			biomeScrollContent.anchoredPosition = Vector2.zero;
+
+			biomeScrollRect = biomeScrollViewportObject.GetComponent<ScrollRect>();
+			biomeScrollRect.content = biomeScrollContent;
+			biomeScrollRect.viewport = biomeScrollViewport;
+			biomeScrollRect.horizontal = true;
+			biomeScrollRect.vertical = false;
+			biomeScrollRect.movementType = ScrollRect.MovementType.Clamped;
+			biomeScrollRect.inertia = true;
+			biomeScrollRect.scrollSensitivity = -(TabWidth + TabSpacing) * 4f;
+
+			if (recipeScrollBar != null)
+			{
+				GameObject scrollBarObject = Object.Instantiate(recipeScrollBar.gameObject, parent);
+				scrollBarObject.name = "MarsarahBiomeTabScrollBar";
+
+				biomeScrollBar = scrollBarObject.GetComponent<Scrollbar>();
+
+				if (biomeScrollBar != null)
+				{
+					biomeScrollBar.onValueChanged = new Scrollbar.ScrollEvent();
+					biomeScrollBar.SetDirection(Scrollbar.Direction.LeftToRight, true);
+
+					Navigation navigation = biomeScrollBar.navigation;
+					navigation.mode = Navigation.Mode.None;
+					biomeScrollBar.navigation = navigation;
+
+					biomeScrollRect.horizontalScrollbar = biomeScrollBar;
+					biomeScrollRect.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+				}
+			}
+
+			biomeScrollViewportObject.transform.SetAsLastSibling();
+
+			if (biomeScrollBar != null)
+				biomeScrollBar.transform.SetAsLastSibling();
+
+			log.Info("Created horizontal biome crafting tab scroll area.");
+		}
+
+		private static void UpdateScrollingTabs(InventoryGui inventoryGui)
+		{
+			CreateBiomeTabs(inventoryGui);
+
+			GameObject craftTab = GetInventoryGuiObject(inventoryGui, "m_tabCraft");
+
+			if (craftTab == null)
+				return;
+
+			RectTransform craftRect = craftTab.GetComponent<RectTransform>();
+
+			if (craftRect == null)
+				return;
+
+			CreateBiomeScrollArea(inventoryGui, craftRect);
+
+			if (biomeScrollViewport == null || biomeScrollContent == null)
+				return;
+
+			float startX = craftRect.anchoredPosition.x - TabRowLeftOffset;
+			float rowY = craftRect.anchoredPosition.y - craftRect.rect.height - 4f;
+			float scrollStartX = startX + (TabWidth * 0.5f) + TabSpacing;
+			float scrollWidth = TabRowWidth - TabWidth - TabSpacing - ScrollRightInset;
+
+			GameObject allTab = tabObjects[CraftingTab.All];
+			RectTransform allRect = allTab.GetComponent<RectTransform>();
+
+			allTab.transform.SetParent(craftTab.transform.parent, false);
+
+			allRect.anchorMin = craftRect.anchorMin;
+			allRect.anchorMax = craftRect.anchorMax;
+			allRect.pivot = craftRect.pivot;
+			allRect.localScale = Vector3.one;
+
+			PositionBiomeTab(allTab, startX, rowY);
+			allTab.SetActive(true);
+
+			biomeScrollViewportObject.SetActive(true);
+			biomeScrollViewport.anchoredPosition = new Vector2(scrollStartX, rowY);
+			biomeScrollViewport.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, scrollWidth);
+			biomeScrollViewport.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, craftRect.rect.height);
+
+			float previousScrollPosition = biomeScrollRect.horizontalNormalizedPosition;
+			float contentX = 0f;
+			int visibleScrollableTabs = 0;
+
+			foreach (CraftingTab tab in tabDisplayOrder)
+			{
+				if (tab == CraftingTab.All)
+					continue;
+
+				GameObject tabObject = tabObjects[tab];
+
+				if (!availableTabs.Contains(tab))
+				{
+					tabObject.SetActive(false);
+					continue;
+				}
+
+				RectTransform rect = tabObject.GetComponent<RectTransform>();
+
+				tabObject.transform.SetParent(biomeScrollContent, false);
+
+				rect.anchorMin = new Vector2(0f, 0.5f);
+				rect.anchorMax = new Vector2(0f, 0.5f);
+				rect.pivot = new Vector2(0f, 0.5f);
+				rect.localScale = Vector3.one;
+
+				rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, TabWidth);
+				rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, craftRect.rect.height);
+				rect.anchoredPosition = new Vector2(contentX, 0f);
+
+				tabObject.SetActive(true);
+
+				contentX += TabWidth + TabSpacing;
+				visibleScrollableTabs++;
+			}
+
+			float contentWidth = visibleScrollableTabs > 0 ? contentX - TabSpacing : 0f;
+
+			biomeScrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, contentWidth);
+			biomeScrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, craftRect.rect.height);
+
+			bool needsScrolling = contentWidth > scrollWidth;
+
+			if (biomeScrollBar != null)
+			{
+				RectTransform scrollBarRect = biomeScrollBar.GetComponent<RectTransform>();
+
+				scrollBarRect.anchorMin = craftRect.anchorMin;
+				scrollBarRect.anchorMax = craftRect.anchorMax;
+				scrollBarRect.pivot = new Vector2(0f, 0.5f);
+
+				float scrollBarY = rowY - (craftRect.rect.height * 0.5f) - (ScrollBarHeight * 0.5f) - 2f;
+
+				scrollBarRect.anchoredPosition = new Vector2(scrollStartX, scrollBarY);
+				scrollBarRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, scrollWidth);
+				scrollBarRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, ScrollBarHeight);
+
+				biomeScrollBar.gameObject.SetActive(needsScrolling);
+			}
+
+			Canvas.ForceUpdateCanvases();
+
+			if (needsScrolling)
+				biomeScrollRect.horizontalNormalizedPosition = previousScrollPosition;
+			else
+				biomeScrollRect.horizontalNormalizedPosition = 0f;
 
 			UpdateTabSelectionVisuals();
 		}
@@ -524,6 +749,15 @@ namespace MarsarahUI.Patches.UI
 				if (tabObject != null)
 					tabObject.SetActive(visible);
 			}
+
+			if (!visible)
+			{
+				if (biomeScrollViewportObject != null)
+					biomeScrollViewportObject.SetActive(false);
+
+				if (biomeScrollBar != null)
+					biomeScrollBar.gameObject.SetActive(false);
+			}
 		}
 
 		private static void SetCraftingLayout(int tabRows, InventoryGui inventoryGui)
@@ -531,6 +765,9 @@ namespace MarsarahUI.Patches.UI
 			CreateCraftingContentRoot(inventoryGui);
 
 			float targetExtraHeight = tabRows > 0 ? 40f + ((tabRows - 1) * TabRowHeight) : 0f;
+
+			if (tabRows > 0 && ConfigManager.EffectiveBiomeCraftingTabsChoice == ConfigManager.BiomeCraftingTabsMode.Scrolling)
+				targetExtraHeight += ScrollBarHeight + ScrollBarSpacing;
 
 			if (Mathf.Approximately(targetExtraHeight, currentCraftingExtraHeight))
 				return;
@@ -609,8 +846,6 @@ namespace MarsarahUI.Patches.UI
 
 		private static int GetRequiredTabRows()
 		{
-			const float maxWidth = 560f;
-
 			float currentWidth = 0f;
 			int rows = 1;
 
@@ -621,7 +856,7 @@ namespace MarsarahUI.Patches.UI
 
 				float requiredWidth = currentWidth == 0f ? TabWidth : TabSpacing + TabWidth;
 
-				if (currentWidth > 0f && currentWidth + requiredWidth > maxWidth)
+				if (currentWidth > 0f && currentWidth + requiredWidth > TabRowWidth)
 				{
 					rows++;
 					currentWidth = TabWidth;
