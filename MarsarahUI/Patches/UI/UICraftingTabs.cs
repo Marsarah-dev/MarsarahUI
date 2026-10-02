@@ -209,6 +209,11 @@ namespace MarsarahUI.Patches.UI
 				if (!__instance.InCraftTab())
 					return;
 
+				Player player = Player.m_localPlayer;
+
+				if (player?.GetCurrentCraftingStation() == null && !(player?.NoCostCheat() ?? false))
+					return;
+
 				ApplyRecipeSorting(__instance);
 			}
 		}

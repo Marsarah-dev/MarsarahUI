@@ -7,10 +7,10 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
-- Updated crafting tabs so normal hand-crafting shows none, nocost hand-crafting shows all, and workstation-specific tabs still work correctly.
 
 B. Updates
 ------------------------
+- Updated crafting tabs so normal hand-crafting shows none, nocost hand-crafting shows all, and workstation-specific tabs still work correctly.
 
 C. New additions
 ------------------------
