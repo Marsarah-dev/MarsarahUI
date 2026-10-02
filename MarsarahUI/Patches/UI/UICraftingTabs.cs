@@ -1621,7 +1621,11 @@ namespace MarsarahUI.Patches.UI
 			if (craftingStation == null)
 				return CraftingTabProfile.Biomes;
 
-			switch (craftingStation.name)
+			string stationName = craftingStation.name.Replace("(Clone)", string.Empty);
+
+			log.Info($"Detected crafting station '{craftingStation.name}' as '{stationName}'.");
+
+			switch (stationName)
 			{
 				case "piece_MeadCauldron":
 					return CraftingTabProfile.MeadKettle;
