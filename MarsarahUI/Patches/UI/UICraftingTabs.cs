@@ -34,7 +34,8 @@ namespace MarsarahUI.Patches.UI
 		{
 			Biomes,
 			MeadKettle,
-			FoodPreparation
+			FoodPreparation,
+			NoCost
 		}
 
 		private static readonly CraftingTab[] tabDisplayOrder =
@@ -147,6 +148,20 @@ namespace MarsarahUI.Patches.UI
 				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
 					return;
 
+				Player player = Player.m_localPlayer;
+				CraftingStation craftingStation = player?.GetCurrentCraftingStation();
+				bool noCost = player?.NoCostCheat() ?? false;
+
+				if (craftingStation == null && !noCost)
+				{
+					selectedTab = CraftingTab.All;
+					SetCraftingTabsVisible(false);
+					RestoreVanillaLayout();
+
+					log.Info("Hand crafting without nocost detected. Custom crafting tabs hidden.");
+					return;
+				}
+
 				SetCurrentInventoryGui(__instance);
 
 				// Keeping this here for future logging
@@ -162,7 +177,7 @@ namespace MarsarahUI.Patches.UI
 
 				int originalCount = recipes.Count;
 
-				currentTabProfile = GetCraftingTabProfile(recipes);
+				currentTabProfile = craftingStation == null ? CraftingTabProfile.NoCost : GetCraftingTabProfile(craftingStation);
 				UpdateAvailableTabs(recipes);
 
 				int tabRows = GetRequiredLayoutRows();
@@ -512,6 +527,9 @@ namespace MarsarahUI.Patches.UI
 				case CraftingTabProfile.FoodPreparation:
 					return RecipeMatchesFoodPreparationTab(recipe);
 
+				case CraftingTabProfile.NoCost:
+					return RecipeMatchesNoCostTab(recipe);
+
 				default:
 					return RecipeMatchesBiomeTab(recipe);
 			}
@@ -704,6 +722,10 @@ namespace MarsarahUI.Patches.UI
 
 				case CraftingTabProfile.FoodPreparation:
 					UpdateFoodPreparationTabs(recipes);
+					break;
+
+				case CraftingTabProfile.NoCost:
+					UpdateNoCostTabs(recipes);
 					break;
 
 				default:
@@ -1594,24 +1616,22 @@ namespace MarsarahUI.Patches.UI
 			return rows;
 		}
 
-		private static CraftingTabProfile GetCraftingTabProfile(List<Recipe> recipes)
+		private static CraftingTabProfile GetCraftingTabProfile(CraftingStation craftingStation)
 		{
-			foreach (Recipe recipe in recipes)
+			if (craftingStation == null)
+				return CraftingTabProfile.Biomes;
+
+			switch (craftingStation.name)
 			{
-				if (recipe?.m_craftingStation == null)
-					continue;
+				case "piece_MeadCauldron":
+					return CraftingTabProfile.MeadKettle;
 
-				switch (recipe.m_craftingStation.name)
-				{
-					case "piece_MeadCauldron":
-						return CraftingTabProfile.MeadKettle;
+				case "piece_preptable":
+					return CraftingTabProfile.FoodPreparation;
 
-					case "piece_preptable":
-						return CraftingTabProfile.FoodPreparation;
-				}
+				default:
+					return CraftingTabProfile.Biomes;
 			}
-
-			return CraftingTabProfile.Biomes;
 		}
 
 		private static bool NeedsHorizontalTabScrolling()
@@ -1633,6 +1653,84 @@ namespace MarsarahUI.Patches.UI
 			float scrollWidth = TabRowWidth - TabWidth - TabSpacing - ScrollRightInset;
 
 			return contentWidth > scrollWidth;
+		}
+
+		private static void UpdateNoCostTabs(List<Recipe> recipes)
+		{
+			bool hasOther = false;
+
+			foreach (Recipe recipe in recipes)
+			{
+				bool hasClassification = BiomeCraftingManager.TryGetClassification(recipe, out BiomeCraftingManager.RecipeClassification classification);
+				bool hasSpecialGroup = BiomeCraftingManager.TryGetSpecialGroup(recipe, out BiomeCraftingManager.SpecialRecipeGroup specialGroup);
+
+				if (hasClassification && TryGetTabForBiome(classification.Biome, out CraftingTab biomeTab))
+					availableTabs.Add(biomeTab);
+
+				if (hasSpecialGroup)
+				{
+					switch (specialGroup)
+					{
+						case BiomeCraftingManager.SpecialRecipeGroup.Feast:
+							availableTabs.Add(CraftingTab.Feasts);
+							break;
+
+						case BiomeCraftingManager.SpecialRecipeGroup.MeadRecovery:
+							availableTabs.Add(CraftingTab.Recovery);
+							break;
+
+						case BiomeCraftingManager.SpecialRecipeGroup.MeadResistance:
+							availableTabs.Add(CraftingTab.Resist);
+							break;
+
+						case BiomeCraftingManager.SpecialRecipeGroup.MeadUtility:
+							availableTabs.Add(CraftingTab.Utility);
+							break;
+					}
+				}
+
+				if (!hasClassification && !hasSpecialGroup)
+					hasOther = true;
+			}
+
+			if (hasOther)
+				availableTabs.Add(CraftingTab.Other);
+		}
+
+		private static bool RecipeMatchesNoCostTab(Recipe recipe)
+		{
+			if (selectedTab == CraftingTab.Other)
+			{
+				return !BiomeCraftingManager.TryGetClassification(recipe, out _) &&
+					!BiomeCraftingManager.TryGetSpecialGroup(recipe, out _);
+			}
+
+			if (TryGetBiomeForTab(selectedTab, out BiomeCraftingManager.CraftingBiome biome) &&
+				BiomeCraftingManager.TryGetClassification(recipe, out BiomeCraftingManager.RecipeClassification classification))
+			{
+				return classification.Biome == biome;
+			}
+
+			if (!BiomeCraftingManager.TryGetSpecialGroup(recipe, out BiomeCraftingManager.SpecialRecipeGroup group))
+				return false;
+
+			switch (selectedTab)
+			{
+				case CraftingTab.Feasts:
+					return group == BiomeCraftingManager.SpecialRecipeGroup.Feast;
+
+				case CraftingTab.Recovery:
+					return group == BiomeCraftingManager.SpecialRecipeGroup.MeadRecovery;
+
+				case CraftingTab.Resist:
+					return group == BiomeCraftingManager.SpecialRecipeGroup.MeadResistance;
+
+				case CraftingTab.Utility:
+					return group == BiomeCraftingManager.SpecialRecipeGroup.MeadUtility;
+
+				default:
+					return false;
+			}
 		}
 
 		private static void DumpCurrentRecipes()
