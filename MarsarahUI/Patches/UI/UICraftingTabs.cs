@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UICraftingTabs
 	{
-		private static readonly LogManager log = new LogManager("UI Crafting Tabs", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("UI Crafting Tabs", LogManager.LogLevel.Info);
 
 		private enum CraftingTab
 		{
@@ -74,13 +74,48 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
+		private sealed class RectTransformState
+		{
+			internal RectTransform Rect { get; }
+
+			private readonly Vector2 anchorMin;
+			private readonly Vector2 anchorMax;
+			private readonly Vector2 pivot;
+			private readonly Vector2 anchoredPosition;
+			private readonly Vector2 sizeDelta;
+			private readonly Vector3 localScale;
+
+			internal RectTransformState(RectTransform rect)
+			{
+				Rect = rect;
+				anchorMin = rect.anchorMin;
+				anchorMax = rect.anchorMax;
+				pivot = rect.pivot;
+				anchoredPosition = rect.anchoredPosition;
+				sizeDelta = rect.sizeDelta;
+				localScale = rect.localScale;
+			}
+
+			internal void Restore()
+			{
+				if (Rect == null)
+					return;
+
+				Rect.anchorMin = anchorMin;
+				Rect.anchorMax = anchorMax;
+				Rect.pivot = pivot;
+				Rect.sizeDelta = sizeDelta;
+				Rect.anchoredPosition = anchoredPosition;
+				Rect.localScale = localScale;
+			}
+		}
+
 		private static readonly HashSet<CraftingTab> availableTabs = new HashSet<CraftingTab>();
 		private static readonly Dictionary<CraftingTab, GameObject> tabObjects = new Dictionary<CraftingTab, GameObject>();
 
 		private static CraftingTab selectedTab = CraftingTab.All;
 		private static CraftingTabProfile currentTabProfile = CraftingTabProfile.Biomes;
 		private static InventoryGui currentInventoryGui;
-		private static RectTransform craftingContentRoot;
 		private static float currentCraftingExtraHeight;
 		private static GameObject biomeScrollViewportObject;
 		private static RectTransform biomeScrollViewport;
@@ -104,15 +139,22 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Prefix(InventoryGui __instance, List<Recipe> recipes)
 			{
-				if (__instance == null || recipes == null) return;
+				if (__instance == null || recipes == null)
+					return;
+
+				SetCurrentInventoryGui(__instance);
 
 				//DumpCurrentRecipes();
 
 				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
 				{
-					selectedTab = CraftingTab.All;
-					SetCraftingTabsVisible(false);
-					SetCraftingLayout(0, __instance);
+					if (vanillaLayoutCaptured || HasCustomCraftingUI())
+					{
+						selectedTab = CraftingTab.All;
+						RestoreVanillaLayout();
+						DestroyCustomCraftingUI();
+					}
+
 					return;
 				}
 
@@ -120,7 +162,7 @@ namespace MarsarahUI.Patches.UI
 				{
 					selectedTab = CraftingTab.All;
 					SetCraftingTabsVisible(false);
-					SetCraftingLayout(0, __instance);
+					RestoreVanillaLayout();
 					return;
 				}
 
@@ -160,6 +202,25 @@ namespace MarsarahUI.Patches.UI
 
 				ApplyRecipeSorting(__instance);
 			}
+		}
+
+		private static void SetCurrentInventoryGui(InventoryGui inventoryGui)
+		{
+			if (currentInventoryGui == inventoryGui)
+				return;
+
+			RestoreVanillaLayout();
+			DestroyCustomCraftingUI();
+
+			currentInventoryGui = inventoryGui;
+			selectedTab = CraftingTab.All;
+
+			log.Info("Crafting InventoryGui instance changed. Reset custom crafting UI state.");
+		}
+
+		private static bool HasCustomCraftingUI()
+		{
+			return tabObjects.Count > 0 || biomeScrollViewportObject != null || biomeScrollBar != null;
 		}
 
 		private static void ApplyRecipeSorting(InventoryGui inventoryGui)
@@ -775,58 +836,104 @@ namespace MarsarahUI.Patches.UI
 
 		private static void CreateCraftingTabs(InventoryGui inventoryGui)
 		{
+			if (tabObjects.Count > 0)
+				return;
+
 			GameObject craftTab = GetInventoryGuiObject(inventoryGui, "m_tabCraft");
-			GameObject upgradeTab = GetInventoryGuiObject(inventoryGui, "m_tabUpgrade");
 
-			if (craftTab == null || upgradeTab == null)
+			if (craftTab == null)
 			{
-				log.Error("Could not find vanilla Craft/Upgrade tab objects.");
-				return;
-			}
-
-			if (currentInventoryGui == inventoryGui && tabObjects.Count > 0)
-				return;
-
-			currentInventoryGui = inventoryGui;
-			tabObjects.Clear();
-
-			RectTransform craftRect = craftTab.GetComponent<RectTransform>();
-
-			if (craftRect == null)
-			{
-				log.Error("Could not find RectTransform on vanilla Craft tab.");
+				log.Error("Could not find vanilla Craft tab object.");
 				return;
 			}
 
 			foreach (CraftingTab tab in tabDisplayOrder)
 			{
-				GameObject tabObject = Object.Instantiate(upgradeTab, upgradeTab.transform.parent);
-				tabObject.name = $"MarsarahBiomeTab_{tab}";
-
-				Button button = tabObject.GetComponentInChildren<Button>(true);
-
-				if (button != null)
-				{
-					button.onClick = new Button.ButtonClickedEvent();
-
-					CraftingTab capturedTab = tab;
-					button.onClick.AddListener(() => OnBiomeTabClicked(capturedTab));
-
-					Navigation navigation = button.navigation;
-					navigation.mode = Navigation.Mode.None;
-					button.navigation = navigation;
-				}
-
-				TMP_Text text = tabObject.GetComponentInChildren<TMP_Text>(true);
-
-				if (text != null)
-					text.text = GetTabLabel(tab);
-
+				GameObject tabObject = CreateCustomCraftingTab(craftTab, tab);
 				tabObjects[tab] = tabObject;
-				tabObject.transform.SetAsLastSibling();
 			}
 
-			log.Info("Created biome crafting tab objects.");
+			log.Info("Created custom biome crafting tab objects.");
+		}
+
+		private static GameObject CreateCustomCraftingTab(GameObject craftTab, CraftingTab tab)
+		{
+			Transform parent = craftTab.transform.parent;
+
+			GameObject tabObject = new GameObject($"MarsarahBiomeTab_{tab}", typeof(RectTransform), typeof(Image), typeof(Button));
+			RectTransform rect = tabObject.GetComponent<RectTransform>();
+			rect.SetParent(parent, false);
+
+			Button sourceButton = craftTab.GetComponentInChildren<Button>(true);
+			Image sourceImage = sourceButton?.targetGraphic as Image;
+
+			Image image = tabObject.GetComponent<Image>();
+			CopyImageStyle(sourceImage, image);
+			image.raycastTarget = true;
+
+			Button button = tabObject.GetComponent<Button>();
+			button.targetGraphic = image;
+			button.onClick = new Button.ButtonClickedEvent();
+
+			if (sourceButton != null)
+			{
+				button.transition = sourceButton.transition;
+				button.colors = sourceButton.colors;
+				button.spriteState = sourceButton.spriteState;
+				button.animationTriggers = sourceButton.animationTriggers;
+			}
+
+			CraftingTab capturedTab = tab;
+			button.onClick.AddListener(() => OnBiomeTabClicked(capturedTab));
+
+			Navigation navigation = button.navigation;
+			navigation.mode = Navigation.Mode.None;
+			button.navigation = navigation;
+
+			GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+			RectTransform textRect = textObject.GetComponent<RectTransform>();
+			textRect.SetParent(tabObject.transform, false);
+			textRect.anchorMin = Vector2.zero;
+			textRect.anchorMax = Vector2.one;
+			textRect.offsetMin = Vector2.zero;
+			textRect.offsetMax = Vector2.zero;
+
+			TMP_Text sourceText = craftTab.GetComponentInChildren<TMP_Text>(true);
+			TextMeshProUGUI text = textObject.GetComponent<TextMeshProUGUI>();
+
+			if (sourceText != null)
+			{
+				text.font = sourceText.font;
+				text.fontSharedMaterial = sourceText.fontSharedMaterial;
+				text.fontSize = sourceText.fontSize;
+				text.fontStyle = sourceText.fontStyle;
+				text.alignment = sourceText.alignment;
+				text.color = sourceText.color;
+				text.enableAutoSizing = sourceText.enableAutoSizing;
+				text.fontSizeMin = sourceText.fontSizeMin;
+				text.fontSizeMax = sourceText.fontSizeMax;
+			}
+
+			text.text = GetTabLabel(tab);
+			text.raycastTarget = false;
+
+			tabObject.SetActive(false);
+
+			return tabObject;
+		}
+
+		private static void CopyImageStyle(Image source, Image target)
+		{
+			if (source == null || target == null)
+				return;
+
+			target.sprite = source.sprite;
+			target.overrideSprite = source.overrideSprite;
+			target.type = source.type;
+			target.preserveAspect = source.preserveAspect;
+			target.fillCenter = source.fillCenter;
+			target.color = source.color;
+			target.material = source.material;
 		}
 
 		private static void OnBiomeTabClicked(CraftingTab tab)
@@ -868,7 +975,28 @@ namespace MarsarahUI.Patches.UI
 
 		internal static void RefreshFromConfig()
 		{
-			if (currentInventoryGui == null) return;
+			if (currentInventoryGui == null)
+				return;
+
+			if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
+			{
+				bool hadCustomState = vanillaLayoutCaptured || HasCustomCraftingUI() || selectedTab != CraftingTab.All;
+
+				selectedTab = CraftingTab.All;
+
+				if (hadCustomState)
+				{
+					RestoreVanillaLayout();
+					DestroyCustomCraftingUI();
+
+					// Rebuild once so a recipe list previously filtered by a biome tab
+					// immediately returns to vanilla contents and ordering.
+					RefreshCraftingPanel(currentInventoryGui);
+				}
+
+				log.Info("Biome crafting tabs disabled. Vanilla crafting UI restored.");
+				return;
+			}
 
 			RefreshCraftingPanel(currentInventoryGui);
 
@@ -985,7 +1113,7 @@ namespace MarsarahUI.Patches.UI
 
 			Transform parent = craftTab.transform.parent;
 
-			biomeScrollViewportObject = new GameObject("MarsarahBiomeTabScrollViewport", typeof(RectTransform), typeof(Image), typeof(RectMask2D), typeof(ScrollRect));
+			biomeScrollViewportObject = new GameObject("MarsarahBiomeTabScrollViewport", typeof(RectTransform), typeof(RectMask2D), typeof(ScrollRect));
 			biomeScrollViewport = biomeScrollViewportObject.GetComponent<RectTransform>();
 			biomeScrollViewport.SetParent(parent, false);
 
@@ -993,10 +1121,6 @@ namespace MarsarahUI.Patches.UI
 			biomeScrollViewport.anchorMax = craftRect.anchorMax;
 			biomeScrollViewport.pivot = new Vector2(0f, craftRect.pivot.y);
 			biomeScrollViewport.localScale = Vector3.one;
-
-			Image viewportImage = biomeScrollViewportObject.GetComponent<Image>();
-			viewportImage.color = new Color(0f, 0f, 0f, 0f);
-			viewportImage.raycastTarget = true;
 
 			GameObject contentObject = new GameObject("Content", typeof(RectTransform));
 			biomeScrollContent = contentObject.GetComponent<RectTransform>();
@@ -1015,33 +1139,131 @@ namespace MarsarahUI.Patches.UI
 			biomeScrollRect.inertia = true;
 			biomeScrollRect.scrollSensitivity = -(TabWidth + TabSpacing) * 4f;
 
-			if (recipeScrollBar != null)
-			{
-				GameObject scrollBarObject = Object.Instantiate(recipeScrollBar.gameObject, parent);
-				scrollBarObject.name = "MarsarahBiomeTabScrollBar";
-
-				biomeScrollBar = scrollBarObject.GetComponent<Scrollbar>();
-
-				if (biomeScrollBar != null)
-				{
-					biomeScrollBar.onValueChanged = new Scrollbar.ScrollEvent();
-					biomeScrollBar.SetDirection(Scrollbar.Direction.LeftToRight, true);
-
-					Navigation navigation = biomeScrollBar.navigation;
-					navigation.mode = Navigation.Mode.None;
-					biomeScrollBar.navigation = navigation;
-
-					biomeScrollRect.horizontalScrollbar = biomeScrollBar;
-					biomeScrollRect.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-				}
-			}
-
-			biomeScrollViewportObject.transform.SetAsLastSibling();
+			biomeScrollBar = CreateCustomScrollBar(parent, recipeScrollBar);
 
 			if (biomeScrollBar != null)
-				biomeScrollBar.transform.SetAsLastSibling();
+			{
+				biomeScrollRect.horizontalScrollbar = biomeScrollBar;
+				biomeScrollRect.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+			}
 
-			log.Info("Created horizontal biome crafting tab scroll area.");
+			log.Info("Created custom horizontal biome crafting tab scroll area.");
+		}
+
+		private static Scrollbar CreateCustomScrollBar(Transform parent, Scrollbar sourceScrollBar)
+		{
+			GameObject scrollBarObject = new GameObject("MarsarahBiomeTabScrollBar", typeof(RectTransform), typeof(Image), typeof(Scrollbar));
+			RectTransform scrollBarRect = scrollBarObject.GetComponent<RectTransform>();
+			scrollBarRect.SetParent(parent, false);
+
+			Image background = scrollBarObject.GetComponent<Image>();
+			CopyImageStyle(sourceScrollBar?.GetComponent<Image>(), background);
+			background.raycastTarget = true;
+
+			GameObject slidingAreaObject = new GameObject("Sliding Area", typeof(RectTransform));
+			RectTransform slidingArea = slidingAreaObject.GetComponent<RectTransform>();
+			slidingArea.SetParent(scrollBarObject.transform, false);
+			slidingArea.anchorMin = Vector2.zero;
+			slidingArea.anchorMax = Vector2.one;
+			slidingArea.offsetMin = Vector2.zero;
+			slidingArea.offsetMax = Vector2.zero;
+
+			GameObject handleObject = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+			RectTransform handleRect = handleObject.GetComponent<RectTransform>();
+			handleRect.SetParent(slidingArea, false);
+			handleRect.anchorMin = Vector2.zero;
+			handleRect.anchorMax = Vector2.one;
+			handleRect.offsetMin = Vector2.zero;
+			handleRect.offsetMax = Vector2.zero;
+
+			Image handleImage = handleObject.GetComponent<Image>();
+			Image sourceHandleImage = sourceScrollBar?.handleRect?.GetComponent<Image>();
+			CopyImageStyle(sourceHandleImage, handleImage);
+			handleImage.raycastTarget = true;
+
+			Scrollbar scrollBar = scrollBarObject.GetComponent<Scrollbar>();
+			scrollBar.handleRect = handleRect;
+			scrollBar.targetGraphic = handleImage;
+			scrollBar.direction = Scrollbar.Direction.LeftToRight;
+			scrollBar.onValueChanged = new Scrollbar.ScrollEvent();
+
+			if (sourceScrollBar != null)
+			{
+				scrollBar.transition = sourceScrollBar.transition;
+				scrollBar.colors = sourceScrollBar.colors;
+				scrollBar.spriteState = sourceScrollBar.spriteState;
+				scrollBar.animationTriggers = sourceScrollBar.animationTriggers;
+			}
+
+			Navigation navigation = scrollBar.navigation;
+			navigation.mode = Navigation.Mode.None;
+			scrollBar.navigation = navigation;
+
+			scrollBarObject.SetActive(false);
+
+			return scrollBar;
+		}
+
+		private static bool CaptureVanillaLayout(InventoryGui inventoryGui)
+		{
+			if (vanillaLayoutCaptured)
+				return true;
+
+			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
+
+			if (craftingRoot == null)
+			{
+				log.Error("Could not capture vanilla crafting layout because the crafting root was not found.");
+				return false;
+			}
+
+			vanillaLayoutStates.Clear();
+
+			CaptureRectTransform(craftingRoot.Find("RecipeList") as RectTransform);
+			CaptureRectTransform(craftingRoot.Find("Decription") as RectTransform);
+			CaptureRectTransform(craftingRoot.Find("Darken") as RectTransform);
+			CaptureRectTransform(craftingRoot.Find("selected_frame") as RectTransform);
+			CaptureRectTransform(craftingRoot.Find("Bkg") as RectTransform);
+
+			CaptureRectTransform(GetInventoryGuiObject(inventoryGui, "m_repairButton")?.GetComponent<RectTransform>());
+			CaptureRectTransform(GetInventoryGuiObject(inventoryGui, "m_repairPanel")?.GetComponent<RectTransform>());
+
+			vanillaLayoutCaptured = true;
+			currentCraftingExtraHeight = 0f;
+
+			log.Info("Captured vanilla crafting layout.");
+
+			return true;
+		}
+
+		private static void CaptureRectTransform(RectTransform rect)
+		{
+			if (rect == null || vanillaLayoutStates.ContainsKey(rect))
+				return;
+
+			vanillaLayoutStates.Add(rect, new RectTransformState(rect));
+		}
+
+		private static void RestoreCapturedLayout()
+		{
+			foreach (RectTransformState state in vanillaLayoutStates.Values)
+			{
+				state.Restore();
+			}
+		}
+
+		private static void RestoreVanillaLayout()
+		{
+			if (!vanillaLayoutCaptured)
+				return;
+
+			RestoreCapturedLayout();
+
+			vanillaLayoutStates.Clear();
+			vanillaLayoutCaptured = false;
+			currentCraftingExtraHeight = 0f;
+
+			log.Info("Restored vanilla crafting layout.");
 		}
 
 		private static void UpdateScrollingTabs(InventoryGui inventoryGui)
@@ -1156,53 +1378,6 @@ namespace MarsarahUI.Patches.UI
 			UpdateTabSelectionVisuals();
 		}
 
-		private static void CreateCraftingContentRoot(InventoryGui inventoryGui)
-		{
-			if (craftingContentRoot != null)
-				return;
-
-			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
-
-			if (craftingRoot == null)
-			{
-				log.Error("Could not find crafting root.");
-				return;
-			}
-
-			GameObject contentObject = new GameObject("MarsarahBiomeCraftingContent", typeof(RectTransform));
-			craftingContentRoot = contentObject.GetComponent<RectTransform>();
-			craftingContentRoot.SetParent(craftingRoot, false);
-
-			craftingContentRoot.anchorMin = Vector2.zero;
-			craftingContentRoot.anchorMax = Vector2.one;
-			craftingContentRoot.offsetMin = Vector2.zero;
-			craftingContentRoot.offsetMax = Vector2.zero;
-
-			string[] contentChildren =
-			{
-				"RecipeList",
-				"Decription"
-			};
-
-			foreach (string childName in contentChildren)
-			{
-				Transform child = craftingRoot.Find(childName);
-
-				if (child == null)
-				{
-					log.Info($"Crafting child '{childName}' was not found.");
-					continue;
-				}
-
-				child.SetParent(craftingContentRoot, true);
-			}
-
-			craftingContentRoot.anchoredPosition = Vector2.zero;
-			currentCraftingExtraHeight = 0f;
-
-			log.Info("Created biome crafting content container.");
-		}
-
 		private static void MoveRectDown(RectTransform rect, float amount)
 		{
 			if (rect == null)
@@ -1255,41 +1430,78 @@ namespace MarsarahUI.Patches.UI
 
 		private static void SetCraftingLayout(int tabRows, InventoryGui inventoryGui)
 		{
-			CreateCraftingContentRoot(inventoryGui);
-
 			float targetExtraHeight = tabRows > 0 ? 40f + ((tabRows - 1) * TabRowHeight) : 0f;
 
-			if (tabRows > 0 && ConfigManager.EffectiveBiomeCraftingTabsChoice == ConfigManager.BiomeCraftingTabsMode.Scrolling && NeedsHorizontalTabScrolling())
+			if (tabRows > 0 &&
+				ConfigManager.EffectiveBiomeCraftingTabsChoice == ConfigManager.BiomeCraftingTabsMode.Scrolling &&
+				NeedsHorizontalTabScrolling())
 			{
 				targetExtraHeight += ScrollBarHeight + ScrollBarSpacing;
 			}
 
+			if (targetExtraHeight <= 0f)
+			{
+				RestoreVanillaLayout();
+				return;
+			}
+
+			if (!CaptureVanillaLayout(inventoryGui))
+				return;
+
 			if (Mathf.Approximately(targetExtraHeight, currentCraftingExtraHeight))
 				return;
+
+			// Always recalculate from the untouched baseline rather than applying deltas.
+			RestoreCapturedLayout();
 
 			RectTransform craftingRoot = AccessTools.Field(typeof(InventoryGui), "m_crafting")?.GetValue(inventoryGui) as RectTransform;
 
 			if (craftingRoot == null)
 				return;
 
-			float difference = targetExtraHeight - currentCraftingExtraHeight;
+			MoveRectDown(craftingRoot.Find("RecipeList") as RectTransform, targetExtraHeight);
+			MoveRectDown(craftingRoot.Find("Decription") as RectTransform, targetExtraHeight);
 
-			if (craftingContentRoot != null)
-				craftingContentRoot.anchoredPosition = new Vector2(0f, -targetExtraHeight);
-
-			ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, difference);
-			ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, difference);
-			ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, difference);
+			ExtendRectDown(craftingRoot.Find("Darken") as RectTransform, targetExtraHeight);
+			ExtendRectDown(craftingRoot.Find("selected_frame") as RectTransform, targetExtraHeight);
+			ExtendRectDown(craftingRoot.Find("Bkg") as RectTransform, targetExtraHeight);
 
 			RectTransform repairButton = GetInventoryGuiObject(inventoryGui, "m_repairButton")?.GetComponent<RectTransform>();
 			RectTransform repairPanel = GetInventoryGuiObject(inventoryGui, "m_repairPanel")?.GetComponent<RectTransform>();
 
-			MoveRectDown(repairButton, difference);
-			MoveRectDown(repairPanel, difference);
+			MoveRectDown(repairButton, targetExtraHeight);
+			MoveRectDown(repairPanel, targetExtraHeight);
 
 			currentCraftingExtraHeight = targetExtraHeight;
 
 			log.Info($"Crafting layout adjusted for {tabRows} biome tab row(s), extra height {targetExtraHeight}px.");
+		}
+
+		private static void DestroyCustomCraftingUI()
+		{
+			foreach (GameObject tabObject in tabObjects.Values)
+			{
+				if (tabObject != null)
+					Object.Destroy(tabObject);
+			}
+
+			tabObjects.Clear();
+
+			if (biomeScrollViewportObject != null)
+				Object.Destroy(biomeScrollViewportObject);
+
+			if (biomeScrollBar != null)
+				Object.Destroy(biomeScrollBar.gameObject);
+
+			biomeScrollViewportObject = null;
+			biomeScrollViewport = null;
+			biomeScrollContent = null;
+			biomeScrollRect = null;
+			biomeScrollBar = null;
+
+			availableTabs.Clear();
+
+			log.Info("Destroyed custom crafting tab UI.");
 		}
 
 		private static void EnsureSelectedRecipeVisible(InventoryGui inventoryGui)

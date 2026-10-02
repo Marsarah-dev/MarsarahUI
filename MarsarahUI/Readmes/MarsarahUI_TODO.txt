@@ -7,7 +7,6 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
-- Crafting tabs now display craftable recipes at the top of the list. 
 
 B. Updates
 ------------------------
@@ -21,6 +20,8 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
+* Fix upgrade tab not working
+* Center on recipe after going from upgrade button to crafting.
 
 B. Requests
 --------------------
