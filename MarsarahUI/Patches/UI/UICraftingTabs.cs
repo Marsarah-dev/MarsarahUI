@@ -144,21 +144,12 @@ namespace MarsarahUI.Patches.UI
 				if (__instance == null || recipes == null)
 					return;
 
+				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
+					return;
+
 				SetCurrentInventoryGui(__instance);
 
 				//DumpCurrentRecipes();
-
-				if (!ConfigManager.EffectiveBiomeSortedCraftingTabs)
-				{
-					if (vanillaLayoutCaptured || HasCustomCraftingUI())
-					{
-						selectedTab = CraftingTab.All;
-						RestoreVanillaLayout();
-						DestroyCustomCraftingUI();
-					}
-
-					return;
-				}
 
 				if (!__instance.InCraftTab())
 				{
@@ -203,6 +194,27 @@ namespace MarsarahUI.Patches.UI
 					return;
 
 				ApplyRecipeSorting(__instance);
+			}
+		}
+
+		[HarmonyPatch(typeof(InventoryGui), "OnTabCraftPressed")]
+		private static class OnTabCraftPressed_Patch
+		{
+			private static void Prefix(InventoryGui __instance, out bool __state)
+			{
+				__state = ConfigManager.EffectiveBiomeSortedCraftingTabs &&
+					__instance != null &&
+					__instance.InUpradeTab();
+			}
+
+			private static void Postfix(InventoryGui __instance, bool __state)
+			{
+				if (!__state || __instance == null || !__instance.InCraftTab())
+					return;
+
+				EnsureSelectedRecipeVisible(__instance);
+
+				log.Info("Focused selected recipe after switching from Upgrade to Craft.");
 			}
 		}
 
@@ -1301,6 +1313,8 @@ namespace MarsarahUI.Patches.UI
 			allRect.anchorMax = craftRect.anchorMax;
 			allRect.pivot = craftRect.pivot;
 			allRect.localScale = Vector3.one;
+			allRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, TabWidth);
+			allRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, craftRect.rect.height);
 
 			PositionBiomeTab(allTab, startX, rowY);
 			allTab.SetActive(true);
