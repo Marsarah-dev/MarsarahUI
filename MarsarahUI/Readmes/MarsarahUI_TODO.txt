@@ -7,6 +7,9 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
+- Reworked Biome-Sorted Crafting Tabs to avoid cloning or reparenting vanilla UI elements.
+- Added proper restoration and cleanup when switching tabs or disabling the feature.
+- Switching from Upgrade back to Craft now focuses the selected recipe.
 
 B. Updates
 ------------------------
@@ -20,8 +23,6 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
-* Fix upgrade tab not working
-* Center on recipe after going from upgrade button to crafting.
 
 B. Requests
 --------------------

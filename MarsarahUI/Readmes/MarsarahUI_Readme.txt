@@ -1,4 +1,4 @@
-Marsarah UI v1.3.1
+Marsarah UI v1.3.2
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -434,7 +434,7 @@ MOD CONFIGS
 ► Modes:
   Scrolling    - displays one row of tabs with horizontal scrolling when needed.
   MultipleRows - displays all available tabs across multiple rows.
-  Off          - disables Biome-Sorted Crafting Tabs.
+  Off          - disables Biome-Sorted Crafting Tabs and leaves the vanilla crafting interface untouched.
 
 ► MarsarahTweaks Compatibility:
   If MarsarahTweaks is installed and Early Linen Cape is enabled, the Linen Cape is categorized under Swamp to match the modified progression.
@@ -655,6 +655,12 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.3.2
+- Fixes / Compatibility:
+  - Reworked Biome-Sorted Crafting Tabs to avoid cloning or reparenting vanilla crafting UI elements.
+  - Disabling the feature now restores the vanilla crafting layout and removes its custom UI.
+  - Switching from Upgrade back to Craft now focuses the selected recipe.
+
 v1.3.1
 - Fixes:
   - Fixed Biome-Sorted Crafting Tabs overriding vanilla craftable-first recipe priority. Craftable recipes are now shown first while retaining the custom recipe sorting.

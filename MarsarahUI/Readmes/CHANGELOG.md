@@ -1,4 +1,10 @@
 ## <strong> 📜 Version History </strong>
+v1.3.2
+- **Fixes / Compatibility:**
+  - Reworked Biome-Sorted Crafting Tabs to avoid cloning or reparenting vanilla crafting UI elements.
+  - Disabling the feature now restores the vanilla crafting layout and removes its custom UI.
+  - Switching from Upgrade back to Craft now focuses the selected recipe.
+
 v1.3.1
 - **Fixes:**
   - Fixed Biome-Sorted Crafting Tabs overriding vanilla craftable-first recipe priority. Craftable recipes are now shown first while retaining the custom recipe sorting.
