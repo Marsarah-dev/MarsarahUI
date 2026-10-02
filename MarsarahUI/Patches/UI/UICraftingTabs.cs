@@ -112,10 +112,12 @@ namespace MarsarahUI.Patches.UI
 
 		private static readonly HashSet<CraftingTab> availableTabs = new HashSet<CraftingTab>();
 		private static readonly Dictionary<CraftingTab, GameObject> tabObjects = new Dictionary<CraftingTab, GameObject>();
+		private static readonly Dictionary<RectTransform, RectTransformState> vanillaLayoutStates = new Dictionary<RectTransform, RectTransformState>();
 
 		private static CraftingTab selectedTab = CraftingTab.All;
 		private static CraftingTabProfile currentTabProfile = CraftingTabProfile.Biomes;
 		private static InventoryGui currentInventoryGui;
+		private static bool vanillaLayoutCaptured;
 		private static float currentCraftingExtraHeight;
 		private static GameObject biomeScrollViewportObject;
 		private static RectTransform biomeScrollViewport;
