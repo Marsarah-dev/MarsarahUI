@@ -7,9 +7,7 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
-- Reworked Biome-Sorted Crafting Tabs to avoid cloning or reparenting vanilla UI elements.
-- Added proper restoration and cleanup when switching tabs or disabling the feature.
-- Switching from Upgrade back to Craft now focuses the selected recipe.
+- Updated crafting tabs so normal hand-crafting shows none, nocost hand-crafting shows all, and workstation-specific tabs still work correctly.
 
 B. Updates
 ------------------------

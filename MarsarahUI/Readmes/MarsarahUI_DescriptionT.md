@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.3.2  
+**Version:** 1.3.3  
 **Author:** Marsarah
 
 ---
@@ -254,6 +254,7 @@ https://paypal.me/Marsarah9
 - Standard crafting stations organize recipes by biome.
 - The Mead Kettle uses **Recovery, Resist and Utility** categories.
 - The Food Preparation Table uses biome categories together with a separate **Feasts** category.
+- Normal hand crafting does not show custom tabs; with **nocost** enabled, hand crafting shows all available categories while active crafting stations keep their normal station-specific tabs.
 - Only tabs containing available recipes are shown.
 - Unclassified and modded recipes remain available under **Other**.
 - Includes Deep North recipe categorization.

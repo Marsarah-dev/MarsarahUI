@@ -1,4 +1,9 @@
 ## <strong> 📜 Version History </strong>
+v1.3.3
+- **Updates:**
+  - Updated Biome-Sorted Crafting Tabs so normal hand crafting shows no custom tabs, nocost hand crafting shows all available categories, and workstation-specific tabs remain unchanged.
+
+
 v1.3.2
 - **Fixes / Compatibility:**
   - Reworked Biome-Sorted Crafting Tabs to avoid cloning or reparenting vanilla crafting UI elements.

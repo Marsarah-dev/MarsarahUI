@@ -1,4 +1,4 @@
-Marsarah UI v1.3.2
+Marsarah UI v1.3.3
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -426,6 +426,8 @@ MOD CONFIGS
   Standard crafting stations organize recipes by biome.
   The Mead Kettle uses Recovery, Resist and Utility categories.
   The Food Preparation Table uses biome categories together with a separate Feasts category.
+  Normal hand crafting does not show custom tabs.
+  With nocost enabled, hand crafting shows all available categories while active crafting stations keep their normal station-specific tabs.
   Only categories containing available recipes are displayed.
   Unclassified or modded recipes are placed under Other so they remain accessible.
   The All tab always displays the complete recipe list.
@@ -655,6 +657,10 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.3.3
+- Updates:
+  - Updated Biome-Sorted Crafting Tabs so normal hand crafting shows no custom tabs, nocost hand crafting shows all available categories, and workstation-specific tabs remain unchanged.
+
 v1.3.2
 - Fixes / Compatibility:
   - Reworked Biome-Sorted Crafting Tabs to avoid cloning or reparenting vanilla crafting UI elements.
