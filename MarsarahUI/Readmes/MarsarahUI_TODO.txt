@@ -10,10 +10,12 @@ A. Fixes
 
 B. Updates
 ------------------------
-- Updated crafting tabs so normal hand-crafting shows none, nocost hand-crafting shows all, and workstation-specific tabs still work correctly.
+* Fire arrow is no longer shown as a black forest recipe. It's in the Meadows tab now. 
 
 C. New additions
 ------------------------
+* Added Show Raid Timer. 
+  - Shows the time reimaining of an existing base or player targeted raid. 
 
 ============================================================
 TO IMPLEMENT / VERIFY

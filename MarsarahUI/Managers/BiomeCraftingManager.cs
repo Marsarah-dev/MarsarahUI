@@ -102,6 +102,7 @@ namespace MarsarahUI.Managers
 
 			AddRecipes(CraftingBiome.Meadows, RecipeCategory.Ammo,
 				"Recipe_ArrowWood",
+				"Recipe_ArrowFire",
 				"Recipe_ArrowFlint");
 
 			AddRecipes(CraftingBiome.Meadows, RecipeCategory.Food,
@@ -152,7 +153,6 @@ namespace MarsarahUI.Managers
 				"Recipe_BowFineWood");
 
 			AddRecipes(CraftingBiome.BlackForest, RecipeCategory.Ammo,
-				"Recipe_ArrowFire",
 				"Recipe_ArrowBronze");
 
 			AddRecipes(CraftingBiome.BlackForest, RecipeCategory.Food,

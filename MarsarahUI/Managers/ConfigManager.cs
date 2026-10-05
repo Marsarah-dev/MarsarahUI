@@ -274,6 +274,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.", ConfigSections.GeneralHUD, 60);
 			public static readonly ConfigMetadata UIShowPowerExpiration = new ConfigMetadata("Show Boss Power Expiration Message", "Displays a message in the center of the screen when any Forsaken Power expires.", ConfigSections.GeneralHUD, 50);
 			public static readonly ConfigMetadata UIAshlandsHeatLevel = new ConfigMetadata("Show Heat Meter in Ashlands", "Shows a heat meter at the top-center of the screen when in Ashlands water or lava.", ConfigSections.GeneralHUD, 40);
+			public static readonly ConfigMetadata UIRaidTimer = new ConfigMetadata("Show Raid Timer", "Shows the remaining duration beneath the vanilla raid title while the raid banner is visible.", ConfigSections.GeneralHUD, 35);
 			public static readonly ConfigMetadata UIStatusEffectsUnderMinimap = new ConfigMetadata("Status Effects Under Minimap", "Moves status effects below the minimap and displays them in a more compact layout.", ConfigSections.GeneralHUD, 30);
 			public static readonly ConfigMetadata UIGlobalChatByDefault = new ConfigMetadata("Global Chat By Default", "Makes regular chat messages visible to all players regardless of distance.", ConfigSections.GeneralHUD, 20);
 			public static readonly ConfigMetadata UICharacterStatistics = new ConfigMetadata("Logon Screen Character Statistics", "Displays statistics and notable facts for the selected character on the character selection screen.", ConfigSections.GeneralHUD, 10);
@@ -358,6 +359,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ShowOwnedResources;
 		public static ConfigEntry<bool> ShowBossExpirationMessage;
 		public static ConfigEntry<bool> ShowHeatLevelInAshlands;
+		public static ConfigEntry<bool> ShowRaidTimer;
 		public static ConfigEntry<EnemyNameplateMode> EnemyNameplateChoice;
 		public static ConfigEntry<bool> ShowTamingProgress;
 		public static ConfigEntry<ItemQualityMode> ItemQualityIndicatorChoice;
@@ -441,6 +443,7 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveShowOwnedResources => ShowOwnedResources.Value;
 		public static bool EffectiveShowBossExpirationMessage => ShowBossExpirationMessage.Value;
 		public static bool EffectiveShowHeatLevelInAshlands => ResolveBool(ShowHeatLevelInAshlands, AshlandsHeatOverride);
+		public static bool EffectiveShowRaidTimer => ShowRaidTimer.Value;
 		public static EnemyNameplateMode EffectiveEnemyNameplateChoice => ResolveEnum(EnemyNameplateChoice, EnemyNameplatesOverride, EnemyNameplateModeOverride.UserChoice);
 		public static bool EffectiveShowTamingProgress => ResolveBool(ShowTamingProgress, TamingProgressOverride);
 		public static ItemQualityMode EffectiveItemQualityIndicatorChoice => ItemQualityIndicatorChoice.Value;
@@ -518,6 +521,7 @@ namespace MarsarahUI.Managers
 			ShowOnlinePlayers = CreateConfig(Configs.UIOnlinePlayers, true);
 			ShowBossExpirationMessage = CreateConfig(Configs.UIShowPowerExpiration, true);
 			ShowHeatLevelInAshlands = CreateConfig(Configs.UIAshlandsHeatLevel, true);
+			ShowRaidTimer = CreateConfig(Configs.UIRaidTimer, true);
 			StatusEffectsUnderMinimap = CreateConfig(Configs.UIStatusEffectsUnderMinimap, true);
 			GlobalChatByDefault = CreateConfig(Configs.UIGlobalChatByDefault, true);
 			ShowCharacterStatistics = CreateConfig(Configs.UICharacterStatistics, true);
