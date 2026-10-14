@@ -266,6 +266,7 @@ namespace MarsarahUI.Managers
 			// ===== General & HUD
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator.", ConfigSections.GeneralHUD, 110);
+			public static readonly ConfigMetadata UIBoatHealth = new ConfigMetadata("Show Boat Health", "Shows the controlled boat's health as a bar with its percentage near the sailing controls.", ConfigSections.GeneralHUD, 105);
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("Show Current Day", "Shows the current day above the minimap.", ConfigSections.GeneralHUD, 100);
 			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("Show Current Time", "Shows the current time above the minimap. Choose between 24-hour digital clock, 12-hour digital clock, day phases, or off.", ConfigSections.GeneralHUD, 90);
 			public static readonly ConfigMetadata UIColorDayPhases = new ConfigMetadata("Color Day Phases", "Colors the Day Phases time display based on the current phase of the day. Only applies when Show Current Time is set to DayPhases.", ConfigSections.GeneralHUD, 85);
@@ -350,6 +351,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<Vector2> SummonCounterPosition;
 		public static ConfigEntry<int> SummonCounterScale;
 		public static ConfigEntry<bool> ShowBoatSpeed;
+		public static ConfigEntry<bool> ShowBoatHealth;
 		public static ConfigEntry<bool> ShowCurrentDay;
 		public static ConfigEntry<TimeMode> TimeChoice;
 		public static ConfigEntry<bool> ColorDayPhases;
@@ -435,6 +437,7 @@ namespace MarsarahUI.Managers
 
 		public static bool EffectiveShowEnemyDetector => EffectiveEnemyDetectorChoice != EnemyDetectorMode.Off;
 		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
+		public static bool EffectiveShowBoatHealth => ShowBoatHealth.Value;
 		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
 		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
 		public static bool EffectiveColorDayPhases => ColorDayPhases.Value;
@@ -517,6 +520,7 @@ namespace MarsarahUI.Managers
 			// ===== General & HUD
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
+			ShowBoatHealth = CreateConfig(Configs.UIBoatHealth, true);
 			ShowCurrentDay = CreateConfig(Configs.UICurrentDay, true);
 			TimeChoice = CreateConfig(Configs.UITimeMode, TimeMode.DigitalClock);
 			ColorDayPhases = CreateConfig(Configs.UIColorDayPhases, true);

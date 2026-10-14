@@ -303,7 +303,7 @@ https://paypal.me/Marsarah9
 
 **Container Hover Information:**
 - Can show used/max slots, free slots, percentage filled, or be disabled independently.
-- **Container Contents Mode** supports:
+- **Container Contents Mode** options:
   - **IconsHorizontal** - actual item icons in a 5x2 layout.
   - **IconsVertical** - actual item icons in a 2x5 layout.
   - **Text** - aligned item quantities and names.

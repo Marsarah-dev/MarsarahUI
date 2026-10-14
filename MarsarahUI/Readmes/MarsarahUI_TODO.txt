@@ -7,19 +7,14 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
-* Fixed Fire Arrows being categorized under Black Forest instead of Meadows in Biome-Sorted Crafting Tabs.
 
 B. Updates
 ------------------------
-* Added configurable X/Y positioning and scaling for Container Contents icons.
-  - Supports IconsHorizontal and IconsVertical modes.
-  - Scaling includes item icons, item counts, spacing and the additional-items indicator.
-  - Text mode remains unaffected.
+* Adding ship HP
+* Adding notif revamp slider
 
 C. New additions
 ------------------------
-* Added Show Raid Timer. 
-  - Displays the remaining time of an active raid beneath the vanilla raid title.
 
 ============================================================
 TO IMPLEMENT / VERIFY
@@ -46,6 +41,7 @@ D. New UI Features
   - Admin defines allowed/predefined pins.
   - Players can place only the predefined pin types.
 * Show a center-screen message when a Trinket triggers.
+* Show boat HP when driving one. 
 
 E. Deep North / 1.0 Content
 ---------------------------
