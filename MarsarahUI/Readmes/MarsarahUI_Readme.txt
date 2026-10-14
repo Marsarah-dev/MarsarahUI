@@ -1,4 +1,4 @@
-Marsarah UI v1.3.3
+Marsarah UI v1.3.4
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -183,6 +183,13 @@ MOD CONFIGS
 ------------------ [Show Heat Meter in Ashlands] --------------
 ► Description:
   Displays a heat meter at the top-center while relevant Ashlands water/lava heat mechanics are active.
+
+
+----------------------- [Show Raid Timer] ----------------------
+► Description:
+  Displays the remaining duration of an active raid beneath the vanilla raid title.
+  The countdown is displayed in MM:SS format.
+  Automatically hides when no raid is active or the vanilla raid banner is not visible.
 
 
 ------------------- [Status Effects Under Minimap] -------------
@@ -530,10 +537,15 @@ MOD CONFIGS
 
 ------------------- [Container Contents Mode] ------------------
 ► Description:
-  Lists the actual contents of a chest/container in its hover text.
-  Stacks sharing the same display name are combined.
+  Displays the actual contents of a chest/container when hovering over it.
+  Multiple stacks of the same item are combined.
   Up to 10 different item types are shown; additional types are summarized as +X Others.
-  Has options to display contents as icons or text.
+
+► Modes:
+  IconsHorizontal - displays item icons in a 5x2 grid.
+  IconsVertical   - displays item icons in a 2x5 grid.
+  Text            - displays aligned item quantities and names.
+  Off             - disables container contents display.
 
 ► Container Access / Privacy:
   Custom container hover information is only displayed when the local player has access to the container.
@@ -542,15 +554,33 @@ MOD CONFIGS
   The owner of a Personal Chest continues to receive the configured Detailed Hover and Container Contents information.
 
 ► MarsarahTweaks Compatibility:
-  If Progression Halt seals a chest, its real contents are replaced with:
-  "This chest is sealed."
+  If Progression Halt seals a chest, its real contents are replaced with: "This chest is sealed."
 
 ► StoreAndCraft Compatibility:
   StoreAndCraft can add additional lines to container hover text.
   Icon-based Container Contents may overlap this additional text.
-  Use Text or Off for Container Contents if needed.
+  Use the X/Y offset and icon scale options to adjust the icon grid, or select Text or Off if needed.
 
 ► Dependency: Detailed Hover Information
+
+
+------------- [Container Contents Icon X/Y Offset] -------------
+► Description:
+  Adjusts the X and Y position of the Container Contents icon grid relative to its default hover position.
+  Positive X moves the icons right; negative X moves them left.
+  Positive Y moves the icons up; negative Y moves them down.
+  Applies to IconsHorizontal and IconsVertical modes only.
+  Does not affect Text mode.
+
+
+---------------- [Container Contents Icon Scale] ---------------
+► Description:
+  Scales the entire Container Contents icon grid, including item icons, item counts, spacing, and the additional-items indicator.
+  The value is expressed as a percentage.
+  100 is the original size.
+  75 makes the icons smaller, while 150 makes them larger.
+  Applies to IconsHorizontal and IconsVertical modes only.
+  Does not affect Text mode.
 
 
 --------------------- [Container Hover Mode] -------------------
@@ -657,6 +687,17 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.3.4
+- Fixes:
+  - Fixed Fire Arrows being categorized under Black Forest instead of Meadows in Biome-Sorted Crafting Tabs.
+
+- Updates:
+  - Added configurable X/Y positioning for Container Contents icons in both horizontal and vertical display modes.
+  - Added configurable icon scaling, including item counts and the additional-items indicator.
+
+- New Features:
+  - Added Show Raid Timer, displaying the remaining time of an active raid beneath the vanilla raid title.
+
 v1.3.3
 - Updates:
   - Updated Biome-Sorted Crafting Tabs so normal hand crafting shows no custom tabs, nocost hand crafting shows all available categories, and workstation-specific tabs remain unchanged.

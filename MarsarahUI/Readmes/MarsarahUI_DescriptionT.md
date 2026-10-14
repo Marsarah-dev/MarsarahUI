@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.3.3  
+**Version:** 1.3.4  
 **Author:** Marsarah
 
 ---
@@ -131,6 +131,11 @@ https://paypal.me/Marsarah9
 
 ### <strong>🔧 Show Heat Meter in Ashlands</strong>
 - Displays a heat meter at the top-center of the screen while relevant Ashlands water/lava heat mechanics are active.
+
+### <strong>🔧 Show Raid Timer</strong>
+- Displays the remaining time of an active raid beneath the vanilla raid title.
+- Shows the countdown in minutes and seconds.
+- Automatically hides when no raid is active or the vanilla raid banner is not visible.
 
 ### <strong>🔧 Status Effects Under Minimap</strong>
 - Moves status effects into a compact vertical layout below the minimap.
@@ -305,14 +310,17 @@ https://paypal.me/Marsarah9
   - **Off** - disables contents display.
 - Multiple stacks of the same item are combined.
 - Displays up to 10 different item types with **+N Others** for additional types.
+- **Container Contents Icon X/Y Offset** allows repositioning the icon grid relative to its default hover position.
+- **Container Contents Icon Scale** adjusts the size of the icon grid, including item counts and the additional-items indicator. The default is 100%.
+- Positioning and scaling apply to IconsHorizontal and IconsVertical modes only. Text mode is unaffected.
 - If **MarsarahTweaks Progression Halt** seals a chest, its contents are hidden and replaced with **"This chest is sealed."**
 - Custom container information and contents are only shown when the local player has access to the container.
 - Containers protected by another player's Ward do not reveal their contents.
 - Other players' **Personal Chests** retain their vanilla hover and do not reveal their contents.
 
-- **Conflicts:**
-  - StoreAndCraft chest labels or tags may not display as expected with Container Hover Mode enabled. If this occurs, set Container Hover Mode to Off.
-  - Icon-based Container Contents can overlap StoreAndCraft's additional hover text. Use Text or Off for Container Contents if needed.
+- **Compatibility:**
+  - If StoreAndCraft chest labels or tags do not display as expected, try setting Container Hover Mode to Off.
+  - If icon-based Container Contents overlap additional hover text from another mod, use the X/Y offset and scale settings to adjust their placement. Alternatively, use Text or Off for Container Contents.
 
 ---
 

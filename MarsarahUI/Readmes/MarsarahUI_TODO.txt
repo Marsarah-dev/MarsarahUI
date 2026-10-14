@@ -7,16 +7,19 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
+* Fixed Fire Arrows being categorized under Black Forest instead of Meadows in Biome-Sorted Crafting Tabs.
 
 B. Updates
 ------------------------
-* Fire arrow is no longer shown as a black forest recipe. It's in the Meadows tab now. 
-* Added icon positioning and scale for the Container Contents in Icon mode. 
+* Added configurable X/Y positioning and scaling for Container Contents icons.
+  - Supports IconsHorizontal and IconsVertical modes.
+  - Scaling includes item icons, item counts, spacing and the additional-items indicator.
+  - Text mode remains unaffected.
 
 C. New additions
 ------------------------
 * Added Show Raid Timer. 
-  - Shows the time reimaining of an existing base or player targeted raid. 
+  - Displays the remaining time of an active raid beneath the vanilla raid title.
 
 ============================================================
 TO IMPLEMENT / VERIFY

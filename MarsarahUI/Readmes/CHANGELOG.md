@@ -1,8 +1,18 @@
 ## <strong> 📜 Version History </strong>
+v1.3.4
+- **Fixes:**
+  - Fixed Fire Arrows being categorized under Black Forest instead of Meadows in Biome-Sorted Crafting Tabs.
+
+- **Updates:**
+  - Added configurable X/Y positioning for Container Contents icons in both horizontal and vertical display modes.
+  - Added configurable scaling for Container Contents icons, including item counts and the additional-items indicator.
+
+- **New Features:**
+  - Added Show Raid Timer, displaying the remaining time of an active raid beneath the vanilla raid title.
+
 v1.3.3
 - **Updates:**
   - Updated Biome-Sorted Crafting Tabs so normal hand crafting shows no custom tabs, nocost hand crafting shows all available categories, and workstation-specific tabs remain unchanged.
-
 
 v1.3.2
 - **Fixes / Compatibility:**

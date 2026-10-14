@@ -7,7 +7,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIRaidTimer : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Raid Timer", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Raid Timer", LogManager.LogLevel.Warning);
 
 		private const float FontSize = 18f;
 		private static readonly Vector2 TimerOffset = new Vector2(0f, -30f);
