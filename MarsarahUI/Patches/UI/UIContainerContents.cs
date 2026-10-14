@@ -27,8 +27,8 @@ namespace MarsarahUI.Patches.UI
 		private const int HorizontalColumns = 5;
 		private const int VerticalRows = 5;
 
-		private const float GridLeftOffset = -1f;
-		private const float GridTopOffset = 20f;
+		private const float DefaultGridLeftOffset = -1f;
+		private const float DefaultGridTopOffset = 20f;
 		private const float OthersGap = 7f;
 
 		private class ContainerItemEntry
@@ -259,11 +259,16 @@ namespace MarsarahUI.Patches.UI
 
 			RectTransform areaTransform = containerContentsArea.GetComponent<RectTransform>();
 			RectTransform hoverTransform = Hud.instance.m_hoverName.GetComponent<RectTransform>();
+			float scale = Mathf.Max(1, ConfigManager.ContainerContentsScale.Value) / 100f;
+			areaTransform.localScale = Vector3.one * scale;
 
 			float hoverWidth = hoverTransform != null ? hoverTransform.rect.width : 350f;
-			float xPosition = -hoverWidth / 2f + gridWidth / 2f + GridLeftOffset;
+			Vector2 configuredOffset = ConfigManager.ContainerContentsOffset.Value;
 
-			areaTransform.anchoredPosition = new Vector2(xPosition, GridTopOffset);
+			float xPosition = -hoverWidth / 2f + gridWidth / 2f + DefaultGridLeftOffset + configuredOffset.x;
+			float yPosition = DefaultGridTopOffset + configuredOffset.y;
+
+			areaTransform.anchoredPosition = new Vector2(xPosition, yPosition);
 			areaTransform.sizeDelta = new Vector2(gridWidth, gridHeight);
 
 			for (int i = 0; i < itemIcons.Count; i++)

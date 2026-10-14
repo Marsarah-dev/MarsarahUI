@@ -11,6 +11,7 @@ A. Fixes
 B. Updates
 ------------------------
 * Fire arrow is no longer shown as a black forest recipe. It's in the Meadows tab now. 
+* Added icon positioning and scale for the Container Contents in Icon mode. 
 
 C. New additions
 ------------------------

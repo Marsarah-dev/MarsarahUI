@@ -308,6 +308,8 @@ namespace MarsarahUI.Managers
 			// ===== Detailed Hovers
 			public static readonly ConfigMetadata UIHoverInfoMode = new ConfigMetadata("Detailed Hover Information", "Controls the style of detailed hover information, or disables all detailed hovers.", ConfigSections.DetailedHovers, 90);
 			public static readonly ConfigMetadata UIContainerContents = new ConfigMetadata("Container Contents Mode", "Choose how container contents are displayed when hovering: horizontal icons, vertical icons, text, or off.", ConfigSections.DetailedHovers, 80);
+			public static readonly ConfigMetadata UIContainerContentsOffset = new ConfigMetadata("Container Contents Icon X/Y Offset", "Adjusts the X and Y position of container content icons relative to their default hover position.", ConfigSections.DetailedHovers, 79);
+			public static readonly ConfigMetadata UIContainerContentsScale = new ConfigMetadata("Container Contents Icon Scale", "Sets the scale of the container contents icons and item counts as a percentage. 100 is the default size.", ConfigSections.DetailedHovers, 78);
 			public static readonly ConfigMetadata UIContainerHoverMode = new ConfigMetadata("Container Hover Mode", "Choose the method of displaying Container hover info, or Off to disable it.", ConfigSections.DetailedHovers, 70);
 			public static readonly ConfigMetadata UIBeeHoverMode = new ConfigMetadata("Beehive Hover Mode", "Choose the method of displaying Beehive hover info, or Off to disable it.", ConfigSections.DetailedHovers, 60);
 			public static readonly ConfigMetadata UIPlantHoverMode = new ConfigMetadata("Plant Hover Mode", "Choose the method of displaying Plant hover info, or Off to disable it.", ConfigSections.DetailedHovers, 50);
@@ -368,6 +370,8 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ColoredItemDurabilityBar;
 		public static ConfigEntry<HoverInfoMode> DetailedHoverInfoChoice;
 		public static ConfigEntry<ContainerContentsMode> ContainerContentsChoice;
+		public static ConfigEntry<Vector2> ContainerContentsOffset;
+		public static ConfigEntry<int> ContainerContentsScale;
 		public static ConfigEntry<ContainerHoverMode> ContainerHoverModeChoice;
 		public static ConfigEntry<BeeHoverMode> BeehiveHoverModeChoice;
 		public static ConfigEntry<PlantHoverMode> PlantHoverModeChoice;
@@ -556,6 +560,8 @@ namespace MarsarahUI.Managers
 			// ===== Detailed Hovers
 			DetailedHoverInfoChoice = CreateConfig(Configs.UIHoverInfoMode, HoverInfoMode.ColoredText);
 			ContainerContentsChoice = CreateConfig(Configs.UIContainerContents, ContainerContentsMode.IconsHorizontal);
+			ContainerContentsOffset = CreateConfig(Configs.UIContainerContentsOffset, Vector2.zero);
+			ContainerContentsScale = CreateConfig(Configs.UIContainerContentsScale, 100);
 			ContainerHoverModeChoice = CreateConfig(Configs.UIContainerHoverMode, ContainerHoverMode.CurrentPerMax);
 			BeehiveHoverModeChoice = CreateConfig(Configs.UIBeeHoverMode, BeeHoverMode.RemainingTime);
 			PlantHoverModeChoice = CreateConfig(Configs.UIPlantHoverMode, PlantHoverMode.RemainingTime);
@@ -726,6 +732,8 @@ namespace MarsarahUI.Managers
 
 			if (configName == Configs.UIHoverInfoMode.Name ||
 				configName == Configs.UIContainerContents.Name ||
+				configName == Configs.UIContainerContentsOffset.Name ||
+				configName == Configs.UIContainerContentsScale.Name ||
 				configName == Configs.OverrideDetailedHovers.Name ||
 				configName == Configs.OverrideContainerContents.Name ||
 				configName == Configs.EnableServerOverrides.Name)
