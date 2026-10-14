@@ -1,10 +1,8 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -12,14 +10,14 @@ namespace MarsarahUI.Patches.UI
 	{
 		private static readonly LogManager log = new LogManager("UI Boat Speed", LogManager.LogLevel.Warning);
 
+		internal const float BoatAreaWidth = 80f;
+
 		private static float boatSpeed;
-		private static bool showBoatSpeedUI;
 
 		internal static GameObject UIBoatArea;
-		private static Text UIBoatText;
+		private static GameObject UIBoatSpeedArea;
+		private static TextMeshProUGUI UIBoatTextTMP;
 		private static TextMeshProUGUI UIBoatEmojiTMP;
-
-		private static readonly MethodInfo haveControllingPlayerMethod = AccessTools.Method(typeof(Ship), "HaveControllingPlayer");
 		private static RectTransform boatAreaTransform;
 
 		[HarmonyPatch(typeof(Ship), "GetSpeed")]
@@ -29,16 +27,10 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (!ConfigManager.EffectiveShowBoatSpeed) return;
+				if (__instance == null || ___m_body == null || Player.m_localPlayer == null) return;
+				if (Player.m_localPlayer.GetControlledShip() != __instance) return;
 
-				if (__instance && __instance.HasPlayerOnboard() && ___m_body != null)
-				{
-					boatSpeed = Vector3.Dot(___m_body.linearVelocity, __instance.transform.forward);
-				}
-
-				if (haveControllingPlayerMethod != null)
-				{
-					showBoatSpeedUI = (bool)haveControllingPlayerMethod.Invoke(__instance, null);
-				}
+				boatSpeed = Vector3.Dot(___m_body.linearVelocity, __instance.transform.forward);
 			}
 		}
 
@@ -50,7 +42,7 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
 
-				if (ConfigManager.EffectiveShowBoatSpeed)
+				if (ConfigManager.EffectiveShowBoatSpeed || ConfigManager.EffectiveShowBoatHealth)
 				{
 					CreateUI(__instance);
 				}
@@ -65,37 +57,43 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
 
-				if (!ConfigManager.EffectiveShowBoatSpeed)
-				{
-					if (UIBoatArea != null && UIBoatArea.activeSelf)
-					{
-						UIBoatArea.SetActive(false);
-					}
+				bool showSpeed = ConfigManager.EffectiveShowBoatSpeed;
+				bool showHealth = ConfigManager.EffectiveShowBoatHealth;
 
+				if (!showSpeed && !showHealth)
+				{
+					if (UIBoatArea != null) UIBoatArea.SetActive(false);
 					return;
 				}
 
 				CreateUI(__instance);
 				UpdateBoatSpeedPosition();
 
-				bool shouldBeVisible = showBoatSpeedUI && ShowUI;
+				Ship ship = Player.m_localPlayer != null ? Player.m_localPlayer.GetControlledShip() : null;
+				bool shouldBeVisible = ship != null && ShowUI;
 
-				UIBoatArea?.SetActive(shouldBeVisible);
-
+				if (UIBoatArea != null) UIBoatArea.SetActive(shouldBeVisible);
 				if (!shouldBeVisible) return;
 
-				if (UIBoatText != null)
+				if (UIBoatSpeedArea != null) UIBoatSpeedArea.SetActive(showSpeed);
+
+				if (showSpeed)
 				{
-					UIBoatText.color = GetColorFromSpeed(boatSpeed);
-					UIBoatText.text = boatSpeed > 0f
-						? boatSpeed.ToString("0.00")
-						: $"R {Math.Abs(boatSpeed):0.00}";
+					if (UIBoatTextTMP != null)
+					{
+						UIBoatTextTMP.color = GetColorFromSpeed(boatSpeed);
+						UIBoatTextTMP.text = boatSpeed > 0f
+							? boatSpeed.ToString("0.00")
+							: $"R {Math.Abs(boatSpeed):0.00}";
+					}
+
+					if (UIBoatEmojiTMP != null)
+					{
+						UIBoatEmojiTMP.text = "⛵";
+					}
 				}
 
-				if (UIBoatEmojiTMP != null)
-				{
-					UIBoatEmojiTMP.text = "⛵";
-				}
+				UIBoatHealth.UpdateUI(UIBoatArea, ship, showHealth, showSpeed);
 			}
 		}
 
@@ -113,26 +111,43 @@ namespace MarsarahUI.Patches.UI
 			if (UIBoatArea != null) return;
 
 			int uiTextFontSize = 16;
-			string uiTextFontName = "AveriaSansLibre-Bold";
-			string UIEmojiFontName = "NotoEmoji-Regular SDF";
-			Vector2 uiBoatAreaSize = new Vector2(80f, 30f);
+			string uiTextFontName = "Valheim-AveriaSansLibre";
+			string uiEmojiFontName = "NotoEmoji-Regular SDF";
+			Vector2 uiBoatAreaSize = new Vector2(BoatAreaWidth, 30f);
 
 			float xOffset = Game.m_noMap ? -145f : -283f;
 			float yOffset = -225f;
 
 			UIBoatArea = new GameObject("BoatArea");
 			UIBoatArea.layer = 5;
-			UIBoatArea.transform.SetParent(hud.m_rootObject.transform);
+			UIBoatArea.transform.SetParent(hud.m_rootObject.transform, false);
 
 			boatAreaTransform = UIBoatArea.AddComponent<RectTransform>();
 			boatAreaTransform.anchorMin = new Vector2(1f, 1f);
 			boatAreaTransform.anchorMax = new Vector2(1f, 1f);
 			boatAreaTransform.anchoredPosition = new Vector2(xOffset, yOffset);
 			boatAreaTransform.sizeDelta = uiBoatAreaSize;
-			UIBoatArea.transform.localScale = Vector3.one;
+			boatAreaTransform.localScale = Vector3.one;
 
-			UIBoatText = CreateTextObject("BoatText", UIBoatArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(-4f, 0f), uiBoatAreaSize);
-			UIBoatEmojiTMP = CreateTMPTextObject("BoatEmojiTMP", UIBoatArea, Color.white, UIEmojiFontName, uiTextFontSize + 4, TextAlignmentOptions.MidlineLeft, new Vector2(4f, 0f), uiBoatAreaSize, log);
+			UIBoatSpeedArea = new GameObject("BoatSpeedArea");
+			UIBoatSpeedArea.layer = 5;
+			UIBoatSpeedArea.transform.SetParent(UIBoatArea.transform, false);
+
+			RectTransform speedAreaTransform = UIBoatSpeedArea.AddComponent<RectTransform>();
+			speedAreaTransform.anchorMin = new Vector2(0.5f, 0.5f);
+			speedAreaTransform.anchorMax = new Vector2(0.5f, 0.5f);
+			speedAreaTransform.anchoredPosition = Vector2.zero;
+			speedAreaTransform.sizeDelta = uiBoatAreaSize;
+			speedAreaTransform.localScale = Vector3.one;
+
+			UIBoatTextTMP = CreateTMPTextObject("BoatTextTMP", UIBoatSpeedArea, Color.white, uiTextFontName, uiTextFontSize, TextAlignmentOptions.MidlineRight, new Vector2(-4f, 0f), uiBoatAreaSize, log);
+			UIBoatEmojiTMP = CreateTMPTextObject("BoatEmojiTMP", UIBoatSpeedArea, Color.white, uiEmojiFontName, uiTextFontSize + 4, TextAlignmentOptions.MidlineLeft, new Vector2(4f, 0f), uiBoatAreaSize, log);
+
+			UIBoatTextTMP.raycastTarget = false;
+			UIBoatEmojiTMP.raycastTarget = false;
+			UIBoatArea.SetActive(false);
+
+			log.Info("Created shared sailing HUD area.");
 		}
 
 		private static void UpdateBoatSpeedPosition()
