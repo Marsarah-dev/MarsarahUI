@@ -19,7 +19,7 @@ namespace MarsarahUI.Patches.UI
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 20f;
 		private const float NotificationSpacing = 4f;
-		private const float NotificationWidth = 260f;
+		private const float NotificationWidth = 200f; // 260
 		private const float MaxNotificationWidth = 500f;
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;
@@ -34,6 +34,8 @@ namespace MarsarahUI.Patches.UI
 		private class NotificationEntry
 		{
 			internal GameObject Root;
+			internal GameObject Content;
+			internal RectTransform ContentRect;
 			internal RectTransform Rect;
 			internal LayoutElement Layout;
 			internal CanvasGroup CanvasGroup;
@@ -188,9 +190,41 @@ namespace MarsarahUI.Patches.UI
 					continue;
 				}
 
-				notification.Lifetime -= Time.deltaTime;
+				if (!notification.Leaving)
+				{
+					notification.Lifetime -= Time.deltaTime;
 
-				if (notification.Lifetime <= 0f)
+					if (notification.Lifetime <= 0f)
+					{
+						notification.Leaving = true;
+					}
+				}
+
+				float targetProgress = notification.Leaving ? 0f : 1f;
+
+				notification.Progress = Mathf.MoveTowards(
+					notification.Progress,
+					targetProgress,
+					Time.deltaTime / AnimationDuration);
+
+				float easedProgress = Mathf.SmoothStep(0f, 1f, notification.Progress);
+
+				notification.CanvasGroup.alpha = easedProgress;
+
+				if (notification.ContentRect != null)
+				{
+					notification.ContentRect.anchoredPosition = new Vector2(
+						Mathf.Lerp(-SlideDistance, 0f, easedProgress),
+						0f);
+				}
+
+				if (notification.Leaving)
+				{
+					notification.Layout.preferredHeight = NotificationHeight * easedProgress;
+					notification.Layout.minHeight = NotificationHeight * easedProgress;
+				}
+
+				if (notification.Leaving && notification.Progress <= 0f)
 				{
 					Object.Destroy(notification.Root);
 					notifications.RemoveAt(i);
@@ -372,21 +406,33 @@ namespace MarsarahUI.Patches.UI
 			layout.minHeight = NotificationHeight;
 
 			CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
-			canvasGroup.alpha = 1f;
+			canvasGroup.alpha = 0f;
 			canvasGroup.interactable = false;
 			canvasGroup.blocksRaycasts = false;
 
+			GameObject content = new GameObject("Content");
+			content.layer = 5;
+			content.transform.SetParent(root.transform, false);
+
+			RectTransform contentRect = content.AddComponent<RectTransform>();
+			contentRect.anchorMin = Vector2.zero;
+			contentRect.anchorMax = Vector2.one;
+			contentRect.offsetMin = Vector2.zero;
+			contentRect.offsetMax = Vector2.zero;
+			contentRect.localScale = Vector3.one;
+			contentRect.anchoredPosition = new Vector2(-SlideDistance, 0f);
+
 			UIStyleDefinition style = UIStyleManager.Current;
 
-			CreateStyledBackground("Background", root, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+			CreateStyledBackground("Background", content, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
 
-			CreateStyledBorder("Border", root, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+			CreateStyledBorder("Border", content, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
 
 			Image iconImage = null;
 
 			if (icon != null)
 			{
-				iconImage = CreateUIImageObject("Icon", root, Vector2.zero, new Vector2(IconSize, IconSize));
+				iconImage = CreateUIImageObject("Icon", content, Vector2.zero, new Vector2(IconSize, IconSize));
 				iconImage.sprite = icon;
 				iconImage.preserveAspect = true;
 				iconImage.raycastTarget = false;
@@ -398,7 +444,7 @@ namespace MarsarahUI.Patches.UI
 
 			Color textColor = GetNotificationTextColor(type);
 
-			Text messageText = CreateTextObject("Message", root, textColor, uiTextFontName, uiTextFontSize, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+			Text messageText = CreateTextObject("Message", content, textColor, uiTextFontName, uiTextFontSize, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
 			messageText.text = message;
 			messageText.raycastTarget = false;
 
@@ -424,7 +470,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (amount != 0)
 			{
-				amountText = CreateTextObject("Amount", root, UIStyleManager.Current.ValueTextColor, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
+				amountText = CreateTextObject("Amount", content, UIStyleManager.Current.ValueTextColor, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
 				amountText.text = amount > 0 ? $"+{amount}" : amount.ToString();
 				amountText.raycastTarget = false;
 
@@ -437,6 +483,8 @@ namespace MarsarahUI.Patches.UI
 			NotificationEntry notification = new NotificationEntry
 			{
 				Root = root,
+				Content = content,
+				ContentRect = contentRect,
 				Rect = rect,
 				Layout = layout,
 				CanvasGroup = canvasGroup,
@@ -447,7 +495,7 @@ namespace MarsarahUI.Patches.UI
 				Key = key,
 				Amount = amount,
 				Lifetime = ConfigManager.EffectiveNotificationDuration,
-				Progress = 1f,
+				Progress = 0f,
 				Leaving = false
 			};
 
@@ -496,16 +544,27 @@ namespace MarsarahUI.Patches.UI
 		{
 			int maxVisible = Mathf.Max(1, ConfigManager.EffectiveNotificationMaxVisible);
 
-			while (notifications.Count > maxVisible)
-			{
-				NotificationEntry oldest = notifications[0];
+			int activeCount = 0;
 
-				if (oldest.Root != null)
+			foreach (NotificationEntry notification in notifications)
+			{
+				if (!notification.Leaving)
 				{
-					Object.Destroy(oldest.Root);
+					activeCount++;
+				}
+			}
+
+			while (activeCount > maxVisible)
+			{
+				NotificationEntry oldest = notifications.Find(notification => !notification.Leaving);
+
+				if (oldest == null)
+				{
+					break;
 				}
 
-				notifications.RemoveAt(0);
+				oldest.Leaving = true;
+				activeCount--;
 			}
 		}
 	}
