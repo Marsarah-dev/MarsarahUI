@@ -55,17 +55,12 @@ namespace MarsarahUI.Managers
 			public int? Order;
 		}
 
+		// ===== General & HUD
 		public enum UIStyle
 		{
 			Style1,
 			Style2,
 			Style3
-		}
-
-		public enum InfoRailDisplayMode
-		{
-			Icons,
-			Text
 		}
 
 		public enum TimeMode
@@ -74,6 +69,13 @@ namespace MarsarahUI.Managers
 			DigitalClock12Hour,
 			DayPhases,
 			Off
+		}
+
+		// ===== Information Rail
+		public enum InfoRailDisplayMode
+		{
+			Icons,
+			Text
 		}
 
 		public enum InventoryDisplayMode
@@ -88,6 +90,37 @@ namespace MarsarahUI.Managers
 		{
 			Consolidated,
 			Split,
+			Off
+		}
+
+		public enum EnemyDetectorPosition
+		{
+			TopCenter,
+			InformationRail
+		}
+
+		public enum SkillProgressBarColor
+		{
+			Gold,
+			White,
+			Green,
+			Blue,
+			Cyan,
+			Red,
+			Purple
+		}
+
+		public enum SkillProgressPercentageLocation
+		{
+			NotificationArea,
+			InformationRail
+		}
+
+		// ===== Items & Interaction
+		public enum BiomeCraftingTabsMode
+		{
+			Scrolling,
+			MultipleRows,
 			Off
 		}
 
@@ -125,6 +158,7 @@ namespace MarsarahUI.Managers
 			Cyan
 		}
 
+		// ===== Detailed Hovers
 		public enum HoverInfoMode
 		{
 			ColoredText,
@@ -194,43 +228,14 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
-		public enum SkillProgressBarColor
-		{
-			Gold,
-			White,
-			Green,
-			Blue,
-			Cyan,
-			Red,
-			Purple
-		}
-
-		public enum SkillProgressPercentageLocation
-		{
-			NotificationArea,
-			InformationRail
-		}
-
-		public enum EnemyDetectorPosition
-		{
-			TopCenter,
-			InformationRail
-		}
-
-		public enum BiomeCraftingTabsMode
-		{
-			Scrolling,
-			MultipleRows,
-			Off
-		}
-
+		// ===== Notifications
 		public enum NotificationMode
 		{
 			Enhanced,
 			Vanilla
 		}
 
-		// Overrides
+		// ===== Server Overrides
 		public enum BoolOverride
 		{
 			UserChoice,
@@ -357,19 +362,10 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.", ConfigSections.ServerOverrides, 10);
 		}
 
+		// ===== General & HUD
 		public static ConfigEntry<UIStyle> UIStyleChoice;
 		public static ConfigEntry<bool> UIAnimationsEnabled;
-		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
-		public static ConfigEntry<Vector2> InfoRailPosition;
-		public static ConfigEntry<int> InfoRailScale;
-		public static ConfigEntry<EnemyDetectorPosition> EnemyDetectorPositionChoice;
-		public static ConfigEntry<Vector2> EnemyRailPosition;
-		public static ConfigEntry<int> EnemyRailScale;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
-		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
-		public static ConfigEntry<EnemyDetectorMode> EnemyDetectorChoice;
-		public static ConfigEntry<Vector2> SummonCounterPosition;
-		public static ConfigEntry<int> SummonCounterScale;
 		public static ConfigEntry<bool> ShowBoatSpeed;
 		public static ConfigEntry<bool> ShowBoatHealth;
 		public static ConfigEntry<bool> ShowCurrentDay;
@@ -377,19 +373,41 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ColorDayPhases;
 		public static ConfigEntry<bool> ShowWeatherForecast;
 		public static ConfigEntry<bool> ShowSmartBiome;
-		public static ConfigEntry<bool> ShowSummonCounter;
 		public static ConfigEntry<bool> ShowOnlinePlayers;
-		public static ConfigEntry<BiomeCraftingTabsMode> BiomeCraftingTabsChoice;
-		public static ConfigEntry<bool> ShowOwnedResources;
 		public static ConfigEntry<bool> ShowBossExpirationMessage;
 		public static ConfigEntry<bool> ShowHeatLevelInAshlands;
 		public static ConfigEntry<bool> ShowRaidTimer;
+		public static ConfigEntry<bool> StatusEffectsUnderMinimap;
+		public static ConfigEntry<bool> GlobalChatByDefault;
+		public static ConfigEntry<bool> ShowCharacterStatistics;
+
+		// ===== Information Rail
+		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
+		public static ConfigEntry<Vector2> InfoRailPosition;
+		public static ConfigEntry<int> InfoRailScale;
+		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
+		public static ConfigEntry<EnemyDetectorMode> EnemyDetectorChoice;
+		public static ConfigEntry<EnemyDetectorPosition> EnemyDetectorPositionChoice;
+		public static ConfigEntry<Vector2> EnemyRailPosition;
+		public static ConfigEntry<int> EnemyRailScale;
+		public static ConfigEntry<bool> ShowSummonCounter;
+		public static ConfigEntry<Vector2> SummonCounterPosition;
+		public static ConfigEntry<int> SummonCounterScale;
+		public static ConfigEntry<bool> ShowSkillProgress;
+		public static ConfigEntry<SkillProgressBarColor> SkillProgressBarColorChoice;
+		public static ConfigEntry<SkillProgressPercentageLocation> SkillProgressPercentageLocationChoice;
+
+		// ===== Items & Interaction
+		public static ConfigEntry<BiomeCraftingTabsMode> BiomeCraftingTabsChoice;
+		public static ConfigEntry<bool> ShowOwnedResources;
 		public static ConfigEntry<EnemyNameplateMode> EnemyNameplateChoice;
 		public static ConfigEntry<bool> ShowTamingProgress;
 		public static ConfigEntry<ItemQualityMode> ItemQualityIndicatorChoice;
 		public static ConfigEntry<ItemQualitySymbol> ItemQualitySymbolChoice;
 		public static ConfigEntry<ItemQualityColor> ItemQualityColorChoice;
 		public static ConfigEntry<bool> ColoredItemDurabilityBar;
+
+		// ===== Detailed Hovers
 		public static ConfigEntry<HoverInfoMode> DetailedHoverInfoChoice;
 		public static ConfigEntry<ContainerContentsMode> ContainerContentsChoice;
 		public static ConfigEntry<Vector2> ContainerContentsOffset;
@@ -401,18 +419,15 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<CookingStationHoverMode> CookingStationHoverModeChoice;
 		public static ConfigEntry<SmelterHoverMode> SmelterHoverModeChoice;
 		public static ConfigEntry<EggHoverMode> EggHoverModeChoice;
-		public static ConfigEntry<bool> StatusEffectsUnderMinimap;
-		public static ConfigEntry<bool> GlobalChatByDefault;
-		public static ConfigEntry<bool> ShowSkillProgress;
-		public static ConfigEntry<SkillProgressBarColor> SkillProgressBarColorChoice;
-		public static ConfigEntry<SkillProgressPercentageLocation> SkillProgressPercentageLocationChoice;
-		public static ConfigEntry<bool> ShowCharacterStatistics;
+
+		// ===== Notifications
 		public static ConfigEntry<NotificationMode> NotificationModeChoice;
 		public static ConfigEntry<Vector2> NotificationPosition;
 		public static ConfigEntry<int> NotificationScale;
 		public static ConfigEntry<float> NotificationDuration;
 		public static ConfigEntry<int> NotificationMaxVisible;
 
+		// ===== Server Overrides
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
 
