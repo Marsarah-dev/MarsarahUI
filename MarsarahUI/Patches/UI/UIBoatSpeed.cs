@@ -17,7 +17,6 @@ namespace MarsarahUI.Patches.UI
 		internal static GameObject UIBoatArea;
 		private static GameObject UIBoatSpeedArea;
 		private static Text UIBoatText;
-		private static Image UIBoatIcon;
 		private static RectTransform boatAreaTransform;
 
 		[HarmonyPatch(typeof(Ship), "GetSpeed")]
@@ -145,15 +144,7 @@ namespace MarsarahUI.Patches.UI
 			speedAreaTransform.localScale = Vector3.one;
 
 			UIBoatText = CreateTextObject("BoatText", UIBoatSpeedArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(-4f, 0f), uiBoatAreaSize);
-			UIBoatIcon = CreateUIImageObject("BoatIcon", UIBoatSpeedArea, new Vector2(-23f, 0f), new Vector2(24f, 24f));
-			UIBoatIcon.preserveAspect = true;
-			UIBoatIcon.raycastTarget = false;
 			UIBoatArea.SetActive(false);
-
-			UIStyleManager.StyleChanged -= ApplyBoatIconStyle;
-			UIStyleManager.StyleChanged += ApplyBoatIconStyle;
-
-			ApplyBoatIconStyle();
 
 			log.Info("Created shared sailing HUD area.");
 		}
@@ -172,20 +163,6 @@ namespace MarsarahUI.Patches.UI
 				float yOffset = Game.m_noMap ? -225f : -195f;
 
 				boatAreaTransform.anchoredPosition = new Vector2(xOffset, yOffset);
-			}
-		}
-
-		private static void ApplyBoatIconStyle()
-		{
-			if (UIBoatIcon == null) return;
-
-			string iconName = UIStyleManager.Current.BoatIcon;
-			UIBoatIcon.sprite = IconManager.LoadHudIcon(iconName);
-			UIBoatIcon.preserveAspect = true;
-
-			if (UIBoatIcon.sprite == null)
-			{
-				log.Warn($"Could not load boat icon '{iconName}'.");
 			}
 		}
 	}
