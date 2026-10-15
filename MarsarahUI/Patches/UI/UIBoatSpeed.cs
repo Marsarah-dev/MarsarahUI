@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +17,7 @@ namespace MarsarahUI.Patches.UI
 		internal static GameObject UIBoatArea;
 		private static GameObject UIBoatSpeedArea;
 		private static Text UIBoatText;
-		private static TextMeshProUGUI UIBoatEmojiTMP;
+		private static Image UIBoatIcon;
 		private static RectTransform boatAreaTransform;
 
 		[HarmonyPatch(typeof(Ship), "GetSpeed")]
@@ -95,14 +94,7 @@ namespace MarsarahUI.Patches.UI
 					if (UIBoatText != null)
 					{
 						UIBoatText.color = UIStyleManager.Current.WeightFillColorMode == InfoRailColorMode.WeightGradient ? GetColorFromSpeed(boatSpeed) : UIStyleManager.Current.ValueTextColor;
-						UIBoatText.text = boatSpeed > 0f
-							? boatSpeed.ToString("0.00")
-							: $"R {Math.Abs(boatSpeed):0.00}";
-					}
-
-					if (UIBoatEmojiTMP != null)
-					{
-						UIBoatEmojiTMP.text = "⛵";
+						UIBoatText.text = boatSpeed > 0f ? boatSpeed.ToString("0.00") : $"R {Math.Abs(boatSpeed):0.00}";
 					}
 				}
 
@@ -125,7 +117,6 @@ namespace MarsarahUI.Patches.UI
 
 			int uiTextFontSize = 16;
 			string uiTextFontName = "AveriaSansLibre-Bold";
-			string uiEmojiFontName = "NotoEmoji-Regular SDF";
 			Vector2 uiBoatAreaSize = new Vector2(BoatAreaWidth, 30f);
 
 			float xOffset = Game.m_noMap ? -145f : -283f;
@@ -154,11 +145,15 @@ namespace MarsarahUI.Patches.UI
 			speedAreaTransform.localScale = Vector3.one;
 
 			UIBoatText = CreateTextObject("BoatText", UIBoatSpeedArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(-4f, 0f), uiBoatAreaSize);
-			UIBoatEmojiTMP = CreateTMPTextObject("BoatEmojiTMP", UIBoatSpeedArea, Color.white, uiEmojiFontName, uiTextFontSize + 4, TextAlignmentOptions.MidlineLeft, new Vector2(4f, 0f), uiBoatAreaSize, log);
-
-			UIBoatText.raycastTarget = false;
-			UIBoatEmojiTMP.raycastTarget = false;
+			UIBoatIcon = CreateUIImageObject("BoatIcon", UIBoatSpeedArea, new Vector2(-28f, 0f), new Vector2(24f, 24f));
+			UIBoatIcon.preserveAspect = true;
+			UIBoatIcon.raycastTarget = false;
 			UIBoatArea.SetActive(false);
+
+			UIStyleManager.StyleChanged -= ApplyBoatIconStyle;
+			UIStyleManager.StyleChanged += ApplyBoatIconStyle;
+
+			ApplyBoatIconStyle();
 
 			log.Info("Created shared sailing HUD area.");
 		}
@@ -177,6 +172,20 @@ namespace MarsarahUI.Patches.UI
 				float yOffset = Game.m_noMap ? -225f : -195f;
 
 				boatAreaTransform.anchoredPosition = new Vector2(xOffset, yOffset);
+			}
+		}
+
+		private static void ApplyBoatIconStyle()
+		{
+			if (UIBoatIcon == null) return;
+
+			string iconName = UIStyleManager.Current.BoatIcon;
+			UIBoatIcon.sprite = IconManager.LoadHudIcon(iconName);
+			UIBoatIcon.preserveAspect = true;
+
+			if (UIBoatIcon.sprite == null)
+			{
+				log.Warn($"Could not load boat icon '{iconName}'.");
 			}
 		}
 	}
