@@ -44,7 +44,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				__state = new SkillProgressState();
 
-				if (ConfigManager.EffectiveSkillProgressBarChoice == ConfigManager.SkillProgressBarColor.Off) return;
+				if (!ConfigManager.EffectiveShowSkillProgress) return;
 				if (Player.m_localPlayer == null || __instance != Player.m_localPlayer.GetSkills()) return;
 				if (skillType == SkillType.Run) return;
 
@@ -90,7 +90,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
-				if (ConfigManager.EffectiveSkillProgressBarChoice == ConfigManager.SkillProgressBarColor.Off) return;
+				if (!ConfigManager.EffectiveShowSkillProgress) return;
 
 				CreateUI(__instance);
 			}
@@ -101,7 +101,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(Hud __instance)
 			{
-				if (ConfigManager.EffectiveSkillProgressBarChoice == ConfigManager.SkillProgressBarColor.Off)
+				if (!ConfigManager.EffectiveShowSkillProgress)
 				{
 					displayTimer = 0f;
 					IsDisplaying = false;

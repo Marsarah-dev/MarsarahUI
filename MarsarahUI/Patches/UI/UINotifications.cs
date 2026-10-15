@@ -19,7 +19,7 @@ namespace MarsarahUI.Patches.UI
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 20f;
 		private const float NotificationSpacing = 4f;
-		private const float NotificationWidth = 200f; // 260
+		private const float NotificationWidth = 180f; // 260
 		private const float MaxNotificationWidth = 500f;
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;

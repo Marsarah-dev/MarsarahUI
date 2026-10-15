@@ -202,20 +202,19 @@ namespace MarsarahUI.Managers
 			Blue,
 			Cyan,
 			Red,
-			Purple,
-			Off
+			Purple
 		}
 
 		public enum SkillProgressLocation
 		{
 			NotificationArea,
-			InfoRail
+			InformationRail
 		}
 
 		public enum EnemyDetectorPosition
 		{
 			TopCenter,
-			InfoRail
+			InformationRail
 		}
 
 		public enum BiomeCraftingTabsMode
@@ -276,6 +275,8 @@ namespace MarsarahUI.Managers
 		public static class Configs
 		{
 			// ===== General & HUD
+			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("UI Style", "Choose the shared visual style used by supported MarsarahUI elements, including the information rail, summon counter, enhanced notifications, and other HUD elements that use the shared style.", ConfigSections.GeneralHUD, 140);
+			public static readonly ConfigMetadata UIInfoRailAnimations = new ConfigMetadata("UI Animations", "Animate supported MarsarahUI elements such as the information rail, summon counter, and enhanced notifications. Disable this if you experience UI-related performance issues.", ConfigSections.GeneralHUD, 130);
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator.", ConfigSections.GeneralHUD, 110);
 			public static readonly ConfigMetadata UIBoatHealth = new ConfigMetadata("Show Boat Health", "Shows the controlled boat's health as a bar with its percentage near the sailing controls.", ConfigSections.GeneralHUD, 105);
@@ -293,9 +294,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UICharacterStatistics = new ConfigMetadata("Logon Screen Character Statistics", "Displays statistics and notable facts for the selected character on the character selection screen.", ConfigSections.GeneralHUD, 10);
 
 			// ===== Information Rail
-			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("Information Rail Style", "Choose the visual style used by the information rail and summon counter.", ConfigSections.InformationRail, 70);
 			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.", ConfigSections.InformationRail, 60);
-			public static readonly ConfigMetadata UIInfoRailAnimations = new ConfigMetadata("Information Rail Animations", "Animate information rail elements and the summon counter when they appear or disappear. Disable this if you experience UI-related performance issues.", ConfigSections.InformationRail, 55);
 			public static readonly ConfigMetadata UIInfoRailPosition = new ConfigMetadata("Information Rail X/Y Position", "Sets the exact X and Y position of the information rail.", ConfigSections.InformationRail, 54);
 			public static readonly ConfigMetadata UIInfoRailScale = new ConfigMetadata("Information Rail Scale", "Sets the scale of the information rail as a percentage. 100 is the default size.", ConfigSections.InformationRail, 53);
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.", ConfigSections.InformationRail, 50);
@@ -306,8 +305,9 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UISummonCounter = new ConfigMetadata("Show Summon Counter", "Shows number of summoned skeletons from the Dead Raiser.", ConfigSections.InformationRail, 20);
 			public static readonly ConfigMetadata UISummonCounterPosition = new ConfigMetadata("Summon Counter X/Y Position", "Sets the exact X and Y position of the summon counter.", ConfigSections.InformationRail, 19);
 			public static readonly ConfigMetadata UISummonCounterScale = new ConfigMetadata("Summon Counter Scale", "Sets the scale of the summon counter as a percentage. 100 is the default size.", ConfigSections.InformationRail, 18);
-			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.", ConfigSections.InformationRail, 10);
-			public static readonly ConfigMetadata UISkillProgressLocation = new ConfigMetadata("Skill Progress Location", "Choose whether skill progress is shown in the enhanced notification area or in the information rail. When Notification Mode is Vanilla, skill progress is always shown in the information rail.", ConfigSections.InformationRail, 5);
+			public static readonly ConfigMetadata UIShowSkillProgress = new ConfigMetadata("Show Skill Progress", "Shows skill progress while advancing toward the next skill level.", ConfigSections.InformationRail, 12);
+			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar Color", "Choose the color of the skill progress bar shown at the bottom while advancing toward the next skill level.", ConfigSections.InformationRail, 11);
+			public static readonly ConfigMetadata UISkillProgressLocation = new ConfigMetadata("Skill Progress Percentage Location", "Choose whether the skill progress percentage is shown in the enhanced notification area or in the information rail. When Notification Mode is Vanilla, the percentage is always shown in the information rail.", ConfigSections.InformationRail, 10);
 
 			// ===== Items & Interaction
 			public static readonly ConfigMetadata UIBiomeSortedCraftingTabs = new ConfigMetadata("Biome-Sorted Crafting Tabs", "Organizes crafting recipes into contextual tabs (separated by biome and type). Choose Scrolling, MultipleRows, or Off.", ConfigSections.ItemsInteraction, 80);
@@ -403,14 +403,15 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<EggHoverMode> EggHoverModeChoice;
 		public static ConfigEntry<bool> StatusEffectsUnderMinimap;
 		public static ConfigEntry<bool> GlobalChatByDefault;
+		public static ConfigEntry<bool> ShowSkillProgress;
 		public static ConfigEntry<SkillProgressBarColor> SkillProgressBarChoice;
+		public static ConfigEntry<SkillProgressLocation> SkillProgressLocationChoice;
 		public static ConfigEntry<bool> ShowCharacterStatistics;
 		public static ConfigEntry<NotificationMode> NotificationModeChoice;
 		public static ConfigEntry<Vector2> NotificationPosition;
 		public static ConfigEntry<int> NotificationScale;
 		public static ConfigEntry<float> NotificationDuration;
 		public static ConfigEntry<int> NotificationMaxVisible;
-		public static ConfigEntry<SkillProgressLocation> SkillProgressLocationChoice;
 
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
@@ -536,6 +537,7 @@ namespace MarsarahUI.Managers
 		public static EggHoverMode EffectiveEggHoverModeChoice => EggHoverModeChoice.Value;
 		public static bool EffectiveStatusEffectsUnderMinimap => StatusEffectsUnderMinimap.Value;
 		public static bool EffectiveGlobalChatByDefault => ResolveBool(GlobalChatByDefault, GlobalChatByDefaultOverride);
+		public static bool EffectiveShowSkillProgress => ShowSkillProgress.Value;
 		public static SkillProgressBarColor EffectiveSkillProgressBarChoice => SkillProgressBarChoice.Value;
 		public static bool EffectiveShowCharacterStatistics => ShowCharacterStatistics.Value;
 		public static NotificationMode EffectiveNotificationModeChoice => NotificationModeChoice.Value;
@@ -549,7 +551,7 @@ namespace MarsarahUI.Managers
 			{
 				if (EffectiveNotificationModeChoice == NotificationMode.Vanilla)
 				{
-					return SkillProgressLocation.InfoRail;
+					return SkillProgressLocation.InformationRail;
 				}
 
 				return SkillProgressLocationChoice.Value;
@@ -561,6 +563,9 @@ namespace MarsarahUI.Managers
 			Config = configFile;
 
 			// ===== General & HUD
+			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
+			UIStyleManager.Initialize(InfoRailStyleChoice);
+			InfoRailAnimationsEnabled = CreateConfig(Configs.UIInfoRailAnimations, true);
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
 			ShowBoatHealth = CreateConfig(Configs.UIBoatHealth, true);
@@ -578,10 +583,7 @@ namespace MarsarahUI.Managers
 			ShowCharacterStatistics = CreateConfig(Configs.UICharacterStatistics, true);
 
 			// ===== Information Rail
-			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
-			UIStyleManager.Initialize(InfoRailStyleChoice);
 			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
-			InfoRailAnimationsEnabled = CreateConfig(Configs.UIInfoRailAnimations, true);
 			InfoRailPosition = CreateConfig(Configs.UIInfoRailPosition, new Vector2(-88f, -230f));
 			InfoRailScale = CreateConfig(Configs.UIInfoRailScale, 100);
 			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
@@ -592,6 +594,7 @@ namespace MarsarahUI.Managers
 			ShowSummonCounter = CreateConfig(Configs.UISummonCounter, true);
 			SummonCounterPosition = CreateConfig(Configs.UISummonCounterPosition, new Vector2(38f, -85f));
 			SummonCounterScale = CreateConfig(Configs.UISummonCounterScale, 100);
+			ShowSkillProgress = CreateConfig(Configs.UIShowSkillProgress, true);
 			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
 			SkillProgressLocationChoice = CreateConfig(Configs.UISkillProgressLocation, SkillProgressLocation.NotificationArea);
 
@@ -623,7 +626,7 @@ namespace MarsarahUI.Managers
 			NotificationPosition = CreateConfig(Configs.UINotificationPosition, new Vector2(47f, -120f));
 			NotificationScale = CreateConfig(Configs.UINotificationScale, 100);
 			NotificationDuration = CreateConfig(Configs.UINotificationDuration, 6f);
-			NotificationMaxVisible = CreateConfig(Configs.UINotificationMaxVisible, 10);
+			NotificationMaxVisible = CreateConfig(Configs.UINotificationMaxVisible, 5);
 
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);
@@ -805,6 +808,7 @@ namespace MarsarahUI.Managers
 			}
 
 			if (configName == Configs.UINotificationMode.Name ||
+				configName == Configs.UIShowSkillProgress.Name ||
 				configName == Configs.UISkillProgressLocation.Name)
 			{
 				UIInfoRail.RefreshSkillProgressLocation();
