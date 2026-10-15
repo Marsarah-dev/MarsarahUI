@@ -289,14 +289,15 @@ namespace MarsarahUI.Managers
 			// ===== General & HUD
 			public static readonly ConfigMetadata UIStyle = new ConfigMetadata("UI Style", "Choose the shared visual style used by supported MarsarahUI elements, including the information rail, summon counter, enhanced notifications, and other HUD elements that use the shared style.", ConfigSections.GeneralHUD, 140);
 			public static readonly ConfigMetadata UIAnimations = new ConfigMetadata("UI Animations", "Animate supported MarsarahUI elements such as the information rail, summon counter, and enhanced notifications. Disable this if you experience UI-related performance issues.", ConfigSections.GeneralHUD, 130);
+			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("UI Display Mode", "Choose whether supported UI elements, including the information rail, summon counter, and sailing HUD, display icons or text labels.", ConfigSections.GeneralHUD, 125);
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
-			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator.", ConfigSections.GeneralHUD, 110);
-			public static readonly ConfigMetadata UIBoatHealth = new ConfigMetadata("Show Boat Health", "Shows the controlled boat's health as a bar with its percentage near the sailing controls.", ConfigSections.GeneralHUD, 105);
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("Show Current Day", "Shows the current day above the minimap.", ConfigSections.GeneralHUD, 100);
 			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("Show Current Time", "Shows the current time above the minimap. Choose between 24-hour digital clock, 12-hour digital clock, day phases, or off.", ConfigSections.GeneralHUD, 90);
 			public static readonly ConfigMetadata UIColorDayPhases = new ConfigMetadata("Color Day Phases", "Colors the Day Phases time display based on the current phase of the day. Only applies when Show Current Time is set to DayPhases.", ConfigSections.GeneralHUD, 85);
 			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.", ConfigSections.GeneralHUD, 80);
 			public static readonly ConfigMetadata UISmartBiome = new ConfigMetadata("Smart Biome Indicator", "Shows smart biome text on the minimap (colored according to worn armor relative to current biome).", ConfigSections.GeneralHUD, 70);
+			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows the controlled boat's speed near the sailing controls.", ConfigSections.GeneralHUD, 69);
+			public static readonly ConfigMetadata UIBoatHealth = new ConfigMetadata("Show Boat Health", "Shows the controlled boat's health as a bar near the sailing controls.", ConfigSections.GeneralHUD, 68);
 			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.", ConfigSections.GeneralHUD, 60);
 			public static readonly ConfigMetadata UIShowPowerExpiration = new ConfigMetadata("Show Boss Power Expiration Message", "Displays a message in the center of the screen when any Forsaken Power expires.", ConfigSections.GeneralHUD, 50);
 			public static readonly ConfigMetadata UIAshlandsHeatLevel = new ConfigMetadata("Show Heat Meter in Ashlands", "Shows a heat meter at the top-center of the screen when in Ashlands water or lava.", ConfigSections.GeneralHUD, 40);
@@ -306,7 +307,6 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UICharacterStatistics = new ConfigMetadata("Logon Screen Character Statistics", "Displays statistics and notable facts for the selected character on the character selection screen.", ConfigSections.GeneralHUD, 10);
 
 			// ===== Information Rail
-			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("Information Rail Display Mode", "Choose whether the information rail and summon counter use icons or text labels.", ConfigSections.InformationRail, 60);
 			public static readonly ConfigMetadata UIInfoRailPosition = new ConfigMetadata("Information Rail X/Y Position", "Sets the exact X and Y position of the information rail.", ConfigSections.InformationRail, 54);
 			public static readonly ConfigMetadata UIInfoRailScale = new ConfigMetadata("Information Rail Scale", "Sets the scale of the information rail as a percentage. 100 is the default size.", ConfigSections.InformationRail, 53);
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.", ConfigSections.InformationRail, 50);
@@ -373,15 +373,16 @@ namespace MarsarahUI.Managers
 		// ===== General & HUD
 		public static ConfigEntry<UIStyle> UIStyleChoice;
 		public static ConfigEntry<bool> UIAnimationsEnabled;
+		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
-		public static ConfigEntry<bool> ShowBoatSpeed;
-		public static ConfigEntry<bool> ShowBoatHealth;
 		public static ConfigEntry<bool> ShowCurrentDay;
 		public static ConfigEntry<TimeMode> TimeChoice;
 		public static ConfigEntry<bool> ColorDayPhases;
 		public static ConfigEntry<bool> ShowWeatherForecast;
 		public static ConfigEntry<bool> ShowSmartBiome;
 		public static ConfigEntry<bool> ShowOnlinePlayers;
+		public static ConfigEntry<bool> ShowBoatSpeed;
+		public static ConfigEntry<bool> ShowBoatHealth;
 		public static ConfigEntry<bool> ShowBossExpirationMessage;
 		public static ConfigEntry<bool> ShowHeatLevelInAshlands;
 		public static ConfigEntry<bool> ShowRaidTimer;
@@ -390,7 +391,6 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ShowCharacterStatistics;
 
 		// ===== Information Rail
-		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
 		public static ConfigEntry<Vector2> InfoRailPosition;
 		public static ConfigEntry<int> InfoRailScale;
 		public static ConfigEntry<InventoryDisplayMode> InventoryDisplayChoice;
@@ -457,14 +457,15 @@ namespace MarsarahUI.Managers
 
 		// ===== Effective General & HUD
 		public static bool EffectiveUIAnimations => UIAnimationsEnabled.Value;
+		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
-		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
-		public static bool EffectiveShowBoatHealth => ShowBoatHealth.Value;
 		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
 		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
 		public static bool EffectiveColorDayPhases => ColorDayPhases.Value;
 		public static bool EffectiveShowWeatherForecast => ResolveBool(ShowWeatherForecast, WeatherForecastOverride);
 		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
+		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
+		public static bool EffectiveShowBoatHealth => ShowBoatHealth.Value;
 		public static bool EffectiveShowOnlinePlayers => ShowOnlinePlayers.Value;
 		public static bool EffectiveShowBossExpirationMessage => ShowBossExpirationMessage.Value;
 		public static bool EffectiveShowHeatLevelInAshlands => ResolveBool(ShowHeatLevelInAshlands, AshlandsHeatOverride);
@@ -474,7 +475,6 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveShowCharacterStatistics => ShowCharacterStatistics.Value;
 
 		// ===== Effective Information Rail
-		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
 
 		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
 		public static bool EffectiveShowInventoryWeightAndSlots => EffectiveInventoryDisplayChoice != InventoryDisplayMode.Off;
@@ -606,14 +606,15 @@ namespace MarsarahUI.Managers
 			UIStyleChoice = CreateConfig(Configs.UIStyle, UIStyle.Style1);
 			UIStyleManager.Initialize(UIStyleChoice);
 			UIAnimationsEnabled = CreateConfig(Configs.UIAnimations, true);
+			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
-			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
-			ShowBoatHealth = CreateConfig(Configs.UIBoatHealth, true);
 			ShowCurrentDay = CreateConfig(Configs.UICurrentDay, true);
 			TimeChoice = CreateConfig(Configs.UITimeMode, TimeMode.DigitalClock);
 			ColorDayPhases = CreateConfig(Configs.UIColorDayPhases, true);
 			ShowWeatherForecast = CreateConfig(Configs.UIWeatherForecast, true);
 			ShowSmartBiome = CreateConfig(Configs.UISmartBiome, true);
+			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
+			ShowBoatHealth = CreateConfig(Configs.UIBoatHealth, true);
 			ShowOnlinePlayers = CreateConfig(Configs.UIOnlinePlayers, true);
 			ShowBossExpirationMessage = CreateConfig(Configs.UIShowPowerExpiration, true);
 			ShowHeatLevelInAshlands = CreateConfig(Configs.UIAshlandsHeatLevel, true);
@@ -622,8 +623,7 @@ namespace MarsarahUI.Managers
 			GlobalChatByDefault = CreateConfig(Configs.UIGlobalChatByDefault, true);
 			ShowCharacterStatistics = CreateConfig(Configs.UICharacterStatistics, true);
 
-			// ===== Information Rail
-			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
+			// ===== Information Rail			
 			InfoRailPosition = CreateConfig(Configs.UIInfoRailPosition, new Vector2(-88f, -230f));
 			InfoRailScale = CreateScaleConfig(Configs.UIInfoRailScale, 100);
 			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);

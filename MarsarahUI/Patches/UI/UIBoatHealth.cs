@@ -25,6 +25,7 @@ namespace MarsarahUI.Patches.UI
 		private static RectTransform healthAreaTransform;
 		private static RectTransform healthFillTransform;
 		private static Image boatIcon;
+		private static Text boatHealthLabel;
 		private static Image healthFillImage;
 		private static bool warnedMissingHealth;
 		private static Ship cachedShip;
@@ -62,6 +63,19 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			warnedMissingHealth = false;
+
+			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+
+			if (boatIcon != null)
+			{
+				boatIcon.gameObject.SetActive(!useText);
+			}
+
+			if (boatHealthLabel != null)
+			{
+				boatHealthLabel.gameObject.SetActive(useText);
+				boatHealthLabel.color = UIStyleManager.Current.LabelTextColor;
+			}
 
 			if (healthAreaTransform != null)
 			{
@@ -110,6 +124,9 @@ namespace MarsarahUI.Patches.UI
 			boatIcon = CreateUIImageObject("BoatHealthIcon", UIHealthArea, new Vector2(BoatIconX, 0f), new Vector2(BoatIconSize, BoatIconSize));
 			boatIcon.preserveAspect = true;
 			boatIcon.raycastTarget = false;
+			boatHealthLabel = CreateTextObject("BoatHealthLabel", UIHealthArea, UIStyleManager.Current.LabelTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, new Vector2(-52f, 0f), new Vector2(72f, HealthAreaHeight));
+			boatHealthLabel.text = "Boat HP";
+			boatHealthLabel.raycastTarget = false;
 
 			float barCenterX = HealthAreaWidth * 0.5f - HealthBarWidth * 0.5f - HealthBarRightInset;
 

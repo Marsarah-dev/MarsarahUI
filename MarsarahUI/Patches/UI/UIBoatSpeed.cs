@@ -18,6 +18,7 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject UIBoatSpeedArea;
 		private static Text UIBoatText;
 		private static Image UIBoatSpeedIcon;
+		private static Text UIBoatSpeedLabel;
 		private static RectTransform boatAreaTransform;
 
 		[HarmonyPatch(typeof(Ship), "GetSpeed")]
@@ -89,6 +90,19 @@ namespace MarsarahUI.Patches.UI
 					}
 				}
 
+				bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+
+				if (UIBoatSpeedIcon != null)
+				{
+					UIBoatSpeedIcon.gameObject.SetActive(!useText);
+				}
+
+				if (UIBoatSpeedLabel != null)
+				{
+					UIBoatSpeedLabel.gameObject.SetActive(useText);
+					UIBoatSpeedLabel.color = UIStyleManager.Current.LabelTextColor;
+				}
+
 				if (showSpeed)
 				{
 					if (UIBoatText != null)
@@ -148,6 +162,9 @@ namespace MarsarahUI.Patches.UI
 			UIBoatSpeedIcon = CreateUIImageObject("BoatSpeedIcon", UIBoatSpeedArea, new Vector2(-23f, 0f), new Vector2(24f, 24f));
 			UIBoatSpeedIcon.preserveAspect = true;
 			UIBoatSpeedIcon.raycastTarget = false;
+			UIBoatSpeedLabel = CreateTextObject("BoatSpeedLabel", UIBoatSpeedArea, UIStyleManager.Current.LabelTextColor, uiTextFontName, 16, TextAnchor.MiddleRight, new Vector2(-60f, 0f), new Vector2(88f, 30f));
+			UIBoatSpeedLabel.text = "Boat Speed";
+			UIBoatSpeedLabel.raycastTarget = false;
 			UIBoatArea.SetActive(false);
 
 			UIStyleManager.StyleChanged -= ApplyBoatSpeedIconStyle;
