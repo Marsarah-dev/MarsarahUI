@@ -3,6 +3,7 @@ using MarsarahUI.Managers;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -16,7 +17,7 @@ namespace MarsarahUI.Patches.UI
 
 		internal static GameObject UIBoatArea;
 		private static GameObject UIBoatSpeedArea;
-		private static TextMeshProUGUI UIBoatTextTMP;
+		private static Text UIBoatText;
 		private static TextMeshProUGUI UIBoatEmojiTMP;
 		private static RectTransform boatAreaTransform;
 
@@ -79,10 +80,10 @@ namespace MarsarahUI.Patches.UI
 
 				if (showSpeed)
 				{
-					if (UIBoatTextTMP != null)
+					if (UIBoatText != null)
 					{
-						UIBoatTextTMP.color = GetColorFromSpeed(boatSpeed);
-						UIBoatTextTMP.text = boatSpeed > 0f
+						UIBoatText.color = GetColorFromSpeed(boatSpeed);
+						UIBoatText.text = boatSpeed > 0f
 							? boatSpeed.ToString("0.00")
 							: $"R {Math.Abs(boatSpeed):0.00}";
 					}
@@ -111,12 +112,12 @@ namespace MarsarahUI.Patches.UI
 			if (UIBoatArea != null) return;
 
 			int uiTextFontSize = 16;
-			string uiTextFontName = "Valheim-AveriaSansLibre";
+			string uiTextFontName = "AveriaSansLibre-Bold";
 			string uiEmojiFontName = "NotoEmoji-Regular SDF";
 			Vector2 uiBoatAreaSize = new Vector2(BoatAreaWidth, 30f);
 
 			float xOffset = Game.m_noMap ? -145f : -283f;
-			float yOffset = -225f;
+			float yOffset = Game.m_noMap ? -225f : -175f;
 
 			UIBoatArea = new GameObject("BoatArea");
 			UIBoatArea.layer = 5;
@@ -140,10 +141,10 @@ namespace MarsarahUI.Patches.UI
 			speedAreaTransform.sizeDelta = uiBoatAreaSize;
 			speedAreaTransform.localScale = Vector3.one;
 
-			UIBoatTextTMP = CreateTMPTextObject("BoatTextTMP", UIBoatSpeedArea, Color.white, uiTextFontName, uiTextFontSize, TextAlignmentOptions.MidlineRight, new Vector2(-4f, 0f), uiBoatAreaSize, log);
+			UIBoatText = CreateTextObject("BoatText", UIBoatSpeedArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(-4f, 0f), uiBoatAreaSize);
 			UIBoatEmojiTMP = CreateTMPTextObject("BoatEmojiTMP", UIBoatSpeedArea, Color.white, uiEmojiFontName, uiTextFontSize + 4, TextAlignmentOptions.MidlineLeft, new Vector2(4f, 0f), uiBoatAreaSize, log);
 
-			UIBoatTextTMP.raycastTarget = false;
+			UIBoatText.raycastTarget = false;
 			UIBoatEmojiTMP.raycastTarget = false;
 			UIBoatArea.SetActive(false);
 
@@ -156,12 +157,14 @@ namespace MarsarahUI.Patches.UI
 
 			if (ConfigManager.EffectiveStatusEffectsUnderMinimap && !Game.m_noMap)
 			{
-				boatAreaTransform.anchoredPosition = new Vector2(-360f, -25f);
+				boatAreaTransform.anchoredPosition = new Vector2(-290f, -25f);
 			}
 			else
 			{
 				float xOffset = Game.m_noMap ? -145f : -283f;
-				boatAreaTransform.anchoredPosition = new Vector2(xOffset, -225f);
+				float yOffset = Game.m_noMap ? -225f : -195f;
+
+				boatAreaTransform.anchoredPosition = new Vector2(xOffset, yOffset);
 			}
 		}
 	}

@@ -1,5 +1,4 @@
 ﻿using MarsarahUI.Managers;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +18,7 @@ namespace MarsarahUI.Patches.UI
 		private static RectTransform healthAreaTransform;
 		private static RectTransform healthFillTransform;
 		private static Image healthFillImage;
-		private static TextMeshProUGUI healthPercentTMP;
+		private static Text healthPercentText;
 		private static bool warnedMissingHealth;
 		private static Ship cachedShip;
 		private static WearNTear cachedWear;
@@ -70,10 +69,10 @@ namespace MarsarahUI.Patches.UI
 
 			if (healthFillImage != null) healthFillImage.color = healthColor;
 
-			if (healthPercentTMP != null)
+			if (healthPercentText != null)
 			{
-				healthPercentTMP.text = $"{Mathf.RoundToInt(health * 100f)}%";
-				healthPercentTMP.color = healthColor;
+				healthPercentText.text = $"{Mathf.RoundToInt(health * 100f)}%";
+				healthPercentText.color = healthColor;
 			}
 
 			UIHealthArea.SetActive(true);
@@ -116,8 +115,8 @@ namespace MarsarahUI.Patches.UI
 
 			// The percentage occupies the remaining space to the right of the bar.
 			float percentCenterX = HealthBarWidth * 0.5f;
-			healthPercentTMP = CreateTMPTextObject("BoatHealthPercentTMP", UIHealthArea, Color.white, "Valheim-AveriaSansLibre", 15, TextAlignmentOptions.MidlineRight, new Vector2(percentCenterX, 0f), new Vector2(HealthAreaWidth - HealthBarWidth, HealthAreaHeight), log);
-			healthPercentTMP.raycastTarget = false;
+			healthPercentText = CreateTextObject("BoatHealthPercent", UIHealthArea, Color.white, "AveriaSansLibre-Bold", 15, TextAnchor.MiddleRight, new Vector2(percentCenterX, 0f), new Vector2(HealthAreaWidth - HealthBarWidth, HealthAreaHeight));
+			healthPercentText.raycastTarget = false;
 
 			UIHealthArea.SetActive(false);
 			log.Info("Created boat health indicator.");
