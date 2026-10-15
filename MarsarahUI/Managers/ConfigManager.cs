@@ -446,12 +446,28 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> GlobalChatByDefaultOverride;
 
 		// Effective UI settings
-		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
+		// ===== Effective General & HUD
 		public static bool EffectiveUIAnimations => UIAnimationsEnabled.Value;
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
-		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
-		public static EnemyDetectorPosition EffectiveEnemyDetectorPositionChoice => EnemyDetectorPositionChoice.Value;
+		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
+		public static bool EffectiveShowBoatHealth => ShowBoatHealth.Value;
+		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
+		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
+		public static bool EffectiveColorDayPhases => ColorDayPhases.Value;
+		public static bool EffectiveShowWeatherForecast => ResolveBool(ShowWeatherForecast, WeatherForecastOverride);
+		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
+		public static bool EffectiveShowOnlinePlayers => ShowOnlinePlayers.Value;
+		public static bool EffectiveShowBossExpirationMessage => ShowBossExpirationMessage.Value;
+		public static bool EffectiveShowHeatLevelInAshlands => ResolveBool(ShowHeatLevelInAshlands, AshlandsHeatOverride);
+		public static bool EffectiveShowRaidTimer => ShowRaidTimer.Value;
+		public static bool EffectiveStatusEffectsUnderMinimap => StatusEffectsUnderMinimap.Value;
+		public static bool EffectiveGlobalChatByDefault => ResolveBool(GlobalChatByDefault, GlobalChatByDefaultOverride);
+		public static bool EffectiveShowCharacterStatistics => ShowCharacterStatistics.Value;
 
+		// ===== Effective Information Rail
+		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
+
+		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
 		public static bool EffectiveShowInventoryWeightAndSlots => EffectiveInventoryDisplayChoice != InventoryDisplayMode.Off;
 
 		public static EnemyDetectorMode EffectiveEnemyDetectorChoice
@@ -478,27 +494,39 @@ namespace MarsarahUI.Managers
 		}
 
 		public static bool EffectiveShowEnemyDetector => EffectiveEnemyDetectorChoice != EnemyDetectorMode.Off;
-		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
-		public static bool EffectiveShowBoatHealth => ShowBoatHealth.Value;
-		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
-		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
-		public static bool EffectiveColorDayPhases => ColorDayPhases.Value;
-		public static bool EffectiveShowWeatherForecast => ResolveBool(ShowWeatherForecast, WeatherForecastOverride);
-		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
+		public static EnemyDetectorPosition EffectiveEnemyDetectorPositionChoice => EnemyDetectorPositionChoice.Value;
+
 		public static bool EffectiveShowSummonCounter => ShowSummonCounter.Value;
-		public static bool EffectiveShowOnlinePlayers => ShowOnlinePlayers.Value;
+
+		public static bool EffectiveShowSkillProgress => ShowSkillProgress.Value;
+		public static SkillProgressBarColor EffectiveSkillProgressBarColor => SkillProgressBarColorChoice.Value;
+
+		public static SkillProgressPercentageLocation EffectiveSkillProgressPercentageLocation
+		{
+			get
+			{
+				if (EffectiveNotificationModeChoice == NotificationMode.Vanilla)
+				{
+					return SkillProgressPercentageLocation.InformationRail;
+				}
+
+				return SkillProgressPercentageLocationChoice.Value;
+			}
+		}
+
+		// ===== Effective Items & Interaction
 		public static BiomeCraftingTabsMode EffectiveBiomeCraftingTabsChoice => ResolveEnum(BiomeCraftingTabsChoice, BiomeCraftingTabsOverrideChoice, BiomeCraftingTabsModeOverride.UserChoice);
 		public static bool EffectiveBiomeSortedCraftingTabs => EffectiveBiomeCraftingTabsChoice != BiomeCraftingTabsMode.Off;
+
 		public static bool EffectiveShowOwnedResources => ShowOwnedResources.Value;
-		public static bool EffectiveShowBossExpirationMessage => ShowBossExpirationMessage.Value;
-		public static bool EffectiveShowHeatLevelInAshlands => ResolveBool(ShowHeatLevelInAshlands, AshlandsHeatOverride);
-		public static bool EffectiveShowRaidTimer => ShowRaidTimer.Value;
 		public static EnemyNameplateMode EffectiveEnemyNameplateChoice => ResolveEnum(EnemyNameplateChoice, EnemyNameplatesOverride, EnemyNameplateModeOverride.UserChoice);
 		public static bool EffectiveShowTamingProgress => ResolveBool(ShowTamingProgress, TamingProgressOverride);
 		public static ItemQualityMode EffectiveItemQualityIndicatorChoice => ItemQualityIndicatorChoice.Value;
 		public static ItemQualitySymbol EffectiveItemQualitySymbolChoice => ItemQualitySymbolChoice.Value;
 		public static ItemQualityColor EffectiveItemQualityColorChoice => ItemQualityColorChoice.Value;
 		public static bool EffectiveColoredItemDurabilityBar => ColoredItemDurabilityBar.Value;
+
+		// ===== Effective Detailed Hovers
 		public static HoverInfoMode EffectiveDetailedHoverInfoChoice
 		{
 			get
@@ -521,6 +549,7 @@ namespace MarsarahUI.Managers
 				}
 			}
 		}
+
 		public static ContainerContentsMode EffectiveContainerContentsChoice
 		{
 			get
@@ -543,6 +572,7 @@ namespace MarsarahUI.Managers
 				}
 			}
 		}
+
 		public static ContainerHoverMode EffectiveContainerHoverModeChoice => ContainerHoverModeChoice.Value;
 		public static BeeHoverMode EffectiveBeehiveHoverModeChoice => BeehiveHoverModeChoice.Value;
 		public static PlantHoverMode EffectivePlantHoverModeChoice => PlantHoverModeChoice.Value;
@@ -550,29 +580,16 @@ namespace MarsarahUI.Managers
 		public static CookingStationHoverMode EffectiveCookingStationHoverModeChoice => CookingStationHoverModeChoice.Value;
 		public static SmelterHoverMode EffectiveSmelterHoverModeChoice => SmelterHoverModeChoice.Value;
 		public static EggHoverMode EffectiveEggHoverModeChoice => EggHoverModeChoice.Value;
-		public static bool EffectiveStatusEffectsUnderMinimap => StatusEffectsUnderMinimap.Value;
-		public static bool EffectiveGlobalChatByDefault => ResolveBool(GlobalChatByDefault, GlobalChatByDefaultOverride);
-		public static bool EffectiveShowSkillProgress => ShowSkillProgress.Value;
-		public static SkillProgressBarColor EffectiveSkillProgressBarColor => SkillProgressBarColorChoice.Value;
-		public static bool EffectiveShowCharacterStatistics => ShowCharacterStatistics.Value;
+
+		// ===== Effective Notifications
 		public static NotificationMode EffectiveNotificationModeChoice => NotificationModeChoice.Value;
 		public static Vector2 EffectiveNotificationPosition => NotificationPosition.Value;
 		public static int EffectiveNotificationScale => NotificationScale.Value;
 		public static float EffectiveNotificationDuration => NotificationDuration.Value;
 		public static int EffectiveNotificationMaxVisible => NotificationMaxVisible.Value;
-		public static SkillProgressPercentageLocation EffectiveSkillProgressPercentageLocation
-		{
-			get
-			{
-				if (EffectiveNotificationModeChoice == NotificationMode.Vanilla)
-				{
-					return SkillProgressPercentageLocation.InformationRail;
-				}
 
-				return SkillProgressPercentageLocationChoice.Value;
-			}
-		}
 
+		// ===== Init
 		public static void Init(ConfigFile configFile)
 		{
 			Config = configFile;
@@ -756,6 +773,7 @@ namespace MarsarahUI.Managers
 			log.Info($"Config setting '{configName}' changed!");
 			Config.Save();
 
+			// ===== General & HUD
 			if (configName == Configs.UICurrentDay.Name ||
 				configName == Configs.UITimeMode.Name ||
 				configName == Configs.OverrideCurrentDay.Name ||
@@ -765,13 +783,14 @@ namespace MarsarahUI.Managers
 				UITimeAndDay.UpdatePositions();
 			}
 
-			if (configName == Configs.UIItemQualityIndicatorMode.Name ||
-				configName == Configs.UIItemQualitySymbol.Name ||
-				configName == Configs.UIItemQualityColor.Name)
+			if (configName == Configs.UIAnimations.Name)
 			{
-				UIItemQuality.UpdateSymbols();
+				UIInfoRail.ApplyAnimationSetting();
+				UISummonDisplay.ApplyAnimationSetting();
+				UINotifications.ApplyAnimationSetting();
 			}
 
+			// ===== Information Rail
 			if (configName == Configs.UIInfoRailPosition.Name ||
 				configName == Configs.UIInfoRailScale.Name)
 			{
@@ -784,19 +803,13 @@ namespace MarsarahUI.Managers
 				UIInfoRail.ApplyEnemyRailTransform();
 			}
 
-			if (configName == Configs.UIAnimations.Name)
-			{
-				UIInfoRail.ApplyAnimationSetting();
-				UISummonDisplay.ApplyAnimationSetting();
-				UINotifications.ApplyAnimationSetting();
-			}
-
 			if (configName == Configs.UISummonCounterPosition.Name ||
 				configName == Configs.UISummonCounterScale.Name)
 			{
 				UISummonDisplay.ApplySummonCounterTransform();
 			}
 
+			// ===== Items & Interaction
 			if (configName == Configs.UIBiomeSortedCraftingTabs.Name ||
 				configName == Configs.OverrideBiomeCraftingTabs.Name ||
 				configName == Configs.EnableServerOverrides.Name)
@@ -804,6 +817,14 @@ namespace MarsarahUI.Managers
 				UICraftingTabs.RefreshFromConfig();
 			}
 
+			if (configName == Configs.UIItemQualityIndicatorMode.Name ||
+				configName == Configs.UIItemQualitySymbol.Name ||
+				configName == Configs.UIItemQualityColor.Name)
+			{
+				UIItemQuality.UpdateSymbols();
+			}
+
+			// ===== Detailed Hovers
 			if (configName == Configs.UIHoverInfoMode.Name ||
 				configName == Configs.UIContainerContents.Name ||
 				configName == Configs.UIContainerContentsOffset.Name ||
@@ -815,6 +836,7 @@ namespace MarsarahUI.Managers
 				UIContainerContents.HideContainerContents();
 			}
 
+			// ===== Notifications
 			if (configName == Configs.UINotificationMode.Name ||
 				configName == Configs.UINotificationDuration.Name ||
 				configName == Configs.UINotificationMaxVisible.Name)
