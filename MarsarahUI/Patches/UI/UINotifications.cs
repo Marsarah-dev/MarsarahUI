@@ -235,7 +235,22 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (notificationRoot == null) return;
 
-			// Notification cards will be restyled here once entries exist.
+			foreach (NotificationEntry notification in notifications)
+			{
+				if (notification.Root == null) continue;
+
+				Color textColor = GetNotificationTextColor(notification.Type);
+
+				if (notification.MessageText != null)
+				{
+					notification.MessageText.color = textColor;
+				}
+
+				if (notification.AmountText != null)
+				{
+					notification.AmountText.color = UIStyleManager.Current.ValueTextColor;
+				}
+			}
 		}
 
 		private static void ClearNotifications()
@@ -294,6 +309,10 @@ namespace MarsarahUI.Patches.UI
 					notificationType = NotificationType.Item;
 					notificationKey = localizedMessage;
 				}
+			}
+			else if (localizedMessage.StartsWith("Skill improved "))
+			{
+				notificationType = NotificationType.Skill;
 			}
 
 			log.Info($"Intercepted TopLeft notification '{localizedMessage}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
@@ -377,7 +396,9 @@ namespace MarsarahUI.Patches.UI
 				iconRect.anchoredPosition = new Vector2(19f, 0f);
 			}
 
-			Text messageText = CreateTextObject("Message", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+			Color textColor = GetNotificationTextColor(type);
+
+			Text messageText = CreateTextObject("Message", root, textColor, uiTextFontName, uiTextFontSize, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
 			messageText.text = message;
 			messageText.raycastTarget = false;
 
@@ -403,7 +424,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (amount != 0)
 			{
-				amountText = CreateTextObject("Amount", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
+				amountText = CreateTextObject("Amount", root, UIStyleManager.Current.ValueTextColor, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
 				amountText.text = amount > 0 ? $"+{amount}" : amount.ToString();
 				amountText.raycastTarget = false;
 
@@ -455,6 +476,20 @@ namespace MarsarahUI.Patches.UI
 			rect.anchorMin = anchorMin;
 			rect.anchorMax = anchorMax;
 			rect.pivot = pivot;
+		}
+
+		private static Color GetNotificationTextColor(NotificationType type)
+		{
+			switch (type)
+			{
+				case NotificationType.Skill:
+					return UIStyleManager.Current.SkillTextColor;
+
+				case NotificationType.Item:
+				case NotificationType.Info:
+				default:
+					return UIStyleManager.Current.ValueTextColor;
+			}
 		}
 
 		private static void TrimNotifications()
