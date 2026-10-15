@@ -90,30 +90,28 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		[HarmonyPatch(typeof(Character), nameof(Character.ShowRemovedMessage))]
-		private static class RemovedMessagePatch
+		[HarmonyPatch(typeof(Humanoid), "DropItem", new System.Type[] { typeof(Inventory), typeof(ItemDrop.ItemData), typeof(int) })]
+		private static class HumanoidDropItemPatch
 		{
-			private static bool Prefix(Character __instance, ItemDrop.ItemData item, int amount)
+			private static void Prefix(Humanoid __instance, Inventory inventory, ItemDrop.ItemData item, int amount)
 			{
 				if (ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Vanilla)
 				{
-					return true;
+					return;
 				}
 
 				if (__instance != Player.m_localPlayer)
 				{
-					return true;
+					return;
 				}
 
 				if (item == null || item.m_shared == null)
 				{
-					log.Warn("Removed item notification received without valid item data. Falling back to vanilla notification.");
-					return true;
+					log.Warn("Dropped item notification received without valid item data.");
+					return;
 				}
 
 				AddRemovedNotification(item, amount);
-
-				return false;
 			}
 		}
 
