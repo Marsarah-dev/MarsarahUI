@@ -23,6 +23,15 @@ namespace MarsarahUI.Patches.UI
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;
 
+		private static int pendingItemMessagesToSuppress;
+
+		private enum NotificationType
+		{
+			Item,
+			Skill,
+			Info
+		}
+
 		private class NotificationEntry
 		{
 			internal GameObject Root;
@@ -63,17 +72,33 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		[HarmonyPatch(typeof(Character), "Message")]
-		private static class CharacterMessagePatch
+		[HarmonyPatch]
+		private static class MessageHudShowMessagePatch
 		{
-			private static bool Prefix(Character __instance, MessageHud.MessageType type, string msg)
+			private static IEnumerable<System.Reflection.MethodBase> TargetMethods()
+			{
+				foreach (System.Reflection.MethodInfo method in AccessTools.GetDeclaredMethods(typeof(MessageHud)))
+				{
+					if (method.Name == "ShowMessage")
+					{
+						yield return method;
+					}
+				}
+			}
+
+			private static bool Prefix(System.Reflection.MethodBase __originalMethod, object[] __args)
 			{
 				if (ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Vanilla)
 				{
 					return true;
 				}
 
-				if (__instance != Player.m_localPlayer)
+				if (__args == null || __args.Length < 2)
+				{
+					return true;
+				}
+
+				if (!(__args[0] is MessageHud.MessageType type))
 				{
 					return true;
 				}
@@ -83,17 +108,14 @@ namespace MarsarahUI.Patches.UI
 					return true;
 				}
 
-				if (string.IsNullOrEmpty(msg))
+				if (!(__args[1] is string message) || string.IsNullOrEmpty(message))
 				{
 					return true;
 				}
 
-				if (msg.StartsWith("$msg_dropped "))
-				{
-					return false;
-				}
+				HandleTopLeftMessage(__originalMethod, __args, message);
 
-				return true;
+				return false;
 			}
 		}
 
@@ -146,6 +168,7 @@ namespace MarsarahUI.Patches.UI
 				}
 
 				AddRemovedNotification(item, amount);
+				pendingItemMessagesToSuppress++;
 			}
 		}
 
@@ -283,105 +306,59 @@ namespace MarsarahUI.Patches.UI
 			notifications.Clear();
 		}
 
-		private static void AddItemNotification(ItemDrop.ItemData item, int amount)
+		private static void HandleTopLeftMessage(System.Reflection.MethodBase originalMethod, object[] args, string message)
 		{
-			if (notificationRoot == null)
+			if (pendingItemMessagesToSuppress > 0)
 			{
-				log.Warn("Could not show loot notification because the notification stack has not been created.");
+				pendingItemMessagesToSuppress--;
+				log.Info($"Suppressed vanilla TopLeft item message '{message}' because a rich item notification was already created.");
 				return;
 			}
 
-			int uiTextFontSize = 16;
-			string uiTextFontName = "AveriaSansLibre-Bold";
+			int amount = 0;
+			Sprite icon = null;
 
-			GameObject root = new GameObject("LootNotification");
-			root.layer = 5;
-			root.transform.SetParent(notificationRoot.transform, false);
+			for (int i = 2; i < args.Length; i++)
+			{
+				if (args[i] is int intValue)
+				{
+					amount = intValue;
+				}
+				else if (args[i] is Sprite spriteValue)
+				{
+					icon = spriteValue;
+				}
+			}
 
-			RectTransform rect = root.AddComponent<RectTransform>();
-			rect.sizeDelta = new Vector2(NotificationWidth, NotificationHeight);
-			rect.localScale = Vector3.one;
+			log.Info($"Intercepted TopLeft notification '{message}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
 
-			LayoutElement layout = root.AddComponent<LayoutElement>();
-			layout.preferredWidth = NotificationWidth;
-			layout.preferredHeight = NotificationHeight;
-			layout.minWidth = NotificationWidth;
-			layout.minHeight = NotificationHeight;
+			AddGenericNotification(message, icon, amount);
+		}
 
-			CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
-			canvasGroup.alpha = 1f;
-			canvasGroup.interactable = false;
-			canvasGroup.blocksRaycasts = false;
+		private static void AddGenericNotification(string message, Sprite icon = null, int amount = 0)
+		{
+			if (notificationRoot == null)
+			{
+				log.Warn("Could not show notification because the notification stack has not been created.");
+				return;
+			}
 
-			UIStyleDefinition style = UIStyleManager.Current;
+			string localizedMessage = Localization.instance.Localize(message);
 
-			CreateStyledBackground("Background", root, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+			AddNotification(NotificationType.Info, null, localizedMessage, icon, amount);
+		}
 
-			CreateStyledBorder(
-				"Border",
-				root,
-				style.BorderType,
-				style.BorderCapAsset,
-				style.BorderColor,
-				style.BorderCapSize,
-				style.BorderOuterColor,
-				style.BorderInnerColor,
-				style.BorderOuterWidth,
-				style.BorderInnerWidth,
-				log);
-
-			Image icon = CreateUIImageObject("Icon", root, Vector2.zero, new Vector2(IconSize, IconSize));
-			icon.sprite = item.GetIcon();
-			icon.preserveAspect = true;
-			icon.raycastTarget = false;
-
-			RectTransform iconRect = icon.rectTransform;
-			SetRectAnchors(iconRect, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f));
-			iconRect.anchoredPosition = new Vector2(19f, 0f);
+		private static void AddItemNotification(ItemDrop.ItemData item, int amount)
+		{
+			if (item == null || item.m_shared == null)
+			{
+				log.Warn("Could not create item notification because item data was invalid.");
+				return;
+			}
 
 			string itemName = Localization.instance.Localize(item.m_shared.m_name);
 
-			Text messageText = CreateTextObject("ItemName", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-
-			messageText.text = itemName;
-			messageText.raycastTarget = false;
-
-			RectTransform messageRect = messageText.rectTransform;
-			SetRectAnchors(messageRect, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f));
-			messageRect.offsetMin = new Vector2(38f, 0f);
-			messageRect.offsetMax = new Vector2(-50f, 0f);
-
-			Text amountText = CreateTextObject("Amount", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
-
-			amountText.text = amount > 0 ? $"+{amount}" : amount.ToString();
-			amountText.raycastTarget = false;
-
-			RectTransform amountRect = amountText.rectTransform;
-			SetRectAnchors(amountRect, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f));
-			amountRect.anchoredPosition = new Vector2(-8f, 0f);
-			amountRect.sizeDelta = new Vector2(44f, 0f);
-
-			NotificationEntry notification = new NotificationEntry
-			{
-				Root = root,
-				Rect = rect,
-				Layout = layout,
-				CanvasGroup = canvasGroup,
-				Icon = icon,
-				MessageText = messageText,
-				AmountText = amountText,
-				Key = item.m_shared.m_name,
-				Amount = amount,
-				Lifetime = ConfigManager.EffectiveNotificationDuration,
-				Progress = 1f,
-				Leaving = false
-			};
-
-			notifications.Add(notification);
-
-			TrimNotifications();
-
-			log.Info($"Added item notification: {item.m_shared.m_name} x{amount}.");
+			AddNotification(NotificationType.Item, item.m_shared.m_name, itemName, item.GetIcon(), amount);
 		}
 
 		private static void AddLootNotification(ItemDrop.ItemData item, int amount)
