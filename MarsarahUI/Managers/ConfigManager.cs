@@ -307,7 +307,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UISummonCounterPosition = new ConfigMetadata("Summon Counter X/Y Position", "Sets the exact X and Y position of the summon counter.", ConfigSections.InformationRail, 19);
 			public static readonly ConfigMetadata UISummonCounterScale = new ConfigMetadata("Summon Counter Scale", "Sets the scale of the summon counter as a percentage. 100 is the default size.", ConfigSections.InformationRail, 18);
 			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.", ConfigSections.InformationRail, 10);
-			public static readonly ConfigMetadata UISkillProgressLocation = new ConfigMetadata("Skill Progress Location", "Choose whether skill progress is shown in the enhanced notification area or in the information rail. When Notification Mode is Vanilla, skill progress is always shown in the information rail.", ConfigSections.Notifications, 5);
+			public static readonly ConfigMetadata UISkillProgressLocation = new ConfigMetadata("Skill Progress Location", "Choose whether skill progress is shown in the enhanced notification area or in the information rail. When Notification Mode is Vanilla, skill progress is always shown in the information rail.", ConfigSections.InformationRail, 5);
 
 			// ===== Items & Interaction
 			public static readonly ConfigMetadata UIBiomeSortedCraftingTabs = new ConfigMetadata("Biome-Sorted Crafting Tabs", "Organizes crafting recipes into contextual tabs (separated by biome and type). Choose Scrolling, MultipleRows, or Off.", ConfigSections.ItemsInteraction, 80);
