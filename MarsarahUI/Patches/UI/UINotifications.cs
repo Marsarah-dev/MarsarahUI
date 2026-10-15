@@ -20,6 +20,7 @@ namespace MarsarahUI.Patches.UI
 		private const float SlideDistance = 20f;
 		private const float NotificationSpacing = 4f;
 		private const float NotificationWidth = 260f;
+		private const float MaxNotificationWidth = 500f;
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;
 
@@ -380,10 +381,23 @@ namespace MarsarahUI.Patches.UI
 			messageText.text = message;
 			messageText.raycastTarget = false;
 
+			messageText.horizontalOverflow = HorizontalWrapMode.Overflow;
+			messageText.verticalOverflow = VerticalWrapMode.Truncate;
+
+			float leftSpace = icon != null ? 38f : 10f;
+			float rightSpace = amount != 0 ? 50f : 10f;
+			float requiredWidth = messageText.preferredWidth + leftSpace + rightSpace + 8f;
+			float notificationWidth = Mathf.Clamp(requiredWidth, NotificationWidth, MaxNotificationWidth);
+
+			rect.sizeDelta = new Vector2(notificationWidth, NotificationHeight);
+
+			layout.preferredWidth = notificationWidth;
+			layout.minWidth = notificationWidth;
+
 			RectTransform messageRect = messageText.rectTransform;
 			SetRectAnchors(messageRect, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f));
-			messageRect.offsetMin = new Vector2(icon != null ? 38f : 10f, 0f);
-			messageRect.offsetMax = new Vector2(amount != 0 ? -50f : -10f, 0f);
+			messageRect.offsetMin = new Vector2(leftSpace, 0f);
+			messageRect.offsetMax = new Vector2(-rightSpace, 0f);
 
 			Text amountText = null;
 
