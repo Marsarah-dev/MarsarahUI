@@ -14,6 +14,7 @@ namespace MarsarahUI.Patches.UI
 		private const float HealthBarWidth = 40f;
 		private const float HealthBarHeight = 9f;
 		private const float HealthOffsetBelowSpeed = -27f;
+		private const float CriticalHealthThreshold = 0.3f;
 
 		private static GameObject UIHealthArea;
 		private static RectTransform healthAreaTransform;
@@ -64,8 +65,11 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			float health = Mathf.Clamp01(cachedWear.GetHealthPercentage());
-			Color healthColor = GetColorFromHealth(health);
-			Color fillColor = UIStyleManager.GetWeightFillColor(1f - health);
+			float damageLevel = Mathf.Clamp01((1f - health) / (1f - CriticalHealthThreshold));
+			Color fillColor = UIStyleManager.GetWeightFillColor(damageLevel);
+
+			bool useDynamicColors = UIStyleManager.Current.WeightFillColorMode == InfoRailColorMode.WeightGradient;
+			Color textColor = useDynamicColors ? fillColor : UIStyleManager.Current.ValueTextColor;
 
 			if (healthFillImage != null)
 			{
@@ -78,23 +82,16 @@ namespace MarsarahUI.Patches.UI
 					healthFillTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, HealthBarWidth * health);
 				}
 
-				healthFillImage.color = UIStyleManager.GetWeightFillColor(1f - health);
+				healthFillImage.color = fillColor;
 			}
 
 			if (healthPercentText != null)
 			{
 				healthPercentText.text = $"{Mathf.RoundToInt(health * 100f)}%";
-				healthPercentText.color = healthColor;
+				healthPercentText.color = textColor;
 			}
 
 			UIHealthArea.SetActive(true);
-		}
-
-		private static Color GetColorFromHealth(float health)
-		{
-			if (health > 0.6f) return new Color(0.427f, 0.745f, 0.412f);
-			if (health > 0.3f) return new Color(0.890f, 0.702f, 0.298f);
-			return new Color(0.851f, 0.325f, 0.310f);
 		}
 
 		private static void CreateUI(GameObject parent)
