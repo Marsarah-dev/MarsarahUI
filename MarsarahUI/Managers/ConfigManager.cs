@@ -1,11 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using MarsarahUI.Patches.UI;
+using ServerSync;
 using System;
 using System.IO;
-using ServerSync;
 using UnityEngine;
-
-using MarsarahUI.Patches.UI;
+using UnityEngine.Playables;
 
 namespace MarsarahUI.Managers
 {
@@ -31,7 +31,8 @@ namespace MarsarahUI.Managers
 			public const string InformationRail = "02 - Information Rail (Local)";
 			public const string ItemsInteraction = "03 - Items & Interaction (Local)";
 			public const string DetailedHovers = "04 - Detailed Hovers (Local)";
-			public const string ServerOverrides = "05 - Server Overrides (Synced)";
+			public const string Notifications = "05 - Notifications (Local)";
+			public const string ServerOverrides = "06 - Server Overrides (Synced)";
 		}
 
 		public struct ConfigMetadata
@@ -209,7 +210,7 @@ namespace MarsarahUI.Managers
 		public enum EnemyDetectorPosition
 		{
 			TopCenter,
-			InfoRail			
+			InfoRail
 		}
 
 		public enum BiomeCraftingTabsMode
@@ -217,6 +218,12 @@ namespace MarsarahUI.Managers
 			Scrolling,
 			MultipleRows,
 			Off
+		}
+
+		public enum NotificationMode
+		{
+			Enhanced,
+			Vanilla
 		}
 
 		// Overrides
@@ -319,6 +326,13 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UISmelterHoverMode = new ConfigMetadata("Smelter Hover Mode", "Choose the method of displaying Smelter hover info, or Off to disable it.", ConfigSections.DetailedHovers, 20);
 			public static readonly ConfigMetadata UIEggHoverMode = new ConfigMetadata("Egg Hover Mode", "Choose the method of displaying Egg hatching hover info, or Off to disable it.", ConfigSections.DetailedHovers, 10);
 
+			// ===== Notifications
+			public static readonly ConfigMetadata UINotificationMode = new ConfigMetadata("Notification Mode", "Choose whether transient notifications use the enhanced MarsarahUI notification stack, or the vanilla Valheim notification system.", ConfigSections.Notifications, 50);
+			public static readonly ConfigMetadata UINotificationPosition = new ConfigMetadata("Notification X/Y Position", "Sets the exact X and Y position of the enhanced notification stack.", ConfigSections.Notifications,	40);
+			public static readonly ConfigMetadata UINotificationScale = new ConfigMetadata("Notification Scale", "Sets the scale of the enhanced notification stack as a percentage. 100 is the default size.", ConfigSections.Notifications, 30);
+			public static readonly ConfigMetadata UINotificationDuration = new ConfigMetadata("Notification Duration", "Sets how many seconds enhanced notifications remain visible before disappearing.", ConfigSections.Notifications, 20);
+			public static readonly ConfigMetadata UINotificationMaxVisible = new ConfigMetadata("Maximum Visible Notifications", "Sets the maximum number of enhanced notifications that can be visible at the same time.", ConfigSections.Notifications, 10);
+
 			// ===== Server Overrides
 			public static readonly ConfigMetadata LockServerOverrides = new ConfigMetadata("Lock Server Overrides", "If on, only server admins can change Server Override settings. Local UI settings are never affected.", ConfigSections.ServerOverrides, 130);
 			public static readonly ConfigMetadata EnableServerOverrides = new ConfigMetadata("Enable Server Overrides", "If on, the server can override selected UI settings for connected players. Settings left as UserChoice continue to use each player's local UI preference.", ConfigSections.ServerOverrides, 120);
@@ -385,6 +399,11 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> GlobalChatByDefault;
 		public static ConfigEntry<SkillProgressBarColor> SkillProgressBarChoice;
 		public static ConfigEntry<bool> ShowCharacterStatistics;
+		public static ConfigEntry<NotificationMode> NotificationModeChoice;
+		public static ConfigEntry<Vector2> NotificationPosition;
+		public static ConfigEntry<int> NotificationScale;
+		public static ConfigEntry<float> NotificationDuration;
+		public static ConfigEntry<int> NotificationMaxVisible;
 
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
@@ -512,6 +531,11 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveGlobalChatByDefault => ResolveBool(GlobalChatByDefault, GlobalChatByDefaultOverride);
 		public static SkillProgressBarColor EffectiveSkillProgressBarChoice => SkillProgressBarChoice.Value;
 		public static bool EffectiveShowCharacterStatistics => ShowCharacterStatistics.Value;
+		public static NotificationMode EffectiveNotificationModeChoice => NotificationModeChoice.Value;
+		public static Vector2 EffectiveNotificationPosition => NotificationPosition.Value;
+		public static int EffectiveNotificationScale => NotificationScale.Value;
+		public static float EffectiveNotificationDuration => NotificationDuration.Value;
+		public static int EffectiveNotificationMaxVisible => NotificationMaxVisible.Value;
 
 		public static void Init(ConfigFile configFile)
 		{
@@ -573,6 +597,13 @@ namespace MarsarahUI.Managers
 			CookingStationHoverModeChoice = CreateConfig(Configs.UICookingStationHoverMode, CookingStationHoverMode.RemainingTime);
 			SmelterHoverModeChoice = CreateConfig(Configs.UISmelterHoverMode, SmelterHoverMode.RemainingTime);
 			EggHoverModeChoice = CreateConfig(Configs.UIEggHoverMode, EggHoverMode.RemainingTime);
+
+			// ===== Notifications
+			NotificationModeChoice = CreateConfig(Configs.UINotificationMode, NotificationMode.Enhanced);
+			NotificationPosition = CreateConfig(Configs.UINotificationPosition, new Vector2(30f, -120f));
+			NotificationScale = CreateConfig(Configs.UINotificationScale, 100);
+			NotificationDuration = CreateConfig(Configs.UINotificationDuration, 3f);
+			NotificationMaxVisible = CreateConfig(Configs.UINotificationMaxVisible, 5);
 
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);
@@ -743,6 +774,23 @@ namespace MarsarahUI.Managers
 				configName == Configs.EnableServerOverrides.Name)
 			{
 				UIContainerContents.HideContainerContents();
+			}
+
+			if (configName == Configs.UINotificationMode.Name)
+			{
+				UINotifications.RefreshFromConfig();
+			}
+
+			if (configName == Configs.UINotificationPosition.Name ||
+				configName == Configs.UINotificationScale.Name)
+			{
+				UINotifications.ApplyNotificationTransform();
+			}
+
+			if (configName == Configs.UINotificationDuration.Name ||
+				configName == Configs.UINotificationMaxVisible.Name)
+			{
+				UINotifications.RefreshFromConfig();
 			}
 		}
 	}

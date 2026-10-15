@@ -10,7 +10,9 @@ A. Fixes
 
 B. Updates
 ------------------------
-* Adding ship HP
+* Show Boat Health
+  - Added configurable Boat Health indicator with HP bar and percentage.
+  - Added custom boat icons, colors, and textures matching all three Information Rail styles.
 * Adding notif revamp slider
 
 C. New additions
