@@ -221,13 +221,13 @@ namespace MarsarahUI.Patches.UI
 		{
 			switch (backgroundType)
 			{
-				case UIBackgroundType .None:
+				case UIBackgroundType.None:
 					return null;
 
-				case UIBackgroundType .UnityImage:
+				case UIBackgroundType.UnityImage:
 					return CreateUnityBackground(objectName, parent, backgroundColor);
 
-				case UIBackgroundType .VanillaSlicedSprite:
+				case UIBackgroundType.VanillaSlicedSprite:
 					return CreateVanillaSlicedBackground(objectName, parent, vanillaSpriteName, backgroundColor, specificLog);
 
 				default:
@@ -267,17 +267,17 @@ namespace MarsarahUI.Patches.UI
 			return background;
 		}
 
-		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, UIBorderType  borderType, string capSpriteName, Color borderColor, Vector2 capSize, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
+		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, UIBorderType borderType, string capSpriteName, Color borderColor, Vector2 capSize, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
 		{
 			switch (borderType)
 			{
-				case UIBorderType .None:
+				case UIBorderType.None:
 					return null;
 
-				case UIBorderType .SideCapsSprite:
+				case UIBorderType.SideCapsSprite:
 					return CreateSideCapsBorder(objectName, parent, capSpriteName, borderColor, capSize, specificLog);
 
-				case UIBorderType .UnityBorder:
+				case UIBorderType.UnityBorder:
 					return CreateUnityBorder(objectName, parent, borderOuterColor, borderColor, borderInnerColor, borderOuterWidth, borderInnerWidth);
 
 				default:

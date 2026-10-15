@@ -563,11 +563,9 @@ namespace MarsarahUI.Managers
 			Config = configFile;
 
 			// ===== General & HUD
-			// ===== General & HUD
 			UIStyleChoice = CreateConfig(Configs.UIStyle, UIStyle.Style1);
 			UIStyleManager.Initialize(UIStyleChoice);
 			UIAnimationsEnabled = CreateConfig(Configs.UIAnimations, true);
-			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
 			ShowBoatHealth = CreateConfig(Configs.UIBoatHealth, true);
