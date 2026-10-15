@@ -63,6 +63,40 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
+		[HarmonyPatch(typeof(Character), "Message")]
+		private static class CharacterMessagePatch
+		{
+			private static bool Prefix(Character __instance, MessageHud.MessageType type, string msg)
+			{
+				if (ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Vanilla)
+				{
+					return true;
+				}
+
+				if (__instance != Player.m_localPlayer)
+				{
+					return true;
+				}
+
+				if (type != MessageHud.MessageType.TopLeft)
+				{
+					return true;
+				}
+
+				if (string.IsNullOrEmpty(msg))
+				{
+					return true;
+				}
+
+				if (msg.StartsWith("$msg_dropped "))
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
 		[HarmonyPatch(typeof(Character), nameof(Character.ShowPickupMessage))]
 		private static class PickupMessagePatch
 		{
@@ -347,7 +381,7 @@ namespace MarsarahUI.Patches.UI
 
 			TrimNotifications();
 
-			log.Info($"Added loot notification: {item.m_shared.m_name} x{amount}.");
+			log.Info($"Added item notification: {item.m_shared.m_name} x{amount}.");
 		}
 
 		private static void AddLootNotification(ItemDrop.ItemData item, int amount)
