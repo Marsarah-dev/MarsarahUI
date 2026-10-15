@@ -903,7 +903,8 @@ namespace MarsarahUI.Patches.UI
 		private static void UpdateSkillElements()
 		{
 			bool enabled = ConfigManager.EffectiveSkillProgressBarChoice != ConfigManager.SkillProgressBarColor.Off;
-			bool visible = enabled && UISkillProgress.IsDisplaying;
+			bool useInfoRail = ConfigManager.EffectiveSkillProgressLocation == ConfigManager.SkillProgressLocation.InfoRail;
+			bool visible = enabled && useInfoRail && UISkillProgress.IsDisplaying;
 
 			SetElementVisible(ElementType.Skill, visible);
 
@@ -1380,7 +1381,20 @@ namespace MarsarahUI.Patches.UI
 		{
 			return ConfigManager.EffectiveInventoryDisplayChoice != ConfigManager.InventoryDisplayMode.Off ||
 				ConfigManager.EffectiveEnemyDetectorChoice != ConfigManager.EnemyDetectorMode.Off ||
-				ConfigManager.EffectiveSkillProgressBarChoice != ConfigManager.SkillProgressBarColor.Off;
+				(ConfigManager.EffectiveSkillProgressBarChoice != ConfigManager.SkillProgressBarColor.Off &&
+				ConfigManager.EffectiveSkillProgressLocation == ConfigManager.SkillProgressLocation.InfoRail);
+		}
+
+		internal static void RefreshSkillProgressLocation()
+		{
+			if (UIRail == null) return;
+
+			UpdateSkillElements();
+			UpdateSeparatorTargets();
+			RebuildLayout();
+			UpdateRailVisibility();
+
+			log.Info($"Skill progress location changed to {ConfigManager.EffectiveSkillProgressLocation}.");
 		}
 	}
 } 

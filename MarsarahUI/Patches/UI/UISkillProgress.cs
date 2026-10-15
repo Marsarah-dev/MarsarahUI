@@ -216,6 +216,11 @@ namespace MarsarahUI.Patches.UI
 			CurrentSkillName = skillName;
 			CurrentDisplayText = $"{level} - {percent}%";
 
+			if (ConfigManager.EffectiveSkillProgressLocation == ConfigManager.SkillProgressLocation.NotificationArea)
+			{
+				UINotifications.ShowSkillProgress(skillName, level, percent, skillIcon);
+			}
+
 			if (skillProgressCanvasGroup != null)
 			{
 				skillProgressCanvasGroup.alpha = 1f;

@@ -206,6 +206,12 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
+		public enum SkillProgressLocation
+		{
+			NotificationArea,
+			InfoRail
+		}
+
 		public enum EnemyDetectorPosition
 		{
 			TopCenter,
@@ -301,6 +307,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UISummonCounterPosition = new ConfigMetadata("Summon Counter X/Y Position", "Sets the exact X and Y position of the summon counter.", ConfigSections.InformationRail, 19);
 			public static readonly ConfigMetadata UISummonCounterScale = new ConfigMetadata("Summon Counter Scale", "Sets the scale of the summon counter as a percentage. 100 is the default size.", ConfigSections.InformationRail, 18);
 			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar", "Displays skill progress when advancing toward the next skill level. Choose the bar color or Off to disable.", ConfigSections.InformationRail, 10);
+			public static readonly ConfigMetadata UISkillProgressLocation = new ConfigMetadata("Skill Progress Location", "Choose whether skill progress is shown in the enhanced notification area or in the information rail. When Notification Mode is Vanilla, skill progress is always shown in the information rail.", ConfigSections.Notifications, 5);
 
 			// ===== Items & Interaction
 			public static readonly ConfigMetadata UIBiomeSortedCraftingTabs = new ConfigMetadata("Biome-Sorted Crafting Tabs", "Organizes crafting recipes into contextual tabs (separated by biome and type). Choose Scrolling, MultipleRows, or Off.", ConfigSections.ItemsInteraction, 80);
@@ -403,6 +410,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<int> NotificationScale;
 		public static ConfigEntry<float> NotificationDuration;
 		public static ConfigEntry<int> NotificationMaxVisible;
+		public static ConfigEntry<SkillProgressLocation> SkillProgressLocationChoice;
 
 		public static ConfigEntry<bool> ServerOverridesLocked;
 		public static ConfigEntry<bool> ServerOverridesEnabled;
@@ -535,6 +543,18 @@ namespace MarsarahUI.Managers
 		public static int EffectiveNotificationScale => NotificationScale.Value;
 		public static float EffectiveNotificationDuration => NotificationDuration.Value;
 		public static int EffectiveNotificationMaxVisible => NotificationMaxVisible.Value;
+		public static SkillProgressLocation EffectiveSkillProgressLocation
+		{
+			get
+			{
+				if (EffectiveNotificationModeChoice == NotificationMode.Vanilla)
+				{
+					return SkillProgressLocation.InfoRail;
+				}
+
+				return SkillProgressLocationChoice.Value;
+			}
+		}
 
 		public static void Init(ConfigFile configFile)
 		{
@@ -573,6 +593,7 @@ namespace MarsarahUI.Managers
 			SummonCounterPosition = CreateConfig(Configs.UISummonCounterPosition, new Vector2(38f, -85f));
 			SummonCounterScale = CreateConfig(Configs.UISummonCounterScale, 100);
 			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
+			SkillProgressLocationChoice = CreateConfig(Configs.UISkillProgressLocation, SkillProgressLocation.NotificationArea);
 
 			// ===== Items & Interaction
 			BiomeCraftingTabsChoice = CreateConfig(Configs.UIBiomeSortedCraftingTabs, BiomeCraftingTabsMode.Scrolling);
@@ -781,6 +802,12 @@ namespace MarsarahUI.Managers
 				configName == Configs.UINotificationMaxVisible.Name)
 			{
 				UINotifications.RefreshFromConfig();
+			}
+
+			if (configName == Configs.UINotificationMode.Name ||
+				configName == Configs.UISkillProgressLocation.Name)
+			{
+				UIInfoRail.RefreshSkillProgressLocation();
 			}
 
 			if (configName == Configs.UINotificationPosition.Name ||

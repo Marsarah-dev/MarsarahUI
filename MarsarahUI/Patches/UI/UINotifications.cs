@@ -285,6 +285,17 @@ namespace MarsarahUI.Patches.UI
 			log.Info($"Applied notification transform: position {ConfigManager.EffectiveNotificationPosition}, scale {ConfigManager.EffectiveNotificationScale}%.");
 		}
 
+		internal static void ShowSkillProgress(string skillName, int level, int percent, Sprite icon)
+		{
+			if (ConfigManager.EffectiveNotificationModeChoice != ConfigManager.NotificationMode.Enhanced) return;
+			if (ConfigManager.EffectiveSkillProgressLocation != ConfigManager.SkillProgressLocation.NotificationArea) return;
+
+			string message = $"{skillName}: {level} - {percent}%";
+			string key = $"SkillProgress:{skillName}";
+
+			AddNotification(NotificationType.Skill, key, message, icon, 0);
+		}
+
 		private static void ApplyStyle()
 		{
 			if (notificationRoot == null) return;
@@ -382,27 +393,38 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
-			if (type == NotificationType.Item && !string.IsNullOrEmpty(key))
+			if ((type == NotificationType.Item || type == NotificationType.Skill) && !string.IsNullOrEmpty(key))
 			{
 				NotificationEntry existingNotification = notifications.Find(notification =>
-					notification.Type == NotificationType.Item &&
+					notification.Type == type &&
 					notification.Key == key &&
 					!notification.Leaving &&
 					notification.Root != null);
 
 				if (existingNotification != null)
 				{
-					existingNotification.Amount += amount;
 					existingNotification.Lifetime = ConfigManager.EffectiveNotificationDuration;
 
-					if (existingNotification.AmountText != null)
+					if (type == NotificationType.Item)
 					{
-						existingNotification.AmountText.text = existingNotification.Amount > 0
-							? $"+{existingNotification.Amount}"
-							: existingNotification.Amount.ToString();
-					}
+						existingNotification.Amount += amount;
 
-					log.Info($"Merged item notification '{message}'. New amount: {existingNotification.Amount}.");
+						if (existingNotification.AmountText != null)
+						{
+							existingNotification.AmountText.text = existingNotification.Amount > 0 ? $"+{existingNotification.Amount}" : existingNotification.Amount.ToString();
+						}
+
+						log.Info($"Merged item notification '{message}'. New amount: {existingNotification.Amount}.");
+					}
+					else if (type == NotificationType.Skill)
+					{
+						if (existingNotification.MessageText != null)
+						{
+							existingNotification.MessageText.text = message;
+						}
+
+						log.Info($"Updated skill progress notification '{message}'.");
+					}
 
 					return;
 				}
