@@ -178,6 +178,9 @@
     <EmbeddedResource Include="Assets\Icons\HUD\Style1\Boat.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Style2\Boat.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Style3\Boat.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\BoatSpeed.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style2\BoatSpeed.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\BoatSpeed.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />

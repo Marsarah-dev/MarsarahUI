@@ -55,6 +55,7 @@ namespace MarsarahUI.Managers
 		internal string NeutralIcon;
 		internal string SummonIcon;
 		internal string BoatIcon;
+		internal string BoatSpeedIcon;
 
 		// Rail
 		internal float RailHeight;
@@ -120,6 +121,7 @@ namespace MarsarahUI.Managers
 			NeutralIcon = "Style1.Neutral",
 			SummonIcon = "Style1.Summon",
 			BoatIcon = "Style1.Boat",
+			BoatSpeedIcon = "Style1.BoatSpeed",
 
 			// Rail
 			RailHeight = 30f,
@@ -177,6 +179,7 @@ namespace MarsarahUI.Managers
 			NeutralIcon = "Style2.Neutral",
 			SummonIcon = "Style2.Summon",
 			BoatIcon = "Style2.Boat",
+			BoatSpeedIcon = "Style2.BoatSpeed",
 
 			// Rail
 			RailHeight = 30f,
@@ -240,6 +243,7 @@ namespace MarsarahUI.Managers
 			NeutralIcon = "Style3.Neutral",
 			SummonIcon = "Style3.Summon",
 			BoatIcon = "Style3.Boat",
+			BoatSpeedIcon = "Style3.BoatSpeed",
 
 			// Rail
 			RailHeight = 34f,
