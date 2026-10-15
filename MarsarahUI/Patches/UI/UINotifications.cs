@@ -42,6 +42,7 @@ namespace MarsarahUI.Patches.UI
 			internal Text MessageText;
 			internal Text AmountText;
 
+			internal NotificationType Type;
 			internal string Key;
 			internal int Amount;
 			internal float Lifetime;
@@ -168,7 +169,7 @@ namespace MarsarahUI.Patches.UI
 				}
 
 				AddRemovedNotification(item, amount);
-				pendingItemMessagesToSuppress++;
+				//pendingItemMessagesToSuppress++;
 			}
 		}
 
@@ -308,12 +309,12 @@ namespace MarsarahUI.Patches.UI
 
 		private static void HandleTopLeftMessage(System.Reflection.MethodBase originalMethod, object[] args, string message)
 		{
-			if (pendingItemMessagesToSuppress > 0)
+			/*if (pendingItemMessagesToSuppress > 0)
 			{
 				pendingItemMessagesToSuppress--;
 				log.Info($"Suppressed vanilla TopLeft item message '{message}' because a rich item notification was already created.");
 				return;
-			}
+			}*/
 
 			int amount = 0;
 			Sprite icon = null;
@@ -333,6 +334,103 @@ namespace MarsarahUI.Patches.UI
 			log.Info($"Intercepted TopLeft notification '{message}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
 
 			AddGenericNotification(message, icon, amount);
+		}
+
+		private static void AddNotification(NotificationType type, string key, string message, Sprite icon, int amount)
+		{
+			if (notificationRoot == null)
+			{
+				log.Warn("Could not show notification because the notification stack has not been created.");
+				return;
+			}
+
+			int uiTextFontSize = 16;
+			string uiTextFontName = "AveriaSansLibre-Bold";
+
+			GameObject root = new GameObject("Notification");
+			root.layer = 5;
+			root.transform.SetParent(notificationRoot.transform, false);
+
+			RectTransform rect = root.AddComponent<RectTransform>();
+			rect.sizeDelta = new Vector2(NotificationWidth, NotificationHeight);
+			rect.localScale = Vector3.one;
+
+			LayoutElement layout = root.AddComponent<LayoutElement>();
+			layout.preferredWidth = NotificationWidth;
+			layout.preferredHeight = NotificationHeight;
+			layout.minWidth = NotificationWidth;
+			layout.minHeight = NotificationHeight;
+
+			CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
+			canvasGroup.alpha = 1f;
+			canvasGroup.interactable = false;
+			canvasGroup.blocksRaycasts = false;
+
+			UIStyleDefinition style = UIStyleManager.Current;
+
+			CreateStyledBackground("Background", root, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+
+			CreateStyledBorder("Border", root, style.BorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+
+			Image iconImage = null;
+
+			if (icon != null)
+			{
+				iconImage = CreateUIImageObject("Icon", root, Vector2.zero, new Vector2(IconSize, IconSize));
+				iconImage.sprite = icon;
+				iconImage.preserveAspect = true;
+				iconImage.raycastTarget = false;
+
+				RectTransform iconRect = iconImage.rectTransform;
+				SetRectAnchors(iconRect, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f));
+				iconRect.anchoredPosition = new Vector2(19f, 0f);
+			}
+
+			Text messageText = CreateTextObject("Message", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+			messageText.text = message;
+			messageText.raycastTarget = false;
+
+			RectTransform messageRect = messageText.rectTransform;
+			SetRectAnchors(messageRect, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f));
+			messageRect.offsetMin = new Vector2(icon != null ? 38f : 10f, 0f);
+			messageRect.offsetMax = new Vector2(amount != 0 ? -50f : -10f, 0f);
+
+			Text amountText = null;
+
+			if (amount != 0)
+			{
+				amountText = CreateTextObject("Amount", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
+				amountText.text = amount > 0 ? $"+{amount}" : amount.ToString();
+				amountText.raycastTarget = false;
+
+				RectTransform amountRect = amountText.rectTransform;
+				SetRectAnchors(amountRect, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f));
+				amountRect.anchoredPosition = new Vector2(-8f, 0f);
+				amountRect.sizeDelta = new Vector2(44f, 0f);
+			}
+
+			NotificationEntry notification = new NotificationEntry
+			{
+				Root = root,
+				Rect = rect,
+				Layout = layout,
+				CanvasGroup = canvasGroup,
+				Icon = iconImage,
+				MessageText = messageText,
+				AmountText = amountText,
+				Type = type,
+				Key = key,
+				Amount = amount,
+				Lifetime = ConfigManager.EffectiveNotificationDuration,
+				Progress = 1f,
+				Leaving = false
+			};
+
+			notifications.Add(notification);
+
+			TrimNotifications();
+
+			log.Info($"Added {type} notification: '{message}' x{amount}.");
 		}
 
 		private static void AddGenericNotification(string message, Sprite icon = null, int amount = 0)
