@@ -283,9 +283,21 @@ namespace MarsarahUI.Patches.UI
 				}
 			}
 
+			NotificationType notificationType = NotificationType.Info;
+			string notificationKey = null;
+
+			if (amount != 0 && icon != null)
+			{
+				if (localizedMessage.StartsWith("Added ") || localizedMessage.StartsWith("Dropped "))
+				{
+					notificationType = NotificationType.Item;
+					notificationKey = localizedMessage;
+				}
+			}
+
 			log.Info($"Intercepted TopLeft notification '{localizedMessage}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
 
-			AddGenericNotification(localizedMessage, icon, amount, false);
+			AddGenericNotification(localizedMessage, icon, amount, false, notificationType, notificationKey);
 		}
 
 		private static void AddNotification(NotificationType type, string key, string message, Sprite icon, int amount)
@@ -294,6 +306,32 @@ namespace MarsarahUI.Patches.UI
 			{
 				log.Warn("Could not show notification because the notification stack has not been created.");
 				return;
+			}
+
+			if (type == NotificationType.Item && !string.IsNullOrEmpty(key))
+			{
+				NotificationEntry existingNotification = notifications.Find(notification =>
+					notification.Type == NotificationType.Item &&
+					notification.Key == key &&
+					!notification.Leaving &&
+					notification.Root != null);
+
+				if (existingNotification != null)
+				{
+					existingNotification.Amount += amount;
+					existingNotification.Lifetime = ConfigManager.EffectiveNotificationDuration;
+
+					if (existingNotification.AmountText != null)
+					{
+						existingNotification.AmountText.text = existingNotification.Amount > 0
+							? $"+{existingNotification.Amount}"
+							: existingNotification.Amount.ToString();
+					}
+
+					log.Info($"Merged item notification '{message}'. New amount: {existingNotification.Amount}.");
+
+					return;
+				}
 			}
 
 			int uiTextFontSize = 16;
@@ -385,7 +423,7 @@ namespace MarsarahUI.Patches.UI
 			log.Info($"Added {type} notification: '{message}' x{amount}.");
 		}
 
-		private static void AddGenericNotification(string message, Sprite icon = null, int amount = 0, bool localize = true)
+		private static void AddGenericNotification(string message, Sprite icon = null, int amount = 0, bool localize = true, NotificationType type = NotificationType.Info, string key = null)
 		{
 			if (notificationRoot == null)
 			{
@@ -395,7 +433,7 @@ namespace MarsarahUI.Patches.UI
 
 			string displayMessage = localize ? Localization.instance.Localize(message) : message;
 
-			AddNotification(NotificationType.Info, null, displayMessage, icon, amount);
+			AddNotification(type, key, displayMessage, icon, amount);
 		}
 
 		private static void SetRectAnchors(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)

@@ -601,8 +601,8 @@ namespace MarsarahUI.Managers
 			NotificationModeChoice = CreateConfig(Configs.UINotificationMode, NotificationMode.Enhanced);
 			NotificationPosition = CreateConfig(Configs.UINotificationPosition, new Vector2(47f, -120f));
 			NotificationScale = CreateConfig(Configs.UINotificationScale, 100);
-			NotificationDuration = CreateConfig(Configs.UINotificationDuration, 3f);
-			NotificationMaxVisible = CreateConfig(Configs.UINotificationMaxVisible, 5);
+			NotificationDuration = CreateConfig(Configs.UINotificationDuration, 6f);
+			NotificationMaxVisible = CreateConfig(Configs.UINotificationMaxVisible, 10);
 
 			// ===== Server Overrides
 			ServerOverridesLocked = CreateServerOverride(Configs.LockServerOverrides, true);
