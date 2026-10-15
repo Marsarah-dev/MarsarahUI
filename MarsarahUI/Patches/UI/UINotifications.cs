@@ -259,6 +259,9 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
+			int uiTextFontSize = 16;
+			string uiTextFontName = "AveriaSansLibre-Bold";
+
 			GameObject root = new GameObject("LootNotification");
 			root.layer = 5;
 			root.transform.SetParent(notificationRoot.transform, false);
@@ -306,7 +309,7 @@ namespace MarsarahUI.Patches.UI
 
 			string itemName = Localization.instance.Localize(item.m_shared.m_name);
 
-			Text messageText = CreateTextObject("ItemName", root, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+			Text messageText = CreateTextObject("ItemName", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
 
 			messageText.text = itemName;
 			messageText.raycastTarget = false;
@@ -316,7 +319,7 @@ namespace MarsarahUI.Patches.UI
 			messageRect.offsetMin = new Vector2(38f, 0f);
 			messageRect.offsetMax = new Vector2(-50f, 0f);
 
-			Text amountText = CreateTextObject("Amount", root, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
+			Text amountText = CreateTextObject("Amount", root, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
 
 			amountText.text = amount > 0 ? $"+{amount}" : amount.ToString();
 			amountText.raycastTarget = false;

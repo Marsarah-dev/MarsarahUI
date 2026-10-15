@@ -599,7 +599,7 @@ namespace MarsarahUI.Managers
 
 			// ===== Notifications
 			NotificationModeChoice = CreateConfig(Configs.UINotificationMode, NotificationMode.Enhanced);
-			NotificationPosition = CreateConfig(Configs.UINotificationPosition, new Vector2(30f, -120f));
+			NotificationPosition = CreateConfig(Configs.UINotificationPosition, new Vector2(50f, -120f));
 			NotificationScale = CreateConfig(Configs.UINotificationScale, 100);
 			NotificationDuration = CreateConfig(Configs.UINotificationDuration, 3f);
 			NotificationMaxVisible = CreateConfig(Configs.UINotificationMaxVisible, 5);
