@@ -23,8 +23,6 @@ namespace MarsarahUI.Patches.UI
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;
 
-		//private static int pendingItemMessagesToSuppress;
-
 		private enum NotificationType
 		{
 			Item,
@@ -119,59 +117,6 @@ namespace MarsarahUI.Patches.UI
 				return false;
 			}
 		}
-
-		/*[HarmonyPatch(typeof(Character), nameof(Character.ShowPickupMessage))]
-		private static class PickupMessagePatch
-		{
-			private static bool Prefix(Character __instance, ItemDrop.ItemData item, int amount)
-			{
-				if (ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Vanilla)
-				{
-					return true;
-				}
-
-				if (__instance != Player.m_localPlayer)
-				{
-					return true;
-				}
-
-				if (item == null || item.m_shared == null)
-				{
-					log.Warn("Pickup notification received without valid item data. Falling back to vanilla notification.");
-					return true;
-				}
-
-				AddLootNotification(item, amount);
-
-				return false;
-			}
-		}*/
-
-		/*[HarmonyPatch(typeof(Humanoid), "DropItem", new System.Type[] { typeof(Inventory), typeof(ItemDrop.ItemData), typeof(int) })]
-		private static class HumanoidDropItemPatch
-		{
-			private static void Prefix(Humanoid __instance, Inventory inventory, ItemDrop.ItemData item, int amount)
-			{
-				if (ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Vanilla)
-				{
-					return;
-				}
-
-				if (__instance != Player.m_localPlayer)
-				{
-					return;
-				}
-
-				if (item == null || item.m_shared == null)
-				{
-					log.Warn("Dropped item notification received without valid item data.");
-					return;
-				}
-
-				AddRemovedNotification(item, amount);
-				//pendingItemMessagesToSuppress++;
-			}
-		}*/
 
 		private static void CreateUI(Hud hud)
 		{
@@ -309,13 +254,6 @@ namespace MarsarahUI.Patches.UI
 
 		private static void HandleTopLeftMessage(System.Reflection.MethodBase originalMethod, object[] args, string message)
 		{
-			/*if (pendingItemMessagesToSuppress > 0)
-			{
-				pendingItemMessagesToSuppress--;
-				log.Info($"Suppressed vanilla TopLeft item message '{message}' because a rich item notification was already created.");
-				return;
-			}*/
-
 			int amount = 0;
 			Sprite icon = null;
 
@@ -331,9 +269,23 @@ namespace MarsarahUI.Patches.UI
 				}
 			}
 
-			log.Info($"Intercepted TopLeft notification '{message}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
+			string localizedMessage = Localization.instance.Localize(message);
 
-			AddGenericNotification(message, icon, amount);
+			if (amount != 0)
+			{
+				if (localizedMessage.StartsWith("Dropped "))
+				{
+					amount = -Mathf.Abs(amount);
+				}
+				else if (localizedMessage.StartsWith("Added "))
+				{
+					amount = Mathf.Abs(amount);
+				}
+			}
+
+			log.Info($"Intercepted TopLeft notification '{localizedMessage}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
+
+			AddGenericNotification(localizedMessage, icon, amount, false);
 		}
 
 		private static void AddNotification(NotificationType type, string key, string message, Sprite icon, int amount)
@@ -433,7 +385,7 @@ namespace MarsarahUI.Patches.UI
 			log.Info($"Added {type} notification: '{message}' x{amount}.");
 		}
 
-		private static void AddGenericNotification(string message, Sprite icon = null, int amount = 0)
+		private static void AddGenericNotification(string message, Sprite icon = null, int amount = 0, bool localize = true)
 		{
 			if (notificationRoot == null)
 			{
@@ -441,33 +393,10 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
-			string localizedMessage = Localization.instance.Localize(message);
+			string displayMessage = localize ? Localization.instance.Localize(message) : message;
 
-			AddNotification(NotificationType.Info, null, localizedMessage, icon, amount);
+			AddNotification(NotificationType.Info, null, displayMessage, icon, amount);
 		}
-
-		/*private static void AddItemNotification(ItemDrop.ItemData item, int amount)
-		{
-			if (item == null || item.m_shared == null)
-			{
-				log.Warn("Could not create item notification because item data was invalid.");
-				return;
-			}
-
-			string itemName = Localization.instance.Localize(item.m_shared.m_name);
-
-			AddNotification(NotificationType.Item, item.m_shared.m_name, itemName, item.GetIcon(), amount);
-		}
-
-		private static void AddLootNotification(ItemDrop.ItemData item, int amount)
-		{
-			AddItemNotification(item, amount);
-		}
-
-		private static void AddRemovedNotification(ItemDrop.ItemData item, int amount)
-		{
-			AddItemNotification(item, -amount);
-		}*/
 
 		private static void SetRectAnchors(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
 		{
