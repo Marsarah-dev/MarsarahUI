@@ -1,6 +1,7 @@
 ﻿using MarsarahUI.Managers;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -64,13 +65,21 @@ namespace MarsarahUI.Patches.UI
 
 			float health = Mathf.Clamp01(cachedWear.GetHealthPercentage());
 			Color healthColor = GetColorFromHealth(health);
+			Color fillColor = UIStyleManager.GetWeightFillColor(1f - health);
 
-			if (healthFillTransform != null)
+			if (healthFillImage != null)
 			{
-				healthFillTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, HealthBarWidth * health);
-			}
+				if (healthFillImage.type == Image.Type.Filled)
+				{
+					healthFillImage.fillAmount = health;
+				}
+				else if (healthFillTransform != null)
+				{
+					healthFillTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, HealthBarWidth * health);
+				}
 
-			if (healthFillImage != null) healthFillImage.color = healthColor;
+				healthFillImage.color = UIStyleManager.GetWeightFillColor(1f - health);
+			}
 
 			if (healthPercentText != null)
 			{
@@ -118,6 +127,21 @@ namespace MarsarahUI.Patches.UI
 			healthFillTransform.anchorMax = new Vector2(0f, 0.5f);
 			healthFillTransform.pivot = new Vector2(0f, 0.5f);
 			healthFillTransform.anchoredPosition = Vector2.zero;
+
+			Sprite fillSprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(sprite => sprite.name == "bar_monster_hp_5");
+
+			if (fillSprite != null)
+			{
+				healthFillImage.sprite = fillSprite;
+				healthFillImage.type = Image.Type.Filled;
+				healthFillImage.fillMethod = Image.FillMethod.Horizontal;
+				healthFillImage.fillOrigin = (int)Image.OriginHorizontal.Left;
+				healthFillImage.fillAmount = 1f;
+			}
+			else
+			{
+				log.Warn("Could not find the vanilla HP bar sprite. Using the default fill.");
+			}
 
 			// The percentage occupies the remaining space to the right of the bar.
 			float percentCenterX = HealthBarWidth * 0.5f;
