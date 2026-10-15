@@ -205,7 +205,7 @@ namespace MarsarahUI.Managers
 			Purple
 		}
 
-		public enum SkillProgressLocation
+		public enum SkillProgressPercentageLocation
 		{
 			NotificationArea,
 			InformationRail
@@ -306,8 +306,8 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UISummonCounterPosition = new ConfigMetadata("Summon Counter X/Y Position", "Sets the exact X and Y position of the summon counter.", ConfigSections.InformationRail, 19);
 			public static readonly ConfigMetadata UISummonCounterScale = new ConfigMetadata("Summon Counter Scale", "Sets the scale of the summon counter as a percentage. 100 is the default size.", ConfigSections.InformationRail, 18);
 			public static readonly ConfigMetadata UIShowSkillProgress = new ConfigMetadata("Show Skill Progress", "Shows skill progress while advancing toward the next skill level.", ConfigSections.InformationRail, 12);
-			public static readonly ConfigMetadata UISkillProgressBar = new ConfigMetadata("Skill Progress Bar Color", "Choose the color of the skill progress bar shown at the bottom while advancing toward the next skill level.", ConfigSections.InformationRail, 11);
-			public static readonly ConfigMetadata UISkillProgressLocation = new ConfigMetadata("Skill Progress Percentage Location", "Choose whether the skill progress percentage is shown in the enhanced notification area or in the information rail. When Notification Mode is Vanilla, the percentage is always shown in the information rail.", ConfigSections.InformationRail, 10);
+			public static readonly ConfigMetadata UISkillProgressBarColor = new ConfigMetadata("Skill Progress Bar Color", "Choose the color of the skill progress bar shown at the bottom while advancing toward the next skill level.", ConfigSections.InformationRail, 11);
+			public static readonly ConfigMetadata UISkillProgressPercentageLocation = new ConfigMetadata("Skill Progress Percentage Location", "Choose whether the skill progress percentage is shown in the enhanced notification area or in the information rail. When Notification Mode is Vanilla, the percentage is always shown in the information rail.", ConfigSections.InformationRail, 10);
 
 			// ===== Items & Interaction
 			public static readonly ConfigMetadata UIBiomeSortedCraftingTabs = new ConfigMetadata("Biome-Sorted Crafting Tabs", "Organizes crafting recipes into contextual tabs (separated by biome and type). Choose Scrolling, MultipleRows, or Off.", ConfigSections.ItemsInteraction, 80);
@@ -404,8 +404,8 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> StatusEffectsUnderMinimap;
 		public static ConfigEntry<bool> GlobalChatByDefault;
 		public static ConfigEntry<bool> ShowSkillProgress;
-		public static ConfigEntry<SkillProgressBarColor> SkillProgressBarChoice;
-		public static ConfigEntry<SkillProgressLocation> SkillProgressLocationChoice;
+		public static ConfigEntry<SkillProgressBarColor> SkillProgressBarColorChoice;
+		public static ConfigEntry<SkillProgressPercentageLocation> SkillProgressPercentageLocationChoice;
 		public static ConfigEntry<bool> ShowCharacterStatistics;
 		public static ConfigEntry<NotificationMode> NotificationModeChoice;
 		public static ConfigEntry<Vector2> NotificationPosition;
@@ -538,23 +538,23 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveStatusEffectsUnderMinimap => StatusEffectsUnderMinimap.Value;
 		public static bool EffectiveGlobalChatByDefault => ResolveBool(GlobalChatByDefault, GlobalChatByDefaultOverride);
 		public static bool EffectiveShowSkillProgress => ShowSkillProgress.Value;
-		public static SkillProgressBarColor EffectiveSkillProgressBarChoice => SkillProgressBarChoice.Value;
+		public static SkillProgressBarColor EffectiveSkillProgressBarColor => SkillProgressBarColorChoice.Value;
 		public static bool EffectiveShowCharacterStatistics => ShowCharacterStatistics.Value;
 		public static NotificationMode EffectiveNotificationModeChoice => NotificationModeChoice.Value;
 		public static Vector2 EffectiveNotificationPosition => NotificationPosition.Value;
 		public static int EffectiveNotificationScale => NotificationScale.Value;
 		public static float EffectiveNotificationDuration => NotificationDuration.Value;
 		public static int EffectiveNotificationMaxVisible => NotificationMaxVisible.Value;
-		public static SkillProgressLocation EffectiveSkillProgressLocation
+		public static SkillProgressPercentageLocation EffectiveSkillProgressPercentageLocation
 		{
 			get
 			{
 				if (EffectiveNotificationModeChoice == NotificationMode.Vanilla)
 				{
-					return SkillProgressLocation.InformationRail;
+					return SkillProgressPercentageLocation.InformationRail;
 				}
 
-				return SkillProgressLocationChoice.Value;
+				return SkillProgressPercentageLocationChoice.Value;
 			}
 		}
 
@@ -595,8 +595,8 @@ namespace MarsarahUI.Managers
 			SummonCounterPosition = CreateConfig(Configs.UISummonCounterPosition, new Vector2(38f, -85f));
 			SummonCounterScale = CreateConfig(Configs.UISummonCounterScale, 100);
 			ShowSkillProgress = CreateConfig(Configs.UIShowSkillProgress, true);
-			SkillProgressBarChoice = CreateConfig(Configs.UISkillProgressBar, SkillProgressBarColor.Gold);
-			SkillProgressLocationChoice = CreateConfig(Configs.UISkillProgressLocation, SkillProgressLocation.NotificationArea);
+			SkillProgressBarColorChoice = CreateConfig(Configs.UISkillProgressBarColor, SkillProgressBarColor.Gold);
+			SkillProgressPercentageLocationChoice = CreateConfig(Configs.UISkillProgressPercentageLocation, SkillProgressPercentageLocation.NotificationArea);
 
 			// ===== Items & Interaction
 			BiomeCraftingTabsChoice = CreateConfig(Configs.UIBiomeSortedCraftingTabs, BiomeCraftingTabsMode.Scrolling);
@@ -809,9 +809,9 @@ namespace MarsarahUI.Managers
 
 			if (configName == Configs.UINotificationMode.Name ||
 				configName == Configs.UIShowSkillProgress.Name ||
-				configName == Configs.UISkillProgressLocation.Name)
+				configName == Configs.UISkillProgressPercentageLocation.Name)
 			{
-				UIInfoRail.RefreshSkillProgressLocation();
+				UIInfoRail.RefreshSkillProgressPercentageLocation();
 			}
 
 			if (configName == Configs.UINotificationPosition.Name ||

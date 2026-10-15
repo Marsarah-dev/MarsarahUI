@@ -288,7 +288,7 @@ namespace MarsarahUI.Patches.UI
 		internal static void ShowSkillProgress(string skillName, int level, int percent, Sprite icon)
 		{
 			if (ConfigManager.EffectiveNotificationModeChoice != ConfigManager.NotificationMode.Enhanced) return;
-			if (ConfigManager.EffectiveSkillProgressLocation != ConfigManager.SkillProgressLocation.NotificationArea) return;
+			if (ConfigManager.EffectiveSkillProgressPercentageLocation != ConfigManager.SkillProgressPercentageLocation.NotificationArea) return;
 
 			string message = $"{skillName}: {level} - {percent}%";
 			string key = $"SkillProgress:{skillName}";

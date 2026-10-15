@@ -147,7 +147,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (skillProgressFill != null)
 				{
-					skillProgressFill.color = GetBarColor(ConfigManager.EffectiveSkillProgressBarChoice);
+					skillProgressFill.color = GetBarColor(ConfigManager.EffectiveSkillProgressBarColor);
 				}
 			}
 		}
@@ -210,13 +210,13 @@ namespace MarsarahUI.Patches.UI
 			RectTransform fillTransform = skillProgressFill.rectTransform;
 			fillTransform.anchorMax = new Vector2(progress, 1f);
 
-			skillProgressFill.color = GetBarColor(ConfigManager.EffectiveSkillProgressBarChoice);
+			skillProgressFill.color = GetBarColor(ConfigManager.EffectiveSkillProgressBarColor);
 
 			CurrentSkillIcon = skillIcon;
 			CurrentSkillName = skillName;
 			CurrentDisplayText = $"{level} - {percent}%";
 
-			if (ConfigManager.EffectiveSkillProgressLocation == ConfigManager.SkillProgressLocation.NotificationArea)
+			if (ConfigManager.EffectiveSkillProgressPercentageLocation == ConfigManager.SkillProgressPercentageLocation.NotificationArea)
 			{
 				UINotifications.ShowSkillProgress(skillName, level, percent, skillIcon);
 			}
