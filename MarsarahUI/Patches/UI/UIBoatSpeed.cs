@@ -145,7 +145,7 @@ namespace MarsarahUI.Patches.UI
 			speedAreaTransform.localScale = Vector3.one;
 
 			UIBoatText = CreateTextObject("BoatText", UIBoatSpeedArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(-4f, 0f), uiBoatAreaSize);
-			UIBoatIcon = CreateUIImageObject("BoatIcon", UIBoatSpeedArea, new Vector2(-28f, 0f), new Vector2(24f, 24f));
+			UIBoatIcon = CreateUIImageObject("BoatIcon", UIBoatSpeedArea, new Vector2(-23f, 0f), new Vector2(24f, 24f));
 			UIBoatIcon.preserveAspect = true;
 			UIBoatIcon.raycastTarget = false;
 			UIBoatArea.SetActive(false);
