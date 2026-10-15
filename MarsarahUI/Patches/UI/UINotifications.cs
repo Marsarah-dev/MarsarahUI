@@ -23,7 +23,7 @@ namespace MarsarahUI.Patches.UI
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;
 
-		private static int pendingItemMessagesToSuppress;
+		//private static int pendingItemMessagesToSuppress;
 
 		private enum NotificationType
 		{
@@ -120,7 +120,7 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		[HarmonyPatch(typeof(Character), nameof(Character.ShowPickupMessage))]
+		/*[HarmonyPatch(typeof(Character), nameof(Character.ShowPickupMessage))]
 		private static class PickupMessagePatch
 		{
 			private static bool Prefix(Character __instance, ItemDrop.ItemData item, int amount)
@@ -145,9 +145,9 @@ namespace MarsarahUI.Patches.UI
 
 				return false;
 			}
-		}
+		}*/
 
-		[HarmonyPatch(typeof(Humanoid), "DropItem", new System.Type[] { typeof(Inventory), typeof(ItemDrop.ItemData), typeof(int) })]
+		/*[HarmonyPatch(typeof(Humanoid), "DropItem", new System.Type[] { typeof(Inventory), typeof(ItemDrop.ItemData), typeof(int) })]
 		private static class HumanoidDropItemPatch
 		{
 			private static void Prefix(Humanoid __instance, Inventory inventory, ItemDrop.ItemData item, int amount)
@@ -171,7 +171,7 @@ namespace MarsarahUI.Patches.UI
 				AddRemovedNotification(item, amount);
 				//pendingItemMessagesToSuppress++;
 			}
-		}
+		}*/
 
 		private static void CreateUI(Hud hud)
 		{
@@ -446,7 +446,7 @@ namespace MarsarahUI.Patches.UI
 			AddNotification(NotificationType.Info, null, localizedMessage, icon, amount);
 		}
 
-		private static void AddItemNotification(ItemDrop.ItemData item, int amount)
+		/*private static void AddItemNotification(ItemDrop.ItemData item, int amount)
 		{
 			if (item == null || item.m_shared == null)
 			{
@@ -467,7 +467,7 @@ namespace MarsarahUI.Patches.UI
 		private static void AddRemovedNotification(ItemDrop.ItemData item, int amount)
 		{
 			AddItemNotification(item, -amount);
-		}
+		}*/
 
 		private static void SetRectAnchors(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
 		{
