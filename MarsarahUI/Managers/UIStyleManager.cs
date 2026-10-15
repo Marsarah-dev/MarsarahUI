@@ -5,21 +5,21 @@ using UnityEngine;
 
 namespace MarsarahUI.Managers
 {
-	internal enum InfoRailBackgroundType
+	internal enum UIBackgroundType
 	{
 		None,
 		UnityImage,
 		VanillaSlicedSprite
 	}
 
-	internal enum InfoRailBorderType
+	internal enum UIBorderType
 	{
 		None,
 		UnityBorder,
 		SideCapsSprite
 	}
 
-	internal enum InfoRailColorMode
+	internal enum UIColorMode
 	{
 		Fixed,
 		WeightGradient,
@@ -31,13 +31,13 @@ namespace MarsarahUI.Managers
 	internal sealed class UIStyleDefinition
 	{
 		// Background
-		internal InfoRailBackgroundType BackgroundType;
+		internal UIBackgroundType BackgroundType;
 		internal string VanillaBackgroundSprite;
 		internal Color BackgroundColor;
 
 		// Border
-		internal InfoRailBorderType BorderType;
-		internal InfoRailBorderType SummonBorderType;
+		internal UIBorderType BorderType;
+		internal UIBorderType SummonBorderType;
 		internal string BorderCapAsset;
 		internal Color BorderColor;
 		internal Vector2 BorderCapSize;
@@ -87,10 +87,10 @@ namespace MarsarahUI.Managers
 		internal Color SummonTextColor;
 
 		// Color Modes
-		internal InfoRailColorMode WeightFillColorMode;
-		internal InfoRailColorMode SlotsTextColorMode;
-		internal InfoRailColorMode EnemyTextColorMode;
-		internal InfoRailColorMode SummonTextColorMode;
+		internal UIColorMode WeightFillColorMode;
+		internal UIColorMode SlotsTextColorMode;
+		internal UIColorMode EnemyTextColorMode;
+		internal UIColorMode SummonTextColorMode;
 	}
 
 	internal static class UIStyleManager
@@ -102,13 +102,13 @@ namespace MarsarahUI.Managers
 		private static readonly UIStyleDefinition style1 = new UIStyleDefinition
 		{
 			// Background
-			BackgroundType = InfoRailBackgroundType.VanillaSlicedSprite,
+			BackgroundType = UIBackgroundType.VanillaSlicedSprite,
 			VanillaBackgroundSprite = "InputFieldBackground",
 			BackgroundColor = new Color(0f, 0f, 0f, 0.4f),
 
 			// Border
-			BorderType = InfoRailBorderType.None,
-			SummonBorderType = InfoRailBorderType.None,
+			BorderType = UIBorderType.None,
+			SummonBorderType = UIBorderType.None,
 			BorderColor = Color.white,
 
 			// Icons
@@ -148,22 +148,22 @@ namespace MarsarahUI.Managers
 			SummonTextColor = new Color(0.95f, 0.95f, 0.92f),
 
 			// Color Modes
-			WeightFillColorMode = InfoRailColorMode.Fixed,
-			SlotsTextColorMode = InfoRailColorMode.Fixed,
-			EnemyTextColorMode = InfoRailColorMode.Fixed,
-			SummonTextColorMode = InfoRailColorMode.Fixed
+			WeightFillColorMode = UIColorMode.Fixed,
+			SlotsTextColorMode = UIColorMode.Fixed,
+			EnemyTextColorMode = UIColorMode.Fixed,
+			SummonTextColorMode = UIColorMode.Fixed
 		};
 
 		private static readonly UIStyleDefinition style2 = new UIStyleDefinition
 		{
 			// Background
-			BackgroundType = InfoRailBackgroundType.VanillaSlicedSprite,
+			BackgroundType = UIBackgroundType.VanillaSlicedSprite,
 			VanillaBackgroundSprite = "InputFieldBackground",
 			BackgroundColor = new Color(0f, 0f, 0f, 0.45f),
 
 			// Border
-			BorderType = InfoRailBorderType.SideCapsSprite,
-			SummonBorderType = InfoRailBorderType.SideCapsSprite,
+			BorderType = UIBorderType.SideCapsSprite,
+			SummonBorderType = UIBorderType.SideCapsSprite,
 			BorderCapAsset = "Style2.BorderCap",
 			BorderColor = Color.white,
 			BorderCapSize = new Vector2(18f, 36f),
@@ -209,22 +209,22 @@ namespace MarsarahUI.Managers
 			SummonTextColor = Color.white,
 
 			// Color Modes
-			WeightFillColorMode = InfoRailColorMode.WeightGradient,
-			SlotsTextColorMode = InfoRailColorMode.SlotsGradient,
-			EnemyTextColorMode = InfoRailColorMode.EnemyCountGradient,
-			SummonTextColorMode = InfoRailColorMode.SummonCountGradient
+			WeightFillColorMode = UIColorMode.WeightGradient,
+			SlotsTextColorMode = UIColorMode.SlotsGradient,
+			EnemyTextColorMode = UIColorMode.EnemyCountGradient,
+			SummonTextColorMode = UIColorMode.SummonCountGradient
 		};
 
 		private static readonly UIStyleDefinition style3 = new UIStyleDefinition
 		{
 			// Background
-			BackgroundType = InfoRailBackgroundType.VanillaSlicedSprite,
+			BackgroundType = UIBackgroundType.VanillaSlicedSprite,
 			VanillaBackgroundSprite = "InputFieldBackground",
 			BackgroundColor = new Color(0f, 0f, 0f, 0.45f),
 
 			// Border
-			BorderType = InfoRailBorderType.UnityBorder,
-			SummonBorderType = InfoRailBorderType.None,
+			BorderType = UIBorderType.UnityBorder,
+			SummonBorderType = UIBorderType.None,
 			BorderColor = new Color(0.58f, 0.58f, 0.55f, 1f),
 			BorderOuterColor = new Color(0.12f, 0.12f, 0.12f, 1f),
 			BorderInnerColor = new Color(0.28f, 0.28f, 0.27f, 1f),
@@ -268,24 +268,24 @@ namespace MarsarahUI.Managers
 			SummonTextColor = new Color(0.88f, 0.87f, 0.82f),
 
 			// Color Modes
-			WeightFillColorMode = InfoRailColorMode.Fixed,
-			SlotsTextColorMode = InfoRailColorMode.Fixed,
-			EnemyTextColorMode = InfoRailColorMode.Fixed,
-			SummonTextColorMode = InfoRailColorMode.Fixed
+			WeightFillColorMode = UIColorMode.Fixed,
+			SlotsTextColorMode = UIColorMode.Fixed,
+			EnemyTextColorMode = UIColorMode.Fixed,
+			SummonTextColorMode = UIColorMode.Fixed
 		};
 
-		private static readonly Dictionary<ConfigManager.InfoRailStyle, UIStyleDefinition> styles = new Dictionary<ConfigManager.InfoRailStyle, UIStyleDefinition>
+		private static readonly Dictionary<ConfigManager.UIStyle, UIStyleDefinition> styles = new Dictionary<ConfigManager.UIStyle, UIStyleDefinition>
 		{
-			{ ConfigManager.InfoRailStyle.Style1, style1 },
-			{ ConfigManager.InfoRailStyle.Style2, style2 },
-			{ ConfigManager.InfoRailStyle.Style3, style3 }
+			{ ConfigManager.UIStyle.Style1, style1 },
+			{ ConfigManager.UIStyle.Style2, style2 },
+			{ ConfigManager.UIStyle.Style3, style3 }
 		};
 
-		private static ConfigEntry<ConfigManager.InfoRailStyle> styleConfig;
+		private static ConfigEntry<ConfigManager.UIStyle> styleConfig;
 
 		internal static UIStyleDefinition Current { get; private set; } = style1;
 
-		internal static void Initialize(ConfigEntry<ConfigManager.InfoRailStyle> config)
+		internal static void Initialize(ConfigEntry<ConfigManager.UIStyle> config)
 		{
 			if (styleConfig != null)
 			{
@@ -309,7 +309,7 @@ namespace MarsarahUI.Managers
 
 		private static void RefreshStyle(bool notify)
 		{
-			ConfigManager.InfoRailStyle selectedStyle = styleConfig?.Value ?? ConfigManager.InfoRailStyle.Style1;
+			ConfigManager.UIStyle selectedStyle = styleConfig?.Value ?? ConfigManager.UIStyle.Style1;
 
 			Current = styles[selectedStyle];
 
@@ -323,7 +323,7 @@ namespace MarsarahUI.Managers
 		{
 			switch (Current.WeightFillColorMode)
 			{
-				case InfoRailColorMode.WeightGradient:
+				case UIColorMode.WeightGradient:
 					return GetUsageGradientColor(weightPercent);
 
 				default:
@@ -335,7 +335,7 @@ namespace MarsarahUI.Managers
 		{
 			switch (Current.SlotsTextColorMode)
 			{
-				case InfoRailColorMode.SlotsGradient:
+				case UIColorMode.SlotsGradient:
 					return GetUsageGradientColor(Mathf.Clamp01(slotsUsedPercent / 100f));
 
 				default:
@@ -347,7 +347,7 @@ namespace MarsarahUI.Managers
 		{
 			switch (Current.EnemyTextColorMode)
 			{
-				case InfoRailColorMode.EnemyCountGradient:
+				case UIColorMode.EnemyCountGradient:
 					return GetCountGradientColor(enemyCount);
 
 				default:
@@ -394,7 +394,7 @@ namespace MarsarahUI.Managers
 		{
 			switch (Current.SummonTextColorMode)
 			{
-				case InfoRailColorMode.SummonCountGradient:
+				case UIColorMode.SummonCountGradient:
 					return GetSummonCountColor(summonCount);
 
 				default:

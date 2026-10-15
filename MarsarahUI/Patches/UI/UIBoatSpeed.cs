@@ -93,7 +93,7 @@ namespace MarsarahUI.Patches.UI
 				{
 					if (UIBoatText != null)
 					{
-						UIBoatText.color = UIStyleManager.Current.WeightFillColorMode == InfoRailColorMode.WeightGradient ? GetColorFromSpeed(boatSpeed) : UIStyleManager.Current.ValueTextColor;
+						UIBoatText.color = UIStyleManager.Current.WeightFillColorMode == UIColorMode.WeightGradient ? GetColorFromSpeed(boatSpeed) : UIStyleManager.Current.ValueTextColor;
 						UIBoatText.text = boatSpeed > 0f ? boatSpeed.ToString("0.00") : $"R {Math.Abs(boatSpeed):0.00}";
 					}
 				}

@@ -19,7 +19,7 @@ namespace MarsarahUI.Patches.UI
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 20f;
 		private const float NotificationSpacing = 4f;
-		private const float NotificationWidth = 180f; // 260
+		private const float NotificationWidth = 150f; // 260
 		private const float MaxNotificationWidth = 500f;
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;
@@ -180,7 +180,7 @@ namespace MarsarahUI.Patches.UI
 				notificationRoot.SetActive(true);
 			}
 
-			bool animationsEnabled = ConfigManager.EffectiveInfoRailAnimations;
+			bool animationsEnabled = ConfigManager.EffectiveUIAnimations;
 
 			for (int i = notifications.Count - 1; i >= 0; i--)
 			{
@@ -448,7 +448,7 @@ namespace MarsarahUI.Patches.UI
 			layout.minHeight = NotificationHeight;
 
 			CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
-			bool animationsEnabled = ConfigManager.EffectiveInfoRailAnimations;
+			bool animationsEnabled = ConfigManager.EffectiveUIAnimations;
 			canvasGroup.alpha = animationsEnabled ? 0f : 1f;
 			canvasGroup.interactable = false;
 			canvasGroup.blocksRaycasts = false;
@@ -613,7 +613,7 @@ namespace MarsarahUI.Patches.UI
 
 		internal static void ApplyAnimationSetting()
 		{
-			if (ConfigManager.EffectiveInfoRailAnimations) return;
+			if (ConfigManager.EffectiveUIAnimations) return;
 
 			foreach (NotificationEntry notification in notifications)
 			{

@@ -513,7 +513,7 @@ namespace MarsarahUI.Patches.UI
 
 			separator.TargetVisible = visible;
 
-			if (!ConfigManager.EffectiveInfoRailAnimations)
+			if (!ConfigManager.EffectiveUIAnimations)
 			{
 				separator.Progress = visible ? 1f : 0f;
 				separator.Layout.preferredWidth = visible ? UIStyleManager.Current.SeparatorWidth : 0f;
@@ -544,7 +544,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (!elements.TryGetValue(type, out RailElement element)) return;
 
-			animate = animate && ConfigManager.EffectiveInfoRailAnimations;
+			animate = animate && ConfigManager.EffectiveUIAnimations;
 
 			if (element.TargetVisible == visible && (animate || !element.Animating)) return;
 
@@ -1047,7 +1047,7 @@ namespace MarsarahUI.Patches.UI
 			UpdateTextHeights(style.RailHeight);
 			RebuildLayout();
 
-			log.Info($"Applied information rail style '{ConfigManager.InfoRailStyleChoice.Value}'.");
+			log.Info($"Applied UI style '{ConfigManager.UIStyleChoice.Value}' to information rail.");
 		}
 
 		private static void ApplyIconStyle(Image icon, string iconName)
@@ -1350,7 +1350,7 @@ namespace MarsarahUI.Patches.UI
 
 		internal static void ApplyAnimationSetting()
 		{
-			if (ConfigManager.EffectiveInfoRailAnimations) return;
+			if (ConfigManager.EffectiveUIAnimations) return;
 
 			foreach (RailElement element in elements.Values)
 			{

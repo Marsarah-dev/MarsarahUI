@@ -86,7 +86,7 @@ namespace MarsarahUI.Patches.UI
 			float damageLevel = Mathf.Clamp01((1f - health) / (1f - CriticalHealthThreshold));
 			Color fillColor = UIStyleManager.GetWeightFillColor(damageLevel);
 
-			bool useDynamicColors = UIStyleManager.Current.WeightFillColorMode == InfoRailColorMode.WeightGradient;
+			bool useDynamicColors = UIStyleManager.Current.WeightFillColorMode == UIColorMode.WeightGradient;
 			Color textColor = useDynamicColors ? fillColor : UIStyleManager.Current.ValueTextColor;
 
 			if (healthFillImage != null)

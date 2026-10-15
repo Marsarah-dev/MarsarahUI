@@ -55,7 +55,7 @@ namespace MarsarahUI.Managers
 			public int? Order;
 		}
 
-		public enum InfoRailStyle
+		public enum UIStyle
 		{
 			Style1,
 			Style2,
@@ -275,8 +275,8 @@ namespace MarsarahUI.Managers
 		public static class Configs
 		{
 			// ===== General & HUD
-			public static readonly ConfigMetadata UIInfoRailStyle = new ConfigMetadata("UI Style", "Choose the shared visual style used by supported MarsarahUI elements, including the information rail, summon counter, enhanced notifications, and other HUD elements that use the shared style.", ConfigSections.GeneralHUD, 140);
-			public static readonly ConfigMetadata UIInfoRailAnimations = new ConfigMetadata("UI Animations", "Animate supported MarsarahUI elements such as the information rail, summon counter, and enhanced notifications. Disable this if you experience UI-related performance issues.", ConfigSections.GeneralHUD, 130);
+			public static readonly ConfigMetadata UIStyle = new ConfigMetadata("UI Style", "Choose the shared visual style used by supported MarsarahUI elements, including the information rail, summon counter, enhanced notifications, and other HUD elements that use the shared style.", ConfigSections.GeneralHUD, 140);
+			public static readonly ConfigMetadata UIAnimations = new ConfigMetadata("UI Animations", "Animate supported MarsarahUI elements such as the information rail, summon counter, and enhanced notifications. Disable this if you experience UI-related performance issues.", ConfigSections.GeneralHUD, 130);
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows boat speed when using a boat next to the sail indicator.", ConfigSections.GeneralHUD, 110);
 			public static readonly ConfigMetadata UIBoatHealth = new ConfigMetadata("Show Boat Health", "Shows the controlled boat's health as a bar with its percentage near the sailing controls.", ConfigSections.GeneralHUD, 105);
@@ -357,9 +357,9 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.", ConfigSections.ServerOverrides, 10);
 		}
 
-		public static ConfigEntry<InfoRailStyle> InfoRailStyleChoice;
+		public static ConfigEntry<UIStyle> UIStyleChoice;
+		public static ConfigEntry<bool> UIAnimationsEnabled;
 		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
-		public static ConfigEntry<bool> InfoRailAnimationsEnabled;
 		public static ConfigEntry<Vector2> InfoRailPosition;
 		public static ConfigEntry<int> InfoRailScale;
 		public static ConfigEntry<EnemyDetectorPosition> EnemyDetectorPositionChoice;
@@ -432,7 +432,7 @@ namespace MarsarahUI.Managers
 
 		// Effective UI settings
 		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
-		public static bool EffectiveInfoRailAnimations => InfoRailAnimationsEnabled.Value;
+		public static bool EffectiveUIAnimations => UIAnimationsEnabled.Value;
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
 		public static InventoryDisplayMode EffectiveInventoryDisplayChoice => InventoryDisplayChoice.Value;
 		public static EnemyDetectorPosition EffectiveEnemyDetectorPositionChoice => EnemyDetectorPositionChoice.Value;
@@ -563,9 +563,11 @@ namespace MarsarahUI.Managers
 			Config = configFile;
 
 			// ===== General & HUD
-			InfoRailStyleChoice = CreateConfig(Configs.UIInfoRailStyle, InfoRailStyle.Style1);
-			UIStyleManager.Initialize(InfoRailStyleChoice);
-			InfoRailAnimationsEnabled = CreateConfig(Configs.UIInfoRailAnimations, true);
+			// ===== General & HUD
+			UIStyleChoice = CreateConfig(Configs.UIStyle, UIStyle.Style1);
+			UIStyleManager.Initialize(UIStyleChoice);
+			UIAnimationsEnabled = CreateConfig(Configs.UIAnimations, true);
+			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
 			ShowBoatHealth = CreateConfig(Configs.UIBoatHealth, true);
@@ -769,7 +771,7 @@ namespace MarsarahUI.Managers
 				UIInfoRail.ApplyEnemyRailTransform();
 			}
 
-			if (configName == Configs.UIInfoRailAnimations.Name)
+			if (configName == Configs.UIAnimations.Name)
 			{
 				UIInfoRail.ApplyAnimationSetting();
 				UISummonDisplay.ApplyAnimationSetting();

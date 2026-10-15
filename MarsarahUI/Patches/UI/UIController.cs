@@ -197,7 +197,7 @@ namespace MarsarahUI.Patches.UI
 			image.raycastTarget = false;
 		}
 
-		internal static GameObject ReplaceStyledBackground(GameObject currentBackground, string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
+		internal static GameObject ReplaceStyledBackground(GameObject currentBackground, string objectName, GameObject parent, UIBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
 		{
 			if (currentBackground != null)
 			{
@@ -207,7 +207,7 @@ namespace MarsarahUI.Patches.UI
 			return CreateStyledBackground(objectName, parent, backgroundType, backgroundColor, vanillaSpriteName, specificLog);
 		}
 
-		internal static GameObject ReplaceStyledBorder(GameObject currentBorder, string objectName, GameObject parent, InfoRailBorderType borderType, string capSpriteName, Color borderColor, Vector2 capSize, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
+		internal static GameObject ReplaceStyledBorder(GameObject currentBorder, string objectName, GameObject parent, UIBorderType borderType, string capSpriteName, Color borderColor, Vector2 capSize, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
 		{
 			if (currentBorder != null)
 			{
@@ -217,21 +217,21 @@ namespace MarsarahUI.Patches.UI
 			return CreateStyledBorder(objectName, parent, borderType, capSpriteName, borderColor, capSize, borderOuterColor, borderInnerColor, borderOuterWidth, borderInnerWidth, specificLog);
 		}
 
-		internal static GameObject CreateStyledBackground(string objectName, GameObject parent, InfoRailBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
+		internal static GameObject CreateStyledBackground(string objectName, GameObject parent, UIBackgroundType backgroundType, Color backgroundColor, string vanillaSpriteName, LogManager specificLog)
 		{
 			switch (backgroundType)
 			{
-				case InfoRailBackgroundType.None:
+				case UIBackgroundType .None:
 					return null;
 
-				case InfoRailBackgroundType.UnityImage:
+				case UIBackgroundType .UnityImage:
 					return CreateUnityBackground(objectName, parent, backgroundColor);
 
-				case InfoRailBackgroundType.VanillaSlicedSprite:
+				case UIBackgroundType .VanillaSlicedSprite:
 					return CreateVanillaSlicedBackground(objectName, parent, vanillaSpriteName, backgroundColor, specificLog);
 
 				default:
-					specificLog.Warn($"Unsupported information rail background type '{backgroundType}'.");
+					specificLog.Warn($"Unsupported UI background type '{backgroundType}'.");
 					return null;
 			}
 		}
@@ -267,21 +267,21 @@ namespace MarsarahUI.Patches.UI
 			return background;
 		}
 
-		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, InfoRailBorderType borderType, string capSpriteName, Color borderColor, Vector2 capSize, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
+		internal static GameObject CreateStyledBorder(string objectName, GameObject parent, UIBorderType  borderType, string capSpriteName, Color borderColor, Vector2 capSize, Color borderOuterColor, Color borderInnerColor, float borderOuterWidth, float borderInnerWidth, LogManager specificLog)
 		{
 			switch (borderType)
 			{
-				case InfoRailBorderType.None:
+				case UIBorderType .None:
 					return null;
 
-				case InfoRailBorderType.SideCapsSprite:
+				case UIBorderType .SideCapsSprite:
 					return CreateSideCapsBorder(objectName, parent, capSpriteName, borderColor, capSize, specificLog);
 
-				case InfoRailBorderType.UnityBorder:
+				case UIBorderType .UnityBorder:
 					return CreateUnityBorder(objectName, parent, borderOuterColor, borderColor, borderInnerColor, borderOuterWidth, borderInnerWidth);
 
 				default:
-					specificLog.Warn($"Unsupported information rail border type '{borderType}'.");
+					specificLog.Warn($"Unsupported UI border type '{borderType}'.");
 					return null;
 			}
 		}

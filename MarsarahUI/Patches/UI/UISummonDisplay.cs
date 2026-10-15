@@ -139,7 +139,7 @@ namespace MarsarahUI.Patches.UI
 
 			targetVisible = visible;
 
-			if (!ConfigManager.EffectiveInfoRailAnimations)
+			if (!ConfigManager.EffectiveUIAnimations)
 			{
 				animationProgress = visible ? 1f : 0f;
 				animating = false;
@@ -254,7 +254,7 @@ namespace MarsarahUI.Patches.UI
 
 			ApplyDisplayMode();
 
-			log.Info($"Applied information rail style '{ConfigManager.InfoRailStyleChoice.Value}' to summon display.");
+			log.Info($"Applied UI style '{ConfigManager.UIStyleChoice.Value}' to summon display.");
 		}
 
 		internal static void ApplySummonCounterTransform()
@@ -327,7 +327,7 @@ namespace MarsarahUI.Patches.UI
 
 		internal static void ApplyAnimationSetting()
 		{
-			if (ConfigManager.EffectiveInfoRailAnimations) return;
+			if (ConfigManager.EffectiveUIAnimations) return;
 			if (UISummonArea == null) return;
 
 			animationProgress = targetVisible ? 1f : 0f;
