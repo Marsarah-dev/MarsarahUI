@@ -749,6 +749,7 @@ namespace MarsarahUI.Managers
 			{
 				UIInfoRail.ApplyAnimationSetting();
 				UISummonDisplay.ApplyAnimationSetting();
+				UINotifications.ApplyAnimationSetting();
 			}
 
 			if (configName == Configs.UISummonCounterPosition.Name ||

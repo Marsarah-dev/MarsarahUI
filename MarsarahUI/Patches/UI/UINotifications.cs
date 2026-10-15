@@ -180,6 +180,8 @@ namespace MarsarahUI.Patches.UI
 				notificationRoot.SetActive(true);
 			}
 
+			bool animationsEnabled = ConfigManager.EffectiveInfoRailAnimations;
+
 			for (int i = notifications.Count - 1; i >= 0; i--)
 			{
 				NotificationEntry notification = notifications[i];
@@ -200,12 +202,32 @@ namespace MarsarahUI.Patches.UI
 					}
 				}
 
+				if (!animationsEnabled)
+				{
+					if (notification.Leaving)
+					{
+						Object.Destroy(notification.Root);
+						notifications.RemoveAt(i);
+						continue;
+					}
+
+					notification.Progress = 1f;
+					notification.CanvasGroup.alpha = 1f;
+
+					if (notification.ContentRect != null)
+					{
+						notification.ContentRect.anchoredPosition = Vector2.zero;
+					}
+
+					notification.Layout.preferredHeight = NotificationHeight;
+					notification.Layout.minHeight = NotificationHeight;
+
+					continue;
+				}
+
 				float targetProgress = notification.Leaving ? 0f : 1f;
 
-				notification.Progress = Mathf.MoveTowards(
-					notification.Progress,
-					targetProgress,
-					Time.deltaTime / AnimationDuration);
+				notification.Progress = Mathf.MoveTowards(notification.Progress, targetProgress, Time.deltaTime / AnimationDuration);
 
 				float easedProgress = Mathf.SmoothStep(0f, 1f, notification.Progress);
 
@@ -213,9 +235,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (notification.ContentRect != null)
 				{
-					notification.ContentRect.anchoredPosition = new Vector2(
-						Mathf.Lerp(-SlideDistance, 0f, easedProgress),
-						0f);
+					notification.ContentRect.anchoredPosition = new Vector2(Mathf.Lerp(-SlideDistance, 0f, easedProgress), 0f);
 				}
 
 				if (notification.Leaving)
@@ -406,7 +426,8 @@ namespace MarsarahUI.Patches.UI
 			layout.minHeight = NotificationHeight;
 
 			CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
-			canvasGroup.alpha = 0f;
+			bool animationsEnabled = ConfigManager.EffectiveInfoRailAnimations;
+			canvasGroup.alpha = animationsEnabled ? 0f : 1f;
 			canvasGroup.interactable = false;
 			canvasGroup.blocksRaycasts = false;
 
@@ -420,7 +441,7 @@ namespace MarsarahUI.Patches.UI
 			contentRect.offsetMin = Vector2.zero;
 			contentRect.offsetMax = Vector2.zero;
 			contentRect.localScale = Vector3.one;
-			contentRect.anchoredPosition = new Vector2(-SlideDistance, 0f);
+			contentRect.anchoredPosition = animationsEnabled ? new Vector2(-SlideDistance, 0f) : Vector2.zero;
 
 			UIStyleDefinition style = UIStyleManager.Current;
 
@@ -495,7 +516,7 @@ namespace MarsarahUI.Patches.UI
 				Key = key,
 				Amount = amount,
 				Lifetime = ConfigManager.EffectiveNotificationDuration,
-				Progress = 0f,
+				Progress = animationsEnabled ? 0f : 1f,
 				Leaving = false
 			};
 
@@ -566,6 +587,37 @@ namespace MarsarahUI.Patches.UI
 				oldest.Leaving = true;
 				activeCount--;
 			}
+		}
+
+		internal static void ApplyAnimationSetting()
+		{
+			if (ConfigManager.EffectiveInfoRailAnimations) return;
+
+			foreach (NotificationEntry notification in notifications)
+			{
+				if (notification.Root == null) continue;
+
+				if (notification.Leaving)
+				{
+					Object.Destroy(notification.Root);
+					continue;
+				}
+
+				notification.Progress = 1f;
+				notification.CanvasGroup.alpha = 1f;
+
+				if (notification.ContentRect != null)
+				{
+					notification.ContentRect.anchoredPosition = Vector2.zero;
+				}
+
+				notification.Layout.preferredHeight = NotificationHeight;
+				notification.Layout.minHeight = NotificationHeight;
+			}
+
+			notifications.RemoveAll(notification => notification.Root == null || notification.Leaving);
+
+			log.Info("Notification animations disabled and active animations finalized.");
 		}
 	}
 }
