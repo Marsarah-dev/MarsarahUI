@@ -76,7 +76,19 @@ namespace MarsarahUI.Patches.UI
 				if (UIBoatArea != null) UIBoatArea.SetActive(shouldBeVisible);
 				if (!shouldBeVisible) return;
 
-				if (UIBoatSpeedArea != null) UIBoatSpeedArea.SetActive(showSpeed);
+				if (UIBoatSpeedArea != null)
+				{
+					UIBoatSpeedArea.SetActive(showSpeed);
+
+					bool compactLayout = ConfigManager.EffectiveStatusEffectsUnderMinimap && !Game.m_noMap;
+					RectTransform speedTransform = UIBoatSpeedArea.transform as RectTransform;
+
+					if (speedTransform != null)
+					{
+						float yOffset = !compactLayout && !showHealth ? -27f : 0f;
+						speedTransform.anchoredPosition = new Vector2(0f, yOffset);
+					}
+				}
 
 				if (showSpeed)
 				{

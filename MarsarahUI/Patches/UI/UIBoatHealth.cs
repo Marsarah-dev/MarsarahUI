@@ -56,7 +56,10 @@ namespace MarsarahUI.Patches.UI
 
 			if (healthAreaTransform != null)
 			{
-				healthAreaTransform.anchoredPosition = new Vector2(-(HealthAreaWidth - UIBoatSpeed.BoatAreaWidth) * 0.5f, showSpeed ? HealthOffsetBelowSpeed : 0f);
+				bool useCompactLayout = ConfigManager.EffectiveStatusEffectsUnderMinimap && !Game.m_noMap;
+				float yOffset = useCompactLayout && !showSpeed ? 0f : HealthOffsetBelowSpeed;
+
+				healthAreaTransform.anchoredPosition = new Vector2(-(HealthAreaWidth - UIBoatSpeed.BoatAreaWidth) * 0.5f, yOffset);
 			}
 
 			float health = Mathf.Clamp01(cachedWear.GetHealthPercentage());
