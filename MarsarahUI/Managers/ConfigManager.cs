@@ -5,7 +5,6 @@ using ServerSync;
 using System;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Playables;
 
 namespace MarsarahUI.Managers
 {
@@ -328,7 +327,7 @@ namespace MarsarahUI.Managers
 
 			// ===== Notifications
 			public static readonly ConfigMetadata UINotificationMode = new ConfigMetadata("Notification Mode", "Choose whether transient notifications use the enhanced MarsarahUI notification stack, or the vanilla Valheim notification system.", ConfigSections.Notifications, 50);
-			public static readonly ConfigMetadata UINotificationPosition = new ConfigMetadata("Notification X/Y Position", "Sets the exact X and Y position of the enhanced notification stack.", ConfigSections.Notifications,	40);
+			public static readonly ConfigMetadata UINotificationPosition = new ConfigMetadata("Notification X/Y Position", "Sets the exact X and Y position of the enhanced notification stack.", ConfigSections.Notifications, 40);
 			public static readonly ConfigMetadata UINotificationScale = new ConfigMetadata("Notification Scale", "Sets the scale of the enhanced notification stack as a percentage. 100 is the default size.", ConfigSections.Notifications, 30);
 			public static readonly ConfigMetadata UINotificationDuration = new ConfigMetadata("Notification Duration", "Sets how many seconds enhanced notifications remain visible before disappearing.", ConfigSections.Notifications, 20);
 			public static readonly ConfigMetadata UINotificationMaxVisible = new ConfigMetadata("Maximum Visible Notifications", "Sets the maximum number of enhanced notifications that can be visible at the same time.", ConfigSections.Notifications, 10);
@@ -776,7 +775,9 @@ namespace MarsarahUI.Managers
 				UIContainerContents.HideContainerContents();
 			}
 
-			if (configName == Configs.UINotificationMode.Name)
+			if (configName == Configs.UINotificationMode.Name ||
+				configName == Configs.UINotificationDuration.Name ||
+				configName == Configs.UINotificationMaxVisible.Name)
 			{
 				UINotifications.RefreshFromConfig();
 			}
@@ -785,12 +786,6 @@ namespace MarsarahUI.Managers
 				configName == Configs.UINotificationScale.Name)
 			{
 				UINotifications.ApplyNotificationTransform();
-			}
-
-			if (configName == Configs.UINotificationDuration.Name ||
-				configName == Configs.UINotificationMaxVisible.Name)
-			{
-				UINotifications.RefreshFromConfig();
 			}
 		}
 	}
