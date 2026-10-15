@@ -11,7 +11,8 @@ namespace MarsarahUI.Patches.UI
 
 		private const float HealthAreaWidth = 72f;
 		private const float HealthAreaHeight = 20f;
-		private const float HealthBarWidth = 40f;
+		private const float HealthBarWidthFull = 30f;
+		private const float HealthBarWidthDamaged = 36f;
 		private const float HealthBarHeight = 9f;
 		private const float HealthOffsetBelowSpeed = -27f;
 		private const float CriticalHealthThreshold = 0.3f;
@@ -19,6 +20,7 @@ namespace MarsarahUI.Patches.UI
 		private static GameObject UIHealthArea;
 		private static RectTransform healthAreaTransform;
 		private static RectTransform healthFillTransform;
+		private static RectTransform healthBackgroundTransform;
 		private static Image healthFillImage;
 		private static Text healthPercentText;
 		private static bool warnedMissingHealth;
@@ -65,6 +67,22 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			float health = Mathf.Clamp01(cachedWear.GetHealthPercentage());
+			int healthPercentage = Mathf.RoundToInt(health * 100f);
+			float barWidth = healthPercentage == 100 ? HealthBarWidthFull : HealthBarWidthDamaged;
+
+			if (healthBackgroundTransform != null)
+			{
+				healthBackgroundTransform.anchoredPosition = new Vector2(-HealthAreaWidth * 0.5f + barWidth * 0.5f, 0f);
+				healthBackgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, barWidth);
+			}
+
+			if (healthPercentText != null)
+			{
+				RectTransform percentTransform = healthPercentText.rectTransform;
+				percentTransform.anchoredPosition = new Vector2(barWidth * 0.5f, 0f);
+				percentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, HealthAreaWidth - barWidth);
+			}
+
 			float damageLevel = Mathf.Clamp01((1f - health) / (1f - CriticalHealthThreshold));
 			Color fillColor = UIStyleManager.GetWeightFillColor(damageLevel);
 
@@ -73,13 +91,15 @@ namespace MarsarahUI.Patches.UI
 
 			if (healthFillImage != null)
 			{
+				if (healthFillTransform != null)
+				{
+					float fillWidth = healthFillImage.type == Image.Type.Filled ? barWidth : barWidth * health;
+					healthFillTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, fillWidth);
+				}
+
 				if (healthFillImage.type == Image.Type.Filled)
 				{
 					healthFillImage.fillAmount = health;
-				}
-				else if (healthFillTransform != null)
-				{
-					healthFillTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, HealthBarWidth * health);
 				}
 
 				healthFillImage.color = fillColor;
@@ -87,7 +107,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (healthPercentText != null)
 			{
-				healthPercentText.text = $"{Mathf.RoundToInt(health * 100f)}%";
+				healthPercentText.text = $"{healthPercentage}%";
 				healthPercentText.color = textColor;
 			}
 
@@ -112,12 +132,13 @@ namespace MarsarahUI.Patches.UI
 			healthAreaTransform.sizeDelta = new Vector2(HealthAreaWidth, HealthAreaHeight);
 			healthAreaTransform.localScale = Vector3.one;
 
-			float barCenterX = -HealthAreaWidth * 0.5f + HealthBarWidth * 0.5f;
-			Image barBackground = CreateUIImageObject("BoatHealthBackground", UIHealthArea, new Vector2(barCenterX, 0f), new Vector2(HealthBarWidth, HealthBarHeight));
+			float barCenterX = -HealthAreaWidth * 0.5f + HealthBarWidthDamaged * 0.5f;
+			Image barBackground = CreateUIImageObject("BoatHealthBackground", UIHealthArea, new Vector2(barCenterX, 0f), new Vector2(HealthBarWidthDamaged, HealthBarHeight));
+			healthBackgroundTransform = barBackground.rectTransform;
 			barBackground.color = new Color(0.12f, 0.12f, 0.12f, 0.78f);
 			barBackground.raycastTarget = false;
 
-			healthFillImage = CreateUIImageObject("BoatHealthFill", barBackground.gameObject, Vector2.zero, new Vector2(HealthBarWidth, HealthBarHeight));
+			healthFillImage = CreateUIImageObject("BoatHealthFill", barBackground.gameObject, Vector2.zero, new Vector2(HealthBarWidthDamaged, HealthBarHeight));
 			healthFillImage.raycastTarget = false;
 			healthFillTransform = healthFillImage.rectTransform;
 			healthFillTransform.anchorMin = new Vector2(0f, 0.5f);
@@ -141,8 +162,8 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			// The percentage occupies the remaining space to the right of the bar.
-			float percentCenterX = HealthBarWidth * 0.5f;
-			healthPercentText = CreateTextObject("BoatHealthPercent", UIHealthArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(percentCenterX, 0f), new Vector2(HealthAreaWidth - HealthBarWidth, HealthAreaHeight));
+			float percentCenterX = HealthBarWidthDamaged * 0.5f;
+			healthPercentText = CreateTextObject("BoatHealthPercent", UIHealthArea, Color.white, uiTextFontName, uiTextFontSize, TextAnchor.MiddleRight, new Vector2(percentCenterX, 0f), new Vector2(HealthAreaWidth - HealthBarWidthDamaged, HealthAreaHeight));
 			healthPercentText.raycastTarget = false;
 
 			UIHealthArea.SetActive(false);
