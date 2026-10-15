@@ -13,7 +13,14 @@ B. Updates
 * Show Boat Health
   - Added configurable Boat Health indicator with HP bar and percentage.
   - Added custom boat icons, colors, and textures matching all three Information Rail styles.
-* Adding notif revamp slider
+* Revamp Notifications
+  - Replaced vanilla top-left messages with enhanced stacked notifications
+  - Merged repeated item messages and show + / - amounts
+  - Addd position, scale, duration, max-visible, and server override settings
+* Config Improvements
+  - Reorganized and clean up config sections and naming
+  - Added shared UI Style / Animation settings and improved Skill Progress options
+  - Converted UI scale settings to 50–150 sliders
 
 C. New additions
 ------------------------

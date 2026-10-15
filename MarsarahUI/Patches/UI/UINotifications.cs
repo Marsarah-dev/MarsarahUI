@@ -8,7 +8,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UINotifications : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Notifications", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Notifications", LogManager.LogLevel.Warning);
 
 		private static GameObject notificationRoot;
 		private static RectTransform notificationRootRect;
@@ -19,7 +19,7 @@ namespace MarsarahUI.Patches.UI
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 20f;
 		private const float NotificationSpacing = 4f;
-		private const float NotificationWidth = 150f; // 260
+		private const float NotificationWidth = 150f;
 		private const float MaxNotificationWidth = 500f;
 		private const float NotificationHeight = 36f;
 		private const float IconSize = 28f;

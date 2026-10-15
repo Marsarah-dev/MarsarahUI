@@ -625,15 +625,15 @@ namespace MarsarahUI.Managers
 			// ===== Information Rail
 			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
 			InfoRailPosition = CreateConfig(Configs.UIInfoRailPosition, new Vector2(-88f, -230f));
-			InfoRailScale = CreateConfig(Configs.UIInfoRailScale, 100);
+			InfoRailScale = CreateScaleConfig(Configs.UIInfoRailScale, 100);
 			InventoryDisplayChoice = CreateConfig(Configs.UIInventoryWeightAndSlots, InventoryDisplayMode.WeightAndFreeSlots);
 			EnemyDetectorChoice = CreateConfig(Configs.UIEnemyDetector, EnemyDetectorMode.Consolidated);
 			EnemyDetectorPositionChoice = CreateConfig(Configs.UIEnemyDetectorPosition, EnemyDetectorPosition.TopCenter);
 			EnemyRailPosition = CreateConfig(Configs.UIEnemyRailPosition, new Vector2(0f, -44f));
-			EnemyRailScale = CreateConfig(Configs.UIEnemyRailScale, 100);
+			EnemyRailScale = CreateScaleConfig(Configs.UIEnemyRailScale, 100);
 			ShowSummonCounter = CreateConfig(Configs.UISummonCounter, true);
 			SummonCounterPosition = CreateConfig(Configs.UISummonCounterPosition, new Vector2(38f, -85f));
-			SummonCounterScale = CreateConfig(Configs.UISummonCounterScale, 100);
+			SummonCounterScale = CreateScaleConfig(Configs.UISummonCounterScale, 100);
 			ShowSkillProgress = CreateConfig(Configs.UIShowSkillProgress, true);
 			SkillProgressBarColorChoice = CreateConfig(Configs.UISkillProgressBarColor, SkillProgressBarColor.Gold);
 			SkillProgressPercentageLocationChoice = CreateConfig(Configs.UISkillProgressPercentageLocation, SkillProgressPercentageLocation.NotificationArea);
@@ -652,7 +652,7 @@ namespace MarsarahUI.Managers
 			DetailedHoverInfoChoice = CreateConfig(Configs.UIHoverInfoMode, HoverInfoMode.ColoredText);
 			ContainerContentsChoice = CreateConfig(Configs.UIContainerContents, ContainerContentsMode.IconsHorizontal);
 			ContainerContentsOffset = CreateConfig(Configs.UIContainerContentsOffset, Vector2.zero);
-			ContainerContentsScale = CreateConfig(Configs.UIContainerContentsScale, 100);
+			ContainerContentsScale = CreateScaleConfig(Configs.UIContainerContentsScale, 100);
 			ContainerHoverModeChoice = CreateConfig(Configs.UIContainerHoverMode, ContainerHoverMode.CurrentPerMax);
 			BeehiveHoverModeChoice = CreateConfig(Configs.UIBeeHoverMode, BeeHoverMode.RemainingTime);
 			PlantHoverModeChoice = CreateConfig(Configs.UIPlantHoverMode, PlantHoverMode.RemainingTime);
@@ -664,7 +664,7 @@ namespace MarsarahUI.Managers
 			// ===== Notifications
 			NotificationModeChoice = CreateConfig(Configs.UINotificationMode, NotificationMode.Enhanced);
 			NotificationPosition = CreateConfig(Configs.UINotificationPosition, new Vector2(47f, -120f));
-			NotificationScale = CreateConfig(Configs.UINotificationScale, 100);
+			NotificationScale = CreateScaleConfig(Configs.UINotificationScale, 100);
 			NotificationDuration = CreateConfig(Configs.UINotificationDuration, 6f);
 			NotificationMaxVisible = CreateConfig(Configs.UINotificationMaxVisible, 5);
 
@@ -690,16 +690,21 @@ namespace MarsarahUI.Managers
 			SetupWatcher();
 		}
 
-		private static ConfigEntry<T> CreateConfig<T>(ConfigMetadata metadata, T defaultValue)
+		private static ConfigEntry<T> CreateConfig<T>(ConfigMetadata metadata, T defaultValue, AcceptableValueBase acceptableValues = null)
 		{
 			ConfigurationManagerAttributes attributes = new ConfigurationManagerAttributes
 			{
 				Order = metadata.Order
 			};
 
-			ConfigEntry<T> configEntry = Config.Bind(metadata.Section, metadata.Name, defaultValue, new ConfigDescription(metadata.Description, null, attributes));
+			ConfigEntry<T> configEntry = Config.Bind(metadata.Section, metadata.Name, defaultValue, new ConfigDescription(metadata.Description, acceptableValues, attributes));
 			configEntry.SettingChanged += (_, __) => OnConfigChanged(metadata.Name);
 			return configEntry;
+		}
+
+		private static ConfigEntry<int> CreateScaleConfig(ConfigMetadata metadata, int defaultValue)
+		{
+			return CreateConfig(metadata, defaultValue, new AcceptableValueRange<int>(50, 150));
 		}
 
 		private static ConfigEntry<T> CreateServerOverride<T>(ConfigMetadata metadata, T defaultValue)
