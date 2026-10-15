@@ -19,6 +19,9 @@ namespace MarsarahUI.Patches.UI
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 20f;
 		private const float NotificationSpacing = 4f;
+		private const float NotificationWidth = 280f;
+		private const float NotificationHeight = 44f;
+		private const float IconSize = 32f;
 
 		private class NotificationEntry
 		{
@@ -60,17 +63,28 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
-		[HarmonyPatch(typeof(MessageHud), "ShowPickupMessage")]
+		[HarmonyPatch(typeof(Character), nameof(Character.ShowPickupMessage))]
 		private static class PickupMessagePatch
 		{
-			private static bool Prefix()
+			private static bool Prefix(Character __instance, ItemDrop.ItemData item, int amount)
 			{
 				if (ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Vanilla)
 				{
 					return true;
 				}
 
-				// Convert vanilla pickup into our notification here.
+				if (__instance != Player.m_localPlayer)
+				{
+					return true;
+				}
+
+				if (item == null || item.m_shared == null)
+				{
+					log.Warn("Pickup notification received without valid item data. Falling back to vanilla notification.");
+					return true;
+				}
+
+				AddLootNotification(item, amount);
 
 				return false;
 			}
@@ -113,12 +127,46 @@ namespace MarsarahUI.Patches.UI
 
 		private static void UpdateNotifications()
 		{
-			if (ConfigManager.EffectiveNotificationModeChoice != ConfigManager.NotificationMode.Enhanced)
+			bool enhanced = ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Enhanced;
+
+			if (notificationRoot.activeSelf != enhanced && ShowUI)
 			{
+				notificationRoot.SetActive(enhanced);
+			}
+
+			if (!enhanced || !ShowUI)
+			{
+				if (notificationRoot.activeSelf)
+				{
+					notificationRoot.SetActive(false);
+				}
+
 				return;
 			}
 
-			// Notification lifetime and animation handling will go here.
+			if (!notificationRoot.activeSelf)
+			{
+				notificationRoot.SetActive(true);
+			}
+
+			for (int i = notifications.Count - 1; i >= 0; i--)
+			{
+				NotificationEntry notification = notifications[i];
+
+				if (notification.Root == null)
+				{
+					notifications.RemoveAt(i);
+					continue;
+				}
+
+				notification.Lifetime -= Time.deltaTime;
+
+				if (notification.Lifetime <= 0f)
+				{
+					Object.Destroy(notification.Root);
+					notifications.RemoveAt(i);
+				}
+			}
 		}
 
 		internal static void RefreshFromConfig()
@@ -132,7 +180,12 @@ namespace MarsarahUI.Patches.UI
 				ClearNotifications();
 			}
 
-			notificationRoot.SetActive(enhanced);
+			notificationRoot.SetActive(enhanced && ShowUI);
+
+			if (enhanced)
+			{
+				TrimNotifications();
+			}
 
 			log.Info($"Notification mode changed to {ConfigManager.EffectiveNotificationModeChoice}.");
 		}
@@ -169,6 +222,128 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			notifications.Clear();
+		}
+
+		private static void AddLootNotification(ItemDrop.ItemData item, int amount)
+		{
+			if (notificationRoot == null)
+			{
+				log.Warn("Could not show loot notification because the notification stack has not been created.");
+				return;
+			}
+
+			GameObject root = new GameObject("LootNotification");
+			root.layer = 5;
+			root.transform.SetParent(notificationRoot.transform, false);
+
+			RectTransform rect = root.AddComponent<RectTransform>();
+			rect.sizeDelta = new Vector2(NotificationWidth, NotificationHeight);
+			rect.localScale = Vector3.one;
+
+			LayoutElement layout = root.AddComponent<LayoutElement>();
+			layout.preferredWidth = NotificationWidth;
+			layout.preferredHeight = NotificationHeight;
+			layout.minWidth = NotificationWidth;
+			layout.minHeight = NotificationHeight;
+
+			CanvasGroup canvasGroup = root.AddComponent<CanvasGroup>();
+			canvasGroup.alpha = 1f;
+			canvasGroup.interactable = false;
+			canvasGroup.blocksRaycasts = false;
+
+			UIStyleDefinition style = UIStyleManager.Current;
+
+			CreateStyledBackground("Background", root, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+
+			CreateStyledBorder(
+				"Border",
+				root,
+				style.BorderType,
+				style.BorderCapAsset,
+				style.BorderColor,
+				style.BorderCapSize,
+				style.BorderOuterColor,
+				style.BorderInnerColor,
+				style.BorderOuterWidth,
+				style.BorderInnerWidth,
+				log);
+
+			Image icon = CreateUIImageObject("Icon", root, Vector2.zero, new Vector2(IconSize, IconSize));
+			icon.sprite = item.GetIcon();
+			icon.preserveAspect = true;
+			icon.raycastTarget = false;
+
+			RectTransform iconRect = icon.rectTransform;
+			SetRectAnchors(iconRect, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f));
+			iconRect.anchoredPosition = new Vector2(22f, 0f);
+
+			string itemName = Localization.instance.Localize(item.m_shared.m_name);
+
+			Text messageText = CreateTextObject("ItemName", root, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+
+			messageText.text = itemName;
+			messageText.raycastTarget = false;
+
+			RectTransform messageRect = messageText.rectTransform;
+			SetRectAnchors(messageRect, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f));
+			messageRect.offsetMin = new Vector2(44f, 0f);
+			messageRect.offsetMax = new Vector2(-56f, 0f);
+
+			Text amountText = CreateTextObject("Amount", root, Color.white, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, Vector2.zero, Vector2.zero);
+
+			amountText.text = $"+{amount}";
+			amountText.raycastTarget = false;
+
+			RectTransform amountRect = amountText.rectTransform;
+			SetRectAnchors(amountRect, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f));
+			amountRect.anchoredPosition = new Vector2(-10f, 0f);
+			amountRect.sizeDelta = new Vector2(50f, 0f);
+
+			NotificationEntry notification = new NotificationEntry
+			{
+				Root = root,
+				Rect = rect,
+				Layout = layout,
+				CanvasGroup = canvasGroup,
+				Icon = icon,
+				MessageText = messageText,
+				AmountText = amountText,
+				Key = item.m_shared.m_name,
+				Amount = amount,
+				Lifetime = ConfigManager.EffectiveNotificationDuration,
+				Progress = 1f,
+				Leaving = false
+			};
+
+			notifications.Add(notification);
+
+			TrimNotifications();
+
+			log.Info($"Added loot notification: {item.m_shared.m_name} x{amount}.");
+		}
+
+		private static void SetRectAnchors(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
+		{
+			rect.anchorMin = anchorMin;
+			rect.anchorMax = anchorMax;
+			rect.pivot = pivot;
+		}
+
+		private static void TrimNotifications()
+		{
+			int maxVisible = Mathf.Max(1, ConfigManager.EffectiveNotificationMaxVisible);
+
+			while (notifications.Count > maxVisible)
+			{
+				NotificationEntry oldest = notifications[0];
+
+				if (oldest.Root != null)
+				{
+					Object.Destroy(oldest.Root);
+				}
+
+				notifications.RemoveAt(0);
+			}
 		}
 	}
 }
