@@ -277,6 +277,13 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
+		public enum NotificationModeOverride
+		{
+			UserChoice,
+			Enhanced,
+			Vanilla
+		}
+
 		public static class Configs
 		{
 			// ===== General & HUD
@@ -360,6 +367,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideDetailedHovers = new ConfigMetadata("Detailed Hover Information Override", "Choose whether Detailed Hover Information uses the player's local setting, is forced on, or is forced off.", ConfigSections.ServerOverrides, 30);
 			public static readonly ConfigMetadata OverrideContainerContents = new ConfigMetadata("Container Contents Override", "Overrides the player's local Container Contents setting.", ConfigSections.ServerOverrides, 20);
 			public static readonly ConfigMetadata OverrideGlobalChatByDefault = new ConfigMetadata("Global Chat By Default Override", "Overrides the player's local Global Chat By Default setting.", ConfigSections.ServerOverrides, 10);
+			public static readonly ConfigMetadata OverrideNotificationMode = new ConfigMetadata("Notification Mode Override", "Overrides the player's local Notification Mode setting.", ConfigSections.ServerOverrides, 5);
 		}
 
 		// ===== General & HUD
@@ -444,8 +452,9 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<BoolOverride> DetailedHoversOverride;
 		public static ConfigEntry<BoolOverride> ContainerContentsOverride;
 		public static ConfigEntry<BoolOverride> GlobalChatByDefaultOverride;
+		public static ConfigEntry<NotificationModeOverride> NotificationModeOverrideChoice;
 
-		// Effective UI settings
+
 		// ===== Effective General & HUD
 		public static bool EffectiveUIAnimations => UIAnimationsEnabled.Value;
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
@@ -582,12 +591,11 @@ namespace MarsarahUI.Managers
 		public static EggHoverMode EffectiveEggHoverModeChoice => EggHoverModeChoice.Value;
 
 		// ===== Effective Notifications
-		public static NotificationMode EffectiveNotificationModeChoice => NotificationModeChoice.Value;
+		public static NotificationMode EffectiveNotificationModeChoice => ResolveEnum(NotificationModeChoice, NotificationModeOverrideChoice, NotificationModeOverride.UserChoice);
 		public static Vector2 EffectiveNotificationPosition => NotificationPosition.Value;
 		public static int EffectiveNotificationScale => NotificationScale.Value;
 		public static float EffectiveNotificationDuration => NotificationDuration.Value;
 		public static int EffectiveNotificationMaxVisible => NotificationMaxVisible.Value;
-
 
 		// ===== Init
 		public static void Init(ConfigFile configFile)
@@ -677,6 +685,7 @@ namespace MarsarahUI.Managers
 			DetailedHoversOverride = CreateServerOverride(Configs.OverrideDetailedHovers, BoolOverride.UserChoice);
 			ContainerContentsOverride = CreateServerOverride(Configs.OverrideContainerContents, BoolOverride.UserChoice);
 			GlobalChatByDefaultOverride = CreateServerOverride(Configs.OverrideGlobalChatByDefault, BoolOverride.UserChoice);
+			NotificationModeOverrideChoice = CreateServerOverride(Configs.OverrideNotificationMode, NotificationModeOverride.UserChoice);
 
 			SetupWatcher();
 		}
@@ -838,6 +847,8 @@ namespace MarsarahUI.Managers
 
 			// ===== Notifications
 			if (configName == Configs.UINotificationMode.Name ||
+				configName == Configs.OverrideNotificationMode.Name ||
+				configName == Configs.EnableServerOverrides.Name ||
 				configName == Configs.UINotificationDuration.Name ||
 				configName == Configs.UINotificationMaxVisible.Name)
 			{
@@ -845,6 +856,8 @@ namespace MarsarahUI.Managers
 			}
 
 			if (configName == Configs.UINotificationMode.Name ||
+				configName == Configs.OverrideNotificationMode.Name ||
+				configName == Configs.EnableServerOverrides.Name ||
 				configName == Configs.UIShowSkillProgress.Name ||
 				configName == Configs.UISkillProgressPercentageLocation.Name)
 			{
