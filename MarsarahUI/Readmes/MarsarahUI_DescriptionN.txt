@@ -1,6 +1,6 @@
 [size=5][b]Marsarah UI[/b][/size]
 
-[b]Version:[/b] 1.3.4
+[b]Version:[/b] 1.4.0
 [b]Author:[/b] Marsarah
 
 [line]
@@ -85,16 +85,21 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 
 [size=5][b]⚡ General & HUD[/b][/size]
 
+
+[size=4][b]🔧 UI Style[/b][/size]
+- Choose between [b]3 shared visual styles[/b] for the Information Rail, Summon Counter, Sailing HUD, Enhanced Notifications and other supported UI elements.
+
+[size=4][b]🔧 UI Animations[/b][/size]
+- Enables or disables animations for supported UI elements.
+
+[size=4][b]🔧 UI Display Mode[/b][/size]
+- Choose between [b]Icons[/b] and [b]Text[/b] display modes for the Information Rail, Summon Counter and Sailing HUD.
+
 [size=4][b]🔧 Better Loading Tips[/b][/size]
 - Replaces the vanilla loading-tip selection with a larger pool of more useful gameplay tips.
 - Includes [b]51 tips[/b] covering controls, progression, combat, building, food, exploration and less-obvious mechanics.
 - Intentionally leaves out several very basic vanilla tips.
 - Only applies to the [b]English[/b] localization.
-
-[size=4][b]🔧 Show Boat Speed[/b][/size]
-- Displays current ship speed while controlling a boat.
-- Reverse speed uses an [b]R[/b] prefix.
-- Repositions automatically when [b]Status Effects Under Minimap[/b] is enabled and accounts for No Map worlds.
 
 [size=4][b]🔧 Show Current Day[/b][/size]
 - Displays the current world day above the minimap and works in No Map worlds.
@@ -120,6 +125,16 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Includes Bear, Vilebone and Lox Fur armor.
 - Accounts for [b]MarsarahTweaks Gear Upgrade Unlock[/b] when Tweaks is installed and the feature is enabled.
 
+[size=4][b]🔧 Show Boat Speed[/b][/size]
+- Displays current ship speed while steering, with an [b]R[/b] prefix when reversing.
+- Uses custom speedometer icons or text labels, with colors matching the selected UI style.
+- Adjusts automatically for different sailing HUD layouts and No Map worlds.
+
+[size=4][b]🔧 Show Boat Health[/b][/size]
+- Displays the controlled boat's remaining health using a compact, textured health bar.
+- Uses custom boat icons or text labels, with colors matching the selected UI style.
+- Can be enabled independently of Boat Speed.
+
 [size=4][b]🔧 Show Online Players[/b][/size]
 - Displays total online players and up to [b]20 player names[/b] at the bottom-right.
 - Hidden when only one player is online.
@@ -139,7 +154,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=4][b]🔧 Status Effects Under Minimap[/b][/size]
 - Moves status effects into a compact vertical layout below the minimap.
 - Repositions and resizes the sailing wind indicator and sailing controls to avoid overlap.
-- Boat Speed automatically moves with the adjusted sailing UI.
+- Boat Speed and Boat Health automatically move with the adjusted sailing UI.
 - Automatically restores the vanilla layout when disabled or when No Map mode is active.
 
 [size=4][b]🔧 Global Chat By Default[/b][/size]
@@ -209,11 +224,11 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=4][b]🔧 Information Rail[/b][/size]
 - Adds a unified information area at the bottom-left of the HUD.
 - Inventory Weight, Free Slots, Enemy Detector and temporary Skill Progress information use the Information Rail.
-- Temporary elements animate smoothly into and out of the rail as they become relevant.
-- Includes [b]3 selectable visual styles[/b] with different backgrounds, borders, icons and colors.
-- Display Mode can use [b]Icons[/b] or [b]Text[/b].
+- Temporary elements use the shared UI Animations setting.
+- Appearance follows the selected UI Style, with different backgrounds, borders, icons and colors.
+- Supports the shared [b]Icons[/b] and [b]Text[/b] display modes.
 - The Enemy Detector can optionally be moved out of the rail to a separate top-center display.
-- The Summon Counter remains separate but follows the selected Information Rail style and Icons/Text mode.
+- The Summon Counter remains separate but follows the shared UI Style and Display Mode.
 
 [size=4][b]🔧 Inventory Weight and Free Slots[/b][/size]
 - Displays inventory information inside the Information Rail.
@@ -241,13 +256,12 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Uses the selected Information Rail visual style and Icons/Text display mode.
 - Can be repositioned using exact [b]X/Y coordinates[/b] and scaled independently.
 
-[size=4][b]🔧 Skill Progress Bar[/b][/size]
+[size=4][b]🔧 Show Skill Progress[/b][/size]
 - Displays a temporary progress bar along the bottom edge of the screen when a skill advances to a new whole percentage toward its next level.
-- Skill level and progress percentage appears temporarily in the Information Rail.
-- Icons mode uses the skill's actual in-game icon; Text mode displays the skill name.
+- Skill progress information can appear in [b]Enhanced Notifications[/b] or the [b]Information Rail[/b].
+- When Notification Mode is Vanilla, skill progress information appears in the Information Rail.
 - Run skill progress is intentionally excluded.
-- Colors: [b]Gold, White, Green, Blue, Cyan, Red, Purple[/b].
-- Selecting [b]Off[/b] disables the feature.
+- Can be enabled independently, with selectable bar colors: [b]Gold, White, Green, Blue, Cyan, Red, Purple[/b].
 
 
 [size=5][b]⚡ Items & Interaction[/b][/size]
@@ -318,6 +332,17 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - [b]Compatibility:[/b] 
   - StoreAndCraft chest labels or tags may not display as expected with Container Hover Mode enabled. If this occurs, set Container Hover Mode to Off.
   - If icon-based Container Contents overlap additional hover text from another mod, use the X/Y offset and scale settings to adjust their placement. Alternatively, use Text or Off for Container Contents.
+
+
+[size=5][b]⚡ Notifications[/b][/size]
+
+[size=4][b]🔧 Enhanced Notifications[/b][/size]
+- Replaces vanilla top-left messages with a customizable notification stack.
+- Displays item, skill and information messages with icons and styling matching the selected UI Style.
+- Repeated item notifications are combined, showing positive or negative amounts.
+- Supports animations, adjustable position, scale, duration and maximum visible count.
+- [b]Notification Mode:[/b] Enhanced or Vanilla, with an optional synchronized server override.
+
 
 [line]
 

@@ -1,4 +1,4 @@
-Marsarah UI v1.3.4
+Marsarah UI v1.4.0
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -70,10 +70,10 @@ Settings can be changed through the config file or a compatible configuration ma
 Selected information-oriented features also support synchronized Server Overrides.
 Overrides use UserChoice by default, allowing players to keep their local preferences unless a server administrator explicitly overrides them.
 
-NOTE FOR v1.0.0 USERS
+NOTE FOR EXISTING CONFIGURATIONS
 ----------------------------------------------------------------
-The config layout and setting keys were reorganized in v1.1.0.
-Existing selections from v1.0.0 may need to be configured again after updating.
+UI Style, UI Animations and UI Display Mode now use shared settings under General & HUD.
+Previously saved Information Rail style, display mode and animation preferences may need to be selected again.
 
 
 KEYS
@@ -91,23 +91,31 @@ MOD CONFIGS
 
 ===================== [01 - General & HUD] =====================
 
+-------------------------- [UI Style] ---------------------------
+► Description:
+  Selects the shared visual style used by supported UI elements.
+  Applies to the Information Rail, Summon Counter, Sailing HUD and Enhanced Notifications.
+  Styles affect: Background, Borders, Icons, Text and value colors, Separators.
+  Can choose between 3 separate visual styles.
+
+
+----------------------- [UI Animations] -------------------------
+► Description:
+  Enables or disables animations for supported UI elements, including the Information Rail, Summon Counter and Enhanced Notifications.
+
+
+----------------------- [UI Display Mode] -----------------------
+► Description:
+  Selects whether supported UI elements use icons or text labels.
+  Applies to the Information Rail, Summon Counter and Sailing HUD.
+
+
 ---------------------- [Better Loading Tips] -------------------
 ► Description:
   Replaces the vanilla loading-tip selection with a curated pool of 51 gameplay tips.
   Tips focus on controls, progression, combat, building, food, exploration and less-obvious mechanics.
   Several very basic vanilla tips are intentionally omitted.
   Only works with English localization.  
-
-
------------------------- [Show Boat Speed] ---------------------
-► Description:
-  Displays current ship speed while controlling a boat.
-  Reverse speed uses an R prefix.
-  Text color changes according to speed.
-
-► Compatibility:
-  Automatically moves when Status Effects Under Minimap changes the sailing HUD. Uses alternate positioning in No Map worlds.
-  Not compatible with Minimal Status Effects.
 
 
 ------------------------ [Show Current Day] --------------------
@@ -166,6 +174,28 @@ MOD CONFIGS
   If Tweaks is installed and Gear Upgrade Unlock is enabled, Smart Biome uses expanded expected armor ranges where Tweaks permits earlier level-4 upgrades.
 
 
+------------------------ [Show Boat Speed] ---------------------
+► Description:
+  Displays current ship speed while controlling a boat.
+  Reverse movement uses an R prefix.
+  Speed colors follow the selected UI Style.
+  Uses custom speedometer icons or text labels depending on UI Display Mode.
+
+► Compatibility:
+  Adjusts automatically for Status Effects Under Minimap and No Map worlds.
+  Can be enabled independently of Boat Health.
+
+
+------------------------ [Show Boat Health] --------------------
+► Description:
+  Displays the controlled boat's remaining health as a compact bar.
+  The bar uses the selected UI Style's texture and colors.
+  Uses custom boat icons or text labels depending on UI Display Mode.
+
+  Can be enabled independently of Boat Speed.
+  Both indicators share the same sailing HUD and adjust their positioning automatically.
+
+
 ----------------------- [Show Online Players] ------------------
 ► Description:
   Shows total online players and player names at the bottom-right.
@@ -196,7 +226,7 @@ MOD CONFIGS
 ► Description:
   Moves active status effects into a compact vertical layout below the minimap.
   The sailing wind indicator and sailing controls are repositioned and resized while the feature is active.
-  Boat Speed automatically moves to match the adjusted sailing HUD.
+  The Boat Speed and Boat Health indicators automatically move to match the adjusted sailing HUD.
   The vanilla status-effect and sailing layouts are restored automatically in No Map worlds.
 
 
@@ -283,28 +313,6 @@ MOD CONFIGS
 
 
 ==================== [02 - Information Rail] ===================
-
--------------------- [Information Rail Style] ------------------
-► Description:
-  Selects the visual style used by the Information Rail and Summon Counter (3 style choices).
-
-  Styles affect:
-  • Background
-  • Borders
-  • Icons
-  • Text and value colors
-  • Separators
-
-
----------------- [Information Rail Display Mode] ---------------
-► Description:
-  Selects whether Information Rail information and the Summon Counter are represented using icons or text labels.
-
-
----------------- [Information Rail Animations] -----------------
-► Description:
-  Enables or disables the animated transitions used when Information Rail elements and the Summon Counter appear or disappear.
-
 
 --------------- [Information Rail X/Y Position] ----------------
 ► Description:
@@ -406,14 +414,18 @@ MOD CONFIGS
   100
 
 
------------------------ [Skill Progress Bar] --------------------
+--------------------- [Show Skill Progress] --------------------
 ► Description:
   Displays a temporary full-width progress bar along the bottom of the screen when a skill advances to a new whole percentage toward its next level.
-  Skill information also appears temporarily in the Information Rail.
+  Skill information also appears temporarily in the Enhanced Notification area or Information Rail.
   Run skill progress is intentionally excluded.
-  New progress refreshes the current display instead of stacking notifications.
 
-► Modes:
+  
+------------------ [Skill Progress Bar Color] ------------------
+► Description:
+  Selects the color of the skill progress bar.
+
+► Colors:
   Gold
   White
   Green
@@ -421,7 +433,17 @@ MOD CONFIGS
   Cyan
   Red
   Purple
-  Off
+
+
+-------------- [Skill Progress Percentage Location] ------------
+► Description:
+  Selects where skill progress information is displayed.
+
+► Modes:
+  NotificationArea - displays skill progress in Enhanced Notifications.
+  InformationRail  - displays skill progress in the Information Rail.
+
+  When Notification Mode is set to Vanilla, skill progress is always displayed in the Information Rail.
 
 
 ================== [03 - Items & Interaction] ==================
@@ -639,6 +661,60 @@ MOD CONFIGS
 ► Dependency: Detailed Hover Information
 
 
+======================= [05 - Notifications] ===================
+
+---------------------- [Notification Mode] ---------------------
+► Description:
+  Controls how top-left notifications are displayed.
+
+► Modes:
+  Enhanced - replaces vanilla top-left messages with a styled notification stack.
+  Vanilla  - retains the vanilla notification system.
+
+  Enhanced Notifications display item, skill and information messages.
+  Repeated item notifications are merged and show positive or negative amounts.
+  Notifications follow the selected UI Style and UI Animations settings.
+
+► Server Override:
+  Servers can select UserChoice, Enhanced or Vanilla.
+
+
+------------------ [Notification X/Y Position] -----------------
+► Description:
+  Sets the exact X and Y position of the Enhanced Notifications stack.
+
+► Default:
+  X: 47
+  Y: -120
+
+
+----------------------- [Notification Scale] -------------------
+► Description:
+  Scales the Enhanced Notifications stack.
+
+► Range:
+  50–150%
+
+► Default:
+  100
+
+
+---------------------- [Notification Duration] -----------------
+► Description:
+  Sets how many seconds Enhanced Notifications remain visible.
+
+► Default:
+  6 seconds
+
+
+---------------- [Maximum Visible Notifications] ---------------
+► Description:
+  Sets the maximum number of Enhanced Notifications displayed at once.
+
+► Default:
+  5
+
+
 COMPATIBILITY
 ================================================================
 MarsarahTweaks
@@ -657,10 +733,6 @@ Biome-Sorted Crafting Tabs:
 Craft From Containers
 ----------------------------------------------------------------
 If detected, Marsarah UI does not alter the Owned Resources requirement display and lets Craft From Containers handle it instead.
-
-Minimal Status Effects
-----------------------------------------------------------------
-If detected, Boat Speed uses an alternate location to avoid overlap.
 
 
 FUTURE PLANS
@@ -687,6 +759,20 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.4.0
+- Updates:
+  - Redesigned the sailing HUD with custom Boat Speed and Boat Health icons for all three UI styles.
+  - Added a compact Boat Health bar and Icons/Text display support for both sailing indicators.
+  - Reorganized UI configuration sections and added shared UI Style, Animations and Display Mode settings, previously sitting under the Information Rail section.
+  - Separated Skill Progress into enable, bar color and percentage location settings (can be placed in the new notification area or remain in the information rail).
+  - Updated UI scaling options to use 50–150% sliders if a configuration manager is used.
+
+- New Features:
+  - Added Enhanced Notifications, replacing vanilla top-left messages with a customizable notification stack.
+  - Added merging for repeated item notifications with positive and negative amounts.
+  - Added style-based notification appearance, animations, positioning, scaling, duration and maximum visible count.
+  - The enhanced notification modes can be synchronized in the server override section.
+
 v1.3.4
 - Fixes:
   - Fixed Fire Arrows being categorized under Black Forest instead of Meadows in Biome-Sorted Crafting Tabs.
