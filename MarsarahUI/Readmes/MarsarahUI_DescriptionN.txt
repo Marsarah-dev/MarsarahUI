@@ -352,7 +352,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Optional soft dependency. Marsarah UI works without Tweaks.
 - Smart Biome accounts for [b]Gear Upgrade Unlock[/b].
 - Biome-Sorted Crafting Tabs accounts for [b]Early Linen Cape[/b] by categorizing the Linen Cape under Swamp when enabled.
-- Detailed Hovers and Container Contents respects [b]Progression Halt[/b] and will not reveal sealed chest contents.
+- Detailed Hovers and Container Contents respect [b]Progression Halt[/b] and will not reveal sealed chest contents.
 
 [b]Craft From Containers[/b]
 - Marsarah UI lets Craft From Containers handle the Owned Resources display when detected.
@@ -387,7 +387,7 @@ Blaxxun-bloop - for ServerSync
 - Added Enhanced Notifications, replacing vanilla top-left messages with a customizable notification stack.
 - Added merging for repeated item notifications with positive and negative amounts.
 - Added style-based notification appearance, animations, positioning, scaling, duration and maximum visible count.
-- The enhanced notification modes can be synchronized in the server override section.
+- Added a synchronized Notification Mode override with UserChoice, Enhanced and Vanilla.
 
 [size=4][b]v1.3.4[/b][/size]
 

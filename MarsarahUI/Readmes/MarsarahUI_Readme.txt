@@ -367,7 +367,7 @@ MOD CONFIGS
 
 ► Modes:
   TopCenter - displays enemy information in a separate top-center rail.
-  InfoRail  - displays enemy information inside the bottom-left Information Rail.
+  InformationRail - displays enemy information inside the bottom-left Information Rail.
 
 
 ------------------- [Enemy Rail X/Y Position] ------------------

@@ -33,9 +33,11 @@ TO IMPLEMENT / VERIFY
 
 A. Fixes / Compatibility
 --------------------
+* Fix Enhanced Notifications item grouping and amount signs for non-English localizations.
 
 B. Requests
 --------------------
+* Add localization json file. Export all hardoced text into a language file. And add support for other language files.
 
 C. Existing UI Ideas
 --------------------
