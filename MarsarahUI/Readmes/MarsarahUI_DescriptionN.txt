@@ -375,6 +375,20 @@ Blaxxun-bloop - for ServerSync
 
 [size=5][b]📜 Version History[/b][/size]
 
+[size=4][b]v1.4.0[/b][/size]
+[b]Updates:[/b]
+- Redesigned the sailing HUD with custom Boat Speed and Boat Health icons for all three UI styles.
+- Added a compact Boat Health bar and Icons/Text display support for both sailing indicators.
+- Reorganized UI configuration sections and added shared UI Style, Animations and Display Mode settings, previously sitting under the Information Rail section.
+- Separated Skill Progress into enable, bar color and percentage location settings (can be placed in the new notification area or remain in the information rail).
+- Updated UI scaling options to use 50–150% sliders if a configuration manager is used.
+
+[b]New Features:[/b]
+- Added Enhanced Notifications, replacing vanilla top-left messages with a customizable notification stack.
+- Added merging for repeated item notifications with positive and negative amounts.
+- Added style-based notification appearance, animations, positioning, scaling, duration and maximum visible count.
+- The enhanced notification modes can be synchronized in the server override section.
+
 [size=4][b]v1.3.4[/b][/size]
 
 [b]Fixes:[/b]
