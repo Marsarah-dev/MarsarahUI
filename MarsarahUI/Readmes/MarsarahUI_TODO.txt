@@ -11,16 +11,18 @@ A. Fixes
 B. Updates
 ------------------------
 * Show Boat Health
-  - Added configurable Boat Health indicator with HP bar and percentage.
-  - Added custom boat icons, colors, and textures matching all three Information Rail styles.
+  - Added a configurable Boat Health bar and redesigned the sailing HUD.
+  - Added custom boat and speedometer icons for all three UI styles.
+  - Added icon/text display modes and adaptive positioning for both indicators.
 * Revamp Notifications
-  - Replaced vanilla top-left messages with enhanced stacked notifications
-  - Merged repeated item messages and show + / - amounts
-  - Addd position, scale, duration, max-visible, and server override settings
+  - Replaced vanilla top-left messages with enhanced stacked notifications.
+  - Merged repeated item messages and show + / - amounts.
+  - Addd position, scale, duration, max-visible, and server override settings.
 * Config Improvements
-  - Reorganized and clean up config sections and naming
-  - Added shared UI Style / Animation settings and improved Skill Progress options
-  - Converted UI scale settings to 50–150 sliders
+  - Reorganized and clean up config sections and naming.
+  - Added shared UI Style / Animation settings and improved Skill Progress options.
+  - Grouped Boat Speed/Health settings below Smart Biome.
+  - Converted UI scale settings to 50–150 sliders.
 
 C. New additions
 ------------------------
@@ -50,7 +52,6 @@ D. New UI Features
   - Admin defines allowed/predefined pins.
   - Players can place only the predefined pin types.
 * Show a center-screen message when a Trinket triggers.
-* Show boat HP when driving one. 
 
 E. Deep North / 1.0 Content
 ---------------------------
