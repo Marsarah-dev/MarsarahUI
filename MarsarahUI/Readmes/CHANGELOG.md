@@ -11,7 +11,7 @@ v1.4.0
   - Added Enhanced Notifications, replacing vanilla top-left messages with a customizable notification stack.
   - Added merging for repeated item notifications with positive and negative amounts.
   - Added style-based notification appearance, animations, positioning, scaling, duration and maximum visible count.
-  - The enhanced notification modes can be synchronized in the server override section.
+  - Added a synchronized Notification Mode override with UserChoice, Enhanced and Vanilla.
 
 v1.3.4
 - **Fixes:**

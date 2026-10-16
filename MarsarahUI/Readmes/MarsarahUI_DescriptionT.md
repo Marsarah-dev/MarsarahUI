@@ -352,7 +352,7 @@ https://paypal.me/Marsarah9
 - Optional soft dependency. Marsarah UI works without Tweaks.
 - Smart Biome accounts for **Gear Upgrade Unlock**.
 - Biome-Sorted Crafting Tabs accounts for **Early Linen Cape** by categorizing the Linen Cape under Swamp when enabled.
-- Detailed Hovers / Container Contents respects **Progression Halt** and will not reveal sealed chest contents.
+- Detailed Hovers and Container Contents respects **Progression Halt** and will not reveal sealed chest contents.
 
 ### **Craft From Containers**
 - Marsarah UI steps aside and lets Craft From Containers handle the Owned Resources display.
