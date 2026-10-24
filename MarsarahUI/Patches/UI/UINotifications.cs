@@ -90,6 +90,8 @@ namespace MarsarahUI.Patches.UI
 
 			private static bool Prefix(System.Reflection.MethodBase __originalMethod, object[] __args)
 			{
+				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return true;
+
 				if (ConfigManager.EffectiveNotificationModeChoice == ConfigManager.NotificationMode.Vanilla)
 				{
 					return true;

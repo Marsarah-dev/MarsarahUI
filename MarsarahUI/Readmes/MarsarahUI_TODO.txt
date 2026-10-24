@@ -7,22 +7,10 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
+* UI Notifications are no longer trying to draw on a dedicated server.
 
 B. Updates
 ------------------------
-* Show Boat Health
-  - Added a configurable Boat Health bar and redesigned the sailing HUD.
-  - Added custom boat and speedometer icons for all three UI styles.
-  - Added icon/text display modes and adaptive positioning for both indicators.
-* Revamp Notifications
-  - Replaced vanilla top-left messages with enhanced stacked notifications.
-  - Merged repeated item messages and show + / - amounts.
-  - Addd position, scale, duration, max-visible, and server override settings.
-* Config Improvements
-  - Reorganized and clean up config sections and naming.
-  - Added shared UI Style / Animation settings and improved Skill Progress options.
-  - Grouped Boat Speed/Health settings below Smart Biome.
-  - Converted UI scale settings to 50–150 sliders.
 
 C. New additions
 ------------------------
@@ -31,6 +19,13 @@ C. New additions
 TO IMPLEMENT / VERIFY
 ============================================================
 
+0.
+* Immediately replace notifications that are repeating states like sheltered and exposed.
+* Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
+* On the server we get this: [Marsarah UI] [UI Notifications] : Could not show notification because the notification stack has not been created.
+  - Do not run this on the server.
+* Implement portal teleport images according to destination biome.
+
 A. Fixes / Compatibility
 --------------------
 * Fix Enhanced Notifications item grouping and amount signs for non-English localizations.
@@ -38,6 +33,7 @@ A. Fixes / Compatibility
 B. Requests
 --------------------
 * Add localization json file. Export all hardoced text into a language file. And add support for other language files.
+* Add dedicated slots for gear and quick slots. 
 
 C. Existing UI Ideas
 --------------------
@@ -47,6 +43,7 @@ C. Existing UI Ideas
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
 * Consider showing player HP and death count with Online Players.
 * Consider indicating Corpse Run status, for example by coloring the player name.
+* Show feasts stats on hover.
 
 D. New UI Features
 ------------------
