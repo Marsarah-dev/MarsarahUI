@@ -185,6 +185,13 @@
     <EmbeddedResource Include="Assets\Portals\Biomes\Meadows_01.png" />
     <EmbeddedResource Include="Assets\Portals\Rings\PortalRing_01.png" />
     <EmbeddedResource Include="Assets\Portals\Backgrounds\PortalBackground_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Ashlands_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\BlackForest_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\DeepNorth_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Mistlands_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Mountain_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Plains_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_01.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />
