@@ -48,7 +48,8 @@ namespace MarsarahUI.Patches.UI
 			{ "Plains", "Plains_01.png" },
 			{ "Mistlands", "Mistlands_01.png" },
 			{ "AshLands", "Ashlands_01.png" },
-			{ "DeepNorth", "DeepNorth_01.png" }
+			{ "DeepNorth", "DeepNorth_01.png" },
+			{ "Ocean", "Ocean_01.png" }
 		};
 
 		private static readonly Dictionary<string, Sprite> biomeImageSprites = new Dictionary<string, Sprite>();

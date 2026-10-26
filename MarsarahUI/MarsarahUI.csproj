@@ -192,6 +192,7 @@
     <EmbeddedResource Include="Assets\Portals\Biomes\Mountain_01.png" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Plains_01.png" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_01.png" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Ocean_01.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />
