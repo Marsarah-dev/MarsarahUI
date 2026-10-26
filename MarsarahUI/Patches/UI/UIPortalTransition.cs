@@ -145,5 +145,46 @@ namespace MarsarahUI.Patches.UI
 			}
 		}
 
+		[HarmonyPatch(typeof(ZoneSystem), "Start")]
+		private static class PortalTransition_ZoneSystemPatch
+		{
+			private static void Postfix()
+			{
+				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
+
+				try
+				{
+					if (AltBiomeList.m_altBiomes == null || AltBiomeList.m_altBiomes.Count == 0)
+					{
+						log.Warn("No alternate biomes registered when ZoneSystem.Start ran.");
+						return;
+					}
+
+					List<string> names = new List<string>();
+
+					foreach (AltBiome altBiome in AltBiomeList.m_altBiomes)
+					{
+						if (altBiome == null || string.IsNullOrEmpty(altBiome.m_name)) continue;
+
+						names.Add(altBiome.m_name);
+					}
+
+					names.Sort(System.StringComparer.OrdinalIgnoreCase);
+
+					log.Info("Registered Alternative Biomes", header: true);
+
+					foreach (string name in names)
+					{
+						log.Info($"  {name}");
+					}
+
+					log.Info($"Total registered entries: {names.Count}", footer: true);
+				}
+				catch (System.Exception ex)
+				{
+					log.Error($"Failed to list alternative biomes: {ex}");
+				}
+			}
+		}
 	}
 }
