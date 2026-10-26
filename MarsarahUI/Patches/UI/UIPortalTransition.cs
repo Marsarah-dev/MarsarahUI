@@ -30,7 +30,9 @@ namespace MarsarahUI.Patches.UI
 		private static Sprite ringSprite;
 
 		private const string MeadowsImageResource = "MarsarahUI.Assets.Portals.Biomes.Meadows_01.png";
-		private const string PortalRingResource = "MarsarahUI.Assets.Portals.Rings.PortalRing_01.png";
+		private const string PortalRingResource1 = "MarsarahUI.Assets.Portals.Rings.PortalRing_01.png";
+		private const string PortalRingResource2 = "MarsarahUI.Assets.Portals.Rings.PortalRing_02.png";
+		private const string PortalRingResource3 = "MarsarahUI.Assets.Portals.Rings.PortalRing_03.png";
 
 		private static Sprite meadowsImageSprite;
 		private static Sprite portalRingSprite;
@@ -202,19 +204,19 @@ namespace MarsarahUI.Patches.UI
 
 			if (portalRingSprite == null)
 			{
-				portalRingSprite = IconManager.LoadEmbeddedIcon(PortalRingResource);
+				portalRingSprite = IconManager.LoadEmbeddedIcon(PortalRingResource3);
 
 				if (portalRingSprite != null)
 				{
-					log.Info("Loaded portal ring image: PortalRing_01.png");
+					log.Info("Loaded portal ring image: PortalRing_03.png");
 				}
 				else
 				{
-					log.Warn("Could not load PortalRing_01.png. Using procedural ring.");
+					log.Warn("Could not load PortalRing_03.png. Using procedural ring.");
 				}
 			}
 
-			portalOuterRing = CreateCenteredImage("PortalOuterRing", portalContainer, portalRingSprite != null ? portalRingSprite : GetRingSprite(), Vector2.zero, new Vector2(520f, 520f), Color.white);
+			portalOuterRing = CreateCenteredImage("PortalOuterRing", portalContainer, portalRingSprite != null ? portalRingSprite : GetRingSprite(), Vector2.zero, new Vector2(600f, 600f), Color.white);
 
 			GameObject textArea = new GameObject("PortalTextArea");
 			textArea.layer = 5;
