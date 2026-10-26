@@ -29,9 +29,11 @@ namespace MarsarahUI.Patches.UI
 		private static Sprite circleSprite;
 		private static Sprite ringSprite;
 
-		private const string MeadowsImageResource = "MarsarahUI.Assets.Portals.Meadows_01.png";
+		private const string MeadowsImageResource = "MarsarahUI.Assets.Portals.Biomes.Meadows_01.png";
+		private const string PortalRingResource = "MarsarahUI.Assets.Portals.Rings.PortalRing_01.png";
 
 		private static Sprite meadowsImageSprite;
+		private static Sprite portalRingSprite;
 
 		[HarmonyPatch(typeof(Player), "TeleportTo")]
 		private static class PortalTransition_TeleportToPatch
@@ -198,7 +200,21 @@ namespace MarsarahUI.Patches.UI
 
 			portalInnerImage = CreateCenteredImage("PortalInnerImage", maskObject, GetCircleSprite(), Vector2.zero, new Vector2(390f, 390f), Color.white);
 
-			portalOuterRing = CreateCenteredImage("PortalOuterRing", portalContainer, GetRingSprite(), Vector2.zero, new Vector2(470f, 470f), new Color(0.35f, 0.85f, 1f, 0.92f));
+			if (portalRingSprite == null)
+			{
+				portalRingSprite = IconManager.LoadEmbeddedIcon(PortalRingResource);
+
+				if (portalRingSprite != null)
+				{
+					log.Info("Loaded portal ring image: PortalRing_01.png");
+				}
+				else
+				{
+					log.Warn("Could not load PortalRing_01.png. Using procedural ring.");
+				}
+			}
+
+			portalOuterRing = CreateCenteredImage("PortalOuterRing", portalContainer, portalRingSprite != null ? portalRingSprite : GetRingSprite(), Vector2.zero, new Vector2(520f, 520f), Color.white);
 
 			GameObject textArea = new GameObject("PortalTextArea");
 			textArea.layer = 5;
@@ -251,7 +267,17 @@ namespace MarsarahUI.Patches.UI
 
 			if (portalOuterRing != null)
 			{
-				portalOuterRing.color = GetRingColor(destinationBiome);
+				if (portalRingSprite != null)
+				{
+					portalOuterRing.sprite = portalRingSprite;
+					portalOuterRing.color = Color.white;
+				}
+				else
+				{
+					portalOuterRing.sprite = GetRingSprite();
+					portalOuterRing.color = GetRingColor(destinationBiome);
+				}
+
 				portalOuterRing.rectTransform.Rotate(0f, 0f, -50f * Time.unscaledDeltaTime);
 			}
 
