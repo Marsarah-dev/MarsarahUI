@@ -159,9 +159,9 @@ namespace MarsarahUI.Patches.UI
 			containerRect.anchorMin = new Vector2(0.5f, 0.5f);
 			containerRect.anchorMax = new Vector2(0.5f, 0.5f);
 			containerRect.pivot = new Vector2(0.5f, 0.5f);
-			containerRect.anchoredPosition = new Vector2(0f, 20f);
+			containerRect.anchoredPosition = new Vector2(0f, 0f);
 			containerRect.sizeDelta = new Vector2(700f, 700f);
-			containerRect.localScale = Vector3.one;
+			containerRect.localScale = Vector3.one * 1.7f;
 
 			portalBackplate = CreateCenteredImage("PortalBackplate", portalContainer, GetCircleSprite(), new Vector2(0f, 0f), new Vector2(520f, 520f), new Color(0.04f, 0.04f, 0.04f, 0.95f));
 
@@ -208,7 +208,7 @@ namespace MarsarahUI.Patches.UI
 			textAreaRect.anchorMin = new Vector2(0.5f, 0.5f);
 			textAreaRect.anchorMax = new Vector2(0.5f, 0.5f);
 			textAreaRect.pivot = new Vector2(0.5f, 0.5f);
-			textAreaRect.anchoredPosition = new Vector2(0f, -300f);
+			textAreaRect.anchoredPosition = new Vector2(0f, -500f);
 			textAreaRect.sizeDelta = new Vector2(700f, 90f);
 			textAreaRect.localScale = Vector3.one;
 
