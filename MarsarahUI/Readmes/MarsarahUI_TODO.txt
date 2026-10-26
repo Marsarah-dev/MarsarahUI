@@ -22,8 +22,6 @@ TO IMPLEMENT / VERIFY
 0.
 * Immediately replace notifications that are repeating states like sheltered and exposed.
 * Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
-* On the server we get this: [Marsarah UI] [UI Notifications] : Could not show notification because the notification stack has not been created.
-  - Do not run this on the server.
 * Implement portal teleport images according to destination biome.
 
 A. Fixes / Compatibility
