@@ -184,8 +184,7 @@
     <EmbeddedResource Include="Assets\Icons\HUD\Style3\BoatSpeed.png" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Meadows_01.png" />
     <EmbeddedResource Include="Assets\Portals\Rings\PortalRing_01.png" />
-    <EmbeddedResource Include="Assets\Portals\Rings\PortalRing_02.png" />
-    <EmbeddedResource Include="Assets\Portals\Rings\PortalRing_03.png" />
+    <EmbeddedResource Include="Assets\Portals\Backgrounds\PortalBackground_01.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />

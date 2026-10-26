@@ -31,11 +31,12 @@ namespace MarsarahUI.Patches.UI
 
 		private const string MeadowsImageResource = "MarsarahUI.Assets.Portals.Biomes.Meadows_01.png";
 		private const string PortalRingResource1 = "MarsarahUI.Assets.Portals.Rings.PortalRing_01.png";
-		private const string PortalRingResource2 = "MarsarahUI.Assets.Portals.Rings.PortalRing_02.png";
-		private const string PortalRingResource3 = "MarsarahUI.Assets.Portals.Rings.PortalRing_03.png";
+		private const string PortalBackgroundResource = "MarsarahUI.Assets.Portals.Backgrounds.PortalBackground_01.png";
 
 		private static Sprite meadowsImageSprite;
 		private static Sprite portalRingSprite;
+		private static Sprite portalBackgroundSprite;
+		private static Image portalBackgroundImage;
 
 		[HarmonyPatch(typeof(Player), "TeleportTo")]
 		private static class PortalTransition_TeleportToPatch
@@ -153,7 +154,23 @@ namespace MarsarahUI.Patches.UI
 			rootRect.offsetMax = Vector2.zero;
 			rootRect.localScale = Vector3.one;
 
-			screenDimmer = CreateFullStretchImage("PortalDimmer", portalOverlayRoot, null, new Color(0f, 0f, 0f, 0.92f));
+			if (portalBackgroundSprite == null)
+			{
+				portalBackgroundSprite = IconManager.LoadEmbeddedIcon(PortalBackgroundResource);
+
+				if (portalBackgroundSprite != null)
+				{
+					log.Info("Loaded portal background image: PortalBackground_01.png");
+				}
+				else
+				{
+					log.Warn("Could not load PortalBackground_01.png. Using black fallback.");
+				}
+			}
+
+			portalBackgroundImage = CreateFullStretchImage("PortalBackground", portalOverlayRoot, portalBackgroundSprite, portalBackgroundSprite != null ? Color.white : Color.black);
+
+			screenDimmer = CreateFullStretchImage("PortalDimmer", portalOverlayRoot, null, portalBackgroundSprite != null ? new Color(0f, 0f, 0f, 0.25f) : new Color(0f, 0f, 0f, 0.92f));
 
 			GameObject portalContainer = new GameObject("PortalContainer");
 			portalContainer.layer = 5;
@@ -204,15 +221,15 @@ namespace MarsarahUI.Patches.UI
 
 			if (portalRingSprite == null)
 			{
-				portalRingSprite = IconManager.LoadEmbeddedIcon(PortalRingResource3);
+				portalRingSprite = IconManager.LoadEmbeddedIcon(PortalRingResource1);
 
 				if (portalRingSprite != null)
 				{
-					log.Info("Loaded portal ring image: PortalRing_03.png");
+					log.Info("Loaded portal ring image: PortalRing_01.png");
 				}
 				else
 				{
-					log.Warn("Could not load PortalRing_03.png. Using procedural ring.");
+					log.Warn("Could not load PortalRing_01.png. Using procedural ring.");
 				}
 			}
 
@@ -251,7 +268,15 @@ namespace MarsarahUI.Patches.UI
 
 			if (screenDimmer != null)
 			{
-				screenDimmer.color = new Color(0f, 0f, 0f, overlayAlpha);
+				screenDimmer.color = portalBackgroundSprite != null
+					? new Color(0f, 0f, 0f, 0.25f)
+					: new Color(0f, 0f, 0f, 0.92f);
+			}
+
+			if (portalBackgroundImage != null)
+			{
+				portalBackgroundImage.sprite = portalBackgroundSprite;
+				portalBackgroundImage.color = portalBackgroundSprite != null ? Color.white : Color.black;
 			}
 
 			if (portalBackplate != null)
