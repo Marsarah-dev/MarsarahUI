@@ -15,6 +15,10 @@ B. Updates
 C. New additions
 ------------------------
 
+D. In Progress
+------------------------
+*. Implement portal teleport images according to destination biome.
+
 ============================================================
 TO IMPLEMENT / VERIFY
 ============================================================
@@ -22,7 +26,7 @@ TO IMPLEMENT / VERIFY
 0.
 * Immediately replace notifications that are repeating states like sheltered and exposed.
 * Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
-* Implement portal teleport images according to destination biome.
+* Add config to indicate the alternate biome. See if this can be intercepted by the smart biome indicator when enabled and if it can work by itself otherwise. 
 
 A. Fixes / Compatibility
 --------------------

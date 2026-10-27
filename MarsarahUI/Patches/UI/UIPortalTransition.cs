@@ -554,6 +554,9 @@ namespace MarsarahUI.Patches.UI
 				case "AshLands":
 					return "Ashlands";
 
+				case "DeepNorth":
+					return "Deep North";
+
 				default:
 					return biome ?? string.Empty;
 			}
