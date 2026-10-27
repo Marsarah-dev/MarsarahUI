@@ -345,7 +345,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (portalAltBiomeText != null)
 			{
-				portalAltBiomeText.text = destinationAltBiomes != "None" ? destinationAltBiomes : string.Empty;
+				portalAltBiomeText.text = destinationAltBiomes != "None" ? GetAltBiomeDisplayName(destinationAltBiomes, destinationBiome) : string.Empty;
 			}
 		}
 
@@ -374,6 +374,26 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			return altBiomeNames.Count > 0 ? string.Join(", ", altBiomeNames) : "None";
+		}
+
+		private static string GetAltBiomeDisplayName(string altBiomes, string biome)
+		{
+			string suffix = " " + GetBiomeDisplayName(biome);
+			string[] names = altBiomes.Split(',');
+
+			for (int i = 0; i < names.Length; i++)
+			{
+				string name = names[i].Trim();
+
+				if (name.EndsWith(suffix, System.StringComparison.OrdinalIgnoreCase))
+				{
+					name = name.Substring(0, name.Length - suffix.Length);
+				}
+
+				names[i] = name;
+			}
+
+			return "Alternate: " + string.Join(", ", names);
 		}
 
 		private static Image CreateFullStretchImage(string objectName, GameObject parent, Sprite sprite, Color color)
