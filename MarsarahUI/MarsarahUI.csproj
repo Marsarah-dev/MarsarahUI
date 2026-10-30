@@ -222,8 +222,6 @@
     <EmbeddedResource Include="Assets\Portals\Biomes\Plains_04_Lox.jpg" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Plains_05_Bones.jpg" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Plains_06_Menhir.jpg" />
-    <EmbeddedResource Include="Assets\Portals\Biomes\PortalBackground_01.jpg" />
-    <EmbeddedResource Include="Assets\Portals\Biomes\PortalRing_01.jpg" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_01.jpg" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_02_Abomination.jpg" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_03_Bat.jpg" />

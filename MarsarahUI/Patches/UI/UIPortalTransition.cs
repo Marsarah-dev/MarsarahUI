@@ -226,7 +226,7 @@ namespace MarsarahUI.Patches.UI
 				}
 			}
 
-			portalOuterRing = CreateCenteredImage("PortalOuterRing", portalContainer, portalRingSprite != null ? portalRingSprite : GetRingSprite(), Vector2.zero, new Vector2(600f, 600f), Color.white);
+			portalOuterRing = CreateCenteredImage("PortalOuterRing", portalContainer, portalRingSprite != null ? portalRingSprite : GetRingSprite(), Vector2.zero, new Vector2(630f, 630f), Color.white);
 
 			GameObject textArea = new GameObject("PortalTextArea");
 			textArea.layer = 5;
@@ -348,10 +348,10 @@ namespace MarsarahUI.Patches.UI
 			{
 				string name = names[i].Trim();
 
-				if (name.EndsWith(suffix, System.StringComparison.OrdinalIgnoreCase))
+				/*if (name.EndsWith(suffix, System.StringComparison.OrdinalIgnoreCase))
 				{
 					name = name.Substring(0, name.Length - suffix.Length);
-				}
+				}*/
 
 				names[i] = name;
 			}
