@@ -17,6 +17,7 @@ namespace MarsarahUI.Patches.UI
 
 		private static string destinationBiome = string.Empty;
 		private static string destinationAltBiomes = "None";
+		private static Sprite destinationBiomeSprite;
 
 		private static GameObject portalOverlayRoot;
 		private static Image screenDimmer;
@@ -35,24 +36,6 @@ namespace MarsarahUI.Patches.UI
 		private static Sprite portalRingSprite;
 		private static Sprite portalBackgroundSprite;
 		private static Image portalBackgroundImage;
-
-
-		private const string BiomeImageResourcePrefix = "MarsarahUI.Assets.Portals.Biomes.";
-
-		private static readonly Dictionary<string, string> biomeImageFiles = new Dictionary<string, string>
-		{
-			{ "Meadows", "Meadows_01.png" },
-			{ "BlackForest", "BlackForest_01.png" },
-			{ "Swamp", "Swamp_01.png" },
-			{ "Mountain", "Mountain_01.png" },
-			{ "Plains", "Plains_01.png" },
-			{ "Mistlands", "Mistlands_01.png" },
-			{ "AshLands", "Ashlands_01.png" },
-			{ "DeepNorth", "DeepNorth_01.png" },
-			{ "Ocean", "Ocean_01.png" }
-		};
-
-		private static readonly Dictionary<string, Sprite> biomeImageSprites = new Dictionary<string, Sprite>();
 
 
 		[HarmonyPatch(typeof(Player), "TeleportTo")]
@@ -129,6 +112,9 @@ namespace MarsarahUI.Patches.UI
 			if (!portalSessionActive && hasPendingDestination && teleportProgressVisible)
 			{
 				portalSessionActive = true;
+
+				destinationBiomeSprite = PortalBiomeImageManager.ResolveSprite(destinationBiome, destinationAltBiomes);
+
 				log.Info($"Portal session started | Biome: {destinationBiome} | Alt Biome: {destinationAltBiomes}");
 			}
 
@@ -140,6 +126,7 @@ namespace MarsarahUI.Patches.UI
 				{
 					portalSessionActive = false;
 					hasPendingDestination = false;
+					destinationBiomeSprite = null;
 
 					log.Info("Portal session ended.");
 				}
@@ -149,28 +136,6 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			ShowPortalOverlay(blackScreenAlpha);
-		}
-
-		private static void LoadBiomeImages()
-		{
-			foreach (KeyValuePair<string, string> entry in biomeImageFiles)
-			{
-				string biome = entry.Key;
-				string filename = entry.Value;
-				string resourceName = BiomeImageResourcePrefix + filename;
-
-				Sprite sprite = IconManager.LoadEmbeddedIcon(resourceName);
-
-				if (sprite != null)
-				{
-					biomeImageSprites[biome] = sprite;
-					log.Info($"Loaded portal destination image | Biome: {biome} | Image: {filename}");
-				}
-				else
-				{
-					log.Warn($"Could not load portal destination image: {filename}. Using placeholder circle.");
-				}
-			}
 		}
 
 		private static void CreateUI(Hud hud)
@@ -245,8 +210,6 @@ namespace MarsarahUI.Patches.UI
 			Mask mask = maskObject.AddComponent<Mask>();
 			mask.showMaskGraphic = false;
 
-			LoadBiomeImages();
-
 			portalInnerImage = CreateCenteredImage("PortalInnerImage", maskObject, GetCircleSprite(), Vector2.zero, new Vector2(390f, 390f), Color.white);
 
 			if (portalRingSprite == null)
@@ -316,9 +279,9 @@ namespace MarsarahUI.Patches.UI
 
 			if (portalInnerImage != null)
 			{
-				bool hasBiomeImage = biomeImageSprites.TryGetValue(destinationBiome, out Sprite biomeSprite);
+				bool hasBiomeImage = destinationBiomeSprite != null;
 
-				portalInnerImage.sprite = hasBiomeImage ? biomeSprite : GetCircleSprite();
+				portalInnerImage.sprite = hasBiomeImage ? destinationBiomeSprite : GetCircleSprite();
 				portalInnerImage.color = hasBiomeImage ? Color.white : GetBiomePlaceholderColor(destinationBiome);
 			}
 
