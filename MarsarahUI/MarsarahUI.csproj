@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Managers\BiomeCraftingManager.cs" />
+    <Compile Include="Managers\BiomeDisplayManager.cs" />
     <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
     <Compile Include="Managers\GearProgressionManager.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Managers\PortalBiomeImageManager.cs" />
     <Compile Include="Managers\UIStyleManager.cs" />
     <Compile Include="MarsarahUI.cs" />
+    <Compile Include="Patches\UI\UIAlternateBiomeNames.cs" />
     <Compile Include="Patches\UI\UIAshlandsHeatLevel.cs" />
     <Compile Include="Patches\UI\UIBoatHealth.cs" />
     <Compile Include="Patches\UI\UICraftingTabs.cs" />
