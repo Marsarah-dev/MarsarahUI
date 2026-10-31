@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
+using MarsarahUI.Managers;
 using UnityEngine;
 
-namespace MarsarahUI.Managers
+namespace MarsarahUI.Patches.Logic
 {
-	internal static class GearProgressionManager
+	internal static class SmartBiomeProgression
 	{
 		private static readonly LogManager log = new LogManager("Gear Progression", LogManager.LogLevel.Warning);
 

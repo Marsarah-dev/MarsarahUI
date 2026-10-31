@@ -2,6 +2,7 @@
 using MarsarahUI.Managers;
 using UnityEngine;
 using UnityEngine.UI;
+using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -25,18 +26,6 @@ namespace MarsarahUI.Patches.UI
 		private static bool lastAlternateTextLayout;
 		private static string lastBiomeTextSignature = string.Empty;
 
-		private struct BiomeWeights
-		{
-			public BiomeWeights(int min, int max)
-			{
-				Min = min;
-				Max = max;
-			}
-
-			public int Min;
-			public int Max;
-		}
-
 		[HarmonyPatch(typeof(Player), "Update")]
 		private static class SmartBiome_PlayerPatch
 		{
@@ -48,7 +37,7 @@ namespace MarsarahUI.Patches.UI
 				if (Time.unscaledTime < nextArmorUpdateTime) return;
 
 				nextArmorUpdateTime = Time.unscaledTime + ArmorUpdateInterval;
-				playerArmorWeight = GearProgressionManager.GetEquippedArmorWeight(___m_localPlayer);
+				playerArmorWeight = SmartBiomeProgression.GetEquippedArmorWeight(___m_localPlayer);
 			}
 		}
 
@@ -107,7 +96,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (!UIBiomeText.enabled) return;
 
-				UIBiomeText.color = GearProgressionManager.GetBiomeColor(playerArmorWeight, currentBiome);
+				UIBiomeText.color = SmartBiomeProgression.GetBiomeColor(playerArmorWeight, currentBiome);
 				UpdateBiomeText();
 			}
 		}
@@ -196,7 +185,7 @@ namespace MarsarahUI.Patches.UI
 			switch (biome)
 			{
 				case "BlackForest":
-					return "Black forest";
+					return "Black Forest";
 
 				case "AshLands":
 					return "Ashlands";
@@ -207,16 +196,6 @@ namespace MarsarahUI.Patches.UI
 				default:
 					return biome ?? "";
 			}
-		}
-
-		private static Color GetColorFromPercent(float percent)
-		{
-			if (percent < 0f) return new Color(0.298039f, 0f, 0.6f);
-			if (percent < 25f) return Color.red;
-			if (percent < 75f) return new Color(1f, 0.549019f, 0f);
-			if (percent < 100f) return Color.yellow;
-
-			return Color.green;
 		}
 	}
 }

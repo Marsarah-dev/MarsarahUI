@@ -92,7 +92,7 @@
     <Compile Include="Managers\BiomeCraftingManager.cs" />
     <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
-    <Compile Include="Managers\GearProgressionManager.cs" />
+    <Compile Include="Patches\Logic\SmartBiomeProgression.cs" />
     <Compile Include="Managers\IconManager.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Patches\Logic\PortalImageResolver.cs" />
