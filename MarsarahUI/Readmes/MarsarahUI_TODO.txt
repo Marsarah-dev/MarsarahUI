@@ -11,6 +11,7 @@ A. Fixes
 
 B. Updates
 ------------------------
+* Refactorization of code: moved logic code into its own logic class from relevant UI classes and managers.
 * Swapped UI animations and UI Display Mode position in config.
 * Swapped order of crafting tabs for Plains and Ocean.
 
@@ -30,7 +31,6 @@ C. New additions
 
 D. In Progress
 ------------------------
-* Refactor managers into logic classes.
 
 ============================================================
 TO IMPLEMENT / VERIFY

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MarsarahUI.Patches.Logic
 {
-	internal static class SmartBiomeProgression
+	internal static class SmartBiomeLogic
 	{
 		private static readonly LogManager log = new LogManager("Gear Progression", LogManager.LogLevel.Warning);
 

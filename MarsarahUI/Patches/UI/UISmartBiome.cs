@@ -37,7 +37,7 @@ namespace MarsarahUI.Patches.UI
 				if (Time.unscaledTime < nextArmorUpdateTime) return;
 
 				nextArmorUpdateTime = Time.unscaledTime + ArmorUpdateInterval;
-				playerArmorWeight = SmartBiomeProgression.GetEquippedArmorWeight(___m_localPlayer);
+				playerArmorWeight = SmartBiomeLogic.GetEquippedArmorWeight(___m_localPlayer);
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace MarsarahUI.Patches.UI
 
 				if (!UIBiomeText.enabled) return;
 
-				UIBiomeText.color = SmartBiomeProgression.GetBiomeColor(playerArmorWeight, currentBiome);
+				UIBiomeText.color = SmartBiomeLogic.GetBiomeColor(playerArmorWeight, currentBiome);
 				UpdateBiomeText();
 			}
 		}

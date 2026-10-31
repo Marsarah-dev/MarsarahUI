@@ -122,51 +122,51 @@ namespace MarsarahUI.Patches.Logic
 			AddDeathFact(facts, profile, PlayerStatType.DeathByFreezing, 3, "Should Have Packed a Cloak", "Frozen to death");
 			AddDeathFact(facts, profile, PlayerStatType.DeathByPoisoned, 3, "Poison Control", "Died from poison");
 
-			int bossLastHits = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.BossLastHits));
+			int bossLastHits = Mathf.RoundToInt(GetStat(profile, PlayerStatType.BossLastHits));
 			if (bossLastHits >= 5)
 				facts.Add(new NotableFact("The Finishing Touch", $"Dealt the final blow to {bossLastHits:N0} bosses."));
 
-			int fishLost = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.FishLost));
+			int fishLost = Mathf.RoundToInt(GetStat(profile, PlayerStatType.FishLost));
 			if (fishLost >= 10)
 				facts.Add(new NotableFact("The Ones That Got Away", $"Lost {fishLost:N0} hooked fish."));
 
-			int ravenHits = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.RavenHits));
+			int ravenHits = Mathf.RoundToInt(GetStat(profile, PlayerStatType.RavenHits));
 			if (ravenHits >= 5)
 				facts.Add(new NotableFact("Odin's HR Has Been Notified", $"Hit a raven {ravenHits:N0} {Pluralize(ravenHits, "time", "times")}."));
 
-			int skeletonSummons = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.SkeletonSummons));
+			int skeletonSummons = Mathf.RoundToInt(GetStat(profile, PlayerStatType.SkeletonSummons));
 			if (skeletonSummons >= 250)
 				facts.Add(new NotableFact("Necromancy Is a Hobby", $"Summoned {skeletonSummons:N0} skeletons."));
 
-			int otherTombstones = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.TombstonesOpenedOther));
+			int otherTombstones = Mathf.RoundToInt(GetStat(profile, PlayerStatType.TombstonesOpenedOther));
 			if (otherTombstones >= 5)
 				facts.Add(new NotableFact("Retrieval Specialist", $"Recovered {otherTombstones:N0} other players' tombstones."));
 
-			int doorsOpened = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.DoorsOpened));
-			int doorsClosed = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.DoorsClosed));
+			int doorsOpened = Mathf.RoundToInt(GetStat(profile, PlayerStatType.DoorsOpened));
+			int doorsClosed = Mathf.RoundToInt(GetStat(profile, PlayerStatType.DoorsClosed));
 			int doorsLeftOpen = doorsOpened - doorsClosed;
 
 			if (doorsOpened > 0 && doorsLeftOpen >= 100 && doorsLeftOpen >= doorsOpened * 0.1f)
 				facts.Add(new NotableFact("Born in a Barn", $"Opened {doorsLeftOpen:N0} more doors than you closed."));
 
-			int leviathansSunk = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.LeviathanSink));
+			int leviathansSunk = Mathf.RoundToInt(GetStat(profile, PlayerStatType.LeviathanSink));
 			if (leviathansSunk >= 5)
 				facts.Add(new NotableFact("Thar She Blows", $"Sank {leviathansSunk:N0} {Pluralize(leviathansSunk, "leviathan", "leviathans")}."));
 
 			int treasuresFound =
-				Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.TreasureBuriedFound)) +
+				Mathf.RoundToInt(GetStat(profile, PlayerStatType.TreasureBuriedFound)) +
 				//Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.TreasureDungeonFound)) +
-				Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.TreasureLocationFound));
+				Mathf.RoundToInt(GetStat(profile, PlayerStatType.TreasureLocationFound));
 
 			if (treasuresFound >= 10)
 				facts.Add(new NotableFact("Treasure Hunter", $"Discovered {treasuresFound:N0} hidden treasures."));
 
-			float distanceSailedAtHelm = CharacterStatisticsLogic.GetStat(profile, PlayerStatType.DistanceSailHelm) / 1000f;
+			float distanceSailedAtHelm = GetStat(profile, PlayerStatType.DistanceSailHelm) / 1000f;
 			if (distanceSailedAtHelm >= 100f)
 				facts.Add(new NotableFact("Captain", $"Sailed {distanceSailedAtHelm:N1} km at the helm."));
 
-			int builtPieces = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.BuiltPieces));
-			int removedPieces = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, PlayerStatType.BuildPiecesRemoved));
+			int builtPieces = Mathf.RoundToInt(GetStat(profile, PlayerStatType.BuiltPieces));
+			int removedPieces = Mathf.RoundToInt(GetStat(profile, PlayerStatType.BuildPiecesRemoved));
 
 			if (builtPieces >= 100 && removedPieces >= builtPieces * 0.5f)
 				facts.Add(new NotableFact("Measure Twice, Build Once?", $"Removed {removedPieces:N0} pieces after building {builtPieces:N0}."));
@@ -201,7 +201,7 @@ namespace MarsarahUI.Patches.Logic
 
 		private static void AddDeathFact(List<NotableFact> facts, PlayerProfile profile, PlayerStatType statType, int threshold, string title, string description)
 		{
-			int count = Mathf.RoundToInt(CharacterStatisticsLogic.GetStat(profile, statType));
+			int count = Mathf.RoundToInt(GetStat(profile, statType));
 
 			if (count < threshold) return;
 

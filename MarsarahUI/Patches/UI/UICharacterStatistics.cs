@@ -1,11 +1,9 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using static Skills;
 using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
