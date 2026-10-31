@@ -71,6 +71,13 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
+		public enum AlternateBiomeDisplayMode
+		{
+			Off,
+			OneRow,
+			TwoRows
+		}
+
 		// ===== Information Rail
 		public enum InfoRailDisplayMode
 		{
@@ -252,6 +259,14 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
+		public enum AlternateBiomeDisplayModeOverride
+		{
+			UserChoice,
+			Off,
+			OneRow,
+			TwoRows
+		}
+
 		public enum EnemyNameplateModeOverride
 		{
 			UserChoice,
@@ -298,7 +313,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIColorDayPhases = new ConfigMetadata("Color Day Phases", "Colors the Day Phases time display based on the current phase of the day. Only applies when Show Current Time is set to DayPhases.", ConfigSections.GeneralHUD, 85);
 			public static readonly ConfigMetadata UIWeatherForecast = new ConfigMetadata("Show Weather Forecast Indicator", "Shows the next scheduled weather as an icon at the bottom-right of the minimap and the remaining time to that weather.", ConfigSections.GeneralHUD, 80);
 			public static readonly ConfigMetadata UISmartBiome = new ConfigMetadata("Smart Biome Indicator", "Shows smart biome text on the minimap (colored according to worn armor relative to current biome).", ConfigSections.GeneralHUD, 75);
-			public static readonly ConfigMetadata UIAlternateBiomeNames = new ConfigMetadata("Show Alternate Biome Names", "Displays alternate biome names on the minimap. Shows the full alternate biome name when one is active, or a comma-separated list when multiple are active. Works with or without Smart Biome enabled.", ConfigSections.GeneralHUD, 70);
+			public static readonly ConfigMetadata UIAlternateBiomeNames = new ConfigMetadata("Alternate Biome Names", "Choose how alternate biome names are displayed on the minimap. OneRow shows a compact single-line label, TwoRows shows up to two lines, and Off uses the normal biome name. Lower-priority alternates are summarized with +N when space is limited.", ConfigSections.GeneralHUD, 70);
 			public static readonly ConfigMetadata UIBoatSpeed = new ConfigMetadata("Show Boat Speed", "Shows the controlled boat's speed near the sailing controls.", ConfigSections.GeneralHUD, 69);
 			public static readonly ConfigMetadata UIBoatHealth = new ConfigMetadata("Show Boat Health", "Shows the controlled boat's health as a bar near the sailing controls.", ConfigSections.GeneralHUD, 68);
 			public static readonly ConfigMetadata UIOnlinePlayers = new ConfigMetadata("Show Online Players", "Displays the number of online players in the bottom-right corner. Player names can be toggled with the Home key. Not displayed if only one player is online.", ConfigSections.GeneralHUD, 60);
@@ -364,7 +379,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata OverrideCurrentTime = new ConfigMetadata("Current Time Override", "Overrides the player's local Current Time setting.", ConfigSections.ServerOverrides, 90);
 			public static readonly ConfigMetadata OverrideWeatherForecast = new ConfigMetadata("Weather Forecast Override", "Overrides the player's local Weather Forecast setting.", ConfigSections.ServerOverrides, 80);
 			public static readonly ConfigMetadata OverrideSmartBiome = new ConfigMetadata("Smart Biome Override", "Overrides the player's local Smart Biome setting.", ConfigSections.ServerOverrides, 70);
-			public static readonly ConfigMetadata OverrideAlternateBiomeNames = new ConfigMetadata("Alternate Biome Names Override", "Overrides the player's local Show Alternate Biome Names setting.", ConfigSections.ServerOverrides, 65);
+			public static readonly ConfigMetadata OverrideAlternateBiomeNames = new ConfigMetadata("Alternate Biome Names Mode Override", "Overrides the player's local Alternate Biome Names display mode.", ConfigSections.ServerOverrides, 65);
 			public static readonly ConfigMetadata OverrideAshlandsHeat = new ConfigMetadata("Ashlands Heat Meter Override", "Overrides the player's local Ashlands Heat Meter setting.", ConfigSections.ServerOverrides, 60);
 			public static readonly ConfigMetadata OverrideEnemyNameplates = new ConfigMetadata("Enemy Nameplate Mode Override", "Overrides the player's local Enemy Nameplate Mode setting.", ConfigSections.ServerOverrides, 50);
 			public static readonly ConfigMetadata OverrideTamingProgress = new ConfigMetadata("Taming Progress Override", "Overrides the player's local Taming Progress setting.", ConfigSections.ServerOverrides, 40);
@@ -386,7 +401,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<bool> ColorDayPhases;
 		public static ConfigEntry<bool> ShowWeatherForecast;
 		public static ConfigEntry<bool> ShowSmartBiome;
-		public static ConfigEntry<bool> ShowAlternateBiomeNames;
+		public static ConfigEntry<AlternateBiomeDisplayMode> AlternateBiomeDisplayModeChoice;
 		public static ConfigEntry<bool> ShowOnlinePlayers;
 		public static ConfigEntry<bool> ShowBoatSpeed;
 		public static ConfigEntry<bool> ShowBoatHealth;
@@ -453,7 +468,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<TimeModeOverride> CurrentTimeOverride;
 		public static ConfigEntry<BoolOverride> WeatherForecastOverride;
 		public static ConfigEntry<BoolOverride> SmartBiomeOverride;
-		public static ConfigEntry<BoolOverride> AlternateBiomeNamesOverride;
+		public static ConfigEntry<AlternateBiomeDisplayModeOverride> AlternateBiomeDisplayModeOverrideChoice;
 		public static ConfigEntry<BoolOverride> AshlandsHeatOverride;
 		public static ConfigEntry<EnemyNameplateModeOverride> EnemyNameplatesOverride;
 		public static ConfigEntry<BoolOverride> TamingProgressOverride;
@@ -474,7 +489,7 @@ namespace MarsarahUI.Managers
 		public static bool EffectiveColorDayPhases => ColorDayPhases.Value;
 		public static bool EffectiveShowWeatherForecast => ResolveBool(ShowWeatherForecast, WeatherForecastOverride);
 		public static bool EffectiveShowSmartBiome => ResolveBool(ShowSmartBiome, SmartBiomeOverride);
-		public static bool EffectiveShowAlternateBiomeNames => ResolveBool(ShowAlternateBiomeNames, AlternateBiomeNamesOverride);
+		public static AlternateBiomeDisplayMode EffectiveAlternateBiomeDisplayMode => ResolveEnum(AlternateBiomeDisplayModeChoice, AlternateBiomeDisplayModeOverrideChoice, AlternateBiomeDisplayModeOverride.UserChoice);
 		public static bool EffectiveShowBoatSpeed => ShowBoatSpeed.Value;
 		public static bool EffectiveShowBoatHealth => ShowBoatHealth.Value;
 		public static bool EffectiveShowOnlinePlayers => ShowOnlinePlayers.Value;
@@ -626,7 +641,7 @@ namespace MarsarahUI.Managers
 			ColorDayPhases = CreateConfig(Configs.UIColorDayPhases, true);
 			ShowWeatherForecast = CreateConfig(Configs.UIWeatherForecast, true);
 			ShowSmartBiome = CreateConfig(Configs.UISmartBiome, true);
-			ShowAlternateBiomeNames = CreateConfig(Configs.UIAlternateBiomeNames, true);
+			AlternateBiomeDisplayModeChoice = CreateConfig(Configs.UIAlternateBiomeNames, AlternateBiomeDisplayMode.OneRow);
 			ShowBoatSpeed = CreateConfig(Configs.UIBoatSpeed, true);
 			ShowBoatHealth = CreateConfig(Configs.UIBoatHealth, true);
 			ShowOnlinePlayers = CreateConfig(Configs.UIOnlinePlayers, true);
@@ -693,7 +708,7 @@ namespace MarsarahUI.Managers
 			CurrentTimeOverride = CreateServerOverride(Configs.OverrideCurrentTime, TimeModeOverride.UserChoice);
 			WeatherForecastOverride = CreateServerOverride(Configs.OverrideWeatherForecast, BoolOverride.UserChoice);
 			SmartBiomeOverride = CreateServerOverride(Configs.OverrideSmartBiome, BoolOverride.UserChoice);
-			AlternateBiomeNamesOverride = CreateServerOverride(Configs.OverrideAlternateBiomeNames, BoolOverride.UserChoice);
+			AlternateBiomeDisplayModeOverrideChoice = CreateServerOverride(Configs.OverrideAlternateBiomeNames, AlternateBiomeDisplayModeOverride.UserChoice);
 			AshlandsHeatOverride = CreateServerOverride(Configs.OverrideAshlandsHeat, BoolOverride.UserChoice);
 			EnemyNameplatesOverride = CreateServerOverride(Configs.OverrideEnemyNameplates, EnemyNameplateModeOverride.UserChoice);
 			TamingProgressOverride = CreateServerOverride(Configs.OverrideTamingProgress, BoolOverride.UserChoice);

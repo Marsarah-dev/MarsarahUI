@@ -109,7 +109,6 @@ namespace MarsarahUI.Patches.UI
 
 				UIBiomeText.color = GearProgressionManager.GetBiomeColor(playerArmorWeight, currentBiome);
 				UpdateBiomeText();
-				//UIBiomeText.text = GetBiomeDisplayName(currentBiome);
 			}
 		}
 
@@ -150,9 +149,11 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (UIBiomeText == null) return;
 
-			bool showAlternate = ConfigManager.EffectiveShowAlternateBiomeNames && UIAlternateBiomeNames.HasAlternateBiomes;
+			ConfigManager.AlternateBiomeDisplayMode mode = ConfigManager.EffectiveAlternateBiomeDisplayMode;
 
-			string signature = currentBiome + "|" + (showAlternate ? UIAlternateBiomeNames.CurrentAlternateSignature : string.Empty);
+			bool showAlternate = mode != ConfigManager.AlternateBiomeDisplayMode.Off && UIAlternateBiomeNames.HasAlternateBiomes;
+
+			string signature = currentBiome + "|" + mode + "|" + (showAlternate ? UIAlternateBiomeNames.CurrentAlternateSignature : string.Empty);
 
 			if (lastBiomeTextSignature == signature && lastAlternateTextLayout == showAlternate)
 				return;
@@ -166,14 +167,15 @@ namespace MarsarahUI.Patches.UI
 
 			if (showAlternate)
 			{
-				// Measure the height required by two lines using the existing font.
-				UIBiomeText.text = "Mg\nMg";
-				float twoLineHeight = UIBiomeText.preferredHeight;
+				bool oneRow = mode == ConfigManager.AlternateBiomeDisplayMode.OneRow;
+
+				UIBiomeText.text = oneRow ? "Mg" : "Mg\nMg";
+				float maximumHeight = UIBiomeText.preferredHeight;
 
 				displayName = UIAlternateBiomeNames.GetSmartBiomeDisplayName(candidate =>
 				{
 					UIBiomeText.text = candidate;
-					return UIBiomeText.preferredHeight <= twoLineHeight + 0.5f;
+					return UIBiomeText.preferredHeight <= maximumHeight + 0.5f;
 				});
 			}
 

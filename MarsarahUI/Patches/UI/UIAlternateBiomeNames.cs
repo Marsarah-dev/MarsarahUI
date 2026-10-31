@@ -44,7 +44,7 @@ namespace MarsarahUI.Patches.UI
 					lastBiome = biome;
 				}
 
-				if (!ConfigManager.EffectiveShowAlternateBiomeNames)
+				if (ConfigManager.EffectiveAlternateBiomeDisplayMode == ConfigManager.AlternateBiomeDisplayMode.Off)
 				{
 					currentAlternateNames.Clear();
 					CurrentAlternateSignature = string.Empty;
@@ -79,10 +79,12 @@ namespace MarsarahUI.Patches.UI
 
 				// Measure against the existing vanilla TextMeshPro component.
 				float width = biomeText.rectTransform.rect.width;
-				float twoLineHeight = biomeText.GetPreferredValues("Mg\nMg", width, 10000f).y;
+				bool oneRow = ConfigManager.EffectiveAlternateBiomeDisplayMode == ConfigManager.AlternateBiomeDisplayMode.OneRow;
+				string referenceText = oneRow ? "Mg" : "Mg\nMg";
+				float maximumHeight = biomeText.GetPreferredValues(referenceText, width, 10000f).y;
 
 				string displayName = GetLimitedDisplayName(baseBiome, alternateNames, candidate =>
-					biomeText.GetPreferredValues(candidate, width, 10000f).y <= twoLineHeight + 0.5f);
+					biomeText.GetPreferredValues(candidate, width, 10000f).y <= maximumHeight + 0.5f);
 
 				biomeText.text = displayName;
 
@@ -121,7 +123,14 @@ namespace MarsarahUI.Patches.UI
 				return biome;
 
 			if (alternates.Count == 1)
-				return alternates[0] + " " + biome;
+			{
+				string fullName = alternates[0] + " " + biome;
+
+				if (fits(fullName))
+					return fullName;
+
+				return TruncateToFit(alternates[0], fits);
+			}
 
 			for (int visible = alternates.Count; visible >= 1; visible--)
 			{
@@ -136,7 +145,27 @@ namespace MarsarahUI.Patches.UI
 					return candidate;
 			}
 
-			return biome + " +" + alternates.Count;
+			string compactName = alternates[0] + " +" + (alternates.Count - 1);
+
+			if (fits(compactName))
+				return compactName;
+
+			return TruncateToFit(biome + " +" + alternates.Count, fits);
+		}
+
+		private static string TruncateToFit(string value, Func<string, bool> fits)
+		{
+			if (fits(value)) return value;
+
+			for (int length = value.Length - 1; length > 0; length--)
+			{
+				string candidate = value.Substring(0, length).TrimEnd() + "…";
+
+				if (fits(candidate))
+					return candidate;
+			}
+
+			return fits("…") ? "…" : string.Empty;
 		}
 
 		internal static string GetSmartBiomeDisplayName(Func<string, bool> fits)
@@ -151,7 +180,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (Minimap.instance == null || Player.m_localPlayer == null) return;
 
-			if (!ConfigManager.EffectiveShowAlternateBiomeNames)
+			if (ConfigManager.EffectiveAlternateBiomeDisplayMode == ConfigManager.AlternateBiomeDisplayMode.Off)
 			{
 				TMP_Text biomeText = biomeNameField?.GetValue(Minimap.instance) as TMP_Text;
 				if (biomeText == null) return;
