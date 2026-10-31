@@ -303,8 +303,8 @@ namespace MarsarahUI.Managers
 		{
 			// ===== General & HUD
 			public static readonly ConfigMetadata UIStyle = new ConfigMetadata("UI Style", "Choose the shared visual style used by supported MarsarahUI elements, including the information rail, summon counter, enhanced notifications, and other HUD elements that use the shared style.", ConfigSections.GeneralHUD, 140);
-			public static readonly ConfigMetadata UIAnimations = new ConfigMetadata("UI Animations", "Animate supported MarsarahUI elements such as the information rail, summon counter, and enhanced notifications. Disable this if you experience UI-related performance issues.", ConfigSections.GeneralHUD, 130);
-			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("UI Display Mode", "Choose whether supported UI elements, including the information rail, summon counter, and sailing HUD, display icons or text labels.", ConfigSections.GeneralHUD, 125);
+			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("UI Display Mode", "Choose whether supported UI elements, including the information rail, summon counter, and sailing HUD, display icons or text labels.", ConfigSections.GeneralHUD, 130);
+			public static readonly ConfigMetadata UIAnimations = new ConfigMetadata("UI Animations", "Animate supported MarsarahUI elements such as the information rail, summon counter, and enhanced notifications. Disable this if you experience UI-related performance issues.", ConfigSections.GeneralHUD, 125);
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
 			public static readonly ConfigMetadata UIPortalTransition = new ConfigMetadata("Portal Transition Images", "Replaces Valheim's vanilla teleport screen with a custom portal showing the destination biome and its alternate variation.", ConfigSections.GeneralHUD, 115);
 			public static readonly ConfigMetadata UIShowPortalDestinationText = new ConfigMetadata("Show Portal Destination Text", "Shows the destination biome name and active alternate biome variations beneath the custom portal. Requires Portal Transition Screen to be enabled.", ConfigSections.GeneralHUD, 114);
@@ -391,8 +391,8 @@ namespace MarsarahUI.Managers
 
 		// ===== General & HUD
 		public static ConfigEntry<UIStyle> UIStyleChoice;
-		public static ConfigEntry<bool> UIAnimationsEnabled;
 		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
+		public static ConfigEntry<bool> UIAnimationsEnabled;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
 		public static ConfigEntry<bool> PortalTransitionEnabled;
 		public static ConfigEntry<bool> ShowPortalDestinationText;
@@ -479,8 +479,8 @@ namespace MarsarahUI.Managers
 
 
 		// ===== Effective General & HUD
-		public static bool EffectiveUIAnimations => UIAnimationsEnabled.Value;
 		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
+		public static bool EffectiveUIAnimations => UIAnimationsEnabled.Value;
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
 		public static bool EffectivePortalTransitionEnabled => PortalTransitionEnabled.Value;
 		public static bool EffectiveShowPortalDestinationText => ShowPortalDestinationText.Value;
@@ -631,8 +631,8 @@ namespace MarsarahUI.Managers
 			// ===== General & HUD
 			UIStyleChoice = CreateConfig(Configs.UIStyle, UIStyle.Style1);
 			UIStyleManager.Initialize(UIStyleChoice);
-			UIAnimationsEnabled = CreateConfig(Configs.UIAnimations, true);
 			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
+			UIAnimationsEnabled = CreateConfig(Configs.UIAnimations, true);
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
 			PortalTransitionEnabled = CreateConfig(Configs.UIPortalTransition, true);
 			ShowPortalDestinationText = CreateConfig(Configs.UIShowPortalDestinationText, false);

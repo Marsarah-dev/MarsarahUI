@@ -19,6 +19,12 @@ C. New additions
   - All nine biomes and 34 alternate biome variations use AI edited in-game screenshots.
   - For overlapping alternate biomes there is a priority system to select which image to display.
 
+* Alternate Biome Names
+  - Added alternate biome names to the minimap, compatible with Smart Biome.
+  - Added three display options: One Row, Two Rows, or Off.
+  - Multiple alternate biomes are prioritized, with additional names summarized as +N when space is limited.
+  - Added server override support for alternate biome display settings.
+
 D. In Progress
 ------------------------
 * Add config to indicate the alternate biome on the minimap.
