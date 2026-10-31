@@ -315,14 +315,26 @@ namespace MarsarahUI.Patches.UI
 				portalOuterRing.rectTransform.Rotate(0f, 0f, -50f * Time.unscaledDeltaTime);
 			}
 
+			bool showDestinationText = ConfigManager.EffectiveShowPortalDestinationText;
+
 			if (portalBiomeText != null)
 			{
-				portalBiomeText.text = GetBiomeDisplayName(destinationBiome);
+				portalBiomeText.enabled = showDestinationText;
+
+				if (showDestinationText)
+				{
+					portalBiomeText.text = GetBiomeDisplayName(destinationBiome);
+				}
 			}
 
 			if (portalAltBiomeText != null)
 			{
-				portalAltBiomeText.text = destinationAltBiomes != "None" ? GetAltBiomeDisplayName(destinationAltBiomes, destinationBiome) : string.Empty;
+				portalAltBiomeText.enabled = showDestinationText;
+
+				if (showDestinationText)
+				{
+					portalAltBiomeText.text = destinationAltBiomes != "None" ? GetAltBiomeDisplayName(destinationAltBiomes, destinationBiome) : string.Empty;
+				}
 			}
 		}
 
