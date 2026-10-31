@@ -3,6 +3,7 @@ using MarsarahUI.Managers;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
@@ -436,6 +437,9 @@ namespace MarsarahUI.Patches.UI
 
 				names[i] = name;
 			}
+
+			// Sort alternate names using the shared biome priority.
+			names = names.OrderBy(name => BiomePriority.GetAlternatePriority(biome, name)).ToArray();
 
 			return "Alternate: " + string.Join(", ", names);
 		}
