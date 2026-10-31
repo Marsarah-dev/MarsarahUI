@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Author:** Marsarah
 
 ---
@@ -99,6 +99,15 @@ https://paypal.me/Marsarah9
 - Intentionally leaves out several very basic vanilla tips in favor of more useful information.
 - Only applies when using the **English** localization.
 
+### <strong>🔧 Portal Transition Images</strong>
+- Replaces the vanilla teleport screen with custom biome-themed images showing the destination biome.
+- Includes images for all nine biomes and 34 alternate biome variations.
+- The images are in-game screenshots modified with AI.
+- When multiple alternate biomes are active, the image is selected based on priority.
+- Modes: **Images, ImagesAndText, Off**.
+- **ImagesAndText** also displays the destination biome and active alternate biome names.
+- **Off** restores the vanilla teleport screen.
+
 ### <strong>🔧 Show Current Day</strong>
 - Displays the current world day above the minimap and continues to work in No Map worlds.
 
@@ -124,6 +133,12 @@ https://paypal.me/Marsarah9
 - Evaluates progression from Meadows through Ashlands. Other biomes display in white.
 - Includes Bear, Vilebone and Lox Fur armor.
 - If **MarsarahTweaks** is installed and **Gear Upgrade Unlock** is enabled, Smart Biome adjusts its expected armor ranges accordingly.
+
+### <strong>🔧 Alternate Biome Names</strong>
+- Displays active alternate biome names on the minimap, including when Smart Biome is enabled.
+- Modes: **OneRow, TwoRows, Off**.
+- When multiple alternate biomes are active, names are prioritized and additional names are summarized as **+N** when space is limited.
+- Supports an optional synchronized server override.
 
 ### <strong>🔧 Show Boat Speed</strong>
 - Displays current ship speed while steering, with an **R** prefix when reversing.

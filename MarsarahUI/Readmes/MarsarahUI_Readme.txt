@@ -1,4 +1,4 @@
-Marsarah UI v1.4.0
+Marsarah UI v1.5.0
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -118,6 +118,19 @@ MOD CONFIGS
   Only works with English localization.  
 
 
+------------------- [Portal Transition Images] ------------------
+► Description:
+  Replaces the vanilla teleport screen with custom biome-themed images.
+  Includes images for all nine biomes and 34 alternate biome variations.
+  The images are in-game screenshots modified with AI.
+  When multiple alternate biomes are active, the image is selected based on priority.
+
+► Modes:
+  Images        - displays custom destination biome images.
+  ImagesAndText - also displays the destination biome and active alternate biome names.
+  Off           - uses the vanilla teleport screen.
+
+
 ------------------------ [Show Current Day] --------------------
 ► Description:
   Displays the current world day above the minimap.
@@ -172,6 +185,21 @@ MOD CONFIGS
 
 ► MarsarahTweaks Compatibility:
   If Tweaks is installed and Gear Upgrade Unlock is enabled, Smart Biome uses expanded expected armor ranges where Tweaks permits earlier level-4 upgrades.
+
+
+-------------------- [Alternate Biome Names] --------------------
+► Description:
+  Displays active alternate biome names on the minimap.
+  Also works when Smart Biome Indicator is enabled.
+  Multiple alternate biomes are prioritized, with +N indicating additional names when space is limited.
+
+► Modes:
+  OneRow  - displays alternate biome names in a single row.
+  TwoRows - allows up to two rows.
+  Off     - uses the normal biome name.
+
+► Server Override:
+  Supports UserChoice, OneRow, TwoRows and Off.
 
 
 ------------------------ [Show Boat Speed] ---------------------
@@ -759,6 +787,22 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+v1.5.0
+- Fixes:
+  - Fixed the bottom Skill Progress bar remaining visible when hiding the HUD with Ctrl+F3 or Insert.
+  - Prevented Enhanced Notifications from attempting to draw on dedicated servers.
+
+- Updates:
+  - Adjusted the order of Plains and Ocean in Biome-Sorted Crafting Tabs.
+
+- New Features:
+  - Added Portal Transition Images
+	- Replaces the vanilla teleport screen with biome-themed images for all nine biomes and 34 alternate variations.
+	- The images are in-game screenshots modified with AI.
+    - Added an option to display the destination biome and active alternate biome names during teleportation.
+  - Added Alternate Biome Names 
+	- Shows the alternate biome names on the minimap, including Smart Biome compatibility, OneRow/TwoRows display modes, overflow handling and a server override.
+
 v1.4.0
 - Updates:
   - Redesigned the sailing HUD with custom Boat Speed and Boat Health icons for all three UI styles.

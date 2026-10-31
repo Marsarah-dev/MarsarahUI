@@ -1,6 +1,6 @@
 [size=5][b]Marsarah UI[/b][/size]
 
-[b]Version:[/b] 1.4.0
+[b]Version:[/b] 1.5.0
 [b]Author:[/b] Marsarah
 
 [line]
@@ -101,6 +101,15 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Intentionally leaves out several very basic vanilla tips.
 - Only applies to the [b]English[/b] localization.
 
+[size=4][b]🔧 Portal Transition Images[/b][/size]
+- Replaces the vanilla teleport screen with custom biome-themed images showing the destination biome.
+- Includes images for all nine biomes and 34 alternate biome variations.
+- The images are in-game screenshots modified with AI.
+- When multiple alternate biomes are active, the image is selected based on priority.
+- Modes: [b]Images, ImagesAndText, Off[/b].
+- [b]ImagesAndText[/b] also displays the destination biome and active alternate biome names.
+- [b]Off[/b] restores the vanilla teleport screen.
+
 [size=4][b]🔧 Show Current Day[/b][/size]
 - Displays the current world day above the minimap and works in No Map worlds.
 
@@ -124,6 +133,12 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Evaluates progression from Meadows through Ashlands; other biomes display in white.
 - Includes Bear, Vilebone and Lox Fur armor.
 - Accounts for [b]MarsarahTweaks Gear Upgrade Unlock[/b] when Tweaks is installed and the feature is enabled.
+
+[size=4][b]🔧 Alternate Biome Names[/b][/size]
+- Displays active alternate biome names on the minimap, including when Smart Biome is enabled.
+- Modes: [b]OneRow, TwoRows, Off[/b].
+- When multiple alternate biomes are active, names are prioritized and additional names are summarized as [b]+N[/b] when space is limited.
+- Supports an optional synchronized server override.
 
 [size=4][b]🔧 Show Boat Speed[/b][/size]
 - Displays current ship speed while steering, with an [b]R[/b] prefix when reversing.
@@ -374,6 +389,23 @@ Thanks for checking out Marsarah UI!
 Blaxxun-bloop - for ServerSync
 
 [size=5][b]📜 Version History[/b][/size]
+
+[size=4][b]v1.5.0[/b][/size]
+
+[b]Fixes:[/b]
+- Fixed the bottom Skill Progress bar remaining visible when hiding the HUD with Ctrl+F3 or Insert.
+- Prevented Enhanced Notifications from attempting to draw on dedicated servers.
+
+[b]Updates:[/b]
+- Adjusted the order of Plains and Ocean in Biome-Sorted Crafting Tabs.
+
+[b]New Features:[/b]
+- Added Portal Transition Images
+  - Replaces the vanilla teleport screen with biome-themed images for all nine biomes and 34 alternate variations.
+  - The images are in-game screenshots modified with AI.
+  - Added an option to display the destination biome and active alternate biome names during teleportation.
+- Added Alternate Biome Names 
+  - Shows the alternate biome names on the minimap, including Smart Biome compatibility, OneRow/TwoRows display modes, overflow handling and a server override.
 
 [size=4][b]v1.4.0[/b][/size]
 [b]Updates:[/b]

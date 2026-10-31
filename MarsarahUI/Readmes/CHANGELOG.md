@@ -1,4 +1,21 @@
 ## <strong> 📜 Version History </strong>
+
+v1.5.0
+- **Fixes:**
+  - Fixed the bottom Skill Progress bar remaining visible when hiding the HUD with Ctrl+F3 or Insert.
+  - Prevented Enhanced Notifications from attempting to draw on dedicated servers.
+
+- **Updates:**
+  - Adjusted the order of Plains and Ocean in Biome-Sorted Crafting Tabs.
+
+- **New Features:**
+  - Added Portal Transition Images
+	- Replaces the vanilla teleport screen with biome-themed images for all nine biomes and 34 alternate variations.
+	- The images are in-game screenshots modified with AI.
+    - Added an option to display the destination biome and active alternate biome names during teleportation.
+  - Added Alternate Biome Names 
+	- Shows the alternate biome names on the minimap, including Smart Biome compatibility, OneRow/TwoRows display modes, overflow handling and a server override.
+
 v1.4.0
 - **Updates:**
   - Redesigned the sailing HUD with custom Boat Speed and Boat Health icons for all three UI styles.
