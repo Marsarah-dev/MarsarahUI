@@ -9,7 +9,7 @@ namespace MarsarahUI.Patches.Logic
 {
 	internal static class PortalImageResolver
 	{
-		private static readonly LogManager log = new LogManager("Portal Biome Images", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("Portal Biome Images", LogManager.LogLevel.Warning);
 
 		private const string BiomeImageResourcePrefix = "MarsarahUI.Assets.Portals.Biomes.";
 

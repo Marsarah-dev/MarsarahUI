@@ -10,7 +10,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIPortalTransition : UIController
 	{
-		private static readonly LogManager log = new LogManager("UI Portal Transition", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Portal Transition", LogManager.LogLevel.Warning);
 
 		private static Hud currentHud;
 		private static CanvasGroup vanillaTeleportCanvasGroup;

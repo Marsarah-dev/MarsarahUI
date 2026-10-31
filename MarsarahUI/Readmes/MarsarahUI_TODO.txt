@@ -56,8 +56,8 @@ C. Existing UI Ideas
 * Weather Forecast: choose a better position when No Map is enabled.
 * Smelter hover: add a progress bar display mode.
 * Test item/tool tooltips with EpicLoot and add compatibility only if required.
-* Consider showing player HP and death count with Online Players.
-* Consider indicating Corpse Run status, for example by coloring the player name.
+* Show player HP and death count with Online Players.
+* Indicate Corpse Run status, for example by coloring the player name.
 * Show feasts stats on hover.
 
 D. New UI Features

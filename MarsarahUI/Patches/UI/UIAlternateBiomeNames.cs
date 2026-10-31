@@ -12,7 +12,7 @@ namespace MarsarahUI.Patches.UI
 {
 	internal class UIAlternateBiomeNames
 	{
-		private static readonly LogManager log = new LogManager("UI Alternate Biome Names", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("UI Alternate Biome Names", LogManager.LogLevel.Warning);
 
 		private static readonly FieldInfo biomeNameField = AccessTools.Field(typeof(Minimap), "m_biomeNameSmall");
 		private static readonly MethodInfo updateBiomeMethod = AccessTools.Method(typeof(Minimap), "UpdateBiome", new[] { typeof(Player) });

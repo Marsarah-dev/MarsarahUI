@@ -10,7 +10,7 @@ namespace MarsarahUI.Patches.Logic
 {
 	internal static class WeatherLogic
 	{
-		private static readonly LogManager log = new LogManager("Weather Logic", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("Weather Logic", LogManager.LogLevel.Warning);
 
 		private const bool EnableFutureWeatherLogging = false;
 
