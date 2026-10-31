@@ -4,7 +4,34 @@ using MarsarahUI.Managers;
 
 namespace MarsarahUI.Patches.Logic
 {
-	internal static class CraftingRecipeData
+	internal enum CraftingTab
+	{
+		All,
+		Meadows,
+		BlackForest,
+		Swamp,
+		Mountain,
+		Ocean,
+		Plains,
+		Mistlands,
+		Ashlands,
+		DeepNorth,
+		Feasts,
+		Recovery,
+		Resist,
+		Utility,
+		Other
+	}
+
+	internal enum CraftingTabProfile
+	{
+		Biomes,
+		MeadKettle,
+		FoodPreparation,
+		NoCost
+	}
+
+	internal static class CraftingTabsLogic
 	{
 		private static readonly LogManager log = new LogManager("Biome Crafting", LogManager.LogLevel.Warning);
 
@@ -14,8 +41,8 @@ namespace MarsarahUI.Patches.Logic
 			BlackForest,
 			Swamp,
 			Mountain,
-			Plains,
 			Ocean,
+			Plains,
 			Mistlands,
 			Ashlands,
 			DeepNorth
@@ -64,7 +91,7 @@ namespace MarsarahUI.Patches.Logic
 		private static readonly Dictionary<string, RecipeClassification> recipeClassifications = new Dictionary<string, RecipeClassification>();
 		private static readonly Dictionary<string, SpecialRecipeGroup> specialRecipeGroups = new Dictionary<string, SpecialRecipeGroup>();
 
-		static CraftingRecipeData()
+		static CraftingTabsLogic()
 		{
 			// Meadows
 			AddRecipes(CraftingBiome.Meadows, RecipeCategory.Tools,
@@ -737,6 +764,106 @@ namespace MarsarahUI.Patches.Logic
 				return false;
 
 			return specialRecipeGroups.TryGetValue(recipe.name, out group);
+		}
+
+		internal static bool TryGetBiomeForTab(CraftingTab tab, out CraftingBiome biome)
+		{
+			switch (tab)
+			{
+				case CraftingTab.Meadows:
+					biome = CraftingBiome.Meadows;
+					return true;
+
+				case CraftingTab.BlackForest:
+					biome = CraftingBiome.BlackForest;
+					return true;
+
+				case CraftingTab.Swamp:
+					biome = CraftingBiome.Swamp;
+					return true;
+
+				case CraftingTab.Mountain:
+					biome = CraftingBiome.Mountain;
+					return true;
+
+				case CraftingTab.Plains:
+					biome = CraftingBiome.Plains;
+					return true;
+
+				case CraftingTab.Ocean:
+					biome = CraftingBiome.Ocean;
+					return true;
+
+				case CraftingTab.Mistlands:
+					biome = CraftingBiome.Mistlands;
+					return true;
+
+				case CraftingTab.Ashlands:
+					biome = CraftingBiome.Ashlands;
+					return true;
+
+				case CraftingTab.DeepNorth:
+					biome = CraftingBiome.DeepNorth;
+					return true;
+
+				default:
+					biome = default;
+					return false;
+			}
+		}
+
+		internal static bool TryGetTabForBiome(CraftingBiome biome, out CraftingTab tab)
+		{
+			switch (biome)
+			{
+				case CraftingBiome.Meadows:
+					tab = CraftingTab.Meadows;
+					return true;
+
+				case CraftingBiome.BlackForest:
+					tab = CraftingTab.BlackForest;
+					return true;
+
+				case CraftingBiome.Swamp:
+					tab = CraftingTab.Swamp;
+					return true;
+
+				case CraftingBiome.Mountain:
+					tab = CraftingTab.Mountain;
+					return true;
+
+				case CraftingBiome.Plains:
+					tab = CraftingTab.Plains;
+					return true;
+
+				case CraftingBiome.Ocean:
+					tab = CraftingTab.Ocean;
+					return true;
+
+				case CraftingBiome.Mistlands:
+					tab = CraftingTab.Mistlands;
+					return true;
+
+				case CraftingBiome.Ashlands:
+					tab = CraftingTab.Ashlands;
+					return true;
+
+				case CraftingBiome.DeepNorth:
+					tab = CraftingTab.DeepNorth;
+					return true;
+
+				default:
+					tab = default;
+					return false;
+			}
+		}
+
+		internal static bool IsFoodPreparationBiomeTab(CraftingTab tab)
+		{
+			return tab == CraftingTab.Plains ||
+				tab == CraftingTab.Mistlands ||
+				tab == CraftingTab.Ashlands ||
+				tab == CraftingTab.DeepNorth;
 		}
 	}
 }

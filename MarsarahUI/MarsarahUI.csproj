@@ -89,7 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Patches\Logic\CraftingRecipeData.cs" />
+    <Compile Include="Patches\Logic\CraftingTabsLogic.cs" />
     <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
     <Compile Include="Patches\Logic\SmartBiomeProgression.cs" />
