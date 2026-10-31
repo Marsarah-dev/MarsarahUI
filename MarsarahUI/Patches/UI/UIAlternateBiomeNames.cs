@@ -18,6 +18,8 @@ namespace MarsarahUI.Patches.UI
 		private static string lastDisplayName = string.Empty;
 		private static string vanillaBiomeName = string.Empty;
 		private static string lastBiome = string.Empty;
+		private static string currentAlternateDisplayName = string.Empty;
+		internal static string CurrentAlternateDisplayName => currentAlternateDisplayName;
 
 		[HarmonyPatch(typeof(Minimap), "UpdateBiome")]
 		private static class AlternateBiome_MinimapPatch
@@ -38,9 +40,15 @@ namespace MarsarahUI.Patches.UI
 					lastBiome = biome;
 				}
 
-				if (!ConfigManager.EffectiveShowAlternateBiomeNames) return;
+				if (!ConfigManager.EffectiveShowAlternateBiomeNames)
+				{
+					currentAlternateDisplayName = string.Empty;
+					return;
+				}
 
 				string displayName = GetBiomeDisplayName(biome);
+
+				bool hasAlternates = false;
 
 				BiomeSector sector = WorldGenerator.instance.GetBiomeSector(player.transform.position, true);
 
@@ -62,13 +70,16 @@ namespace MarsarahUI.Patches.UI
 					if (alternateNames.Count == 1)
 					{
 						displayName = alternateNames[0] + " " + displayName;
+						hasAlternates = true;
 					}
 					else if (alternateNames.Count > 1)
 					{
 						displayName += ": " + string.Join(", ", alternateNames);
+						hasAlternates = true;
 					}
 				}
 
+				currentAlternateDisplayName = hasAlternates ? displayName : string.Empty;
 				biomeText.text = displayName;
 
 				if (lastDisplayName != displayName)
@@ -111,6 +122,7 @@ namespace MarsarahUI.Patches.UI
 
 				biomeText.text = vanillaBiomeName;
 				lastDisplayName = string.Empty;
+				currentAlternateDisplayName = string.Empty;
 
 				log.Info("Alternate biome names disabled. Restored original vanilla biome text.");
 			}

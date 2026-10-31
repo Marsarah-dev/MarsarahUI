@@ -17,6 +17,13 @@ namespace MarsarahUI.Patches.UI
 		private const float ArmorUpdateInterval = 0.5f;
 		private static float nextArmorUpdateTime;
 
+		private const float BiomeTextWidth = 150f;
+		private const float AlternateBiomeTextWidth = 220f;
+		private const float BiomeTextHeight = 30f;
+
+		private static float singleLinePreferredHeight;
+		private static bool lastAlternateTextLayout;
+
 		private struct BiomeWeights
 		{
 			public BiomeWeights(int min, int max)
@@ -100,7 +107,8 @@ namespace MarsarahUI.Patches.UI
 				if (!UIBiomeText.enabled) return;
 
 				UIBiomeText.color = GearProgressionManager.GetBiomeColor(playerArmorWeight, currentBiome);
-				UIBiomeText.text = GetBiomeDisplayName(currentBiome);
+				UpdateBiomeText();
+				//UIBiomeText.text = GetBiomeDisplayName(currentBiome);
 			}
 		}
 
@@ -125,6 +133,43 @@ namespace MarsarahUI.Patches.UI
 			UIBiomeArea.transform.localScale = Vector3.one;
 
 			UIBiomeText = CreateTextObject("BiomeText", UIBiomeArea, Color.white, UITextFontName, UITextFontSize, TextAnchor.MiddleRight, Vector2.zero, UIBiomeAreaSize);
+
+			RectTransform textTransform = UIBiomeText.rectTransform;
+			textTransform.anchorMin = Vector2.one;
+			textTransform.anchorMax = Vector2.one;
+			textTransform.pivot = Vector2.one;
+			textTransform.anchoredPosition = Vector2.zero;
+
+			UIBiomeText.text = "Meadows";
+			singleLinePreferredHeight = UIBiomeText.preferredHeight;
+			UIBiomeText.text = string.Empty;
+		}
+
+		private static void UpdateBiomeText()
+		{
+			if (UIBiomeText == null) return;
+
+			string alternateName = UIAlternateBiomeNames.CurrentAlternateDisplayName;
+			bool showAlternate = ConfigManager.EffectiveShowAlternateBiomeNames && !string.IsNullOrEmpty(alternateName);
+
+			string displayName = showAlternate ? alternateName : GetBiomeDisplayName(currentBiome);
+
+			if (UIBiomeText.text == displayName && lastAlternateTextLayout == showAlternate) return;
+
+			UIBiomeText.text = displayName;
+
+			RectTransform textTransform = UIBiomeText.rectTransform;
+			float width = showAlternate ? AlternateBiomeTextWidth : BiomeTextWidth;
+
+			textTransform.sizeDelta = new Vector2(width, BiomeTextHeight);
+
+			if (showAlternate)
+			{
+				float additionalHeight = Mathf.Max(0f, UIBiomeText.preferredHeight - singleLinePreferredHeight);
+				textTransform.sizeDelta = new Vector2(width, BiomeTextHeight + additionalHeight);
+			}
+
+			lastAlternateTextLayout = showAlternate;
 		}
 
 		private static string GetBiomeDisplayName(string biome)
