@@ -11,6 +11,9 @@ namespace MarsarahUI.Patches.UI
 		private static readonly LogManager log = new LogManager("UI Portal Transition", LogManager.LogLevel.Info);
 
 		private static Hud currentHud;
+		private static CanvasGroup vanillaTeleportCanvasGroup;
+		private static float vanillaTeleportOriginalAlpha = 1f;
+		private static bool vanillaTeleportVisualsHidden;
 
 		private static bool hasPendingDestination;
 		private static bool portalSessionActive;
@@ -81,6 +84,7 @@ namespace MarsarahUI.Patches.UI
 				if (__instance == null) return;
 				if (!ConfigManager.EffectivePortalTransitionEnabled) return;
 
+				UpdateVanillaTeleportVisuals(__instance);
 				CreateUI(__instance);
 				HidePortalOverlay();
 			}
@@ -93,6 +97,8 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
+
+				UpdateVanillaTeleportVisuals(__instance);
 
 				if (!ConfigManager.EffectivePortalTransitionEnabled)
 				{
@@ -338,6 +344,48 @@ namespace MarsarahUI.Patches.UI
 			destinationBiome = string.Empty;
 			destinationAltBiomes = "None";
 			destinationBiomeSprite = null;
+		}
+
+		private static void UpdateVanillaTeleportVisuals(Hud hud)
+		{
+			if (hud == null || hud.m_teleportingProgress == null) return;
+
+			bool hideVanillaEffect = ConfigManager.EffectivePortalTransitionEnabled && (hasPendingDestination || portalSessionActive);
+
+			if (!hideVanillaEffect && !vanillaTeleportVisualsHidden) return;
+
+			if (vanillaTeleportCanvasGroup == null || vanillaTeleportCanvasGroup.gameObject != hud.m_teleportingProgress)
+			{
+				vanillaTeleportCanvasGroup = hud.m_teleportingProgress.GetComponent<CanvasGroup>();
+
+				if (vanillaTeleportCanvasGroup == null)
+				{
+					vanillaTeleportCanvasGroup = hud.m_teleportingProgress.AddComponent<CanvasGroup>();
+				}
+
+				vanillaTeleportOriginalAlpha = vanillaTeleportCanvasGroup.alpha;
+				vanillaTeleportVisualsHidden = false;
+			}
+
+			if (hideVanillaEffect)
+			{
+				if (!vanillaTeleportVisualsHidden)
+				{
+					vanillaTeleportOriginalAlpha = vanillaTeleportCanvasGroup.alpha;
+					vanillaTeleportVisualsHidden = true;
+
+					log.Info("Vanilla teleport swirl hidden.");
+				}
+
+				vanillaTeleportCanvasGroup.alpha = 0f;
+			}
+			else if (vanillaTeleportVisualsHidden)
+			{
+				vanillaTeleportCanvasGroup.alpha = vanillaTeleportOriginalAlpha;
+				vanillaTeleportVisualsHidden = false;
+
+				log.Info("Vanilla teleport swirl restored.");
+			}
 		}
 
 		private static string GetAltBiomesString(WorldGenerator generator, Vector3 pos)
