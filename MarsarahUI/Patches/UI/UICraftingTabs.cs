@@ -167,7 +167,7 @@ namespace MarsarahUI.Patches.UI
 
 				log.Info($"Available crafting tabs: {string.Join(", ", availableTabs)}");
 
-				recipes.RemoveAll(recipe => !RecipeMatchesSelectedTab(recipe));
+				recipes.RemoveAll(recipe => !CraftingTabsLogic.RecipeMatchesSelectedTab(recipe, selectedTab, currentTabProfile));
 
 				log.Info($"{selectedTab} crafting filter: {originalCount} -> {recipes.Count} recipes");
 			}
@@ -491,85 +491,6 @@ namespace MarsarahUI.Patches.UI
 				default:
 					return 3;
 			}
-		}
-
-		private static bool RecipeMatchesSelectedTab(Recipe recipe)
-		{
-			if (selectedTab == CraftingTab.All)
-				return true;
-
-			switch (currentTabProfile)
-			{
-				case CraftingTabProfile.MeadKettle:
-					return RecipeMatchesMeadKettleTab(recipe);
-
-				case CraftingTabProfile.FoodPreparation:
-					return RecipeMatchesFoodPreparationTab(recipe);
-
-				case CraftingTabProfile.NoCost:
-					return RecipeMatchesNoCostTab(recipe);
-
-				default:
-					return RecipeMatchesBiomeTab(recipe);
-			}
-		}
-
-		private static bool RecipeMatchesBiomeTab(Recipe recipe)
-		{
-			if (selectedTab == CraftingTab.Other)
-				return !CraftingTabsLogic.TryGetClassification(recipe, out _);
-
-			if (!CraftingTabsLogic.TryGetClassification(recipe, out CraftingTabsLogic.RecipeClassification classification))
-				return false;
-
-			if (!CraftingTabsLogic.TryGetBiomeForTab(selectedTab, out CraftingTabsLogic.CraftingBiome biome))
-				return false;
-
-			return classification.Biome == biome;
-		}
-
-		private static bool RecipeMatchesMeadKettleTab(Recipe recipe)
-		{
-			if (!CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup group))
-				return selectedTab == CraftingTab.Other;
-
-			switch (selectedTab)
-			{
-				case CraftingTab.Recovery:
-					return group == CraftingTabsLogic.SpecialRecipeGroup.MeadRecovery;
-
-				case CraftingTab.Resist:
-					return group == CraftingTabsLogic.SpecialRecipeGroup.MeadResistance;
-
-				case CraftingTab.Utility:
-					return group == CraftingTabsLogic.SpecialRecipeGroup.MeadUtility;
-
-				case CraftingTab.Other:
-					return group != CraftingTabsLogic.SpecialRecipeGroup.MeadRecovery &&
-						group != CraftingTabsLogic.SpecialRecipeGroup.MeadResistance &&
-						group != CraftingTabsLogic.SpecialRecipeGroup.MeadUtility;
-
-				default:
-					return false;
-			}
-		}
-
-		private static bool RecipeMatchesFoodPreparationTab(Recipe recipe)
-		{
-			if (CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup group) &&
-				group == CraftingTabsLogic.SpecialRecipeGroup.Feast)
-			{
-				return selectedTab == CraftingTab.Feasts;
-			}
-
-			if (CraftingTabsLogic.TryGetClassification(recipe, out CraftingTabsLogic.RecipeClassification classification) &&
-				CraftingTabsLogic.TryGetTabForBiome(classification.Biome, out CraftingTab tab) &&
-				CraftingTabsLogic.IsFoodPreparationBiomeTab(tab))
-			{
-				return selectedTab == tab;
-			}
-
-			return selectedTab == CraftingTab.Other;
 		}
 
 		private static bool TryGetCanCraftFromRecipeData(object recipeData, out bool canCraft)
@@ -1578,42 +1499,6 @@ namespace MarsarahUI.Patches.UI
 
 			if (hasOther)
 				availableTabs.Add(CraftingTab.Other);
-		}
-
-		private static bool RecipeMatchesNoCostTab(Recipe recipe)
-		{
-			if (selectedTab == CraftingTab.Other)
-			{
-				return !CraftingTabsLogic.TryGetClassification(recipe, out _) &&
-					!CraftingTabsLogic.TryGetSpecialGroup(recipe, out _);
-			}
-
-			if (CraftingTabsLogic.TryGetBiomeForTab(selectedTab, out CraftingTabsLogic.CraftingBiome biome) &&
-				CraftingTabsLogic.TryGetClassification(recipe, out CraftingTabsLogic.RecipeClassification classification))
-			{
-				return classification.Biome == biome;
-			}
-
-			if (!CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup group))
-				return false;
-
-			switch (selectedTab)
-			{
-				case CraftingTab.Feasts:
-					return group == CraftingTabsLogic.SpecialRecipeGroup.Feast;
-
-				case CraftingTab.Recovery:
-					return group == CraftingTabsLogic.SpecialRecipeGroup.MeadRecovery;
-
-				case CraftingTab.Resist:
-					return group == CraftingTabsLogic.SpecialRecipeGroup.MeadResistance;
-
-				case CraftingTab.Utility:
-					return group == CraftingTabsLogic.SpecialRecipeGroup.MeadUtility;
-
-				default:
-					return false;
-			}
 		}
 
 		private static void DumpCurrentRecipes()

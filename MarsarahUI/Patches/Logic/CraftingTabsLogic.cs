@@ -756,6 +756,7 @@ namespace MarsarahUI.Patches.Logic
 			}
 		}
 
+		// Tab groups
 		internal static bool TryGetSpecialGroup(Recipe recipe, out SpecialRecipeGroup group)
 		{
 			group = default;
@@ -864,6 +865,122 @@ namespace MarsarahUI.Patches.Logic
 				tab == CraftingTab.Mistlands ||
 				tab == CraftingTab.Ashlands ||
 				tab == CraftingTab.DeepNorth;
+		}
+
+		// Filtering
+		internal static bool RecipeMatchesSelectedTab(Recipe recipe, CraftingTab selectedTab, CraftingTabProfile profile)
+		{
+			if (selectedTab == CraftingTab.All)
+				return true;
+
+			switch (profile)
+			{
+				case CraftingTabProfile.MeadKettle:
+					return RecipeMatchesMeadKettleTab(recipe, selectedTab);
+
+				case CraftingTabProfile.FoodPreparation:
+					return RecipeMatchesFoodPreparationTab(recipe, selectedTab);
+
+				case CraftingTabProfile.NoCost:
+					return RecipeMatchesNoCostTab(recipe, selectedTab);
+
+				default:
+					return RecipeMatchesBiomeTab(recipe, selectedTab);
+			}
+		}
+
+		private static bool RecipeMatchesBiomeTab(Recipe recipe, CraftingTab selectedTab)
+		{
+			if (selectedTab == CraftingTab.Other)
+				return !TryGetClassification(recipe, out _);
+
+			if (!TryGetClassification(recipe, out RecipeClassification classification))
+				return false;
+
+			if (!TryGetBiomeForTab(selectedTab, out CraftingBiome biome))
+				return false;
+
+			return classification.Biome == biome;
+		}
+
+		private static bool RecipeMatchesMeadKettleTab(Recipe recipe, CraftingTab selectedTab)
+		{
+			if (!TryGetSpecialGroup(recipe, out SpecialRecipeGroup group))
+				return selectedTab == CraftingTab.Other;
+
+			switch (selectedTab)
+			{
+				case CraftingTab.Recovery:
+					return group == SpecialRecipeGroup.MeadRecovery;
+
+				case CraftingTab.Resist:
+					return group == SpecialRecipeGroup.MeadResistance;
+
+				case CraftingTab.Utility:
+					return group == SpecialRecipeGroup.MeadUtility;
+
+				case CraftingTab.Other:
+					return group != SpecialRecipeGroup.MeadRecovery &&
+						group != SpecialRecipeGroup.MeadResistance &&
+						group != SpecialRecipeGroup.MeadUtility;
+
+				default:
+					return false;
+			}
+		}
+
+		private static bool RecipeMatchesFoodPreparationTab(Recipe recipe, CraftingTab selectedTab)
+		{
+			if (TryGetSpecialGroup(recipe, out SpecialRecipeGroup group) &&
+				group == SpecialRecipeGroup.Feast)
+			{
+				return selectedTab == CraftingTab.Feasts;
+			}
+
+			if (TryGetClassification(recipe, out RecipeClassification classification) &&
+				TryGetTabForBiome(classification.Biome, out CraftingTab tab) &&
+				IsFoodPreparationBiomeTab(tab))
+			{
+				return selectedTab == tab;
+			}
+
+			return selectedTab == CraftingTab.Other;
+		}
+
+		private static bool RecipeMatchesNoCostTab(Recipe recipe, CraftingTab selectedTab)
+		{
+			if (selectedTab == CraftingTab.Other)
+			{
+				return !TryGetClassification(recipe, out _) &&
+					!TryGetSpecialGroup(recipe, out _);
+			}
+
+			if (TryGetBiomeForTab(selectedTab, out CraftingBiome biome) &&
+				TryGetClassification(recipe, out RecipeClassification classification))
+			{
+				return classification.Biome == biome;
+			}
+
+			if (!TryGetSpecialGroup(recipe, out SpecialRecipeGroup group))
+				return false;
+
+			switch (selectedTab)
+			{
+				case CraftingTab.Feasts:
+					return group == SpecialRecipeGroup.Feast;
+
+				case CraftingTab.Recovery:
+					return group == SpecialRecipeGroup.MeadRecovery;
+
+				case CraftingTab.Resist:
+					return group == SpecialRecipeGroup.MeadResistance;
+
+				case CraftingTab.Utility:
+					return group == SpecialRecipeGroup.MeadUtility;
+
+				default:
+					return false;
+			}
 		}
 	}
 }
