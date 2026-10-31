@@ -46,6 +46,7 @@ namespace MarsarahUI.Patches.UI
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null || __instance != Player.m_localPlayer) return;
 				if (!__result) return;
+				if (!ConfigManager.EffectivePortalTransitionEnabled) return;
 
 				try
 				{
@@ -78,6 +79,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
+				if (!ConfigManager.EffectivePortalTransitionEnabled) return;
 
 				CreateUI(__instance);
 				HidePortalOverlay();
@@ -91,6 +93,12 @@ namespace MarsarahUI.Patches.UI
 			{
 				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
 				if (__instance == null) return;
+
+				if (!ConfigManager.EffectivePortalTransitionEnabled)
+				{
+					DisablePortalTransition();
+					return;
+				}
 
 				UpdatePortalOverlay(__instance);
 			}
@@ -320,6 +328,18 @@ namespace MarsarahUI.Patches.UI
 			portalOverlayRoot.SetActive(false);
 		}
 
+		private static void DisablePortalTransition()
+		{
+			HidePortalOverlay();
+
+			hasPendingDestination = false;
+			portalSessionActive = false;
+
+			destinationBiome = string.Empty;
+			destinationAltBiomes = "None";
+			destinationBiomeSprite = null;
+		}
+
 		private static string GetAltBiomesString(WorldGenerator generator, Vector3 pos)
 		{
 			if (generator == null) return "None";
@@ -348,10 +368,10 @@ namespace MarsarahUI.Patches.UI
 			{
 				string name = names[i].Trim();
 
-				/*if (name.EndsWith(suffix, System.StringComparison.OrdinalIgnoreCase))
+				if (name.EndsWith(suffix, System.StringComparison.OrdinalIgnoreCase))
 				{
 					name = name.Substring(0, name.Length - suffix.Length);
-				}*/
+				}
 
 				names[i] = name;
 			}
