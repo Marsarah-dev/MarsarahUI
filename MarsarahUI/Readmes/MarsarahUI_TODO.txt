@@ -12,6 +12,7 @@ A. Fixes
 B. Updates
 ------------------------
 * Swapped UI animations and UI Display Mode position in config.
+* Swapped order of crafting tabs for Plains and Ocean.
 
 C. New additions
 ------------------------
@@ -39,7 +40,6 @@ TO IMPLEMENT / VERIFY
 * Immediately replace notifications that are repeating states like sheltered and exposed.
 * Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
 * Skill progress bar at the bottom is not hidden when main game HUD is off. Also check on Insert. 
-* Swap order of crafting tabs for Plains and Ocean.
 
 A. Fixes / Compatibility
 --------------------
