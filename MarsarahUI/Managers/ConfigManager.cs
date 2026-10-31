@@ -71,6 +71,13 @@ namespace MarsarahUI.Managers
 			Off
 		}
 
+		public enum PortalTransitionMode
+		{
+			Images,
+			ImagesAndText,
+			Off
+		}
+
 		public enum AlternateBiomeDisplayMode
 		{
 			Off,
@@ -306,8 +313,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIInfoRailDisplayMode = new ConfigMetadata("UI Display Mode", "Choose whether supported UI elements, including the information rail, summon counter, and sailing HUD, display icons or text labels.", ConfigSections.GeneralHUD, 130);
 			public static readonly ConfigMetadata UIAnimations = new ConfigMetadata("UI Animations", "Animate supported MarsarahUI elements such as the information rail, summon counter, and enhanced notifications. Disable this if you experience UI-related performance issues.", ConfigSections.GeneralHUD, 125);
 			public static readonly ConfigMetadata UIBetterLoadingTips = new ConfigMetadata("Better Loading Tips", "Replaces the vanilla loading tips with a larger selection of more useful gameplay tips.", ConfigSections.GeneralHUD, 120);
-			public static readonly ConfigMetadata UIPortalTransition = new ConfigMetadata("Portal Transition Images", "Replaces Valheim's vanilla teleport screen with a custom portal showing the destination biome and its alternate variation.", ConfigSections.GeneralHUD, 115);
-			public static readonly ConfigMetadata UIShowPortalDestinationText = new ConfigMetadata("Show Portal Destination Text", "Shows the destination biome name and active alternate biome variations beneath the custom portal. Requires Portal Transition Screen to be enabled.", ConfigSections.GeneralHUD, 114);
+			public static readonly ConfigMetadata UIPortalTransition = new ConfigMetadata("Portal Teleport Images", "Choose between displaying custom portal images, custom portal images with destination biome text, or Valheim's vanilla teleport screen.", ConfigSections.GeneralHUD, 115);
 			public static readonly ConfigMetadata UICurrentDay = new ConfigMetadata("Show Current Day", "Shows the current day above the minimap.", ConfigSections.GeneralHUD, 100);
 			public static readonly ConfigMetadata UITimeMode = new ConfigMetadata("Show Current Time", "Shows the current time above the minimap. Choose between 24-hour digital clock, 12-hour digital clock, day phases, or off.", ConfigSections.GeneralHUD, 90);
 			public static readonly ConfigMetadata UIColorDayPhases = new ConfigMetadata("Color Day Phases", "Colors the Day Phases time display based on the current phase of the day. Only applies when Show Current Time is set to DayPhases.", ConfigSections.GeneralHUD, 85);
@@ -394,8 +400,7 @@ namespace MarsarahUI.Managers
 		public static ConfigEntry<InfoRailDisplayMode> InfoRailDisplayModeChoice;
 		public static ConfigEntry<bool> UIAnimationsEnabled;
 		public static ConfigEntry<bool> BetterLoadingTipsEnabled;
-		public static ConfigEntry<bool> PortalTransitionEnabled;
-		public static ConfigEntry<bool> ShowPortalDestinationText;
+		public static ConfigEntry<PortalTransitionMode> PortalTransitionChoice;
 		public static ConfigEntry<bool> ShowCurrentDay;
 		public static ConfigEntry<TimeMode> TimeChoice;
 		public static ConfigEntry<bool> ColorDayPhases;
@@ -482,8 +487,8 @@ namespace MarsarahUI.Managers
 		public static InfoRailDisplayMode EffectiveInfoRailDisplayModeChoice => ResolveEnum(InfoRailDisplayModeChoice, InfoRailDisplayModeOverrideChoice, InfoRailDisplayModeOverride.UserChoice);
 		public static bool EffectiveUIAnimations => UIAnimationsEnabled.Value;
 		public static bool EffectiveBetterLoadingTipsEnabled => BetterLoadingTipsEnabled.Value;
-		public static bool EffectivePortalTransitionEnabled => PortalTransitionEnabled.Value;
-		public static bool EffectiveShowPortalDestinationText => ShowPortalDestinationText.Value;
+		public static bool EffectivePortalTransitionEnabled => PortalTransitionChoice.Value != PortalTransitionMode.Off;
+		public static bool EffectiveShowPortalDestinationText => PortalTransitionChoice.Value == PortalTransitionMode.ImagesAndText;
 		public static bool EffectiveShowCurrentDay => ResolveBool(ShowCurrentDay, CurrentDayOverride);
 		public static TimeMode EffectiveTimeChoice => ResolveEnum(TimeChoice, CurrentTimeOverride, TimeModeOverride.UserChoice);
 		public static bool EffectiveColorDayPhases => ColorDayPhases.Value;
@@ -634,8 +639,7 @@ namespace MarsarahUI.Managers
 			InfoRailDisplayModeChoice = CreateConfig(Configs.UIInfoRailDisplayMode, InfoRailDisplayMode.Icons);
 			UIAnimationsEnabled = CreateConfig(Configs.UIAnimations, true);
 			BetterLoadingTipsEnabled = CreateConfig(Configs.UIBetterLoadingTips, true);
-			PortalTransitionEnabled = CreateConfig(Configs.UIPortalTransition, true);
-			ShowPortalDestinationText = CreateConfig(Configs.UIShowPortalDestinationText, false);
+			PortalTransitionChoice = CreateConfig(Configs.UIPortalTransition, PortalTransitionMode.Images);
 			ShowCurrentDay = CreateConfig(Configs.UICurrentDay, true);
 			TimeChoice = CreateConfig(Configs.UITimeMode, TimeMode.DigitalClock);
 			ColorDayPhases = CreateConfig(Configs.UIColorDayPhases, true);
