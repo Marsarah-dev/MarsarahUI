@@ -1,12 +1,7 @@
 ﻿using HarmonyLib;
 using MarsarahUI.Managers;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using static MarsarahUI.Managers.ConfigManager;
 using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
@@ -21,12 +16,6 @@ namespace MarsarahUI.Patches.UI
 		// UI elements
 		private static Text UINextWeatherTimerText = null;
 		private static Image UIForecastIcon = null;
-
-		// Cache
-		private static EnvSetup _lastForecastEnv = null;
-		private static long _lastForecastPeriod = -1;
-		private static string _lastEnvironmentSignature = string.Empty;
-		private static readonly MethodInfo selectWeightedEnvironmentMethod = AccessTools.Method(typeof(EnvMan), "SelectWeightedEnvironment");
 
 		// Throttle
 		private const float ForecastUpdateInterval = 1f;
@@ -155,230 +144,42 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
-			// Player position → biome context
 			Vector3 position = Player.m_localPlayer.transform.position;
-			BiomeSector biomeSector = WorldGenerator.instance != null ? WorldGenerator.instance.GetBiomeSector(position, false) : null;
 
-			if (biomeSector == null)
+			WeatherLogic.ForecastResult? result = WeatherLogic.CalculateForecast(envMan, currentEnv, currentEnvironmentPeriod, totalSeconds, position);
+
+			if (!result.HasValue)
 			{
 				log.Warn("Could not determine biome sector for weather forecast.");
 				UIForecastTimer = "--:--";
 				return;
 			}
 
-			Heightmap.Biome currentBiome = biomeSector.Biome;
-
-			bool isAshlands = WorldGenerator.IsAshlands(position.x, position.z);
-			bool isDeepNorth = WorldGenerator.IsDeepnorth(position.x, position.z);
-
-			// Track changes to the resolved weather list so diagnostics can also
-			// react to runtime weight changes such as Clearer Weather.
-			bool availableEnvironmentsChanged = HasAvailableEnvironmentsChanged(envMan, biomeSector);
-
-			EnvSetup forecastEnv = null;
-			long forecastPeriod = -1;
-
-			// Look ahead up to 50 periods
-			for (int i = 1; i <= 50; i++)
-			{
-				long periodToCheck = currentEnvironmentPeriod + i;
-				EnvSetup nextEnv = GetEnvironment(periodToCheck, biomeSector, isAshlands, isDeepNorth);
-
-				if (nextEnv != null && nextEnv.m_name != currentEnv.m_name)
-				{
-					forecastEnv = nextEnv;
-					forecastPeriod = periodToCheck;
-					break;
-				}
-			}
-
-			if (forecastEnv == null)
-			{
-				// No upcoming weather change within 50 periods
-				// → show the current environment icon and a neutral timer ("--:--")
-				Sprite iconSpriteCurrent = null;
-				string currentNameNormalized = WeatherLogic.NormalizeWeatherName(currentBiome, currentEnv.m_name);
-
-				if (WeatherLogic.TryGetIconKey(currentBiome, currentNameNormalized, out string iconKeyCurrent))
-				{
-					string resourcePath = $"MarsarahUI.Assets.Icons.Weather.{iconKeyCurrent}.png";
-					iconSpriteCurrent = IconManager.LoadEmbeddedIcon(resourcePath);
-				}
-
-				if (UIForecastIcon != null)
-				{
-					UIForecastIcon.sprite = iconSpriteCurrent;
-					UIForecastIcon.enabled = iconSpriteCurrent != null;
-				}
-
-				UIForecastTimer = "--:--";
-				return;
-			}
-
-			string normalizedForecastName = WeatherLogic.NormalizeWeatherName(currentBiome, forecastEnv.m_name);
-			string timerStr = GetNextWeatherTimer(forecastPeriod, totalSeconds);
-			bool forecastChanged = availableEnvironmentsChanged || forecastEnv != _lastForecastEnv || forecastPeriod != _lastForecastPeriod;
-
-			// Pick icon
+			WeatherLogic.ForecastResult forecast = result.Value;
 			Sprite iconSprite = null;
 
-			if (WeatherLogic.TryGetIconKey(currentBiome, normalizedForecastName, out string iconKey))
+			if (WeatherLogic.TryGetIconKey(forecast.Biome, forecast.NormalizedWeatherName, out string iconKey))
 			{
 				string resourcePath = $"MarsarahUI.Assets.Icons.Weather.{iconKey}.png";
 				iconSprite = IconManager.LoadEmbeddedIcon(resourcePath);
 
-				if (iconSprite == null && forecastChanged)
+				if (iconSprite == null && forecast.HasUpcomingChange && forecast.HasChanged)
 				{
 					log.Warn($"Failed to load weather icon '{resourcePath}'.");
 				}
 			}
-			else if (forecastChanged)
+			else if (forecast.HasUpcomingChange && forecast.HasChanged)
 			{
-				log.Warn($"No weather icon mapping for biome '{currentBiome}' and environment '{normalizedForecastName}'.");
+				log.Warn($"No weather icon mapping for biome '{forecast.Biome}' and environment '{forecast.NormalizedWeatherName}'.");
 			}
 
-			// Assign globals
-			UIForecastTimer = timerStr;
+			UIForecastTimer = forecast.Timer;
 
-			// Update UI element
 			if (UIForecastIcon != null)
 			{
 				UIForecastIcon.sprite = iconSprite;
 				UIForecastIcon.enabled = iconSprite != null;
 			}
-
-			// Debug: print the next 50 deterministic weather periods.
-			/*if (forecastChanged)
-			{				
-				string normalizedCurrentName = NormalizeWeatherName(currentBiome, currentEnv.m_name);
-								
-				StringBuilder sequenceLog = new StringBuilder();
-				sequenceLog.AppendLine("Next 50 forecast environments:");
-
-				for (int i = 1; i <= 50; i++)
-				{
-					long periodToCheck = currentEnvironmentPeriod + i;
-					EnvSetup nextEnv = GetEnvironment(periodToCheck, biomeSector, isAshlands, isDeepNorth);
-
-					if (nextEnv == null)
-					{
-						sequenceLog.AppendLine($"  +{i,2} → null (normalized: -)");
-						continue;
-					}
-
-					string rawName = nextEnv.m_name;
-					string normalizedNextName = NormalizeWeatherName(currentBiome, rawName);
-
-					sequenceLog.AppendLine($"  +{i,2} → {rawName} (normalized: {normalizedNextName})");
-				}
-
-				log.Info(sequenceLog.ToString());
-				log.Info($"Current weather: {currentEnv.m_name} (normalized: {normalizedCurrentName}), biome={currentBiome}");
-				log.Info($"Next forecast: {forecastEnv.m_name} (normalized: {normalizedForecastName}), ETA {timerStr}");
-			}*/
-
-			_lastForecastEnv = forecastEnv;
-			_lastForecastPeriod = forecastPeriod;
-		}
-
-		private static bool HasAvailableEnvironmentsChanged(EnvMan envMan, BiomeSector biomeSector)
-		{
-			List<EnvEntry> availableEnvironments = envMan.GetAvailableEnvironments(biomeSector);
-
-			if (availableEnvironments == null)
-				return false;
-
-			StringBuilder signature = new StringBuilder();
-			signature.Append($"{biomeSector.Biome}|");
-
-			foreach (EnvEntry entry in availableEnvironments)
-			{
-				if (entry?.m_env == null)
-					continue;
-
-				signature.Append($"{entry.m_env.m_name}:{entry.m_weight}:{entry.m_ashlandsOverride}:{entry.m_deepnorthOverride}|");
-			}
-
-			string currentSignature = signature.ToString();
-
-			if (currentSignature == _lastEnvironmentSignature)
-				return false;
-
-			_lastEnvironmentSignature = currentSignature;
-			return true;
-		}
-
-		private static EnvSetup GetEnvironment(long period, BiomeSector biomeSector, bool isAshlands, bool isDeepNorth)
-		{
-			// Save RNG state
-			UnityEngine.Random.State state = UnityEngine.Random.state;
-
-			// Deterministic seed
-			UnityEngine.Random.InitState((int)period);
-
-			EnvSetup result = null;
-
-			try
-			{
-				EnvMan envMan = EnvMan.instance;
-
-				if (envMan != null)
-				{
-					// Get all the available weathers for the given biome sector
-					List<EnvEntry> availableEnvironments = envMan.GetAvailableEnvironments(biomeSector);
-
-					if (availableEnvironments != null && availableEnvironments.Count > 0)
-					{
-						// From the list of available weathers, select one based on weights
-						if (selectWeightedEnvironmentMethod != null)
-						{
-							result = selectWeightedEnvironmentMethod.Invoke(envMan, new object[] { availableEnvironments }) as EnvSetup;
-						}
-
-						// Apply Ashlands / DeepNorth overrides
-						foreach (EnvEntry entry in availableEnvironments)
-						{
-							if (entry == null)
-								continue;
-
-							if (entry.m_ashlandsOverride && isAshlands)
-								result = entry.m_env;
-
-							if (entry.m_deepnorthOverride && isDeepNorth)
-								result = entry.m_env;
-						}
-					}
-				}
-			}
-			finally
-			{
-				// Restore RNG state
-				UnityEngine.Random.state = state;
-			}
-
-			return result;
-		}
-
-		// Returns a timer string until the given forecast period occurs.
-		private static string GetNextWeatherTimer(long forecastPeriod, double totalSecondsToNow)
-		{
-			EnvMan envMan = EnvMan.instance;
-			if (envMan == null) return "";
-
-			// Period length in seconds (derived from EnvMan constant)
-			float periodLength = envMan.m_environmentDuration;
-			double forecastTime = forecastPeriod * periodLength;
-
-			if (forecastTime <= totalSecondsToNow)
-				return "0:00";
-
-			double secondsLeft = forecastTime - totalSecondsToNow;
-			TimeSpan ts = TimeSpan.FromSeconds(secondsLeft);
-
-			if (ts.TotalHours >= 1.0)
-				return $"{(int)ts.TotalHours}:{ts.Minutes:D2}h";
-
-			return $"{ts.Minutes:D2}:{ts.Seconds:D2}";
 		}
 
 		private static bool ShouldShowWeatherUI()
