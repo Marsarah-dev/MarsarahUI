@@ -152,7 +152,7 @@ namespace MarsarahUI.Patches.UI
 				int originalCount = recipes.Count;
 
 				currentTabProfile = craftingStation == null ? CraftingTabProfile.NoCost : GetCraftingTabProfile(craftingStation);
-				UpdateAvailableTabs(recipes);
+				CraftingTabsLogic.UpdateAvailableTabs(recipes, currentTabProfile, availableTabs);
 
 				int tabRows = GetRequiredLayoutRows();
 				SetCraftingLayout(tabRows, __instance);
@@ -507,116 +507,6 @@ namespace MarsarahUI.Patches.UI
 
 			canCraft = (bool)property.GetValue(recipeData);
 			return true;
-		}
-
-		private static void UpdateAvailableTabs(List<Recipe> recipes)
-		{
-			availableTabs.Clear();
-			availableTabs.Add(CraftingTab.All);
-
-			switch (currentTabProfile)
-			{
-				case CraftingTabProfile.MeadKettle:
-					UpdateMeadKettleTabs(recipes);
-					break;
-
-				case CraftingTabProfile.FoodPreparation:
-					UpdateFoodPreparationTabs(recipes);
-					break;
-
-				case CraftingTabProfile.NoCost:
-					UpdateNoCostTabs(recipes);
-					break;
-
-				default:
-					UpdateBiomeAvailableTabs(recipes);
-					break;
-			}
-		}
-
-		private static void UpdateBiomeAvailableTabs(List<Recipe> recipes)
-		{
-			bool hasOther = false;
-
-			foreach (Recipe recipe in recipes)
-			{
-				if (CraftingTabsLogic.TryGetClassification(recipe, out CraftingTabsLogic.RecipeClassification classification) &&
-					CraftingTabsLogic.TryGetTabForBiome(classification.Biome, out CraftingTab tab))
-				{
-					availableTabs.Add(tab);
-				}
-				else
-				{
-					hasOther = true;
-				}
-			}
-
-			if (hasOther)
-				availableTabs.Add(CraftingTab.Other);
-		}
-
-		private static void UpdateMeadKettleTabs(List<Recipe> recipes)
-		{
-			bool hasOther = false;
-
-			foreach (Recipe recipe in recipes)
-			{
-				if (!CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup group))
-				{
-					hasOther = true;
-					continue;
-				}
-
-				switch (group)
-				{
-					case CraftingTabsLogic.SpecialRecipeGroup.MeadRecovery:
-						availableTabs.Add(CraftingTab.Recovery);
-						break;
-
-					case CraftingTabsLogic.SpecialRecipeGroup.MeadResistance:
-						availableTabs.Add(CraftingTab.Resist);
-						break;
-
-					case CraftingTabsLogic.SpecialRecipeGroup.MeadUtility:
-						availableTabs.Add(CraftingTab.Utility);
-						break;
-
-					default:
-						hasOther = true;
-						break;
-				}
-			}
-
-			if (hasOther)
-				availableTabs.Add(CraftingTab.Other);
-		}
-
-		private static void UpdateFoodPreparationTabs(List<Recipe> recipes)
-		{
-			bool hasOther = false;
-
-			foreach (Recipe recipe in recipes)
-			{
-				if (CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup group) &&
-					group == CraftingTabsLogic.SpecialRecipeGroup.Feast)
-				{
-					availableTabs.Add(CraftingTab.Feasts);
-					continue;
-				}
-
-				if (CraftingTabsLogic.TryGetClassification(recipe, out CraftingTabsLogic.RecipeClassification classification) &&
-					CraftingTabsLogic.TryGetTabForBiome(classification.Biome, out CraftingTab tab) &&
-					CraftingTabsLogic.IsFoodPreparationBiomeTab(tab))
-				{
-					availableTabs.Add(tab);
-					continue;
-				}
-
-				hasOther = true;
-			}
-
-			if (hasOther)
-				availableTabs.Add(CraftingTab.Other);
 		}
 
 		private static GameObject GetInventoryGuiObject(InventoryGui inventoryGui, string fieldName)
@@ -1457,48 +1347,6 @@ namespace MarsarahUI.Patches.UI
 			float scrollWidth = TabRowWidth - TabWidth - TabSpacing - ScrollRightInset;
 
 			return contentWidth > scrollWidth;
-		}
-
-		private static void UpdateNoCostTabs(List<Recipe> recipes)
-		{
-			bool hasOther = false;
-
-			foreach (Recipe recipe in recipes)
-			{
-				bool hasClassification = CraftingTabsLogic.TryGetClassification(recipe, out CraftingTabsLogic.RecipeClassification classification);
-				bool hasSpecialGroup = CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup specialGroup);
-
-				if (hasClassification && CraftingTabsLogic.TryGetTabForBiome(classification.Biome, out CraftingTab biomeTab))
-					availableTabs.Add(biomeTab);
-
-				if (hasSpecialGroup)
-				{
-					switch (specialGroup)
-					{
-						case CraftingTabsLogic.SpecialRecipeGroup.Feast:
-							availableTabs.Add(CraftingTab.Feasts);
-							break;
-
-						case CraftingTabsLogic.SpecialRecipeGroup.MeadRecovery:
-							availableTabs.Add(CraftingTab.Recovery);
-							break;
-
-						case CraftingTabsLogic.SpecialRecipeGroup.MeadResistance:
-							availableTabs.Add(CraftingTab.Resist);
-							break;
-
-						case CraftingTabsLogic.SpecialRecipeGroup.MeadUtility:
-							availableTabs.Add(CraftingTab.Utility);
-							break;
-					}
-				}
-
-				if (!hasClassification && !hasSpecialGroup)
-					hasOther = true;
-			}
-
-			if (hasOther)
-				availableTabs.Add(CraftingTab.Other);
 		}
 
 		private static void DumpCurrentRecipes()
