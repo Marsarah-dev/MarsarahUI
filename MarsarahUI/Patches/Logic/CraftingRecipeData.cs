@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
+using MarsarahUI.Managers;
 
-namespace MarsarahUI.Managers
+namespace MarsarahUI.Patches.Logic
 {
-	internal static class BiomeCraftingManager
+	internal static class CraftingRecipeData
 	{
 		private static readonly LogManager log = new LogManager("Biome Crafting", LogManager.LogLevel.Warning);
 
@@ -62,7 +64,7 @@ namespace MarsarahUI.Managers
 		private static readonly Dictionary<string, RecipeClassification> recipeClassifications = new Dictionary<string, RecipeClassification>();
 		private static readonly Dictionary<string, SpecialRecipeGroup> specialRecipeGroups = new Dictionary<string, SpecialRecipeGroup>();
 
-		static BiomeCraftingManager()
+		static CraftingRecipeData()
 		{
 			// Meadows
 			AddRecipes(CraftingBiome.Meadows, RecipeCategory.Tools,
