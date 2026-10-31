@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
-using UnityEngine;
 using System.Linq;
+using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -70,7 +70,7 @@ namespace MarsarahUI.Patches.UI
 				}
 
 				// Order by the same priority used by portal transition images.
-				alternateNames = alternateNames.OrderBy(name => PortalBiomeImageManager.GetAlternatePriority(biome, name)).ToList();
+				alternateNames = alternateNames.OrderBy(name => BiomePriority.GetAlternatePriority(biome, name)).ToList();
 
 				currentAlternateNames.Clear();
 				currentAlternateNames.AddRange(alternateNames);

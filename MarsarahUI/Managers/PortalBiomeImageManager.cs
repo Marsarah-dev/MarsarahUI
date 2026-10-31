@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Managers
 {
@@ -35,7 +37,8 @@ namespace MarsarahUI.Managers
 			}
 		}
 
-		// Each biome has one default image followed by its alternate images in priority order.
+		// Each biome has one default image and optional alternate artwork mappings.
+		// Selection priority is defined in BiomePriority.
 		// Lantern and Bones Mistlands deliberately have no artwork entries.
 		private static readonly Dictionary<string, BiomeImageSet> biomeImages = new Dictionary<string, BiomeImageSet>
 		{
@@ -104,7 +107,7 @@ namespace MarsarahUI.Managers
 				string[] activeModifiers = altBiomes.Split(',');
 				string normalizedBiome = NormalizeName(biome);
 
-				foreach (AlternateImage alternate in imageSet.Alternates)
+				foreach (AlternateImage alternate in imageSet.Alternates.OrderBy(image => BiomePriority.GetAlternatePriority(biome, image.Name)))
 				{
 					if (!IsActive(alternate.Name, normalizedBiome, activeModifiers)) continue;
 
@@ -155,25 +158,6 @@ namespace MarsarahUI.Managers
 			}
 
 			return false;
-		}
-
-		internal static int GetAlternatePriority(string biome, string alternateName)
-		{
-			if (!biomeImages.TryGetValue(biome, out BiomeImageSet imageSet))
-				return int.MaxValue;
-
-			string normalizedName = NormalizeName(alternateName);
-			string normalizedBiome = NormalizeName(biome);
-
-			for (int i = 0; i < imageSet.Alternates.Length; i++)
-			{
-				string modifier = NormalizeName(imageSet.Alternates[i].Name);
-
-				if (normalizedName == modifier || normalizedName == modifier + normalizedBiome)
-					return i;
-			}
-
-			return int.MaxValue;
 		}
 
 		private static string NormalizeName(string name)

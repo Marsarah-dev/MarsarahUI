@@ -11,6 +11,7 @@ A. Fixes
 
 B. Updates
 ------------------------
+* Swapped UI animations and UI Display Mode position in config.
 
 C. New additions
 ------------------------
@@ -18,6 +19,7 @@ C. New additions
   - Added a custom animated portal transition screen that displays the destination biome and its active alternate variations during teleportation.
   - All nine biomes and 34 alternate biome variations use AI edited in-game screenshots.
   - For overlapping alternate biomes there is a priority system to select which image to display.
+  - Has a dropdown option to display the destination biome text and alternate versions.
 
 * Alternate Biome Names
   - Added alternate biome names to the minimap, compatible with Smart Biome.
@@ -27,7 +29,7 @@ C. New additions
 
 D. In Progress
 ------------------------
-* Add config to indicate the alternate biome on the minimap.
+* Refactor managers into logic classes.
 
 ============================================================
 TO IMPLEMENT / VERIFY
@@ -37,7 +39,7 @@ TO IMPLEMENT / VERIFY
 * Immediately replace notifications that are repeating states like sheltered and exposed.
 * Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
 * Skill progress bar at the bottom is not hidden when main game HUD is off. Also check on Insert. 
-* Swap UI animations and UI Display Mode position in config.
+* Swap order of crafting tabs for Plains and Ocean.
 
 A. Fixes / Compatibility
 --------------------

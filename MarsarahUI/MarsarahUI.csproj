@@ -98,6 +98,7 @@
     <Compile Include="Managers\PortalBiomeImageManager.cs" />
     <Compile Include="Managers\UIStyleManager.cs" />
     <Compile Include="MarsarahUI.cs" />
+    <Compile Include="Patches\Logic\BiomePriority.cs" />
     <Compile Include="Patches\UI\UIAlternateBiomeNames.cs" />
     <Compile Include="Patches\UI\UIAshlandsHeatLevel.cs" />
     <Compile Include="Patches\UI\UIBoatHealth.cs" />
