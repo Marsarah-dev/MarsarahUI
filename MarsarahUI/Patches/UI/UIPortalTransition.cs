@@ -3,6 +3,7 @@ using MarsarahUI.Managers;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -127,7 +128,7 @@ namespace MarsarahUI.Patches.UI
 			{
 				portalSessionActive = true;
 
-				destinationBiomeSprite = PortalBiomeImageManager.ResolveSprite(destinationBiome, destinationAltBiomes);
+				destinationBiomeSprite = PortalImageResolver.ResolveSprite(destinationBiome, destinationAltBiomes);
 
 				log.Info($"Portal session started | Biome: {destinationBiome} | Alt Biome: {destinationAltBiomes}");
 			}

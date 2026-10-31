@@ -1,13 +1,13 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-using MarsarahUI.Patches.Logic;
+using MarsarahUI.Managers;
+using UnityEngine;
 
-namespace MarsarahUI.Managers
+namespace MarsarahUI.Patches.Logic
 {
-	internal static class PortalBiomeImageManager
+	internal static class PortalImageResolver
 	{
 		private static readonly LogManager log = new LogManager("Portal Biome Images", LogManager.LogLevel.Info);
 
@@ -43,36 +43,36 @@ namespace MarsarahUI.Managers
 		private static readonly Dictionary<string, BiomeImageSet> biomeImages = new Dictionary<string, BiomeImageSet>
 		{
 			{ "Meadows", new BiomeImageSet("Meadows_01.jpg",
-				new AlternateImage("Dark", "Meadows_04_Dark.jpg"),
 				new AlternateImage("Birch", "Meadows_02_Birch.jpg"),
-				new AlternateImage("Menhir", "Meadows_08_Menhir.jpg"),
+				new AlternateImage("Dandelion", "Meadows_03_Dandelion.jpg"),
+				new AlternateImage("Dark", "Meadows_04_Dark.jpg"),
 				new AlternateImage("Peaceful", "Meadows_05_Peaceful.jpg"),
-				new AlternateImage("Smalltree", "Meadows_07_Smalltree.jpg"),
 				new AlternateImage("Raspberry", "Meadows_06_Raspberry.jpg"),
-				new AlternateImage("Mushroom", "Meadows_09_Mushroom.jpg"),
-				new AlternateImage("Dandelion", "Meadows_03_Dandelion.jpg")) },
+				new AlternateImage("Smalltree", "Meadows_07_Smalltree.jpg"),
+				new AlternateImage("Menhir", "Meadows_08_Menhir.jpg"),
+				new AlternateImage("Mushroom", "Meadows_09_Mushroom.jpg")) },
 
 			{ "BlackForest", new BiomeImageSet("BlackForest_01.jpg",
-				new AlternateImage("Troll", "BlackForest_08_Troll.jpg"),
+				new AlternateImage("Blueberry", "BlackForest_02_Blueberry.jpg"),
+				new AlternateImage("Kalhygge", "BlackForest_03_Kalhygge.jpg"),
+				new AlternateImage("Pinetree", "BlackForest_04_Pine.jpg"),
+				new AlternateImage("Rock", "BlackForest_05_Rock.jpg"),
 				new AlternateImage("Root", "BlackForest_06_Root.jpg"),
 				new AlternateImage("Ruin", "BlackForest_07_Ruin.jpg"),
-				new AlternateImage("Kalhygge", "BlackForest_03_Kalhygge.jpg"),
-				new AlternateImage("Rock", "BlackForest_05_Rock.jpg"),
-				new AlternateImage("Blueberry", "BlackForest_02_Blueberry.jpg"),
-				new AlternateImage("Mushroom", "BlackForest_09_Mushroom.jpg"),
-				new AlternateImage("Pinetree", "BlackForest_04_Pine.jpg")) },
+				new AlternateImage("Troll", "BlackForest_08_Troll.jpg"),
+				new AlternateImage("Mushroom", "BlackForest_09_Mushroom.jpg")) },
 
 			{ "Swamp", new BiomeImageSet("Swamp_01.jpg",
 				new AlternateImage("Abomination", "Swamp_02_Abomination.jpg"),
 				new AlternateImage("Bat", "Swamp_03_Bat.jpg"),
-				new AlternateImage("Bones", "Swamp_06_Bones.jpg"),
 				new AlternateImage("Bog", "Swamp_04_Bog.jpg"),
-				new AlternateImage("Hut", "Swamp_05_Hut.jpg")) },
+				new AlternateImage("Hut", "Swamp_05_Hut.jpg"),
+				new AlternateImage("Bones", "Swamp_06_Bones.jpg")) },
 
 			{ "Mountain", new BiomeImageSet("Mountain_01.jpg",
 				new AlternateImage("Drake", "Mountain_02_Drake.jpg"),
-				new AlternateImage("Wolf", "Mountain_04_Wolf.jpg"),
-				new AlternateImage("Fortress", "Mountain_03_Fortress.jpg")) },
+				new AlternateImage("Fortress", "Mountain_03_Fortress.jpg"),
+				new AlternateImage("Wolf", "Mountain_04_Wolf.jpg")) },
 
 			{ "Plains", new BiomeImageSet("Plains_01.jpg",
 				new AlternateImage("Death", "Plains_02_Death.jpg"),
@@ -82,11 +82,11 @@ namespace MarsarahUI.Managers
 				new AlternateImage("Menhir", "Plains_06_Menhir.jpg")) },
 
 			{ "Mistlands", new BiomeImageSet("Mistlands_01.jpg",
-				new AlternateImage("Swords", "Mistlands_05_Swords.jpg"),
-				new AlternateImage("Trees", "Mistlands_06_Trees.jpg"),
-				new AlternateImage("Hare", "Mistlands_03_Hare.jpg"),
 				new AlternateImage("BroodSwarm", "Mistlands_02_BroodSwarm.jpg"),
-				new AlternateImage("Rockless", "Mistlands_04_Rockless.jpg")) },
+				new AlternateImage("Hare", "Mistlands_03_Hare.jpg"),
+				new AlternateImage("Rockless", "Mistlands_04_Rockless.jpg"),
+				new AlternateImage("Swords", "Mistlands_05_Swords.jpg"),
+				new AlternateImage("Trees", "Mistlands_06_Trees.jpg")) },
 
 			{ "AshLands", new BiomeImageSet("Ashlands_01.jpg") },
 			{ "DeepNorth", new BiomeImageSet("DeepNorth_01.jpg") },
