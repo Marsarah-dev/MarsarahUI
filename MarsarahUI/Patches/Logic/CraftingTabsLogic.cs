@@ -1136,5 +1136,199 @@ namespace MarsarahUI.Patches.Logic
 			if (hasOther)
 				availableTabs.Add(CraftingTab.Other);
 		}
+
+
+		// Recipe sorting
+		internal readonly struct RecipeSortData
+		{
+			internal Recipe Recipe { get; }
+			internal int OriginalIndex { get; }
+			internal bool CanCraft { get; }
+
+			internal RecipeSortData(Recipe recipe, int originalIndex, bool canCraft)
+			{
+				Recipe = recipe;
+				OriginalIndex = originalIndex;
+				CanCraft = canCraft;
+			}
+		}
+
+		internal static int CompareRecipeEntries(RecipeSortData a, RecipeSortData b, CraftingTab selectedTab, CraftingTabProfile profile)
+		{
+			if (a.CanCraft != b.CanCraft)
+				return a.CanCraft ? -1 : 1;
+
+			switch (profile)
+			{
+				case CraftingTabProfile.MeadKettle:
+					return CompareMeadRecipes(a, b, selectedTab);
+
+				case CraftingTabProfile.FoodPreparation:
+					return CompareFoodPreparationRecipes(a, b, selectedTab);
+
+				default:
+					return CompareBiomeRecipes(a, b, selectedTab);
+			}
+		}
+
+		private static int CompareBiomeRecipes(RecipeSortData a, RecipeSortData b, CraftingTab selectedTab)
+		{
+			bool hasA = TryGetClassification(a.Recipe, out RecipeClassification classificationA);
+			bool hasB = TryGetClassification(b.Recipe, out RecipeClassification classificationB);
+
+			if (selectedTab == CraftingTab.All)
+			{
+				if (hasA != hasB)
+					return hasA ? -1 : 1;
+
+				if (!hasA)
+					return a.OriginalIndex.CompareTo(b.OriginalIndex);
+
+				int comparison = ((int)classificationA.Biome).CompareTo((int)classificationB.Biome);
+
+				if (comparison != 0)
+					return comparison;
+			}
+
+			if (!hasA || !hasB)
+				return a.OriginalIndex.CompareTo(b.OriginalIndex);
+
+			int categoryComparison = ((int)classificationA.Category).CompareTo((int)classificationB.Category);
+
+			if (categoryComparison != 0)
+				return categoryComparison;
+
+			int orderComparison = classificationA.Order.CompareTo(classificationB.Order);
+
+			if (orderComparison != 0)
+				return orderComparison;
+
+			return a.OriginalIndex.CompareTo(b.OriginalIndex);
+		}
+
+		private static int CompareFoodPreparationRecipes(RecipeSortData a, RecipeSortData b, CraftingTab selectedTab)
+		{
+			if (selectedTab == CraftingTab.Feasts)
+				return CompareFeastRecipes(a, b);
+
+			if (selectedTab != CraftingTab.All)
+				return CompareBiomeRecipes(a, b, selectedTab);
+
+			int groupA = GetFoodPreparationSortGroup(a.Recipe);
+			int groupB = GetFoodPreparationSortGroup(b.Recipe);
+
+			int groupComparison = groupA.CompareTo(groupB);
+
+			if (groupComparison != 0)
+				return groupComparison;
+
+			if (groupA == 4)
+				return CompareFeastRecipes(a, b);
+
+			if (groupA == 5)
+				return a.OriginalIndex.CompareTo(b.OriginalIndex);
+
+			if (TryGetClassification(a.Recipe, out RecipeClassification classificationA) &&
+				TryGetClassification(b.Recipe, out RecipeClassification classificationB))
+			{
+				int categoryComparison = ((int)classificationA.Category).CompareTo((int)classificationB.Category);
+
+				if (categoryComparison != 0)
+					return categoryComparison;
+
+				int orderComparison = classificationA.Order.CompareTo(classificationB.Order);
+
+				if (orderComparison != 0)
+					return orderComparison;
+			}
+
+			return a.OriginalIndex.CompareTo(b.OriginalIndex);
+		}
+
+		private static int GetFoodPreparationSortGroup(Recipe recipe)
+		{
+			if (TryGetSpecialGroup(recipe, out SpecialRecipeGroup group) &&
+				group == SpecialRecipeGroup.Feast)
+			{
+				return 4;
+			}
+
+			if (!TryGetClassification(recipe, out RecipeClassification classification))
+				return 5;
+
+			switch (classification.Biome)
+			{
+				case CraftingBiome.Plains:
+					return 0;
+
+				case CraftingBiome.Mistlands:
+					return 1;
+
+				case CraftingBiome.Ashlands:
+					return 2;
+
+				case CraftingBiome.DeepNorth:
+					return 3;
+
+				default:
+					return 5;
+			}
+		}
+
+		private static int CompareFeastRecipes(RecipeSortData a, RecipeSortData b)
+		{
+			bool hasA = TryGetClassification(a.Recipe, out RecipeClassification classificationA);
+			bool hasB = TryGetClassification(b.Recipe, out RecipeClassification classificationB);
+
+			if (hasA != hasB)
+				return hasA ? -1 : 1;
+
+			if (!hasA)
+				return a.OriginalIndex.CompareTo(b.OriginalIndex);
+
+			int biomeComparison = ((int)classificationA.Biome).CompareTo((int)classificationB.Biome);
+
+			if (biomeComparison != 0)
+				return biomeComparison;
+
+			return a.OriginalIndex.CompareTo(b.OriginalIndex);
+		}
+
+		private static int CompareMeadRecipes(RecipeSortData a, RecipeSortData b, CraftingTab selectedTab)
+		{
+			if (selectedTab != CraftingTab.All)
+				return a.OriginalIndex.CompareTo(b.OriginalIndex);
+
+			int groupA = GetMeadSortGroup(a.Recipe);
+			int groupB = GetMeadSortGroup(b.Recipe);
+
+			int comparison = groupA.CompareTo(groupB);
+
+			if (comparison != 0)
+				return comparison;
+
+			return a.OriginalIndex.CompareTo(b.OriginalIndex);
+		}
+
+		private static int GetMeadSortGroup(Recipe recipe)
+		{
+			if (!TryGetSpecialGroup(recipe, out SpecialRecipeGroup group))
+				return 3;
+
+			switch (group)
+			{
+				case SpecialRecipeGroup.MeadRecovery:
+					return 0;
+
+				case SpecialRecipeGroup.MeadResistance:
+					return 1;
+
+				case SpecialRecipeGroup.MeadUtility:
+					return 2;
+
+				default:
+					return 3;
+			}
+		}
 	}
 }

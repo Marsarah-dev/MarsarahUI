@@ -34,18 +34,14 @@ namespace MarsarahUI.Patches.UI
 		private sealed class RecipeSortEntry
 		{
 			internal object RecipeData { get; }
-			internal Recipe Recipe { get; }
 			internal RectTransform Rect { get; }
-			internal int OriginalIndex { get; }
-			internal bool CanCraft { get; }
+			internal CraftingTabsLogic.RecipeSortData SortData { get; }
 
 			internal RecipeSortEntry(object recipeData, Recipe recipe, RectTransform rect, int originalIndex, bool canCraft)
 			{
 				RecipeData = recipeData;
-				Recipe = recipe;
 				Rect = rect;
-				OriginalIndex = originalIndex;
-				CanCraft = canCraft;
+				SortData = new CraftingTabsLogic.RecipeSortData(recipe, originalIndex, canCraft);
 			}
 		}
 
@@ -273,7 +269,7 @@ namespace MarsarahUI.Patches.UI
 				slotPositions.Add(rect.anchoredPosition);
 			}
 
-			entries.Sort(CompareRecipeEntries);
+			entries.Sort((a, b) => CraftingTabsLogic.CompareRecipeEntries(a.SortData, b.SortData, selectedTab, currentTabProfile));
 
 			for (int i = 0; i < entries.Count; i++)
 			{
@@ -313,184 +309,6 @@ namespace MarsarahUI.Patches.UI
 				interfaceElement = AccessTools.Field(recipeData.GetType(), "InterfaceElement")?.GetValue(recipeData) as GameObject;
 
 			return interfaceElement?.GetComponent<RectTransform>();
-		}
-
-		private static int CompareRecipeEntries(RecipeSortEntry a, RecipeSortEntry b)
-		{
-			if (a.CanCraft != b.CanCraft)
-				return a.CanCraft ? -1 : 1;
-
-			switch (currentTabProfile)
-			{
-				case CraftingTabProfile.MeadKettle:
-					return CompareMeadRecipes(a, b);
-
-				case CraftingTabProfile.FoodPreparation:
-					return CompareFoodPreparationRecipes(a, b);
-
-				default:
-					return CompareBiomeRecipes(a, b);
-			}
-		}
-
-		private static int CompareBiomeRecipes(RecipeSortEntry a, RecipeSortEntry b)
-		{
-			bool hasA = CraftingTabsLogic.TryGetClassification(a.Recipe, out CraftingTabsLogic.RecipeClassification classificationA);
-			bool hasB = CraftingTabsLogic.TryGetClassification(b.Recipe, out CraftingTabsLogic.RecipeClassification classificationB);
-
-			if (selectedTab == CraftingTab.All)
-			{
-				if (hasA != hasB)
-					return hasA ? -1 : 1;
-
-				if (!hasA)
-					return a.OriginalIndex.CompareTo(b.OriginalIndex);
-
-				int comparison = ((int)classificationA.Biome).CompareTo((int)classificationB.Biome);
-
-				if (comparison != 0)
-					return comparison;
-			}
-
-			if (!hasA || !hasB)
-				return a.OriginalIndex.CompareTo(b.OriginalIndex);
-
-			int categoryComparison = ((int)classificationA.Category).CompareTo((int)classificationB.Category);
-
-			if (categoryComparison != 0)
-				return categoryComparison;
-
-			int orderComparison = classificationA.Order.CompareTo(classificationB.Order);
-
-			if (orderComparison != 0)
-				return orderComparison;
-
-			return a.OriginalIndex.CompareTo(b.OriginalIndex);
-		}
-
-		private static int CompareFoodPreparationRecipes(RecipeSortEntry a, RecipeSortEntry b)
-		{
-			if (selectedTab == CraftingTab.Feasts)
-				return CompareFeastRecipes(a, b);
-
-			if (selectedTab != CraftingTab.All)
-				return CompareBiomeRecipes(a, b);
-
-			int groupA = GetFoodPreparationSortGroup(a.Recipe);
-			int groupB = GetFoodPreparationSortGroup(b.Recipe);
-
-			int groupComparison = groupA.CompareTo(groupB);
-
-			if (groupComparison != 0)
-				return groupComparison;
-
-			if (groupA == 4)
-				return CompareFeastRecipes(a, b);
-
-			if (groupA == 5)
-				return a.OriginalIndex.CompareTo(b.OriginalIndex);
-
-			if (CraftingTabsLogic.TryGetClassification(a.Recipe, out CraftingTabsLogic.RecipeClassification classificationA) &&
-				CraftingTabsLogic.TryGetClassification(b.Recipe, out CraftingTabsLogic.RecipeClassification classificationB))
-			{
-				int categoryComparison = ((int)classificationA.Category).CompareTo((int)classificationB.Category);
-
-				if (categoryComparison != 0)
-					return categoryComparison;
-
-				int orderComparison = classificationA.Order.CompareTo(classificationB.Order);
-
-				if (orderComparison != 0)
-					return orderComparison;
-			}
-
-			return a.OriginalIndex.CompareTo(b.OriginalIndex);
-		}
-
-		private static int GetFoodPreparationSortGroup(Recipe recipe)
-		{
-			if (CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup group) &&
-				group == CraftingTabsLogic.SpecialRecipeGroup.Feast)
-			{
-				return 4;
-			}
-
-			if (!CraftingTabsLogic.TryGetClassification(recipe, out CraftingTabsLogic.RecipeClassification classification))
-				return 5;
-
-			switch (classification.Biome)
-			{
-				case CraftingTabsLogic.CraftingBiome.Plains:
-					return 0;
-
-				case CraftingTabsLogic.CraftingBiome.Mistlands:
-					return 1;
-
-				case CraftingTabsLogic.CraftingBiome.Ashlands:
-					return 2;
-
-				case CraftingTabsLogic.CraftingBiome.DeepNorth:
-					return 3;
-
-				default:
-					return 5;
-			}
-		}
-
-		private static int CompareFeastRecipes(RecipeSortEntry a, RecipeSortEntry b)
-		{
-			bool hasA = CraftingTabsLogic.TryGetClassification(a.Recipe, out CraftingTabsLogic.RecipeClassification classificationA);
-			bool hasB = CraftingTabsLogic.TryGetClassification(b.Recipe, out CraftingTabsLogic.RecipeClassification classificationB);
-
-			if (hasA != hasB)
-				return hasA ? -1 : 1;
-
-			if (!hasA)
-				return a.OriginalIndex.CompareTo(b.OriginalIndex);
-
-			int biomeComparison = ((int)classificationA.Biome).CompareTo((int)classificationB.Biome);
-
-			if (biomeComparison != 0)
-				return biomeComparison;
-
-			return a.OriginalIndex.CompareTo(b.OriginalIndex);
-		}
-
-		private static int CompareMeadRecipes(RecipeSortEntry a, RecipeSortEntry b)
-		{
-			if (selectedTab != CraftingTab.All)
-				return a.OriginalIndex.CompareTo(b.OriginalIndex);
-
-			int groupA = GetMeadSortGroup(a.Recipe);
-			int groupB = GetMeadSortGroup(b.Recipe);
-
-			int comparison = groupA.CompareTo(groupB);
-
-			if (comparison != 0)
-				return comparison;
-
-			return a.OriginalIndex.CompareTo(b.OriginalIndex);
-		}
-
-		private static int GetMeadSortGroup(Recipe recipe)
-		{
-			if (!CraftingTabsLogic.TryGetSpecialGroup(recipe, out CraftingTabsLogic.SpecialRecipeGroup group))
-				return 3;
-
-			switch (group)
-			{
-				case CraftingTabsLogic.SpecialRecipeGroup.MeadRecovery:
-					return 0;
-
-				case CraftingTabsLogic.SpecialRecipeGroup.MeadResistance:
-					return 1;
-
-				case CraftingTabsLogic.SpecialRecipeGroup.MeadUtility:
-					return 2;
-
-				default:
-					return 3;
-			}
 		}
 
 		private static bool TryGetCanCraftFromRecipeData(object recipeData, out bool canCraft)
