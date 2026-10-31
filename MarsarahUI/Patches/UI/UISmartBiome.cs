@@ -16,7 +16,6 @@ namespace MarsarahUI.Patches.UI
 
 		private const float ArmorUpdateInterval = 0.5f;
 		private static float nextArmorUpdateTime;
-		private const float BiomeAreaWidth = 290f;
 
 		private struct BiomeWeights
 		{
@@ -101,12 +100,7 @@ namespace MarsarahUI.Patches.UI
 				if (!UIBiomeText.enabled) return;
 
 				UIBiomeText.color = GearProgressionManager.GetBiomeColor(playerArmorWeight, currentBiome);
-
-				Player player = Player.m_localPlayer;
-				string displayName = BiomeDisplayManager.GetDisplayName(player, out bool hasAlternates);
-				UIBiomeText.text = hasAlternates
-					? BiomeDisplayManager.WrapDisplayName(UIBiomeText, displayName, BiomeAreaWidth)
-					: GetBiomeDisplayName(currentBiome);
+				UIBiomeText.text = GetBiomeDisplayName(currentBiome);
 			}
 		}
 
@@ -116,7 +110,7 @@ namespace MarsarahUI.Patches.UI
 
 			int UITextFontSize = 16;
 			string UITextFontName = "AveriaSansLibre-Bold";
-			Vector2 UIBiomeAreaSize = new Vector2(BiomeAreaWidth, 52f);
+			Vector2 UIBiomeAreaSize = new Vector2(150f, 30f);
 
 			GameObject UIBiomeArea = new GameObject("BiomeArea");
 			UIBiomeArea.layer = 5;
@@ -125,16 +119,12 @@ namespace MarsarahUI.Patches.UI
 			RectTransform biomeAreaTransform = UIBiomeArea.AddComponent<RectTransform>();
 			biomeAreaTransform.anchorMin = new Vector2(1f, 1f);
 			biomeAreaTransform.anchorMax = new Vector2(1f, 1f);
-			biomeAreaTransform.anchoredPosition = new Vector2(-195f, -66f);
+			biomeAreaTransform.anchoredPosition = new Vector2(-125f, -55f);
 			biomeAreaTransform.sizeDelta = UIBiomeAreaSize;
 
 			UIBiomeArea.transform.localScale = Vector3.one;
 
 			UIBiomeText = CreateTextObject("BiomeText", UIBiomeArea, Color.white, UITextFontName, UITextFontSize, TextAnchor.MiddleRight, Vector2.zero, UIBiomeAreaSize);
-			UIBiomeText.horizontalOverflow = HorizontalWrapMode.Wrap;
-			UIBiomeText.resizeTextForBestFit = true;
-			UIBiomeText.resizeTextMinSize = 12;
-			UIBiomeText.resizeTextMaxSize = UITextFontSize;
 		}
 
 		private static string GetBiomeDisplayName(string biome)
