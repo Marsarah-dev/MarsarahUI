@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Patches\Logic\CharacterStatisticsLogic.cs" />
     <Compile Include="Patches\Logic\CraftingTabsLogic.cs" />
     <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
