@@ -89,11 +89,11 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=4][b]🔧 UI Style[/b][/size]
 - Choose between [b]3 shared visual styles[/b] for the Information Rail, Summon Counter, Sailing HUD, Enhanced Notifications and other supported UI elements.
 
-[size=4][b]🔧 UI Animations[/b][/size]
-- Enables or disables animations for supported UI elements.
-
 [size=4][b]🔧 UI Display Mode[/b][/size]
 - Choose between [b]Icons[/b] and [b]Text[/b] display modes for the Information Rail, Summon Counter and Sailing HUD.
+
+[size=4][b]🔧 UI Animations[/b][/size]
+- Enables or disables animations for supported UI elements.
 
 [size=4][b]🔧 Better Loading Tips[/b][/size]
 - Replaces the vanilla loading-tip selection with a larger pool of more useful gameplay tips.

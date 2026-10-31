@@ -99,15 +99,15 @@ MOD CONFIGS
   Can choose between 3 separate visual styles.
 
 
------------------------ [UI Animations] -------------------------
-► Description:
-  Enables or disables animations for supported UI elements, including the Information Rail, Summon Counter and Enhanced Notifications.
-
-
 ----------------------- [UI Display Mode] -----------------------
 ► Description:
   Selects whether supported UI elements use icons or text labels.
   Applies to the Information Rail, Summon Counter and Sailing HUD.
+
+
+----------------------- [UI Animations] -------------------------
+► Description:
+  Enables or disables animations for supported UI elements, including the Information Rail, Summon Counter and Enhanced Notifications.
 
 
 ---------------------- [Better Loading Tips] -------------------
@@ -797,11 +797,11 @@ v1.5.0
 
 - New Features:
   - Added Portal Transition Images
-	- Replaces the vanilla teleport screen with biome-themed images for all nine biomes and 34 alternate variations.
-	- The images are in-game screenshots modified with AI.
+    - Replaces the vanilla teleport screen with biome-themed images for all nine biomes and 34 alternate variations.
+    - The images are in-game screenshots modified with AI.
     - Added an option to display the destination biome and active alternate biome names during teleportation.
   - Added Alternate Biome Names 
-	- Shows the alternate biome names on the minimap, including Smart Biome compatibility, OneRow/TwoRows display modes, overflow handling and a server override.
+    - Shows the alternate biome names on the minimap, including Smart Biome compatibility, OneRow/TwoRows display modes, overflow handling and a server override.
 
 v1.4.0
 - Updates:

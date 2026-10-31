@@ -10,11 +10,11 @@ v1.5.0
 
 - **New Features:**
   - Added Portal Transition Images
-	- Replaces the vanilla teleport screen with biome-themed images for all nine biomes and 34 alternate variations.
-	- The images are in-game screenshots modified with AI.
+    - Replaces the vanilla teleport screen with biome-themed images for all nine biomes and 34 alternate variations.
+    - The images are in-game screenshots modified with AI.
     - Added an option to display the destination biome and active alternate biome names during teleportation.
   - Added Alternate Biome Names 
-	- Shows the alternate biome names on the minimap, including Smart Biome compatibility, OneRow/TwoRows display modes, overflow handling and a server override.
+    - Shows the alternate biome names on the minimap, including Smart Biome compatibility, OneRow/TwoRows display modes, overflow handling and a server override.
 
 v1.4.0
 - **Updates:**

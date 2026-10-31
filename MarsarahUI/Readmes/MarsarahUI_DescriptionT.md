@@ -87,11 +87,11 @@ https://paypal.me/Marsarah9
 ### <strong>🔧 UI Style</strong>
 - Choose between **3 shared visual styles** for supported UI elements, including the Information Rail, Summon Counter, Sailing HUD and Enhanced Notifications.
 
-### <strong>🔧 UI Animations</strong>
-- Enables or disables animations for supported UI elements.
-
 ### <strong>🔧 UI Display Mode</strong>
 - Choose between **Icons** and **Text** display modes for supported UI elements, including the Information Rail, Summon Counter and Sailing HUD.
+
+### <strong>🔧 UI Animations</strong>
+- Enables or disables animations for supported UI elements.
 
 ### <strong>🔧 Better Loading Tips</strong>
 - Replaces the vanilla loading-tip selection with a larger pool of more useful gameplay tips.
