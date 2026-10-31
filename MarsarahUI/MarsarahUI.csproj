@@ -93,7 +93,7 @@
     <Compile Include="Patches\Logic\CraftingTabsLogic.cs" />
     <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
-    <Compile Include="Patches\Logic\SmartBiomeProgression.cs" />
+    <Compile Include="Patches\Logic\SmartBiomeLogic.cs" />
     <Compile Include="Managers\IconManager.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Patches\Logic\PortalImageResolver.cs" />

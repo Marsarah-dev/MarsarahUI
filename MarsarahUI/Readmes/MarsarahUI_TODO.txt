@@ -8,6 +8,7 @@ IMPLEMENTED - NOT RELEASED
 A. Fixes
 ------------------------
 * UI Notifications are no longer trying to draw on a dedicated server.
+* The bottom skill progress bar is now hidden when main game HUD is off or on Insert. 
 
 B. Updates
 ------------------------
@@ -39,7 +40,6 @@ TO IMPLEMENT / VERIFY
 0.
 * Immediately replace notifications that are repeating states like sheltered and exposed.
 * Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
-* Skill progress bar at the bottom is not hidden when main game HUD is off. Also check on Insert. 
 
 A. Fixes / Compatibility
 --------------------

@@ -123,6 +123,8 @@ namespace MarsarahUI.Patches.UI
 
 				if (!ShowUI)
 				{
+					//displayTimer = 0f;
+					//IsDisplaying = false;
 					UISkillProgressArea.SetActive(false);
 					return;
 				}
@@ -158,7 +160,7 @@ namespace MarsarahUI.Patches.UI
 
 			UISkillProgressArea = new GameObject("SkillProgressArea");
 			UISkillProgressArea.layer = 5;
-			UISkillProgressArea.transform.SetParent(hud.transform, false);
+			UISkillProgressArea.transform.SetParent(hud.m_rootObject.transform, false);
 
 			skillProgressCanvasGroup = UISkillProgressArea.AddComponent<CanvasGroup>();
 
@@ -204,7 +206,7 @@ namespace MarsarahUI.Patches.UI
 		private static void ShowProgress(string skillName, int level, int percent, Sprite skillIcon)
 		{
 			if (UISkillProgressArea == null || skillProgressFill == null) return;
-
+			
 			float progress = Mathf.Clamp01(percent / 100f);
 
 			RectTransform fillTransform = skillProgressFill.rectTransform;
