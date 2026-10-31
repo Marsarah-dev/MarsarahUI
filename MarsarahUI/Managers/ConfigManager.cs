@@ -819,6 +819,13 @@ namespace MarsarahUI.Managers
 				UINotifications.ApplyAnimationSetting();
 			}
 
+			if (configName == Configs.UIAlternateBiomeNames.Name ||
+				configName == Configs.OverrideAlternateBiomeNames.Name ||
+				configName == Configs.EnableServerOverrides.Name)
+			{
+				UIAlternateBiomeNames.RefreshFromConfig();
+			}
+
 			// ===== Information Rail
 			if (configName == Configs.UIInfoRailPosition.Name ||
 				configName == Configs.UIInfoRailScale.Name)

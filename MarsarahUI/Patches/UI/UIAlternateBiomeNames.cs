@@ -14,7 +14,10 @@ namespace MarsarahUI.Patches.UI
 		private static readonly LogManager log = new LogManager("UI Alternate Biome Names", LogManager.LogLevel.Info);
 
 		private static readonly FieldInfo biomeNameField = AccessTools.Field(typeof(Minimap), "m_biomeNameSmall");
+		private static readonly MethodInfo updateBiomeMethod = AccessTools.Method(typeof(Minimap), "UpdateBiome", new[] { typeof(Player) });
 		private static string lastDisplayName = string.Empty;
+		private static string vanillaBiomeName = string.Empty;
+		private static string lastBiome = string.Empty;
 
 		[HarmonyPatch(typeof(Minimap), "UpdateBiome")]
 		private static class AlternateBiome_MinimapPatch
@@ -29,21 +32,15 @@ namespace MarsarahUI.Patches.UI
 				if (biomeText == null) return;
 
 				string biome = player.GetCurrentBiome().ToString();
-				string displayName = GetBiomeDisplayName(biome);
-
-				if (!ConfigManager.EffectiveShowAlternateBiomeNames)
+				if (lastBiome != biome)
 				{
-					string vanillaName = Localization.instance.Localize("$biome_" + biome.ToLowerInvariant());
-
-					if (biomeText.text != vanillaName)
-					{
-						biomeText.text = vanillaName;
-						log.Info($"Alternate biome names disabled. Restored vanilla biome: {vanillaName}");
-					}
-
-					lastDisplayName = string.Empty;
-					return;
+					vanillaBiomeName = biomeText.text;
+					lastBiome = biome;
 				}
+
+				if (!ConfigManager.EffectiveShowAlternateBiomeNames) return;
+
+				string displayName = GetBiomeDisplayName(biome);
 
 				BiomeSector sector = WorldGenerator.instance.GetBiomeSector(player.transform.position, true);
 
@@ -101,6 +98,34 @@ namespace MarsarahUI.Patches.UI
 				return name.Substring(0, name.Length - suffix.Length).Trim();
 
 			return name;
+		}
+
+		internal static void RefreshFromConfig()
+		{
+			if (Minimap.instance == null || Player.m_localPlayer == null) return;
+
+			if (!ConfigManager.EffectiveShowAlternateBiomeNames)
+			{
+				TMP_Text biomeText = biomeNameField?.GetValue(Minimap.instance) as TMP_Text;
+				if (biomeText == null) return;
+
+				biomeText.text = vanillaBiomeName;
+				lastDisplayName = string.Empty;
+
+				log.Info("Alternate biome names disabled. Restored original vanilla biome text.");
+			}
+			else
+			{
+				if (updateBiomeMethod == null)
+				{
+					log.Warn("Could not find Minimap.UpdateBiome method.");
+					return;
+				}
+
+				updateBiomeMethod.Invoke(Minimap.instance, new object[] { Player.m_localPlayer });
+
+				log.Info("Alternate biome names enabled. Refreshed minimap.");
+			}
 		}
 	}
 }
