@@ -18,11 +18,12 @@ namespace MarsarahUI.Patches.UI
 		private static float nextArmorUpdateTime;
 
 		private const float BiomeTextWidth = 150f;
-		private const float AlternateBiomeTextWidth = 220f;
+		private const float AlternateBiomeTextWidth = 185f;
 		private const float BiomeTextHeight = 30f;
 
 		private static float singleLinePreferredHeight;
 		private static bool lastAlternateTextLayout;
+		private static string lastBiomeTextSignature = string.Empty;
 
 		private struct BiomeWeights
 		{
@@ -149,19 +150,34 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (UIBiomeText == null) return;
 
-			string alternateName = UIAlternateBiomeNames.CurrentAlternateDisplayName;
-			bool showAlternate = ConfigManager.EffectiveShowAlternateBiomeNames && !string.IsNullOrEmpty(alternateName);
+			bool showAlternate = ConfigManager.EffectiveShowAlternateBiomeNames && UIAlternateBiomeNames.HasAlternateBiomes;
 
-			string displayName = showAlternate ? alternateName : GetBiomeDisplayName(currentBiome);
+			string signature = currentBiome + "|" + (showAlternate ? UIAlternateBiomeNames.CurrentAlternateSignature : string.Empty);
 
-			if (UIBiomeText.text == displayName && lastAlternateTextLayout == showAlternate) return;
-
-			UIBiomeText.text = displayName;
+			if (lastBiomeTextSignature == signature && lastAlternateTextLayout == showAlternate)
+				return;
 
 			RectTransform textTransform = UIBiomeText.rectTransform;
 			float width = showAlternate ? AlternateBiomeTextWidth : BiomeTextWidth;
 
 			textTransform.sizeDelta = new Vector2(width, BiomeTextHeight);
+
+			string displayName = GetBiomeDisplayName(currentBiome);
+
+			if (showAlternate)
+			{
+				// Measure the height required by two lines using the existing font.
+				UIBiomeText.text = "Mg\nMg";
+				float twoLineHeight = UIBiomeText.preferredHeight;
+
+				displayName = UIAlternateBiomeNames.GetSmartBiomeDisplayName(candidate =>
+				{
+					UIBiomeText.text = candidate;
+					return UIBiomeText.preferredHeight <= twoLineHeight + 0.5f;
+				});
+			}
+
+			UIBiomeText.text = displayName;
 
 			if (showAlternate)
 			{
@@ -170,6 +186,7 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			lastAlternateTextLayout = showAlternate;
+			lastBiomeTextSignature = signature;
 		}
 
 		private static string GetBiomeDisplayName(string biome)
@@ -181,6 +198,9 @@ namespace MarsarahUI.Patches.UI
 
 				case "AshLands":
 					return "Ashlands";
+
+				case "DeepNorth":
+					return "Deep North";
 
 				default:
 					return biome ?? "";

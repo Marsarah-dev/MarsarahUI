@@ -157,6 +157,25 @@ namespace MarsarahUI.Managers
 			return false;
 		}
 
+		internal static int GetAlternatePriority(string biome, string alternateName)
+		{
+			if (!biomeImages.TryGetValue(biome, out BiomeImageSet imageSet))
+				return int.MaxValue;
+
+			string normalizedName = NormalizeName(alternateName);
+			string normalizedBiome = NormalizeName(biome);
+
+			for (int i = 0; i < imageSet.Alternates.Length; i++)
+			{
+				string modifier = NormalizeName(imageSet.Alternates[i].Name);
+
+				if (normalizedName == modifier || normalizedName == modifier + normalizedBiome)
+					return i;
+			}
+
+			return int.MaxValue;
+		}
+
 		private static string NormalizeName(string name)
 		{
 			if (string.IsNullOrEmpty(name)) return string.Empty;

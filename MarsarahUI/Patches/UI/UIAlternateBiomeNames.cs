@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
+using System.Linq;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -18,8 +19,11 @@ namespace MarsarahUI.Patches.UI
 		private static string lastDisplayName = string.Empty;
 		private static string vanillaBiomeName = string.Empty;
 		private static string lastBiome = string.Empty;
-		private static string currentAlternateDisplayName = string.Empty;
-		internal static string CurrentAlternateDisplayName => currentAlternateDisplayName;
+
+		private static readonly List<string> currentAlternateNames = new List<string>();
+		private static string currentBaseBiome = string.Empty;
+		internal static string CurrentAlternateSignature { get; private set; } = string.Empty;
+		internal static bool HasAlternateBiomes => currentAlternateNames.Count > 0;
 
 		[HarmonyPatch(typeof(Minimap), "UpdateBiome")]
 		private static class AlternateBiome_MinimapPatch
@@ -42,44 +46,44 @@ namespace MarsarahUI.Patches.UI
 
 				if (!ConfigManager.EffectiveShowAlternateBiomeNames)
 				{
-					currentAlternateDisplayName = string.Empty;
+					currentAlternateNames.Clear();
+					CurrentAlternateSignature = string.Empty;
 					return;
 				}
 
-				string displayName = GetBiomeDisplayName(biome);
-
-				bool hasAlternates = false;
+				string baseBiome = GetBiomeDisplayName(biome);
+				List<string> alternateNames = new List<string>();
 
 				BiomeSector sector = WorldGenerator.instance.GetBiomeSector(player.transform.position, true);
 
 				if (sector != null && sector.AltBiomes != null)
 				{
-					List<string> alternateNames = new List<string>();
-
 					foreach (AltBiome alternate in sector.AltBiomes)
 					{
 						if (alternate == null || string.IsNullOrWhiteSpace(alternate.m_name)) continue;
 
-						string name = alternate.m_name.Trim();
-						string shortName = GetShortAlternateName(name, displayName);
+						string shortName = GetShortAlternateName(alternate.m_name.Trim(), baseBiome);
 
 						if (!alternateNames.Contains(shortName))
 							alternateNames.Add(shortName);
 					}
-
-					if (alternateNames.Count == 1)
-					{
-						displayName = alternateNames[0] + " " + displayName;
-						hasAlternates = true;
-					}
-					else if (alternateNames.Count > 1)
-					{
-						displayName += ": " + string.Join(", ", alternateNames);
-						hasAlternates = true;
-					}
 				}
 
-				currentAlternateDisplayName = hasAlternates ? displayName : string.Empty;
+				// Order by the same priority used by portal transition images.
+				alternateNames = alternateNames.OrderBy(name => PortalBiomeImageManager.GetAlternatePriority(biome, name)).ToList();
+
+				currentAlternateNames.Clear();
+				currentAlternateNames.AddRange(alternateNames);
+				currentBaseBiome = baseBiome;
+				CurrentAlternateSignature = baseBiome + "|" + string.Join("|", alternateNames);
+
+				// Measure against the existing vanilla TextMeshPro component.
+				float width = biomeText.rectTransform.rect.width;
+				float twoLineHeight = biomeText.GetPreferredValues("Mg\nMg", width, 10000f).y;
+
+				string displayName = GetLimitedDisplayName(baseBiome, alternateNames, candidate =>
+					biomeText.GetPreferredValues(candidate, width, 10000f).y <= twoLineHeight + 0.5f);
+
 				biomeText.text = displayName;
 
 				if (lastDisplayName != displayName)
@@ -111,6 +115,38 @@ namespace MarsarahUI.Patches.UI
 			return name;
 		}
 
+		private static string GetLimitedDisplayName(string biome, List<string> alternates, Func<string, bool> fits)
+		{
+			if (alternates.Count == 0)
+				return biome;
+
+			if (alternates.Count == 1)
+				return alternates[0] + " " + biome;
+
+			for (int visible = alternates.Count; visible >= 1; visible--)
+			{
+				string candidate = biome + ": " + string.Join(", ", alternates.GetRange(0, visible));
+
+				int hidden = alternates.Count - visible;
+
+				if (hidden > 0)
+					candidate += " +" + hidden;
+
+				if (fits(candidate))
+					return candidate;
+			}
+
+			return biome + " +" + alternates.Count;
+		}
+
+		internal static string GetSmartBiomeDisplayName(Func<string, bool> fits)
+		{
+			if (currentAlternateNames.Count == 0)
+				return string.Empty;
+
+			return GetLimitedDisplayName(currentBaseBiome, currentAlternateNames, fits);
+		}
+
 		internal static void RefreshFromConfig()
 		{
 			if (Minimap.instance == null || Player.m_localPlayer == null) return;
@@ -122,7 +158,8 @@ namespace MarsarahUI.Patches.UI
 
 				biomeText.text = vanillaBiomeName;
 				lastDisplayName = string.Empty;
-				currentAlternateDisplayName = string.Empty;
+				currentAlternateNames.Clear();
+				CurrentAlternateSignature = string.Empty;
 
 				log.Info("Alternate biome names disabled. Restored original vanilla biome text.");
 			}
