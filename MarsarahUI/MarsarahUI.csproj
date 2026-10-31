@@ -90,7 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Managers\BiomeCraftingManager.cs" />
-    <Compile Include="Managers\BiomeDisplayManager.cs" />
     <Compile Include="Managers\CompatibilityManager.cs" />
     <Compile Include="Managers\ConfigManager.cs" />
     <Compile Include="Managers\GearProgressionManager.cs" />
