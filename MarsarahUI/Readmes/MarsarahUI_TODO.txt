@@ -7,28 +7,14 @@ IMPLEMENTED - NOT RELEASED
 
 A. Fixes
 ------------------------
-* UI Notifications are no longer trying to draw on a dedicated server.
-* The bottom skill progress bar is now hidden when main game HUD is off or on Insert. 
 
 B. Updates
 ------------------------
-* Refactorization of code: moved logic code into its own logic class from relevant UI classes and managers.
-* Swapped UI animations and UI Display Mode position in config.
-* Swapped order of crafting tabs for Plains and Ocean.
+* Enemy Detector:
+  - Excluded adult seals and seal pups from the Enemy Detector's nearby enemy counts.
 
 C. New additions
 ------------------------
-* Portal Transition Images
-  - Added a custom animated portal transition screen that displays the destination biome and its active alternate variations during teleportation.
-  - All nine biomes and 34 alternate biome variations use AI edited in-game screenshots.
-  - For overlapping alternate biomes there is a priority system to select which image to display.
-  - Has a dropdown option to display the destination biome text and alternate versions.
-
-* Alternate Biome Names
-  - Added alternate biome names to the minimap, compatible with Smart Biome.
-  - Added three display options: One Row, Two Rows, or Off.
-  - Multiple alternate biomes are prioritized, with additional names summarized as +N when space is limited.
-  - Added server override support for alternate biome display settings.
 
 D. In Progress
 ------------------------
@@ -74,3 +60,4 @@ E. Deep North / 1.0 Content
 * Review Deep North gear for Smart Biome weighting.
 * Review any new Deep North mechanics that need UI indicators or hover information.
 * Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.
+* Add specific Deep North enemies to the Enemy Detector's tough enemy list based on their difficulty and threat level.

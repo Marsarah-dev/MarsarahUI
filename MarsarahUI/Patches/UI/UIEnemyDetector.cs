@@ -128,12 +128,16 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (character == null) return true;
 
+			//log.Info($"Detected character: {character.m_name}");
+
 			return character.m_name == "Human" ||
 				character.m_name == "$enemy_deer" ||
 				character.m_name == "$enemy_hare" ||
 				character.m_name == "$enemy_kvastur" ||
 				character.m_name == "$enemy_summonedroot" ||
 				character.m_name == "$piece_trainingdummy" ||
+				character.m_name == "$enemy_seal" ||
+				character.m_name == "$enemy_seal_baby" ||
 				character.IsTamed();
 		}
 
