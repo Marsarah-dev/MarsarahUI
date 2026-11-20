@@ -1,4 +1,4 @@
-Marsarah UI v1.5.0
+Marsarah UI v1.5.1
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -385,7 +385,7 @@ MOD CONFIGS
   Split separates normal, tough and boss enemies into individual counters.
   Bosses and minibosses count as normal enemies while using Consolidated mode.
   Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
-  Other players, Deer, Hare, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+  Other players, Deer, Hare, Seals, Baby Seals, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
   Neutral Dvergr use a separate counter until aggravated.
 
 
@@ -787,6 +787,12 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+
+v1.5.1
+- Updates:
+  - Enemy Detector now excludes Seals and Baby Seals from nearby enemy counts.
+
+
 v1.5.0
 - Fixes:
   - Fixed the bottom Skill Progress bar remaining visible when hiding the HUD with Ctrl+F3 or Insert.

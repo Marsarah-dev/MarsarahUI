@@ -1,6 +1,6 @@
 [size=5][b]Marsarah UI[/b][/size]
 
-[b]Version:[/b] 1.5.0
+[b]Version:[/b] 1.5.1
 [b]Author:[/b] Marsarah
 
 [line]
@@ -259,7 +259,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Split separates normal, tough and boss enemies into individual counters.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+- Other players, Deer, Hare, Seals, Baby Seals, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
 - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
@@ -389,6 +389,10 @@ Thanks for checking out Marsarah UI!
 Blaxxun-bloop - for ServerSync
 
 [size=5][b]📜 Version History[/b][/size]
+
+[size=4][b]v1.5.1[/b][/size]
+[b]Updates:[/b]
+- Enemy Detector now excludes Seals and Baby Seals from nearby enemy counts.
 
 [size=4][b]v1.5.0[/b][/size]
 

@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.5.0  
+**Version:** 1.5.1  
 **Author:** Marsarah
 
 ---
@@ -259,7 +259,7 @@ https://paypal.me/Marsarah9
 - Split separates normal, tough and boss enemies into individual counters.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+- Other players, Deer, Hare, Seals, Baby Seals, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
 - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
 - Uses the selected Information Rail visual style and Icons/Text display mode.

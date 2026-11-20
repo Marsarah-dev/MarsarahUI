@@ -1,5 +1,9 @@
 ## <strong> 📜 Version History </strong>
 
+v1.5.1
+- **Updates:**
+  - Enemy Detector now excludes Seals and Baby Seals from nearby enemy counts.
+
 v1.5.0
 - **Fixes:**
   - Fixed the bottom Skill Progress bar remaining visible when hiding the HUD with Ctrl+F3 or Insert.
