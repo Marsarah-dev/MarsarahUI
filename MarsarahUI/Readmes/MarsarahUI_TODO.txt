@@ -14,6 +14,9 @@ B. Updates
   - Added Barka and Gammeltroll to the Enemy Detector's tough enemy list.
   - Excluded harmless Deep North village Shadows (ShadowPerson) from nearby enemy counts.
 
+* Detailed Hovers:
+  - Added remaining crafting time for the Frost Foundry while a cast is processing.
+  - Added total remaining processing time for the Frigid Kiln based on its available Ice, accounting for multiple Liquid Frost production cycles.
 
 C. New additions
 ------------------------

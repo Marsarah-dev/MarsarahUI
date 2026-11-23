@@ -618,6 +618,17 @@ namespace MarsarahUI.Patches.UI
 			int queueSize = (int)GetQueueSizeMethod.Invoke(smelter, null);
 			float bakeTimer = (float)GetBakeTimerMethod.Invoke(smelter, null);
 
+			//log.Info($"Frigid Kiln: Fuel={fuel}, Queue={queueSize}, BakeTimer={bakeTimer}, SecondsPerProduct={smelter.m_secPerProduct}, FuelPerProduct={smelter.m_fuelPerProduct}");
+
+			if (Utils.GetPrefabName(smelter.gameObject) == "piece_FrostKiln")
+			{
+				if (fuel <= 0f || smelter.m_fuelPerProduct <= 0) return result;
+
+				float remainingSecondsFrigid = fuel * smelter.m_secPerProduct / smelter.m_fuelPerProduct;
+
+				return Localization.instance.Localize($"{result}\n{PaintTextIfEnabled(FormatTime(remainingSecondsFrigid), Color.cyan)}");
+			}
+
 			if (queueSize <= 0) return result;
 
 			float durationPerItem = smelter.m_secPerProduct;
