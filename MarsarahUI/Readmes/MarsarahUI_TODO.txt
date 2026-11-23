@@ -60,7 +60,7 @@ D. New UI Features
 
 E. Deep North / 1.0 Content
 ---------------------------
-[DEFERRED] Do this after playing the Deep North to avoid spoilers.
+[IN PROGRESS] Review and implement additional Deep North support as I advance through the biome, avoiding spoilers for content not yet experienced.
 
 * Review Deep North gear for Smart Biome weighting.
 * Review any new Deep North mechanics that need UI indicators or hover information.

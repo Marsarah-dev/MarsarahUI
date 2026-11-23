@@ -377,7 +377,7 @@ https://paypal.me/Marsarah9
 
 Future ideas include additional hover display modes, improved Online Players information, additional UI indicators, and other interface improvements.
 
-Deep North-specific UI changes will be reviewed after I have completed the biome myself.
+Deep North-specific UI improvements will continue to be reviewed and added as I progress through the biome.
 
 ---
 

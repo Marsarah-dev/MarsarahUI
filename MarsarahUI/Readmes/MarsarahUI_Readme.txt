@@ -768,7 +768,7 @@ Possible future additions include:
 - Additional hover display modes, including a Bars mode for processing stations.
 - Additional Online Players information.
 
-Deep North-specific UI additions will be reviewed after I have completed the biome myself.
+Deep North-specific UI improvements will continue to be reviewed and added as I progress through the biome.
 
 These are development ideas and are not guaranteed to be implemented exactly as described.
 

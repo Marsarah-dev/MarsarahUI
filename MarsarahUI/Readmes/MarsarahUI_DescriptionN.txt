@@ -377,7 +377,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=5][b]🔮 Future Plans[/b][/size]
 Future ideas include additional hover display modes, improved Online Players information, additional UI indicators, and other interface improvements.
 
-Deep North-specific UI changes will be reviewed after I have completed the biome myself.
+Deep North-specific UI improvements will continue to be reviewed and added as I progress through the biome.
 
 [line]
 
