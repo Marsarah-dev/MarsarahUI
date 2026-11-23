@@ -490,9 +490,8 @@ namespace MarsarahUI.Patches.UI
 					hasReadyItem = true;
 				}
 
-				string displayText = IsFrostFoundry(station) && cookedTime >= itemConversion.m_cookTime
-					? $"{Localization.instance.Localize(itemConversion.m_from.m_itemData.m_shared.m_name)}: {PaintTextIfEnabled(Localization.instance.Localize("$hud_ready"), Color.green)}"
-					: BuildCookingSlotText(itemConversion, cookedTime, itemName);
+				string displayText = BuildCookingSlotText(itemConversion, cookedTime, itemName);
+
 				slotInfo += "\n" + displayText;
 			}
 

@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.5.1  
+**Version:** 1.5.2  
 **Author:** Marsarah
 
 ---
@@ -18,9 +18,8 @@ Marsarah UI also includes **ServerSync** support for selected gameplay/informati
 
 ## **Development Notes**
 
-**Deep North / Spoiler Note:** Beyond recipe categorization used by Biome-Sorted Crafting Tabs, Deep North-specific UI integration is intentionally limited for now.  
-I want to experience the new biome and progression myself before digging through its mechanics in detail, so I can play through it without spoiling the experience for myself.  
-After completing the Deep North, I plan to review new gear for Smart Biome and check whether any new mechanics would benefit from additional indicators or hover information.
+**Deep North / Spoiler Note:** Deep North support is being added progressively. Version 1.5.2 expands the Enemy Detector with new tough enemy classifications and exclusions, and adds Detailed Hovers support for the Frost Foundry and Frigid Kiln. Biome-Sorted Crafting Tabs already includes Deep North recipe categorization.
+I am still playing through the biome myself and want to experience the remaining content without spoilers. More Deep North-related UI improvements will be added as I continue my playthrough and discover where they are needed.
 
 **AI Usage Disclosure:** The original UI features were developed as part of my MarsarahMod / Marsarah Tweaks projects. AI tools are now used as part of my development workflow for tasks such as debugging, refactoring, compatibility updates, researching game API changes, and documentation.  
 Development remains human-directed: I decide what features are added, how they should behave, and I write code, review and test the changes included in releases. The mod's logo was also created using generative AI.
@@ -259,8 +258,8 @@ https://paypal.me/Marsarah9
 - Split separates normal, tough and boss enemies into individual counters.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
-- Other players, Deer, Hare, Seals, Baby Seals, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
-- Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
+- Other players, Deer, Hare, Seals, Baby Seals, village Shadows, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+- Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent, Bonemaw, Barka and Gammeltroll.
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
 - Uses the selected Information Rail visual style and Icons/Text display mode.
 

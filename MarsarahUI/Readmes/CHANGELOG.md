@@ -1,5 +1,12 @@
 ## <strong> 📜 Version History </strong>
 
+v1.5.2
+- **Updates:**
+  - Enemy Detector now classifies Barka and Gammeltroll as tough enemies.
+  - Enemy Detector now excludes harmless Deep North village Shadows from nearby enemy counts.
+  - Detailed Hovers now displays remaining crafting time for the Frost Foundry while a cast is processing.
+  - Detailed Hovers now displays total remaining processing time for the Frigid Kiln based on its available Ice.
+
 v1.5.1
 - **Updates:**
   - Enemy Detector now excludes Seals and Baby Seals from nearby enemy counts.

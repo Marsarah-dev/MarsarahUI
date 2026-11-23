@@ -1,4 +1,4 @@
-Marsarah UI v1.5.1
+Marsarah UI v1.5.2
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -11,9 +11,8 @@ Marsarah UI also includes ServerSync support for selected gameplay/information-o
 DEVELOPMENT NOTES
 ================================================================
 DEEP NORTH / SPOILER NOTE:
-Beyond recipe categorization used by Biome-Sorted Crafting Tabs, Deep North-specific UI integration is intentionally limited for now. I want to experience the new biome and progression myself before digging through its mechanics in detail so I can play through it without spoiling the experience for myself.
-
-After completing the Deep North, I plan to review new gear for Smart Biome and check whether any new mechanics would benefit from additional indicators or hover information.
+Deep North support is being added progressively. Version 1.5.2 expands the Enemy Detector with new tough enemy classifications and exclusions, and adds Detailed Hovers support for the Frost Foundry and Frigid Kiln. Biome-Sorted Crafting Tabs already includes Deep North recipe categorization.
+I am still playing through the biome myself and want to experience the remaining content without spoilers. More Deep North-related UI improvements will be added as I continue my playthrough and discover where they are needed.
 
 AI USAGE DISCLOSURE:
 The original UI features were developed as part of my MarsarahMod / Marsarah Tweaks projects. AI tools are now used as part of my development workflow for tasks such as debugging, refactoring, compatibility updates, researching game API changes, and documentation.
@@ -384,8 +383,8 @@ MOD CONFIGS
   Consolidated combines hostile enemies into a single counter.
   Split separates normal, tough and boss enemies into individual counters.
   Bosses and minibosses count as normal enemies while using Consolidated mode.
-  Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent and Bonemaw
-  Other players, Deer, Hare, Seals, Baby Seals, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+  Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent, Bonemaw, Barka and Gammeltroll.
+  Other players, Deer, Hare, Seals, Baby Seals, village Shadows, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
   Neutral Dvergr use a separate counter until aggravated.
 
 
@@ -787,6 +786,13 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+
+v1.5.2
+- Updates:
+  - Enemy Detector now classifies Barka and Gammeltroll as tough enemies.
+  - Enemy Detector now excludes harmless Deep North village Shadows from nearby enemy counts.
+  - Detailed Hovers now displays remaining crafting time for the Frost Foundry while a cast is processing.
+  - Detailed Hovers now displays total remaining processing time for the Frigid Kiln based on its available Ice.
 
 v1.5.1
 - Updates:

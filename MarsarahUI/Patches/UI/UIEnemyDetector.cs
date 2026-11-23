@@ -42,8 +42,8 @@ namespace MarsarahUI.Patches.UI
 			"Morgen_NonSleeping",
 			"BonemawSerpent",
 
-            // Deep North
-            "Barka",
+			// Deep North
+			"Barka",
 			"TrollFrost",
 
 			// Ocean - balanced around Swamp progression

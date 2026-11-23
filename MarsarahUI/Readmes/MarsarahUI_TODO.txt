@@ -65,4 +65,3 @@ E. Deep North / 1.0 Content
 * Review Deep North gear for Smart Biome weighting.
 * Review any new Deep North mechanics that need UI indicators or hover information.
 * Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.
-* Add specific Deep North enemies to the Enemy Detector's tough enemy list based on their difficulty and threat level.
