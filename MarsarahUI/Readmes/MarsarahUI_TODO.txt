@@ -11,7 +11,9 @@ A. Fixes
 B. Updates
 ------------------------
 * Enemy Detector:
-  - Excluded adult seals and seal pups from the Enemy Detector's nearby enemy counts.
+  - Added Barka and Gammeltroll to the Enemy Detector's tough enemy list.
+  - Excluded harmless Deep North village Shadows (ShadowPerson) from nearby enemy counts.
+
 
 C. New additions
 ------------------------

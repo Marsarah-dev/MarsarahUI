@@ -42,6 +42,10 @@ namespace MarsarahUI.Patches.UI
 			"Morgen_NonSleeping",
 			"BonemawSerpent",
 
+            // Deep North
+            "Barka",
+			"TrollFrost",
+
 			// Ocean - balanced around Swamp progression
 			"Serpent"
 		};
@@ -128,7 +132,8 @@ namespace MarsarahUI.Patches.UI
 		{
 			if (character == null) return true;
 
-			//log.Info($"Detected character: {character.m_name}");
+			/*if (character.m_name != "Human")
+				log.Info($"Detected character: {character.m_name}");*/
 
 			return character.m_name == "Human" ||
 				character.m_name == "$enemy_deer" ||
@@ -138,6 +143,7 @@ namespace MarsarahUI.Patches.UI
 				character.m_name == "$piece_trainingdummy" ||
 				character.m_name == "$enemy_seal" ||
 				character.m_name == "$enemy_seal_baby" ||
+				character.m_name == "$enemy_shadowperson" ||
 				character.IsTamed();
 		}
 
