@@ -431,7 +431,7 @@ namespace MarsarahUI.Patches.UI
 				if (___m_nview == null || !___m_nview.IsValid()) return true;
 
 				bool isOven = __instance.m_useFuel && !__instance.m_requireFire;
-				if (isOven) return true;
+				if (isOven && !IsFrostFoundry(__instance)) return true;
 
 				string hoverText = GetCookingStationHover(__instance);
 
@@ -455,6 +455,7 @@ namespace MarsarahUI.Patches.UI
 
 			int activeSlots = 0;
 			bool hasReadyItem = false;
+			bool frostFoundryFinished = false;
 			bool hasOvercookedItem = false;
 
 			for (int i = 0; i < station.m_slots.Length; i++)
@@ -478,14 +479,24 @@ namespace MarsarahUI.Patches.UI
 
 				activeSlots++;
 
+				if (IsFrostFoundry(station) && cookedTime >= itemConversion.m_cookTime)
+				{
+					frostFoundryFinished = true;
+					continue;
+				}
+
 				if (cookedTime >= itemConversion.m_cookTime && cookedTime < itemConversion.m_cookTime * 2f)
 				{
 					hasReadyItem = true;
 				}
 
-				string displayText = BuildCookingSlotText(itemConversion, cookedTime, itemName);
+				string displayText = IsFrostFoundry(station) && cookedTime >= itemConversion.m_cookTime
+					? $"{Localization.instance.Localize(itemConversion.m_from.m_itemData.m_shared.m_name)}: {PaintTextIfEnabled(Localization.instance.Localize("$hud_ready"), Color.green)}"
+					: BuildCookingSlotText(itemConversion, cookedTime, itemName);
 				slotInfo += "\n" + displayText;
 			}
+
+			if (frostFoundryFinished) return string.Empty;
 
 			if (activeSlots == 0 && !hasOvercookedItem) return null;
 
@@ -777,6 +788,14 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			return (bool)ContainerCheckAccessMethod.Invoke(container, new object[] { Player.m_localPlayer.GetPlayerID() });
+		}
+
+		private static bool IsFrostFoundry(CookingStation station)
+		{
+			return station.m_useFuel &&
+				!station.m_requireFire &&
+				station.m_slots != null &&
+				station.m_slots.Length == 1;
 		}
 	}
 }
