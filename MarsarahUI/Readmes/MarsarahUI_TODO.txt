@@ -48,6 +48,7 @@ C. Existing UI Ideas
 * Show player HP and death count with Online Players.
 * Indicate Corpse Run status, for example by coloring the player name.
 * Show feasts stats on hover.
+* Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.
 
 D. New UI Features
 ------------------
@@ -58,7 +59,6 @@ D. New UI Features
 
 E. Deep North / 1.0 Content
 ---------------------------
-[IN PROGRESS] Review and implement additional Deep North support as I advance through the biome, avoiding spoilers for content not yet experienced.
+[IN PROGRESS] 
 
 * Review any new Deep North mechanics that need UI indicators or hover information.
-* Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.

@@ -28,8 +28,15 @@ namespace MarsarahUI.Patches.UI
 		{
 			Item,
 			Skill,
-			Info
+			Info,
+			State
 		}
+
+		private static readonly Dictionary<string, string> stateNotificationKeys = new Dictionary<string, string>()
+		{
+			{ "$se_shelter_start", "Shelter" },
+			{ "$se_shelter_stop", "Shelter" }
+		};
 
 		private class NotificationEntry
 		{
@@ -381,6 +388,11 @@ namespace MarsarahUI.Patches.UI
 			{
 				notificationType = NotificationType.Skill;
 			}
+			else if (stateNotificationKeys.TryGetValue(message, out string stateKey))
+			{
+				notificationType = NotificationType.State;
+				notificationKey = stateKey;
+			}
 
 			log.Info($"Intercepted TopLeft notification '{localizedMessage}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
 
@@ -395,12 +407,12 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
-			if ((type == NotificationType.Item || type == NotificationType.Skill) && !string.IsNullOrEmpty(key))
-			{
+			if ((type == NotificationType.Item || type == NotificationType.Skill || type == NotificationType.State) && !string.IsNullOrEmpty(key))
+				{
 				NotificationEntry existingNotification = notifications.Find(notification =>
 					notification.Type == type &&
 					notification.Key == key &&
-					!notification.Leaving &&
+					(!notification.Leaving || type == NotificationType.State) &&
 					notification.Root != null);
 
 				if (existingNotification != null)
@@ -426,6 +438,28 @@ namespace MarsarahUI.Patches.UI
 						}
 
 						log.Info($"Updated skill progress notification '{message}'.");
+					}
+					else if (type == NotificationType.State)
+					{
+						existingNotification.Leaving = false;
+						existingNotification.Layout.preferredHeight = NotificationHeight;
+						existingNotification.Layout.minHeight = NotificationHeight;
+
+						if (existingNotification.MessageText != null)
+						{
+							existingNotification.MessageText.text = message;
+
+							float leftSpace = existingNotification.Icon != null ? 38f : 10f;
+							float rightSpace = existingNotification.AmountText != null ? 50f : 10f;
+							float requiredWidth = existingNotification.MessageText.preferredWidth + leftSpace + rightSpace + 8f;
+							float notificationWidth = Mathf.Clamp(requiredWidth, NotificationWidth, MaxNotificationWidth);
+
+							existingNotification.Rect.sizeDelta = new Vector2(notificationWidth, NotificationHeight);
+							existingNotification.Layout.preferredWidth = notificationWidth;
+							existingNotification.Layout.minWidth = notificationWidth;
+						}
+
+						log.Info($"Updated state notification '{key}': '{message}'.");
 					}
 
 					return;
@@ -580,6 +614,7 @@ namespace MarsarahUI.Patches.UI
 
 				case NotificationType.Item:
 				case NotificationType.Info:
+				case NotificationType.State:
 				default:
 					return UIStyleManager.Current.ValueTextColor;
 			}
