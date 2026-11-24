@@ -16,6 +16,9 @@ B. Updates
 * Enemy Detector
   - Minibosses in raids are counted as minibosses in the split version. 
 
+* Notification area
+  - Repeated state change notifications or repairs messages are no longer stacking as new entries, but are replaced in-place. 
+
 C. New additions
 ------------------------
 
@@ -27,7 +30,6 @@ TO IMPLEMENT / VERIFY
 ============================================================
 
 0.
-* Immediately replace notifications that are repeating states like sheltered and exposed.
 * Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
 
 A. Fixes / Compatibility

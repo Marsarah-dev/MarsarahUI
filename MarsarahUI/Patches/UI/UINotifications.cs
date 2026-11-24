@@ -32,10 +32,17 @@ namespace MarsarahUI.Patches.UI
 			State
 		}
 
-		private static readonly Dictionary<string, string> stateNotificationKeys = new Dictionary<string, string>()
+		private const string StateMessageArgument = "__STATE_ARGUMENT__";
+
+		private static readonly Dictionary<string, string> stateNotificationPatterns = new Dictionary<string, string>()
 		{
+			// Shelter
 			{ "$se_shelter_start", "Shelter" },
-			{ "$se_shelter_stop", "Shelter" }
+			{ "$se_shelter_stop", "Shelter" },
+
+			// Repair
+			{ "$msg_repaired", "Repair" },
+			{ StateMessageArgument + " $msg_doesnotneedrepair", "Repair" }
 		};
 
 		private class NotificationEntry
@@ -342,6 +349,36 @@ namespace MarsarahUI.Patches.UI
 			notifications.Clear();
 		}
 
+		private static bool TryGetStateNotificationKey(string message, out string key)
+		{
+			foreach (KeyValuePair<string, string> pattern in stateNotificationPatterns)
+			{
+				string localizedPattern = Localization.instance.Localize(pattern.Key, StateMessageArgument);
+
+				int argumentIndex = localizedPattern.IndexOf(StateMessageArgument, System.StringComparison.Ordinal);
+
+				if (argumentIndex < 0)
+				{
+					if (message != localizedPattern) continue;
+				}
+				else
+				{
+					string prefix = localizedPattern.Substring(0, argumentIndex);
+					string suffix = localizedPattern.Substring(argumentIndex + StateMessageArgument.Length);
+
+					if (message.Length <= prefix.Length + suffix.Length) continue;
+					if (!message.StartsWith(prefix, System.StringComparison.Ordinal)) continue;
+					if (!message.EndsWith(suffix, System.StringComparison.Ordinal)) continue;
+				}
+
+				key = pattern.Value;
+				return true;
+			}
+
+			key = null;
+			return false;
+		}
+
 		private static void HandleTopLeftMessage(System.Reflection.MethodBase originalMethod, object[] args, string message)
 		{
 			int amount = 0;
@@ -376,7 +413,12 @@ namespace MarsarahUI.Patches.UI
 			NotificationType notificationType = NotificationType.Info;
 			string notificationKey = null;
 
-			if (amount != 0 && icon != null)
+			if (amount == 0 && TryGetStateNotificationKey(localizedMessage, out string stateKey))
+			{
+				notificationType = NotificationType.State;
+				notificationKey = stateKey;
+			}
+			else if (amount != 0 && icon != null)
 			{
 				if (localizedMessage.StartsWith("Added ") || localizedMessage.StartsWith("Dropped "))
 				{
@@ -387,16 +429,6 @@ namespace MarsarahUI.Patches.UI
 			else if (localizedMessage.StartsWith("Skill improved "))
 			{
 				notificationType = NotificationType.Skill;
-			}
-			else if (stateNotificationKeys.TryGetValue(message, out string stateKey))
-			{
-				notificationType = NotificationType.State;
-				notificationKey = stateKey;
-			}
-			else if (message.Contains("$msg_repaired") || message.Contains("$msg_doesnotneedrepair") || localizedMessage.StartsWith("Repaired "))
-			{
-				notificationType = NotificationType.State;
-				notificationKey = "Repair";
 			}
 
 			log.Info($"Intercepted TopLeft notification '{localizedMessage}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
@@ -435,27 +467,23 @@ namespace MarsarahUI.Patches.UI
 
 						log.Info($"Merged item notification '{message}'. New amount: {existingNotification.Amount}.");
 					}
-					else if (type == NotificationType.Skill)
+					else if (type == NotificationType.Skill || type == NotificationType.State)
 					{
-						if (existingNotification.MessageText != null)
+						if (type == NotificationType.State)
 						{
-							existingNotification.MessageText.text = message;
+							existingNotification.Leaving = false;
+							existingNotification.Layout.preferredHeight = NotificationHeight;
+							existingNotification.Layout.minHeight = NotificationHeight;
 						}
-
-						log.Info($"Updated skill progress notification '{message}'.");
-					}
-					else if (type == NotificationType.State)
-					{
-						existingNotification.Leaving = false;
-						existingNotification.Layout.preferredHeight = NotificationHeight;
-						existingNotification.Layout.minHeight = NotificationHeight;
 
 						if (existingNotification.MessageText != null)
 						{
 							existingNotification.MessageText.text = message;
+
+							UpdateNotificationLayout(existingNotification);
 						}
 
-						log.Info($"Updated state notification '{key}': '{message}'.");
+						log.Info($"Updated {type} notification '{key}': '{message}'.");
 					}
 
 					return;
@@ -526,21 +554,6 @@ namespace MarsarahUI.Patches.UI
 			messageText.horizontalOverflow = HorizontalWrapMode.Overflow;
 			messageText.verticalOverflow = VerticalWrapMode.Truncate;
 
-			float leftSpace = icon != null ? 38f : 10f;
-			float rightSpace = amount != 0 ? 50f : 10f;
-			float requiredWidth = messageText.preferredWidth + leftSpace + rightSpace + 8f;
-			float notificationWidth = Mathf.Clamp(requiredWidth, NotificationWidth, MaxNotificationWidth);
-
-			rect.sizeDelta = new Vector2(notificationWidth, NotificationHeight);
-
-			layout.preferredWidth = notificationWidth;
-			layout.minWidth = notificationWidth;
-
-			RectTransform messageRect = messageText.rectTransform;
-			SetRectAnchors(messageRect, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f));
-			messageRect.offsetMin = new Vector2(leftSpace, 0f);
-			messageRect.offsetMax = new Vector2(-rightSpace, 0f);
-
 			Text amountText = null;
 
 			if (amount != 0)
@@ -574,6 +587,7 @@ namespace MarsarahUI.Patches.UI
 				Leaving = false
 			};
 
+			UpdateNotificationLayout(notification);
 			notifications.Add(notification);
 
 			TrimNotifications();
@@ -592,6 +606,28 @@ namespace MarsarahUI.Patches.UI
 			string displayMessage = localize ? Localization.instance.Localize(message) : message;
 
 			AddNotification(type, key, displayMessage, icon, amount);
+		}
+
+		private static void UpdateNotificationLayout(NotificationEntry notification)
+		{
+			if (notification.MessageText == null) return;
+
+			float leftSpace = notification.Icon != null ? 38f : 10f;
+			float rightSpace = notification.AmountText != null ? 50f : 10f;
+			float requiredWidth = notification.MessageText.preferredWidth + leftSpace + rightSpace + 8f;
+			float notificationWidth = Mathf.Clamp(requiredWidth, NotificationWidth, MaxNotificationWidth);
+
+			notification.Rect.sizeDelta = new Vector2(notificationWidth, notification.Rect.sizeDelta.y);
+
+			notification.Layout.preferredWidth = notificationWidth;
+			notification.Layout.minWidth = notificationWidth;
+
+			RectTransform messageRect = notification.MessageText.rectTransform;
+
+			SetRectAnchors(messageRect, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f));
+
+			messageRect.offsetMin = new Vector2(leftSpace, 0f);
+			messageRect.offsetMax = new Vector2(-rightSpace, 0f);
 		}
 
 		private static void SetRectAnchors(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
