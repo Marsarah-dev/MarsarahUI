@@ -1,5 +1,12 @@
 ## <strong> 📜 Version History </strong>
 
+v1.5.3
+- **Updates:**
+  - Smart Biome now supports Deep North gear and biome progression coloring.
+  - Enemy Detector now correctly counts raid minibosses as minibosses in Split mode.
+  - Enhanced Notifications now updates repeated shelter and repair notifications in place instead of stacking them as separate entries.
+  - Notification bars dynamically adjust their width when their contents are updated.
+
 v1.5.2
 - **Updates:**
   - Enemy Detector now classifies Barka and Gammeltroll as tough enemies.

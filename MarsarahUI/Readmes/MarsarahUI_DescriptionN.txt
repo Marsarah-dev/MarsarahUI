@@ -1,6 +1,6 @@
 [size=5][b]Marsarah UI[/b][/size]
 
-[b]Version:[/b] 1.5.2
+[b]Version:[/b] 1.5.3
 [b]Author:[/b] Marsarah
 
 [line]
@@ -18,8 +18,7 @@ Marsarah UI also includes [b]ServerSync[/b] support for selected gameplay/inform
 
 [size=4][b]Development Notes[/b][/size]
 
-
-[b]Deep North / Spoiler Note:[/b] Deep North support is being added progressively. Version 1.5.2 expands the Enemy Detector with new tough enemy classifications and exclusions, and adds Detailed Hovers support for the Frost Foundry and Frigid Kiln. Biome-Sorted Crafting Tabs already includes Deep North recipe categorization.
+[b]Deep North / Spoiler Note:[/b] Deep North support is being added progressively. Version 1.5.3 adds Smart Biome support for Deep North gear and biome progression coloring. Previous updates introduced Deep North enemy classifications and exclusions, Detailed Hovers support for the Frost Foundry and Frigid Kiln, and Deep North recipe categorization in Biome-Sorted Crafting Tabs.
 I am still playing through the biome myself and want to experience the remaining content without spoilers. More Deep North-related UI improvements will be added as I continue my playthrough and discover where they are needed.
 
 [b]AI Usage Disclosure:[/b] The original UI features were developed as part of my MarsarahMod / Marsarah Tweaks projects. AI tools are now used as part of my development workflow for tasks such as debugging, refactoring, compatibility updates, researching game API changes, and documentation.
@@ -130,7 +129,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 [size=4][b]🔧 Smart Biome Indicator[/b][/size]
 - Color-codes the biome name according to equipped armor and upgrade level.
 - Colors progress from [b]purple[/b] through red, orange, yellow and [b]green[/b].
-- Evaluates progression from Meadows through Ashlands; other biomes display in white.
+- Evaluates progression from Meadows through Deep North; other biomes display in white.
 - Includes Bear, Vilebone and Lox Fur armor.
 - Accounts for [b]MarsarahTweaks Gear Upgrade Unlock[/b] when Tweaks is installed and the feature is enabled.
 
@@ -355,6 +354,7 @@ My mods are and will always be free to use. If you'd like to support my work, yo
 - Replaces vanilla top-left messages with a customizable notification stack.
 - Displays item, skill and information messages with icons and styling matching the selected UI Style.
 - Repeated item notifications are combined, showing positive or negative amounts.
+- Repeated shelter and repair notifications are updated in place instead of stacking as separate entries.
 - Supports animations, adjustable position, scale, duration and maximum visible count.
 - [b]Notification Mode:[/b] Enhanced or Vanilla, with an optional synchronized server override.
 
@@ -389,6 +389,13 @@ Thanks for checking out Marsarah UI!
 Blaxxun-bloop - for ServerSync
 
 [size=5][b]📜 Version History[/b][/size]
+
+[size=4][b]v1.5.3[/b][/size]
+[b]Updates:[/b]
+- Smart Biome now supports Deep North gear and biome progression coloring.
+- Enemy Detector now correctly counts raid minibosses as minibosses in Split mode.
+- Enhanced Notifications now updates repeated shelter and repair notifications in place instead of stacking them as separate entries.
+- Notification bars dynamically adjust their width when their contents are updated.
 
 [size=4][b]v1.5.2[/b][/size]
 [b]Updates:[/b]

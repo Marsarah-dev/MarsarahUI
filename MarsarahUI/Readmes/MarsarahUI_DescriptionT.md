@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.5.2  
+**Version:** 1.5.3  
 **Author:** Marsarah
 
 ---
@@ -18,7 +18,7 @@ Marsarah UI also includes **ServerSync** support for selected gameplay/informati
 
 ## **Development Notes**
 
-**Deep North / Spoiler Note:** Deep North support is being added progressively. Version 1.5.2 expands the Enemy Detector with new tough enemy classifications and exclusions, and adds Detailed Hovers support for the Frost Foundry and Frigid Kiln. Biome-Sorted Crafting Tabs already includes Deep North recipe categorization.
+**Deep North / Spoiler Note:** Deep North support is being added progressively. Version 1.5.3 adds Smart Biome support for Deep North gear and biome progression coloring. Previous updates introduced Deep North enemy classifications and exclusions, Detailed Hovers support for the Frost Foundry and Frigid Kiln, and Deep North recipe categorization in Biome-Sorted Crafting Tabs.
 I am still playing through the biome myself and want to experience the remaining content without spoilers. More Deep North-related UI improvements will be added as I continue my playthrough and discover where they are needed.
 
 **AI Usage Disclosure:** The original UI features were developed as part of my MarsarahMod / Marsarah Tweaks projects. AI tools are now used as part of my development workflow for tasks such as debugging, refactoring, compatibility updates, researching game API changes, and documentation.  
@@ -129,7 +129,7 @@ https://paypal.me/Marsarah9
 ### <strong>🔧 Smart Biome Indicator</strong>
 - Replaces the normal minimap biome text with a color-coded indicator based on equipped armor and upgrade level.
 - Colors progress from **purple** for severely undergeared through red, orange, yellow and **green** for well prepared.
-- Evaluates progression from Meadows through Ashlands. Other biomes display in white.
+- Evaluates progression from Meadows through Deep North. Other biomes display in white.
 - Includes Bear, Vilebone and Lox Fur armor.
 - If **MarsarahTweaks** is installed and **Gear Upgrade Unlock** is enabled, Smart Biome adjusts its expected armor ranges accordingly.
 
@@ -355,6 +355,7 @@ https://paypal.me/Marsarah9
 - Replaces vanilla top-left messages with a customizable notification stack.
 - Displays item, skill and information messages with icons and styling matching the selected UI Style.
 - Repeated item notifications are combined, showing positive or negative amounts.
+- Repeated shelter and repair notifications are updated in place instead of stacking as separate entries.
 - Supports animations, adjustable position, scale, duration and maximum visible count.
 - **Notification Mode:** Enhanced or Vanilla, with an optional synchronized server override.
 

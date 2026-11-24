@@ -1,4 +1,4 @@
-Marsarah UI v1.5.2
+Marsarah UI v1.5.3
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -11,7 +11,7 @@ Marsarah UI also includes ServerSync support for selected gameplay/information-o
 DEVELOPMENT NOTES
 ================================================================
 DEEP NORTH / SPOILER NOTE:
-Deep North support is being added progressively. Version 1.5.2 expands the Enemy Detector with new tough enemy classifications and exclusions, and adds Detailed Hovers support for the Frost Foundry and Frigid Kiln. Biome-Sorted Crafting Tabs already includes Deep North recipe categorization.
+Deep North support is being added progressively. Version 1.5.3 adds Smart Biome support for Deep North gear and biome progression coloring. Previous updates introduced Deep North enemy classifications and exclusions, Detailed Hovers support for the Frost Foundry and Frigid Kiln, and Deep North recipe categorization in Biome-Sorted Crafting Tabs.
 I am still playing through the biome myself and want to experience the remaining content without spoilers. More Deep North-related UI improvements will be added as I continue my playthrough and discover where they are needed.
 
 AI USAGE DISCLOSURE:
@@ -181,6 +181,7 @@ MOD CONFIGS
   Plains
   Mistlands
   Ashlands
+  Deep North
 
 ► MarsarahTweaks Compatibility:
   If Tweaks is installed and Gear Upgrade Unlock is enabled, Smart Biome uses expanded expected armor ranges where Tweaks permits earlier level-4 upgrades.
@@ -700,6 +701,7 @@ MOD CONFIGS
 
   Enhanced Notifications display item, skill and information messages.
   Repeated item notifications are merged and show positive or negative amounts.
+  Repeated shelter and repair notifications are updated in place instead of stacking as separate entries.
   Notifications follow the selected UI Style and UI Animations settings.
 
 ► Server Override:
@@ -786,6 +788,13 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+
+v1.5.3
+- Updates:
+  - Smart Biome now supports Deep North gear and biome progression coloring.
+  - Enemy Detector now correctly counts raid minibosses as minibosses in Split mode.
+  - Enhanced Notifications now updates repeated shelter and repair notifications in place instead of stacking them as separate entries.
+  - Notification bars dynamically adjust their width when their contents are updated.
 
 v1.5.2
 - Updates:
