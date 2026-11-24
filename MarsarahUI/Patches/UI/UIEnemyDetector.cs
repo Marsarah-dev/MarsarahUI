@@ -53,8 +53,11 @@ namespace MarsarahUI.Patches.UI
 		private static readonly HashSet<string> minibossPrefabs = new HashSet<string>
 		{
 			"Skeleton_Hildir",
+			"Skeleton_Hildir_nochest",
 			"Fenring_Cultist_Hildir",
+			"Fenring_Cultist_Hildir_nochest",
 			"GoblinBruteBros",
+			"GoblinBruteBros_nochest",
 			"Charred_Melee_Dyrnwyn"
 		};
 
