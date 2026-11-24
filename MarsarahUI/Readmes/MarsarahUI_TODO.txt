@@ -11,13 +11,14 @@ A. Fixes
 B. Updates
 ------------------------
 * Smart Biome
-  - Includes Deep North gear in its biome weights calculations
+  - Added support for Deep North gear and biome progression coloring.
 
 * Enemy Detector
-  - Minibosses in raids are counted as minibosses in the split version. 
+  - Raid minibosses are now correctly counted as minibosses in Split mode.
 
-* Notification area
-  - Repeated state change notifications or repairs messages are no longer stacking as new entries, but are replaced in-place. 
+* Enhanced Notifications
+  - Repeated state-change and repair notifications are now updated in place instead of stacking as separate entries.
+  - Notification bars dynamically adjust their width when their contents are updated.
 
 C. New additions
 ------------------------
@@ -29,9 +30,6 @@ D. In Progress
 TO IMPLEMENT / VERIFY
 ============================================================
 
-0.
-* Artisan table Black Metal and Wooden missles are not mistlands tier. Move them to Plains. (Acshually, they are only useful in Mistlands so maybe hide them with something else, or just leave as is)
-
 A. Fixes / Compatibility
 --------------------
 * Fix Enhanced Notifications item grouping and amount signs for non-English localizations.
@@ -40,6 +38,7 @@ B. Requests
 --------------------
 * Add localization json file. Export all hardoced text into a language file. And add support for other language files.
 * Add dedicated slots for gear and quick slots. 
+* Make detailed hovers show ALL chests contents instead of stopping at 10 and showing +x afterwards.
 
 C. Existing UI Ideas
 --------------------
@@ -50,13 +49,10 @@ C. Existing UI Ideas
 * Show player HP and death count with Online Players.
 * Indicate Corpse Run status, for example by coloring the player name.
 * Show feasts stats on hover.
-* Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.
 
 D. New UI Features
 ------------------
-* Smart Pins:
-  - Admin defines allowed/predefined pins.
-  - Players can place only the predefined pin types.
+* Add new map pin icons. 
 * Show a center-screen message when a Trinket triggers.
 
 E. Deep North / 1.0 Content
