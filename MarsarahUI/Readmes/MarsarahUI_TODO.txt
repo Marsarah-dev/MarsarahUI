@@ -10,19 +10,14 @@ A. Fixes
 
 B. Updates
 ------------------------
-* Enemy Detector:
-  - Added Barka and Gammeltroll to the Enemy Detector's tough enemy list.
-  - Excluded harmless Deep North village Shadows (ShadowPerson) from nearby enemy counts.
-
-* Detailed Hovers:
-  - Added remaining crafting time for the Frost Foundry while a cast is processing.
-  - Added total remaining processing time for the Frigid Kiln based on its available Ice, accounting for multiple Liquid Frost production cycles.
 
 C. New additions
 ------------------------
 
 D. In Progress
 ------------------------
+* Smart Biome
+  - Include Deep North gear in its biome weights calculations
 
 ============================================================
 TO IMPLEMENT / VERIFY
@@ -35,6 +30,7 @@ TO IMPLEMENT / VERIFY
 A. Fixes / Compatibility
 --------------------
 * Fix Enhanced Notifications item grouping and amount signs for non-English localizations.
+* Enemy Detector does not count minibosses in raids as minibosses. 
 
 B. Requests
 --------------------
@@ -62,6 +58,5 @@ E. Deep North / 1.0 Content
 ---------------------------
 [IN PROGRESS] Review and implement additional Deep North support as I advance through the biome, avoiding spoilers for content not yet experienced.
 
-* Review Deep North gear for Smart Biome weighting.
 * Review any new Deep North mechanics that need UI indicators or hover information.
 * Check Dvergr Helmet / any new special helmets for Smart Biome only if they actually need custom weighting.

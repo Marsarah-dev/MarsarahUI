@@ -38,7 +38,8 @@ namespace MarsarahUI.Patches.Logic
 			{ "Mountain", new BiomeWeights(33, 46) },
 			{ "Plains", new BiomeWeights(42, 55) },
 			{ "Mistlands", new BiomeWeights(51, 60) },
-			{ "AshLands", new BiomeWeights(60, 69) }
+			{ "AshLands", new BiomeWeights(60, 69) },
+			{ "DeepNorth", new BiomeWeights(69, 78) }
 		};
 
 		private static readonly Dictionary<string, BiomeWeights> unlockedBiomeWeights = new Dictionary<string, BiomeWeights>()
@@ -49,7 +50,8 @@ namespace MarsarahUI.Patches.Logic
 			{ "Mountain", new BiomeWeights(33, 46) },
 			{ "Plains", new BiomeWeights(42, 55) },
 			{ "Mistlands", new BiomeWeights(51, 64) },
-			{ "AshLands", new BiomeWeights(60, 73) }
+			{ "AshLands", new BiomeWeights(60, 73) },
+			{ "DeepNorth", new BiomeWeights(69, 82) }
 		};
 
 		private static readonly Dictionary<string, int> armorWeights = new Dictionary<string, int>()
@@ -63,6 +65,8 @@ namespace MarsarahUI.Patches.Logic
 			{ "$item_cape_feather", 1 },
 			{ "$item_cape_ash", 1 },
 			{ "$item_cape_asksvin", 1 },
+			{ "$item_cape_deepnorth", 1 },
+			{ "$item_cape_deepnorth_mage", 1 },
 
 			// Meadows
 			{ "$item_chest_rags", 1 },
@@ -126,7 +130,18 @@ namespace MarsarahUI.Patches.Logic
 			{ "$item_legs_medium_ashlands", 20 },
 			{ "$item_helmet_flametal", 20 },
 			{ "$item_chest_flametal", 20 },
-			{ "$item_legs_flametal", 20 }
+			{ "$item_legs_flametal", 20 },
+						
+			// Deep North
+			{ "$item_helmet_heavy_deepnorth", 23 },
+			{ "$item_chest_heavy_deepnorth", 23 },
+			{ "$item_legs_heavy_deepnorth", 23 },
+			{ "$item_helmet_medium_deepnorth", 23 },
+			{ "$item_chest_medium_deepnorth", 23 },
+			{ "$item_legs_medium_deepnorth", 23 },
+			{ "$item_helmet_mage_deepnorth", 23 },
+			{ "$item_chest_mage_deepnorth", 23 },
+			{ "$item_legs_mage_deepnorth", 23 }
 		};
 
 		internal static int GetEquippedArmorWeight(Player player)
