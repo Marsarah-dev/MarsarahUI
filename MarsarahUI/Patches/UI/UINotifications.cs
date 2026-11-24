@@ -393,6 +393,11 @@ namespace MarsarahUI.Patches.UI
 				notificationType = NotificationType.State;
 				notificationKey = stateKey;
 			}
+			else if (message.Contains("$msg_repaired") || message.Contains("$msg_doesnotneedrepair") || localizedMessage.StartsWith("Repaired "))
+			{
+				notificationType = NotificationType.State;
+				notificationKey = "Repair";
+			}
 
 			log.Info($"Intercepted TopLeft notification '{localizedMessage}' through {originalMethod.Name}. Amount: {amount}, Icon: {(icon != null ? icon.name : "none")}.");
 
@@ -408,7 +413,7 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			if ((type == NotificationType.Item || type == NotificationType.Skill || type == NotificationType.State) && !string.IsNullOrEmpty(key))
-				{
+			{
 				NotificationEntry existingNotification = notifications.Find(notification =>
 					notification.Type == type &&
 					notification.Key == key &&
@@ -448,15 +453,6 @@ namespace MarsarahUI.Patches.UI
 						if (existingNotification.MessageText != null)
 						{
 							existingNotification.MessageText.text = message;
-
-							float leftSpace = existingNotification.Icon != null ? 38f : 10f;
-							float rightSpace = existingNotification.AmountText != null ? 50f : 10f;
-							float requiredWidth = existingNotification.MessageText.preferredWidth + leftSpace + rightSpace + 8f;
-							float notificationWidth = Mathf.Clamp(requiredWidth, NotificationWidth, MaxNotificationWidth);
-
-							existingNotification.Rect.sizeDelta = new Vector2(notificationWidth, NotificationHeight);
-							existingNotification.Layout.preferredWidth = notificationWidth;
-							existingNotification.Layout.minWidth = notificationWidth;
 						}
 
 						log.Info($"Updated state notification '{key}': '{message}'.");
