@@ -1,5 +1,12 @@
 ## <strong> 📜 Version History </strong>
 
+v1.6.0
+- **Updates:**
+  - Added new Portal Transition Images for Thistle Black Forest, Thistle Swamp and Greyling Meadows.
+  - Added Portal Transition Image support for Statue Swamp, using the existing Bog Swamp image.
+  - Updated alternate biome priorities to accommodate the four new variants.
+  - Verified compatibility with Valheim v1.0.30.
+
 v1.5.3
 - **Updates:**
   - Smart Biome now supports Deep North gear and biome progression coloring.

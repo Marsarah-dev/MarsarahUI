@@ -1,4 +1,4 @@
-Marsarah UI v1.5.3
+Marsarah UI v1.6.0
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -120,7 +120,7 @@ MOD CONFIGS
 ------------------- [Portal Transition Images] ------------------
 ► Description:
   Replaces the vanilla teleport screen with custom biome-themed images.
-  Includes images for all nine biomes and 34 alternate biome variations.
+  Includes images for all nine biomes and 38 alternate biome variations.
   The images are in-game screenshots modified with AI.
   When multiple alternate biomes are active, the image is selected based on priority.
 
@@ -788,6 +788,13 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+
+v1.6.0
+- Updates:
+  - Added new Portal Transition Images for Thistle Black Forest, Thistle Swamp and Greyling Meadows.
+  - Added Portal Transition Image support for Statue Swamp, using the existing Bog Swamp image.
+  - Updated alternate biome priorities to accommodate the four new variants.
+  - Verified compatibility with Valheim v1.0.30.
 
 v1.5.3
 - Updates:

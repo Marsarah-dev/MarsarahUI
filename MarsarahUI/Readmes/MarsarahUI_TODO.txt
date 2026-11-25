@@ -20,7 +20,7 @@ C. New additions
 
 D. In Progress
 ------------------------
-* Check needed adjustments/additions folllowing he 1.0.30 game update (specifically the Thistle alt biome teleportation images)
+
 
 ============================================================
 TO IMPLEMENT / VERIFY

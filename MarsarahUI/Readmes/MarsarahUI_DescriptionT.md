@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.5.3  
+**Version:** 1.6.0  
 **Author:** Marsarah
 
 ---
@@ -100,7 +100,7 @@ https://paypal.me/Marsarah9
 
 ### <strong>🔧 Portal Transition Images</strong>
 - Replaces the vanilla teleport screen with custom biome-themed images showing the destination biome.
-- Includes images for all nine biomes and 34 alternate biome variations.
+- Includes images for all nine biomes and 38 alternate biome variations.
 - The images are in-game screenshots modified with AI.
 - When multiple alternate biomes are active, the image is selected based on priority.
 - Modes: **Images, ImagesAndText, Off**.
