@@ -19,6 +19,7 @@ namespace MarsarahUI.Patches.Logic
 				"Raspberry",
 				"Smalltree",
 				"Menhir",
+				"Greyling",
 				"Dandelion"
 			} },
 
@@ -29,6 +30,7 @@ namespace MarsarahUI.Patches.Logic
 				"Ruin",
 				"Mushroom",
 				"Blueberry",
+				"Thistle",
 				"Kalhygge",
 				"Rock",
 				"Pinetree"
@@ -39,7 +41,9 @@ namespace MarsarahUI.Patches.Logic
 				"Abomination",
 				"Bat",
 				"Bones",
+				"Thistle",
 				"Bog",
+				"Statue",
 				"Hut"
 			} },
 

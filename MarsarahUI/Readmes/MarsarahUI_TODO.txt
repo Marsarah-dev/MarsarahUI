@@ -10,6 +10,10 @@ A. Fixes
 
 B. Updates
 ------------------------
+* Portal Transition Images
+  - Added new images for Thistle Black Forest, Thistle Swamp and Greyling Meadows.
+  - Added support for Statue Swamp, reusing the existing Bog Swamp image.
+  - Updated alternate biome priorities to accommodate all four new variants.
 
 C. New additions
 ------------------------

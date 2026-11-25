@@ -232,6 +232,9 @@
     <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_04_Bog.jpg" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_05_Hut.jpg" />
     <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_06_Bones.jpg" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\BlackForest_10_Thistle.jpg" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Meadows_10_Greyling.jpg" />
+    <EmbeddedResource Include="Assets\Portals\Biomes\Swamp_07_Thistle.jpg" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />
