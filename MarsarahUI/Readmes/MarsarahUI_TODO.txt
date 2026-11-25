@@ -10,21 +10,13 @@ A. Fixes
 
 B. Updates
 ------------------------
-* Smart Biome
-  - Added support for Deep North gear and biome progression coloring.
-
-* Enemy Detector
-  - Raid minibosses are now correctly counted as minibosses in Split mode.
-
-* Enhanced Notifications
-  - Repeated state-change and repair notifications are now updated in place instead of stacking as separate entries.
-  - Notification bars dynamically adjust their width when their contents are updated.
 
 C. New additions
 ------------------------
 
 D. In Progress
 ------------------------
+* Check needed adjustments/additions folllowing he 1.0.30 game update (specifically the Thistle alt biome teleportation images)
 
 ============================================================
 TO IMPLEMENT / VERIFY
@@ -36,9 +28,9 @@ A. Fixes / Compatibility
 
 B. Requests
 --------------------
-* Add localization json file. Export all hardoced text into a language file. And add support for other language files.
+* Add localization json file. Export all hardcoded text into a language file. And add support for other language files.
 * Add dedicated slots for gear and quick slots. 
-* Make detailed hovers show ALL chests contents instead of stopping at 10 and showing +x afterwards.
+* Make detailed hovers show ALL chest contents instead of stopping at 10 and showing +x afterwards.
 
 C. Existing UI Ideas
 --------------------
