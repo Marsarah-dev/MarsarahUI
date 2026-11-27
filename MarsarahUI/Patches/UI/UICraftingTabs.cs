@@ -86,6 +86,7 @@ namespace MarsarahUI.Patches.UI
 		private static readonly Dictionary<RectTransform, RectTransformState> vanillaLayoutStates = new Dictionary<RectTransform, RectTransformState>();
 
 		private static CraftingTab selectedTab = CraftingTab.All;
+		private static CraftingTab lastSelectedTab = CraftingTab.All;
 		private static CraftingTabProfile currentTabProfile = CraftingTabProfile.Biomes;
 		private static InventoryGui currentInventoryGui;
 		private static bool vanillaLayoutCaptured;
@@ -153,11 +154,7 @@ namespace MarsarahUI.Patches.UI
 				int tabRows = GetRequiredLayoutRows();
 				SetCraftingLayout(tabRows, __instance);
 
-				if (!availableTabs.Contains(selectedTab))
-				{
-					log.Info($"Selected crafting tab {selectedTab} is not available at this station. Resetting to All.");
-					selectedTab = CraftingTab.All;
-				}
+				selectedTab = availableTabs.Contains(lastSelectedTab) ? lastSelectedTab : CraftingTab.All;
 
 				UpdateCraftingTabs(__instance);
 
@@ -219,6 +216,7 @@ namespace MarsarahUI.Patches.UI
 
 			currentInventoryGui = inventoryGui;
 			selectedTab = CraftingTab.All;
+			lastSelectedTab = CraftingTab.All;
 
 			log.Info("Crafting InventoryGui instance changed. Reset custom crafting UI state.");
 		}
@@ -493,6 +491,8 @@ namespace MarsarahUI.Patches.UI
 				return;
 
 			selectedTab = tab;
+			lastSelectedTab = tab;
+
 			UpdateTabSelectionVisuals();
 
 			log.Info($"Selected crafting tab: {selectedTab}");
@@ -528,6 +528,7 @@ namespace MarsarahUI.Patches.UI
 				bool hadCustomState = vanillaLayoutCaptured || HasCustomCraftingUI() || selectedTab != CraftingTab.All;
 
 				selectedTab = CraftingTab.All;
+				lastSelectedTab = CraftingTab.All;
 
 				if (hadCustomState)
 				{

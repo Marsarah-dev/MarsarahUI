@@ -6,7 +6,7 @@ using MarsarahUI.Patches.UI;
 
 namespace MarsarahUI.Patches.Logic
 {
-	internal class EnemyDetectorLogic
+	internal static class EnemyDetectorLogic
 	{
 		// NOTE: The UI elements for this feature are handled by UIInfoRail
 

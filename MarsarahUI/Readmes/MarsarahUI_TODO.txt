@@ -20,13 +20,27 @@ B. Updates
   - Both counters share the existing visibility, position, scale and animation settings.
   - Only counters with active summons are displayed.
 
+* Enemy Detector
+  - Added a new SplitDeepNorth mode to distinguish lesser Deep North enemies from regular enemies.
+  - Frozen Greydwarfs, Frozen Greydwarf Shamans and Deep North Skeletons are counted separately as lesser enemies.
+  - Added unique single-claw icons for all three UI styles, matching the existing enemy icons.
+  - The lesser enemy counter supports both display modes, both rail positions and existing animations.
+  - Consolidated and standard Split modes remain unchanged.
+  - Refactored enemy detection logic into EnemyDetectorLogic, separating detection logic from UI rendering.
+
+* Biome-Sorted Crafting Tabs
+  - The last selected crafting tab is now retained when switching between crafting stations, opening chests or switching between Craft and Upgrade.
+  - Automatically falls back to the All tab when the remembered category is unavailable at the current station.
+  - Restores the previously selected tab when its category becomes available again.
+  - Supports both Multiple Rows and Scrolling modes.
+
 C. New additions
 ------------------------
 
 D. In Progress
 ------------------------
-* Enemy Detector - split mode special indicator for either lesser enemies or the medium enemies
-* When switching to a chest or another crafting station, the crafting tabs do not retain their last tab selected. Need to look into this. Also, Give Oat Milk it's own Deep North Category when Food and Mead Modifications is not enabled (now it's in Others). 
+* When switching to a chest or another crafting station, the crafting tabs do not retain their last tab selected. Need to look into this. 
+* Give Oat Milk it's own Deep North Category when Food and Mead Modifications is not enabled (now it's in Others). 
 
 spawn Greydwarf_Frozen 1
 spawn Greydwarf_Shaman_Frozen 1
