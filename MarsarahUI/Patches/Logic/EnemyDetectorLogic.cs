@@ -17,6 +17,14 @@ namespace MarsarahUI.Patches.Logic
 
 		private static float nextUpdateTime;
 
+		private static readonly HashSet<string> lesserEnemyPrefabs = new HashSet<string>
+		{
+			// Deep North
+			"Greydwarf_Frozen",
+			"Greydwarf_Shaman_Frozen",
+			"Skeleton_DeepNorth"
+		};
+
 		private static readonly HashSet<string> toughEnemyPrefabs = new HashSet<string>
 		{
 			// Black Forest
@@ -66,6 +74,7 @@ namespace MarsarahUI.Patches.Logic
 
 		private static readonly List<Character> characters = new List<Character>();
 
+		internal static int NumLesserEnemies { get; private set; }
 		internal static int NumEnemies { get; private set; }
 		internal static int NumToughEnemies { get; private set; }
 		internal static int NumNeutralEnemies { get; private set; }
@@ -84,12 +93,16 @@ namespace MarsarahUI.Patches.Logic
 				if (Time.unscaledTime < nextUpdateTime) return;
 				nextUpdateTime = Time.unscaledTime + UpdateInterval;
 
+				int lesserEnemies = 0;
 				int enemies = 0;
 				int toughEnemies = 0;
 				int bosses = 0;
 				int neutralEnemies = 0;
 
-				bool splitEnemies = ConfigManager.EffectiveEnemyDetectorChoice == ConfigManager.EnemyDetectorMode.Split;
+				ConfigManager.EnemyDetectorMode mode = ConfigManager.EffectiveEnemyDetectorChoice;
+
+				bool splitEnemies = mode == ConfigManager.EnemyDetectorMode.Split || mode == ConfigManager.EnemyDetectorMode.SplitDeepNorth;
+				bool splitLesserEnemies = mode == ConfigManager.EnemyDetectorMode.SplitDeepNorth;
 
 				characters.Clear();
 				Character.GetCharactersInRange(___m_localPlayer.transform.position, DetectionRadius, characters);
@@ -124,9 +137,16 @@ namespace MarsarahUI.Patches.Logic
 						continue;
 					}
 
+					if (splitLesserEnemies && IsLesserEnemy(character))
+					{
+						lesserEnemies++;
+						continue;
+					}
+
 					enemies++;
 				}
 
+				NumLesserEnemies = lesserEnemies;
 				NumEnemies = enemies;
 				NumToughEnemies = toughEnemies;
 				NumBosses = bosses;
@@ -186,6 +206,11 @@ namespace MarsarahUI.Patches.Logic
 		private static bool IsToughEnemy(Character character)
 		{
 			return toughEnemyPrefabs.Contains(GetPrefabName(character));
+		}
+
+		private static bool IsLesserEnemy(Character character)
+		{
+			return lesserEnemyPrefabs.Contains(GetPrefabName(character));
 		}
 	}
 }

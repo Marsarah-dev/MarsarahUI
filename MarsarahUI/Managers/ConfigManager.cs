@@ -104,6 +104,7 @@ namespace MarsarahUI.Managers
 		{
 			Consolidated,
 			Split,
+			SplitDeepNorth,
 			Off
 		}
 
@@ -334,7 +335,7 @@ namespace MarsarahUI.Managers
 			public static readonly ConfigMetadata UIInfoRailPosition = new ConfigMetadata("Information Rail X/Y Position", "Sets the exact X and Y position of the information rail.", ConfigSections.InformationRail, 54);
 			public static readonly ConfigMetadata UIInfoRailScale = new ConfigMetadata("Information Rail Scale", "Sets the scale of the information rail as a percentage. 100 is the default size.", ConfigSections.InformationRail, 53);
 			public static readonly ConfigMetadata UIInventoryWeightAndSlots = new ConfigMetadata("Inventory Weight and Free Slots", "Choose whether the bottom-left information rail displays inventory weight, free slots, both, or neither.", ConfigSections.InformationRail, 50);
-			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, or enemy detection is disabled.", ConfigSections.InformationRail, 40);
+			public static readonly ConfigMetadata UIEnemyDetector = new ConfigMetadata("Enemy Detector", "Choose whether nearby hostile enemies are shown in one consolidated counter, split into normal, tough, and boss counters, additionally separate lesser Deep North enemies, or disable enemy detection.", ConfigSections.InformationRail, 40);
 			public static readonly ConfigMetadata UIEnemyDetectorPosition = new ConfigMetadata("Enemy Detector Position", "Choose whether the enemy detector is displayed in the bottom-left information rail or separately at the top-center of the screen.", ConfigSections.InformationRail, 30);
 			public static readonly ConfigMetadata UIEnemyRailPosition = new ConfigMetadata("Enemy Rail X/Y Position", "Sets the exact X and Y position of the top-center enemy rail.", ConfigSections.InformationRail, 29);
 			public static readonly ConfigMetadata UIEnemyRailScale = new ConfigMetadata("Enemy Rail Scale", "Sets the scale of the top-center enemy rail as a percentage. 100 is the default size.", ConfigSections.InformationRail, 28);
