@@ -13,6 +13,13 @@ B. Updates
 * Enhanced Notifications 
   - Updates repeated auto-pickup ON/OFF notifications in place instead of stacking them as separate entries.
 
+* Show Summon Counter
+  - Added support for Spirit Caller animal summons.
+  - Skeleton and animal summons are counted separately and displayed vertically when both are active.
+  - Added unique animal summon icons for all three UI styles.
+  - Both counters share the existing visibility, position, scale and animation settings.
+  - Only counters with active summons are displayed.
+
 C. New additions
 ------------------------
 

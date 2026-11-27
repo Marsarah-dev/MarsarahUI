@@ -15,11 +15,11 @@ namespace MarsarahUI
 		public const string ModGUID = Author + "." + ModName;
 
 		private readonly Harmony harmony = new Harmony(ModGUID);
-		private static readonly LogManager log = new LogManager("Main", LogManager.LogLevel.Info);
+		private static readonly LogManager log = new LogManager("Main", LogManager.LogLevel.Warning);
 
 		private void Awake()
 		{
-			LogManager.SetGlobalLogLevel(LogManager.LogLevel.Warning);
+			LogManager.SetGlobalLogLevel(LogManager.LogLevel.Info);
 			ConfigManager.Init(Config);
 
 			harmony.PatchAll();

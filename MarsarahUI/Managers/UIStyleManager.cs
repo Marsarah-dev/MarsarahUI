@@ -54,6 +54,7 @@ namespace MarsarahUI.Managers
 		internal string BossIcon;
 		internal string NeutralIcon;
 		internal string SummonIcon;
+		internal string SummonAnimalIcon;
 		internal string BoatIcon;
 		internal string BoatSpeedIcon;
 
@@ -120,6 +121,7 @@ namespace MarsarahUI.Managers
 			BossIcon = "Style1.Boss",
 			NeutralIcon = "Style1.Neutral",
 			SummonIcon = "Style1.Summon",
+			SummonAnimalIcon = "Style1.SummonAnimal",
 			BoatIcon = "Style1.Boat",
 			BoatSpeedIcon = "Style1.BoatSpeed",
 
@@ -178,6 +180,7 @@ namespace MarsarahUI.Managers
 			BossIcon = "Style2.Boss",
 			NeutralIcon = "Style2.Neutral",
 			SummonIcon = "Style2.Summon",
+			SummonAnimalIcon = "Style2.SummonAnimal",
 			BoatIcon = "Style2.Boat",
 			BoatSpeedIcon = "Style2.BoatSpeed",
 
@@ -242,6 +245,7 @@ namespace MarsarahUI.Managers
 			BossIcon = "Style3.Boss",
 			NeutralIcon = "Style3.Neutral",
 			SummonIcon = "Style3.Summon",
+			SummonAnimalIcon = "Style3.SummonAnimal",
 			BoatIcon = "Style3.Boat",
 			BoatSpeedIcon = "Style3.BoatSpeed",
 

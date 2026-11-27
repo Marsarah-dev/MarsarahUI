@@ -10,6 +10,7 @@ namespace MarsarahUI.Patches.UI
 		private static readonly LogManager log = new LogManager("UI Summon Counter", LogManager.LogLevel.Warning);
 
 		internal static int NumSummons { get; private set; }
+		internal static int NumAnimalSummons { get; private set; }
 
 		[HarmonyPatch(typeof(Player), "Update")]
 		private static class SummonCounterPlayerPatch
@@ -22,12 +23,17 @@ namespace MarsarahUI.Patches.UI
 				if (!UIController.ShowUI) return;
 
 				List<Character> allCharacters = Character.GetAllCharacters();
+
 				int numSummonedSkeletons = 0;
+				int numSummonedAnimals = 0;
 
 				foreach (Character character in allCharacters)
 				{
-					if (!character.IsTamed()) continue;
-					if (!character.name.Contains("Skeleton_Friendly")) continue;
+					bool isSkeleton = character.name.Contains("Skeleton_Friendly");
+					bool isAnimal = character.name.Contains("_spiritcaller");
+
+					if (!isSkeleton && !isAnimal) continue;
+					if (isSkeleton && !character.IsTamed()) continue;
 
 					MonsterAI monsterAI = character.GetComponent<MonsterAI>();
 					if (monsterAI == null) continue;
@@ -38,10 +44,18 @@ namespace MarsarahUI.Patches.UI
 					Player targetPlayer = followTarget.GetComponent<Player>();
 					if (targetPlayer != ___m_localPlayer) continue;
 
-					numSummonedSkeletons++;
+					if (isSkeleton)
+					{
+						numSummonedSkeletons++;
+					}
+					else if (isAnimal)
+					{
+						numSummonedAnimals++;
+					}
 				}
 
 				NumSummons = numSummonedSkeletons;
+				NumAnimalSummons = numSummonedAnimals;
 			}
 		}
 	}

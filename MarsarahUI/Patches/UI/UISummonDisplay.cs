@@ -13,29 +13,190 @@ namespace MarsarahUI.Patches.UI
 
 		private const float AnimationDuration = 0.2f;
 		private const float SlideDistance = 8f;
-
-		private static readonly Vector2 VisiblePosition = new Vector2(38f, -85f);
-
-		private static GameObject UISummonArea;
-		private static RectTransform summonAreaRect;
-		private static CanvasGroup summonCanvasGroup;
-		private static Text summonText;
-		private static Image summonIcon;
-
-		private static float animationProgress;
-		private static bool targetVisible;
-		private static bool animating;
-
-		private static GameObject summonBackground;
-		private static GameObject summonBorder;
+		private const float PanelSpacing = 8f;
 
 		private static readonly Vector2 SummonTextModeSize = new Vector2(85f, 34f);
-
 		private static readonly Vector2 SummonIconModeIconPosition = new Vector2(-9f, 0f);
 		private static readonly Vector2 SummonIconModeTextPosition = new Vector2(-8f, 0f);
 
-		private static readonly Vector2 SummonTextModeLabelPosition = new Vector2(0f, 11f);
-		private static readonly Vector2 SummonTextModeValuePosition = new Vector2(0f, -11f);
+		private static GameObject summonRoot;
+		private static RectTransform summonRootRect;
+
+		private static SummonPanel skeletonPanel;
+		private static SummonPanel animalPanel;
+
+		private class SummonPanel
+		{
+			internal readonly GameObject Root;
+			internal readonly RectTransform Rect;
+			internal readonly CanvasGroup CanvasGroup;
+			internal readonly Text CountText;
+			internal readonly Image Icon;
+
+			private readonly string label;
+			private readonly bool isAnimal;
+
+			private GameObject background;
+			private GameObject border;
+
+			private float animationProgress;
+			private bool targetVisible;
+
+			internal bool IsActive => Root.activeSelf;
+
+			internal SummonPanel(string name, string label, bool isAnimal, GameObject parent)
+			{
+				this.label = label;
+				this.isAnimal = isAnimal;
+
+				UIStyleDefinition style = UIStyleManager.Current;
+
+				Root = new GameObject(name);
+				Root.layer = 5;
+				Root.transform.SetParent(parent.transform, false);
+
+				Rect = Root.AddComponent<RectTransform>();
+				Rect.anchorMin = new Vector2(0.5f, 0.5f);
+				Rect.anchorMax = new Vector2(0.5f, 0.5f);
+				Rect.pivot = new Vector2(0.5f, 0.5f);
+				Rect.sizeDelta = style.SummonSize;
+
+				CanvasGroup = Root.AddComponent<CanvasGroup>();
+				CanvasGroup.alpha = 0f;
+				CanvasGroup.interactable = false;
+				CanvasGroup.blocksRaycasts = false;
+
+				Icon = CreateUIImageObject("SummonIcon", Root, SummonIconModeIconPosition, new Vector2(24f, 24f));
+				Icon.preserveAspect = true;
+				Icon.color = Color.white;
+
+				CountText = CreateTextObject("SummonText", Root, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, SummonIconModeTextPosition, style.SummonSize);
+
+				Root.SetActive(false);
+			}
+
+			internal void Update(int count, bool visible)
+			{
+				targetVisible = visible;
+
+				if (visible)
+				{
+					if (!Root.activeSelf)
+					{
+						Root.SetActive(true);
+					}
+
+					UpdateDisplay(count);
+				}
+
+				float target = targetVisible ? 1f : 0f;
+
+				animationProgress = ConfigManager.EffectiveUIAnimations
+					? Mathf.MoveTowards(animationProgress, target, Time.deltaTime / AnimationDuration)
+					: target;
+
+				CanvasGroup.alpha = Mathf.SmoothStep(0f, 1f, animationProgress);
+
+				if (!targetVisible && animationProgress <= 0f)
+				{
+					Root.SetActive(false);
+				}
+			}
+
+			private void UpdateDisplay(int count)
+			{
+				bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+
+				Color valueColor = UIStyleManager.GetSummonTextColor(count);
+				string value = count.ToString();
+
+				string displayText = useText ? CreateLabeledValue(label, value, valueColor) : value;
+				Color displayColor = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
+
+				if (CountText.text != displayText)
+				{
+					CountText.text = displayText;
+				}
+
+				if (CountText.color != displayColor)
+				{
+					CountText.color = displayColor;
+				}
+			}
+
+			internal void ApplyPosition(Vector2 position)
+			{
+				float easedProgress = Mathf.SmoothStep(0f, 1f, animationProgress);
+
+				Rect.anchoredPosition = position + new Vector2(0f, Mathf.Lerp(SlideDistance, 0f, easedProgress));
+			}
+
+			internal void ApplyStyle()
+			{
+				UIStyleDefinition style = UIStyleManager.Current;
+
+				background = ReplaceStyledBackground(background, "SummonBackground", Root, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
+
+				border = ReplaceStyledBorder(border, "SummonBorder", Root, style.SummonBorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
+
+				string iconName = isAnimal ? style.SummonAnimalIcon : style.SummonIcon;
+
+				Icon.sprite = IconManager.LoadHudIcon(iconName);
+				Icon.preserveAspect = true;
+				Icon.color = Color.white;
+
+				if (Icon.sprite == null)
+				{
+					log.Warn($"Could not load HUD icon '{iconName}'.");
+				}
+			}
+
+			internal void ApplyDisplayMode()
+			{
+				bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
+				UIStyleDefinition style = UIStyleManager.Current;
+
+				Icon.gameObject.SetActive(!useText);
+
+				Rect.sizeDelta = useText ? SummonTextModeSize : style.SummonSize;
+
+				RectTransform textRect = CountText.rectTransform;
+
+				if (useText)
+				{
+					textRect.anchoredPosition = Vector2.zero;
+					textRect.sizeDelta = SummonTextModeSize;
+
+					CountText.alignment = TextAnchor.MiddleCenter;
+					CountText.fontSize = 14;
+				}
+				else
+				{
+					textRect.anchoredPosition = SummonIconModeTextPosition;
+					textRect.sizeDelta = style.SummonSize;
+
+					CountText.alignment = TextAnchor.MiddleRight;
+					CountText.fontSize = 16;
+				}
+			}
+
+			internal void FinalizeAnimation()
+			{
+				animationProgress = targetVisible ? 1f : 0f;
+
+				CanvasGroup.alpha = animationProgress;
+				Root.SetActive(targetVisible);
+			}
+
+			internal void HideImmediately()
+			{
+				targetVisible = false;
+				animationProgress = 0f;
+
+				CanvasGroup.alpha = 0f;
+				Root.SetActive(false);
+			}
+		}
 
 		[HarmonyPatch(typeof(Hud), "Awake")]
 		private static class SummonDisplayHudAwakePatch
@@ -55,265 +216,112 @@ namespace MarsarahUI.Patches.UI
 		{
 			private static void Postfix(Hud __instance)
 			{
+				if (ZNet.instance != null && ZNet.instance.IsDedicated()) return;
+
 				if (!ConfigManager.EffectiveShowSummonCounter)
 				{
-					if (UISummonArea != null && UISummonArea.activeSelf)
+					if (summonRoot != null)
 					{
-						targetVisible = false;
-						animating = false;
-						UISummonArea.SetActive(false);
+						skeletonPanel.HideImmediately();
+						animalPanel.HideImmediately();
 					}
 
 					return;
 				}
 
-				if (UISummonArea == null)
+				if (summonRoot == null)
 				{
 					CreateUI(__instance);
 				}
 
-				if (UISummonArea == null) return;
+				if (summonRoot == null) return;
 
-				bool visible = ShowUI && UISummonCounter.NumSummons > 0;
-
-				SetVisible(visible);
-				UpdateDisplay();
-				UpdateAnimation();
 				UpdateDisplayMode();
+
+				int skeletonCount = UISummonCounter.NumSummons;
+				int animalCount = UISummonCounter.NumAnimalSummons;
+
+				skeletonPanel.Update(skeletonCount, ShowUI && skeletonCount > 0);
+				animalPanel.Update(animalCount, ShowUI && animalCount > 0);
+
+				UpdateLayout();
 			}
 		}
 
 		private static void CreateUI(Hud hud)
 		{
-			UIStyleDefinition style = UIStyleManager.Current;
+			if (summonRoot != null) return;
+			if (hud == null || hud.m_healthPanel == null) return;
 
-			if (UISummonArea != null) return;
+			summonRoot = new GameObject("SummonDisplay");
+			summonRoot.layer = 5;
+			summonRoot.transform.SetParent(hud.m_healthPanel.transform, false);
 
-			Vector2 areaSize = style.SummonSize;
+			summonRootRect = summonRoot.AddComponent<RectTransform>();
+			summonRootRect.anchorMin = new Vector2(1f, 1f);
+			summonRootRect.anchorMax = new Vector2(1f, 1f);
+			summonRootRect.pivot = new Vector2(0.5f, 0.5f);
+			summonRootRect.sizeDelta = Vector2.zero;
 
-			UISummonArea = new GameObject("SummonDisplay");
-			UISummonArea.layer = 5;
-			UISummonArea.transform.SetParent(hud.m_healthPanel.transform, false);
-
-			summonAreaRect = UISummonArea.AddComponent<RectTransform>();
-			summonAreaRect.anchorMin = new Vector2(1f, 1f);
-			summonAreaRect.anchorMax = new Vector2(1f, 1f);
-			summonAreaRect.sizeDelta = areaSize;
-
-			ApplySummonCounterTransform();
-
-			summonBackground = CreateStyledBackground("SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
-			summonBorder = CreateStyledBorder("SummonBorder", UISummonArea, style.SummonBorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
-
-			summonCanvasGroup = UISummonArea.AddComponent<CanvasGroup>();
-			summonCanvasGroup.alpha = 0f;
-			summonCanvasGroup.interactable = false;
-			summonCanvasGroup.blocksRaycasts = false;
-
-			summonIcon = CreateUIImageObject("SummonIcon", UISummonArea, SummonIconModeIconPosition, new Vector2(24f, 24f));
-			summonIcon.sprite = IconManager.LoadHudIcon(style.SummonIcon);
-			summonIcon.preserveAspect = true;
-			summonIcon.color = Color.white;
-
-			if (summonIcon.sprite == null)
-			{
-				log.Warn($"Could not load HUD icon '{style.SummonIcon}'.");
-			}
-
-			summonText = CreateTextObject("SummonText", UISummonArea, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleRight, SummonIconModeTextPosition, areaSize);
+			skeletonPanel = new SummonPanel("SkeletonSummonDisplay", "Skeletons", false, summonRoot);
+			animalPanel = new SummonPanel("AnimalSummonDisplay", "Spirits", true, summonRoot);
 
 			UIStyleManager.StyleChanged -= ApplyStyle;
 			UIStyleManager.StyleChanged += ApplyStyle;
 
 			ApplyStyle();
-			ApplyDisplayMode();
+			ApplySummonCounterTransform();
 
-			UISummonArea.SetActive(false);
-
-			log.Info("Created standalone summon display.");
+			log.Info("Created skeleton and animal summon displays.");
 		}
 
-		private static void SetVisible(bool visible)
+		private static void UpdateLayout()
 		{
-			if (targetVisible == visible) return;
+			if (summonRoot == null) return;
 
-			targetVisible = visible;
+			skeletonPanel.ApplyPosition(Vector2.zero);
 
-			if (!ConfigManager.EffectiveUIAnimations)
-			{
-				animationProgress = visible ? 1f : 0f;
-				animating = false;
+			float animalOffset = skeletonPanel.IsActive
+				? skeletonPanel.Rect.sizeDelta.y + PanelSpacing
+				: 0f;
 
-				if (summonCanvasGroup != null)
-				{
-					summonCanvasGroup.alpha = visible ? 1f : 0f;
-				}
-
-				if (summonAreaRect != null)
-				{
-					summonAreaRect.anchoredPosition = visible ? GetVisiblePosition() : GetHiddenPosition();
-				}
-
-				UISummonArea.SetActive(visible);
-				return;
-			}
-
-			animating = true;
-
-			if (visible)
-			{
-				UISummonArea.SetActive(true);
-			}
-		}
-
-		private static void UpdateDisplay()
-		{
-			if (!targetVisible) return;
-			if (summonText == null) return;
-
-			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
-
-			Color valueColor = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
-			string value = UISummonCounter.NumSummons.ToString();
-
-			summonText.text = useText ? CreateLabeledValue("Summons", value, valueColor) : value;
-			summonText.color = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
-		}
-
-		private static void UpdateAnimation()
-		{
-			if (!animating) return;
-
-			float target = targetVisible ? 1f : 0f;
-
-			animationProgress = Mathf.MoveTowards(animationProgress, target, Time.deltaTime / AnimationDuration);
-
-			float easedProgress = Mathf.SmoothStep(0f, 1f, animationProgress);
-
-			if (summonCanvasGroup != null)
-			{
-				summonCanvasGroup.alpha = easedProgress;
-			}
-
-			if (summonAreaRect != null)
-			{
-				summonAreaRect.anchoredPosition = Vector2.Lerp(GetHiddenPosition(), GetVisiblePosition(), easedProgress);
-			}
-
-			if (!Mathf.Approximately(animationProgress, target)) return;
-
-			animating = false;
-
-			if (!targetVisible)
-			{
-				UISummonArea.SetActive(false);
-			}
-		}
-
-		private static Vector2 GetVisiblePosition()
-		{
-			return ConfigManager.SummonCounterPosition.Value;
-		}
-
-		private static Vector2 GetHiddenPosition()
-		{
-			return GetVisiblePosition() + new Vector2(0f, SlideDistance);
+			animalPanel.ApplyPosition(new Vector2(0f, animalOffset));
 		}
 
 		internal static void ApplyStyle()
 		{
-			if (UISummonArea == null) return;
+			if (summonRoot == null) return;
 
-			UIStyleDefinition style = UIStyleManager.Current;
-
-			if (summonAreaRect != null)
-			{
-				summonAreaRect.sizeDelta = style.SummonSize;
-			}
-
-			summonBackground = ReplaceStyledBackground(summonBackground, "SummonBackground", UISummonArea, style.BackgroundType, style.BackgroundColor, style.VanillaBackgroundSprite, log);
-			summonBorder = ReplaceStyledBorder(summonBorder, "SummonBorder", UISummonArea, style.SummonBorderType, style.BorderCapAsset, style.BorderColor, style.BorderCapSize, style.BorderOuterColor, style.BorderInnerColor, style.BorderOuterWidth, style.BorderInnerWidth, log);
-
-			if (summonIcon != null)
-			{
-				summonIcon.sprite = IconManager.LoadHudIcon(style.SummonIcon);
-				summonIcon.preserveAspect = true;
-				summonIcon.color = Color.white;
-
-				if (summonIcon.sprite == null)
-				{
-					log.Warn($"Could not load HUD icon '{style.SummonIcon}'.");
-				}
-			}
-
-			if (summonText != null)
-			{
-				summonText.color = UIStyleManager.GetSummonTextColor(UISummonCounter.NumSummons);
-				summonText.rectTransform.sizeDelta = style.SummonSize;
-			}
+			skeletonPanel.ApplyStyle();
+			animalPanel.ApplyStyle();
 
 			ApplyDisplayMode();
 
-			log.Info($"Applied UI style '{ConfigManager.UIStyleChoice.Value}' to summon display.");
+			log.Info($"Applied UI style '{ConfigManager.UIStyleChoice.Value}' to summon displays.");
 		}
 
 		internal static void ApplySummonCounterTransform()
 		{
-			if (summonAreaRect == null) return;
+			if (summonRootRect == null) return;
 
 			float scale = ConfigManager.SummonCounterScale.Value / 100f;
 
-			summonAreaRect.localScale = new Vector3(scale, scale, 1f);
+			summonRootRect.localScale = new Vector3(scale, scale, 1f);
+			summonRootRect.anchoredPosition = ConfigManager.SummonCounterPosition.Value;
 
-			if (animating)
-			{
-				float easedProgress = Mathf.SmoothStep(0f, 1f, animationProgress);
-				summonAreaRect.anchoredPosition = Vector2.Lerp(GetHiddenPosition(), GetVisiblePosition(), easedProgress);
-			}
-			else
-			{
-				summonAreaRect.anchoredPosition = targetVisible ? GetVisiblePosition() : GetHiddenPosition();
-			}
+			UpdateLayout();
 
 			log.Info($"Applied summon counter transform: position {ConfigManager.SummonCounterPosition.Value}, scale {ConfigManager.SummonCounterScale.Value}%.");
 		}
 
 		private static void ApplyDisplayMode()
 		{
-			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
-			UIStyleDefinition style = UIStyleManager.Current;
-
-			if (summonIcon != null)
-			{
-				summonIcon.gameObject.SetActive(!useText);
-			}
-
-			if (summonAreaRect != null)
-			{
-				summonAreaRect.sizeDelta = useText ? SummonTextModeSize : style.SummonSize;
-			}
-
-			if (summonText != null)
-			{
-				RectTransform textRect = summonText.rectTransform;
-
-				if (useText)
-				{
-					textRect.anchoredPosition = Vector2.zero;
-					textRect.sizeDelta = SummonTextModeSize;
-					summonText.alignment = TextAnchor.MiddleCenter;
-					summonText.fontSize = 14;
-				}
-				else
-				{
-					textRect.anchoredPosition = SummonIconModeTextPosition;
-					textRect.sizeDelta = style.SummonSize;
-					summonText.alignment = TextAnchor.MiddleRight;
-					summonText.fontSize = 16;
-				}
-			}
+			skeletonPanel.ApplyDisplayMode();
+			animalPanel.ApplyDisplayMode();
 
 			currentDisplayMode = ConfigManager.EffectiveInfoRailDisplayModeChoice;
+
+			UpdateLayout();
 		}
 
 		private static void UpdateDisplayMode()
@@ -328,24 +336,14 @@ namespace MarsarahUI.Patches.UI
 		internal static void ApplyAnimationSetting()
 		{
 			if (ConfigManager.EffectiveUIAnimations) return;
-			if (UISummonArea == null) return;
+			if (summonRoot == null) return;
 
-			animationProgress = targetVisible ? 1f : 0f;
-			animating = false;
+			skeletonPanel.FinalizeAnimation();
+			animalPanel.FinalizeAnimation();
 
-			if (summonCanvasGroup != null)
-			{
-				summonCanvasGroup.alpha = targetVisible ? 1f : 0f;
-			}
+			UpdateLayout();
 
-			if (summonAreaRect != null)
-			{
-				summonAreaRect.anchoredPosition = targetVisible ? GetVisiblePosition() : GetHiddenPosition();
-			}
-
-			UISummonArea.SetActive(targetVisible);
-
-			log.Info("Summon counter animation state finalized.");
+			log.Info("Summon counter animation states finalized.");
 		}
 	}
 }
