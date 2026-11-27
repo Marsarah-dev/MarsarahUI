@@ -42,7 +42,11 @@ namespace MarsarahUI.Patches.UI
 
 			// Repair
 			{ "$msg_repaired", "Repair" },
-			{ StateMessageArgument + " $msg_doesnotneedrepair", "Repair" }
+			{ StateMessageArgument + " $msg_doesnotneedrepair", "Repair" },
+
+			// Auto-pickup
+			{ "$hud_autopickup:$hud_on", "AutoPickup" },
+			{ "$hud_autopickup:$hud_off", "AutoPickup" }
 		};
 
 		private class NotificationEntry

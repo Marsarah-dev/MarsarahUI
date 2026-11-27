@@ -10,17 +10,16 @@ A. Fixes
 
 B. Updates
 ------------------------
-* Portal Transition Images
-  - Added new images for Thistle Black Forest, Thistle Swamp and Greyling Meadows.
-  - Added support for Statue Swamp, reusing the existing Bog Swamp image.
-  - Updated alternate biome priorities to accommodate all four new variants.
+* Enhanced Notifications 
+  - Updates repeated auto-pickup ON/OFF notifications in place instead of stacking them as separate entries.
 
 C. New additions
 ------------------------
 
 D. In Progress
 ------------------------
-
+* Spirit Caller num summons indicator
+* Enemy Detector - split mode special indicator for either lesser enemies or the medium enemies
 
 ============================================================
 TO IMPLEMENT / VERIFY
