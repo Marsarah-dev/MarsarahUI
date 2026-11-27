@@ -127,7 +127,7 @@
     <Compile Include="Patches\UI\UISkillProgress.cs" />
     <Compile Include="Patches\UI\UISmartBiome.cs" />
     <Compile Include="Patches\UI\UIStatusEffects.cs" />
-    <Compile Include="Patches\UI\UISummonCounter.cs" />
+    <Compile Include="Patches\Logic\SummonCounterLogic.cs" />
     <Compile Include="Patches\UI\UISummonDisplay.cs" />
     <Compile Include="Patches\UI\UITamingProgress.cs" />
     <Compile Include="Patches\UI\UITimeAndDay.cs" />

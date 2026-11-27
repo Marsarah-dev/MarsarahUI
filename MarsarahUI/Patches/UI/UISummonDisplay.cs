@@ -2,6 +2,7 @@
 using MarsarahUI.Managers;
 using UnityEngine;
 using UnityEngine.UI;
+using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -238,8 +239,8 @@ namespace MarsarahUI.Patches.UI
 
 				UpdateDisplayMode();
 
-				int skeletonCount = UISummonCounter.NumSummons;
-				int animalCount = UISummonCounter.NumAnimalSummons;
+				int skeletonCount = SummonCounterLogic.NumSummons;
+				int animalCount = SummonCounterLogic.NumAnimalSummons;
 
 				skeletonPanel.Update(skeletonCount, ShowUI && skeletonCount > 0);
 				animalPanel.Update(animalCount, ShowUI && animalCount > 0);

@@ -1,13 +1,14 @@
 ﻿using HarmonyLib;
-using MarsarahUI.Managers;
 using System.Collections.Generic;
 using UnityEngine;
+using MarsarahUI.Managers;
+using MarsarahUI.Patches.UI;
 
-namespace MarsarahUI.Patches.UI
+namespace MarsarahUI.Patches.Logic
 {
-	internal class UISummonCounter
+	internal static class SummonCounterLogic
 	{
-		private static readonly LogManager log = new LogManager("UI Summon Counter", LogManager.LogLevel.Warning);
+		private static readonly LogManager log = new LogManager("Summon Counter Logic", LogManager.LogLevel.Warning);
 
 		internal static int NumSummons { get; private set; }
 		internal static int NumAnimalSummons { get; private set; }
