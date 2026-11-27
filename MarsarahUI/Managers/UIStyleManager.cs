@@ -49,6 +49,7 @@ namespace MarsarahUI.Managers
 		// Icons
 		internal string WeightIcon;
 		internal string SlotsIcon;
+		internal string LesserEnemyIcon;
 		internal string EnemyIcon;
 		internal string ToughEnemyIcon;
 		internal string BossIcon;
@@ -116,6 +117,7 @@ namespace MarsarahUI.Managers
 			// Icons
 			WeightIcon = "Style1.Weight",
 			SlotsIcon = "Style1.Slots",
+			LesserEnemyIcon = "Style1.LesserEnemy",
 			EnemyIcon = "Style1.Enemy",
 			ToughEnemyIcon = "Style1.ToughEnemy",
 			BossIcon = "Style1.Boss",
@@ -175,6 +177,7 @@ namespace MarsarahUI.Managers
 			// Icons
 			WeightIcon = "Style2.Weight",
 			SlotsIcon = "Style2.Slots",
+			LesserEnemyIcon = "Style2.LesserEnemy",
 			EnemyIcon = "Style2.Enemy",
 			ToughEnemyIcon = "Style2.ToughEnemy",
 			BossIcon = "Style2.Boss",
@@ -240,6 +243,7 @@ namespace MarsarahUI.Managers
 			// Icons
 			WeightIcon = "Style3.Weight",
 			SlotsIcon = "Style3.Slots",
+			LesserEnemyIcon = "Style3.LesserEnemy",
 			EnemyIcon = "Style3.Enemy",
 			ToughEnemyIcon = "Style3.ToughEnemy",
 			BossIcon = "Style3.Boss",

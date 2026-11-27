@@ -19,6 +19,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			Weight,
 			Slots,
+			LesserEnemies,
 			Enemies,
 			ToughEnemies,
 			Bosses,
@@ -32,6 +33,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			ElementType.Weight,
 			ElementType.Slots,
+			ElementType.LesserEnemies,
 			ElementType.Enemies,
 			ElementType.ToughEnemies,
 			ElementType.Bosses,
@@ -64,6 +66,8 @@ namespace MarsarahUI.Patches.UI
 		private static Image slotsIcon;
 
 		// Enemy Detector
+		private static Text lesserEnemyText;
+		private static Image lesserEnemyIcon;
 		private static Text enemyText;
 		private static Image enemyIcon;
 		private static Text neutralEnemyText;
@@ -89,6 +93,7 @@ namespace MarsarahUI.Patches.UI
 		private const float CounterIconWidth = 52f;
 		private const float SkillIconWidth = 100f;
 		private const float SkillTextPadding = 16f;
+		private const float LesserEnemyTextWidth = 72f;
 		private const float EnemyTextWidth = 85f;
 		private const float ToughEnemyTextWidth = 72f;
 		private const float BossTextWidth = 65f;
@@ -290,6 +295,9 @@ namespace MarsarahUI.Patches.UI
 
 			CreateElement(ElementType.Slots, SlotsWidth);
 			CreateSeparator(ElementType.Slots);
+
+			CreateElement(ElementType.LesserEnemies, CounterIconWidth);
+			CreateSeparator(ElementType.LesserEnemies);
 
 			CreateElement(ElementType.Enemies, CounterIconWidth);
 			CreateSeparator(ElementType.Enemies);
@@ -725,6 +733,14 @@ namespace MarsarahUI.Patches.UI
 		{
 			UIStyleDefinition style = UIStyleManager.Current;
 
+			GameObject lesserEnemyContent = GetElementContent(ElementType.LesserEnemies);
+
+			if (lesserEnemyContent != null)
+			{
+				lesserEnemyIcon = CreateRailIcon("LesserEnemyIcon", lesserEnemyContent, style.LesserEnemyIcon, new Vector2(CounterIconX, 0f));
+				lesserEnemyText = CreateTextObject("LesserEnemyText", lesserEnemyContent, style.ValueTextColor, "AveriaSansLibre-Bold", 16, TextAnchor.MiddleCenter, new Vector2(CounterTextX, 0f), new Vector2(IconSize, UIStyleManager.Current.RailHeight));
+			}
+
 			GameObject enemyContent = GetElementContent(ElementType.Enemies);
 
 			if (enemyContent != null)
@@ -818,6 +834,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (!detectorEnabled)
 			{
+				SetElementVisible(ElementType.LesserEnemies, false);
 				SetElementVisible(ElementType.Enemies, false);
 				SetElementVisible(ElementType.ToughEnemies, false);
 				SetElementVisible(ElementType.Bosses, false);
@@ -825,18 +842,33 @@ namespace MarsarahUI.Patches.UI
 				return;
 			}
 
-			bool splitEnemies = mode == ConfigManager.EnemyDetectorMode.Split;
+			bool splitEnemies = mode == ConfigManager.EnemyDetectorMode.Split || mode == ConfigManager.EnemyDetectorMode.SplitDeepNorth;
+			bool splitLesserEnemies = mode == ConfigManager.EnemyDetectorMode.SplitDeepNorth;
 			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
 
+			int lesserEnemies = EnemyDetectorLogic.NumLesserEnemies;
 			int enemies = EnemyDetectorLogic.NumEnemies;
 			int toughEnemies = EnemyDetectorLogic.NumToughEnemies;
 			int bosses = EnemyDetectorLogic.NumBosses;
 			int neutralEnemies = EnemyDetectorLogic.NumNeutralEnemies;
 
+			SetElementVisible(ElementType.LesserEnemies, splitLesserEnemies && lesserEnemies > 0);
 			SetElementVisible(ElementType.Enemies, enemies > 0);
 			SetElementVisible(ElementType.ToughEnemies, splitEnemies && toughEnemies > 0);
 			SetElementVisible(ElementType.Bosses, splitEnemies && bosses > 0);
 			SetElementVisible(ElementType.NeutralEnemies, neutralEnemies > 0);
+
+			if (splitLesserEnemies && lesserEnemies > 0 && lesserEnemyText != null)
+			{
+				Color valueColor = UIStyleManager.GetEnemyTextColor(lesserEnemies);
+				string value = lesserEnemies.ToString();
+
+				string displayText = useText ? CreateLabeledValue("Lesser", value, valueColor) : value;
+				Color displayColor = useText ? UIStyleManager.Current.LabelTextColor : valueColor;
+
+				SetTextIfChanged(lesserEnemyText, displayText);
+				SetColorIfChanged(lesserEnemyText, displayColor);
+			}
 
 			if (enemyText != null)
 			{
@@ -983,6 +1015,7 @@ namespace MarsarahUI.Patches.UI
 
 			ApplyIconStyle(weightIcon, style.WeightIcon);
 			ApplyIconStyle(slotsIcon, style.SlotsIcon);
+			ApplyIconStyle(lesserEnemyIcon, style.LesserEnemyIcon);
 			ApplyIconStyle(enemyIcon, style.EnemyIcon);
 			ApplyIconStyle(toughEnemyIcon, style.ToughEnemyIcon);
 			ApplyIconStyle(bossIcon, style.BossIcon);
@@ -990,6 +1023,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (weightText != null) weightText.color = style.ValueTextColor;
 			if (slotsText != null) slotsText.color = UIStyleManager.GetSlotsTextColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
+			if (lesserEnemyText != null) lesserEnemyText.color = UIStyleManager.GetEnemyTextColor(EnemyDetectorLogic.NumLesserEnemies);
 			if (enemyText != null) enemyText.color = UIStyleManager.GetEnemyTextColor(EnemyDetectorLogic.NumEnemies);
 			if (toughEnemyText != null) toughEnemyText.color = style.ToughEnemyTextColor;
 			if (bossText != null) bossText.color = style.BossTextColor;
@@ -1068,6 +1102,7 @@ namespace MarsarahUI.Patches.UI
 		{
 			UpdateTextHeight(weightText, railHeight);
 			UpdateTextHeight(slotsText, railHeight);
+			UpdateTextHeight(lesserEnemyText, railHeight);
 			UpdateTextHeight(enemyText, railHeight);
 			UpdateTextHeight(toughEnemyText, railHeight);
 			UpdateTextHeight(bossText, railHeight);
@@ -1092,12 +1127,14 @@ namespace MarsarahUI.Patches.UI
 			ApplyWeightLayout(useText);
 
 			if (slotsIcon != null) slotsIcon.gameObject.SetActive(!useText);
+			if (lesserEnemyIcon != null) lesserEnemyIcon.gameObject.SetActive(!useText);
 			if (enemyIcon != null) enemyIcon.gameObject.SetActive(!useText);
 			if (toughEnemyIcon != null) toughEnemyIcon.gameObject.SetActive(!useText);
 			if (bossIcon != null) bossIcon.gameObject.SetActive(!useText);
 			if (neutralEnemyIcon != null) neutralEnemyIcon.gameObject.SetActive(!useText);
 
 			SetElementWidth(ElementType.Slots, useText ? SlotsTextWidth : SlotsWidth);
+			SetElementWidth(ElementType.LesserEnemies, useText ? LesserEnemyTextWidth : CounterIconWidth);
 			SetElementWidth(ElementType.Enemies, useText ? EnemyTextWidth : CounterIconWidth);
 			SetElementWidth(ElementType.ToughEnemies, useText ? ToughEnemyTextWidth : CounterIconWidth);
 			SetElementWidth(ElementType.Bosses, useText ? BossTextWidth : CounterIconWidth);
@@ -1117,6 +1154,7 @@ namespace MarsarahUI.Patches.UI
 			}
 
 			SetCounterTextLayout(slotsText, useText, SlotsTextWidth);
+			SetCounterTextLayout(lesserEnemyText, useText, LesserEnemyTextWidth);
 			SetCounterTextLayout(enemyText, useText, EnemyTextWidth);
 			SetCounterTextLayout(toughEnemyText, useText, ToughEnemyTextWidth);
 			SetCounterTextLayout(bossText, useText, BossTextWidth);
@@ -1271,6 +1309,7 @@ namespace MarsarahUI.Patches.UI
 			ConfigManager.EnemyDetectorPosition position = ConfigManager.EffectiveEnemyDetectorPositionChoice;
 			Transform targetParent = position == ConfigManager.EnemyDetectorPosition.TopCenter ? UIEnemyRail.transform : UIRail.transform;
 
+			MoveElementToRail(ElementType.LesserEnemies, targetParent);
 			MoveElementToRail(ElementType.Enemies, targetParent);
 			MoveElementToRail(ElementType.ToughEnemies, targetParent);
 			MoveElementToRail(ElementType.Bosses, targetParent);
