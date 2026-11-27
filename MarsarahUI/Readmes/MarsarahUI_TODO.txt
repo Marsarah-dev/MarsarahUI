@@ -39,12 +39,6 @@ C. New additions
 
 D. In Progress
 ------------------------
-* When switching to a chest or another crafting station, the crafting tabs do not retain their last tab selected. Need to look into this. 
-* Give Oat Milk it's own Deep North Category when Food and Mead Modifications is not enabled (now it's in Others). 
-
-spawn Greydwarf_Frozen 1
-spawn Greydwarf_Shaman_Frozen 1
-spawn Skeleton_DeepNorth 1
 
 ============================================================
 TO IMPLEMENT / VERIFY

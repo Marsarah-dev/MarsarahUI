@@ -1,6 +1,6 @@
 # <strong> Marsarah UI </strong>
 
-**Version:** 1.6.0  
+**Version:** 1.7.0  
 **Author:** Marsarah
 
 ---
@@ -18,7 +18,7 @@ Marsarah UI also includes **ServerSync** support for selected gameplay/informati
 
 ## **Development Notes**
 
-**Deep North / Spoiler Note:** Deep North support is being added progressively. Version 1.5.3 adds Smart Biome support for Deep North gear and biome progression coloring. Previous updates introduced Deep North enemy classifications and exclusions, Detailed Hovers support for the Frost Foundry and Frigid Kiln, and Deep North recipe categorization in Biome-Sorted Crafting Tabs.
+**Deep North / Spoiler Note:** Deep North support is being added progressively. Current support includes Smart Biome gear and biome progression coloring, Deep North enemy classifications and exclusions, Detailed Hovers support for the Frost Foundry and Frigid Kiln, Deep North recipe categorization in Biome-Sorted Crafting Tabs and animal spirit summon tracking.
 I am still playing through the biome myself and want to experience the remaining content without spoilers. More Deep North-related UI improvements will be added as I continue my playthrough and discover where they are needed.
 
 **AI Usage Disclosure:** The original UI features were developed as part of my MarsarahMod / Marsarah Tweaks projects. AI tools are now used as part of my development workflow for tasks such as debugging, refactoring, compatibility updates, researching game API changes, and documentation.  
@@ -253,21 +253,24 @@ https://paypal.me/Marsarah9
 
 ### <strong>🔧 Enemy Detector</strong>
 - Counts nearby characters within **30 meters**.
-- Modes: **Consolidated, Split, Off**.
+- Modes: **Consolidated, Split, SplitDeepNorth, Off**.
 - Consolidated combines hostile enemies into a single counter.
 - Split separates normal, tough and boss enemies into individual counters.
+- SplitDeepNorth additionally separates lesser Deep North enemies into their own counter.
 - Bosses and minibosses count as normal enemies while using Consolidated mode.
 - Neutral Dvergr are shown separately until aggravated.
 - Other players, Deer, Hare, Seals, Baby Seals, village Shadows, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
+- Enemies in the lesser category are: Frozen Greydwarf, Frozen Greydwarf Shaman and Deep North Skeleton.
 - Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent, Bonemaw, Barka and Gammeltroll.
 - Can be displayed inside the Information Rail or moved to a separate top-center display.
-- Uses the selected Information Rail visual style and Icons/Text display mode.
+- Uses the shared Information Rail visual style and Icons/Text display mode.
 
 ### <strong>🔧 Show Summon Counter</strong>
-- Displays the number of active summoned skeletons created by the Dead Raiser.
-- Does not count summoned Trolls.
-- Appears only while summons are active.
-- Uses the selected Information Rail visual style and Icons/Text display mode.
+- Displays active summoned skeletons from the Dead Raiser and animal spirits from the Spirit Caller.
+- Skeletons and animal spirits are counted separately and displayed vertically when both types of summons are active.
+- Summoned Trolls are not counted.
+- Counters only appear while their respective summons are active.
+- Uses the shared Information Rail visual style and Icons/Text display mode.
 - Can be repositioned using exact **X/Y coordinates** and scaled independently.
 
 ### <strong>🔧 Show Skill Progress</strong>
@@ -355,7 +358,7 @@ https://paypal.me/Marsarah9
 - Replaces vanilla top-left messages with a customizable notification stack.
 - Displays item, skill and information messages with icons and styling matching the selected UI Style.
 - Repeated item notifications are combined, showing positive or negative amounts.
-- Repeated shelter and repair notifications are updated in place instead of stacking as separate entries.
+- Repeated shelter, repair and auto-pickup ON/OFF notifications are updated in place instead of stacking as separate entries.
 - Supports animations, adjustable position, scale, duration and maximum visible count.
 - **Notification Mode:** Enhanced or Vanilla, with an optional synchronized server override.
 

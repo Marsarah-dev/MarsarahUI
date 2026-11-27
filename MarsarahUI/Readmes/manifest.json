@@ -1,6 +1,6 @@
 {
     "name": "MarsarahUI",
-    "version_number": "1.6.0",
+    "version_number": "1.7.0",
     "website_url": "https://www.nexusmods.com/valheim/mods/3710",
     "description": "UI enhancements with custom portal transitions, alternate biome names, biome-sorted crafting tabs, enhanced notifications, customizable HUD information, detailed hovers, and more.",
     "dependencies": [

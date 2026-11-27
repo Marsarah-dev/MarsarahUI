@@ -1,4 +1,4 @@
-Marsarah UI v1.6.0
+Marsarah UI v1.7.0
 ================================================================
 Marsarah UI is a standalone collection of UI and information improvements for Valheim.
 The features originally started as the UI section of Marsarah Tweaks and have now been separated into their own mod so players can use the interface improvements without installing the gameplay tweaks.
@@ -11,7 +11,7 @@ Marsarah UI also includes ServerSync support for selected gameplay/information-o
 DEVELOPMENT NOTES
 ================================================================
 DEEP NORTH / SPOILER NOTE:
-Deep North support is being added progressively. Version 1.5.3 adds Smart Biome support for Deep North gear and biome progression coloring. Previous updates introduced Deep North enemy classifications and exclusions, Detailed Hovers support for the Frost Foundry and Frigid Kiln, and Deep North recipe categorization in Biome-Sorted Crafting Tabs.
+Deep North support is being added progressively. Current support includes Smart Biome gear and biome progression coloring, Deep North enemy classifications and exclusions, Detailed Hovers support for the Frost Foundry and Frigid Kiln, Deep North recipe categorization in Biome-Sorted Crafting Tabs and animal spirit summon tracking.
 I am still playing through the biome myself and want to experience the remaining content without spoilers. More Deep North-related UI improvements will be added as I continue my playthrough and discover where they are needed.
 
 AI USAGE DISCLOSURE:
@@ -376,14 +376,17 @@ MOD CONFIGS
 ► Description:
   Counts characters within 30 meters and displays a nearby-enemy counter.
 
-► Modes: 
+► Modes:
   Consolidated
   Split
+  SplitDeepNorth
   Off
 
   Consolidated combines hostile enemies into a single counter.
   Split separates normal, tough and boss enemies into individual counters.
+  SplitDeepNorth additionally separates lesser Deep North enemies into their own counter.
   Bosses and minibosses count as normal enemies while using Consolidated mode.
+  Enemies in the lesser category are: Frozen Greydwarf, Frozen Greydwarf Shaman and Deep North Skeleton.
   Enemies in the tough category are: Troll, Bjorn, Abomination, Writhan, Stone Golem, Fuling Berserker, Vile Bear, Seeker Soldier, Gjall, Fallen Valkyrie, Morgen, Serpent, Bonemaw, Barka and Gammeltroll.
   Other players, Deer, Hare, Seals, Baby Seals, village Shadows, Kvastur, summoned roots, T.W.I.G. and tamed creatures are excluded from the hostile count.
   Neutral Dvergr use a separate counter until aggravated.
@@ -419,10 +422,12 @@ MOD CONFIGS
 
 ---------------------- [Show Summon Counter] --------------------
 ► Description:
-  Shows the number of active skeletons summoned by the Dead Raiser.
+  Shows the number of active skeletons summoned by the Dead Raiser and animal spirits summoned by the Spirit Caller.
+  Skeletons and animal spirits are counted separately and displayed vertically when both types of summons are active.
   Summoned Trolls are not counted.
-  Counter color changes with active summon count.
-  Uses the selected Information Rail style and Icons/Text display mode.
+  Counters only appear while their respective summons are active.
+  Counter colors change with active summon count.
+  Uses the shared Information Rail style and Icons/Text display mode.
 
 
 ------------------ [Summon Counter X/Y Position] ---------------
@@ -701,7 +706,7 @@ MOD CONFIGS
 
   Enhanced Notifications display item, skill and information messages.
   Repeated item notifications are merged and show positive or negative amounts.
-  Repeated shelter and repair notifications are updated in place instead of stacking as separate entries.
+  Repeated shelter, repair and auto-pickup ON/OFF notifications are updated in place instead of stacking as separate entries.
   Notifications follow the selected UI Style and UI Animations settings.
 
 ► Server Override:
@@ -788,6 +793,16 @@ Blaxxun-bloop - ServerSync
 
 VERSION HISTORY
 ================================================================
+
+v1.7.0
+- Updates:
+  - Enhanced Notifications now updates repeated auto-pickup ON/OFF notifications in place instead of stacking them as separate entries.
+  - Show Summon Counter now supports animal spirits summoned by the Spirit Caller, displaying separate counters for skeletons and animal spirits.
+  - Added unique animal summon icons for all three UI styles.
+  - Added SplitDeepNorth mode to the Enemy Detector, separating lesser Deep North enemies from normal, tough and boss enemies.
+  - Added unique lesser enemy icons for all three UI styles.
+  - Biome-Sorted Crafting Tabs now remembers the last tab chosen when switching between crafting stations, opening chests or switching between Craft and Upgrade.
+  - Crafting tabs temporarily fall back to All when the remembered category is unavailable and restore it when available again.
 
 v1.6.0
 - Updates:

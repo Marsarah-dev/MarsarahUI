@@ -1,5 +1,15 @@
 ## <strong> 📜 Version History </strong>
 
+v1.7.0
+- **Updates:**
+  - Enhanced Notifications now updates repeated auto-pickup ON/OFF notifications in place instead of stacking them as separate entries.
+  - Show Summon Counter now supports animal spirits summoned by the Spirit Caller, displaying separate counters for skeletons and animal spirits.
+  - Added unique animal summon icons for all three UI styles.
+  - Added SplitDeepNorth mode to the Enemy Detector, separating lesser Deep North enemies from normal, tough and boss enemies.
+  - Added unique lesser enemy icons for all three UI styles.
+  - Biome-Sorted Crafting Tabs now remembers the last tab chosen when switching between crafting stations, opening chests or switching between Craft and Upgrade.
+  - Crafting tabs temporarily fall back to All when the remembered category is unavailable and restore it when available again.
+
 v1.6.0
 - **Updates:**
   - Added new Portal Transition Images for Thistle Black Forest, Thistle Swamp and Greyling Meadows.
