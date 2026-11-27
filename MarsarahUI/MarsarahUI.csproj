@@ -238,6 +238,9 @@
     <EmbeddedResource Include="Assets\Icons\HUD\Style1\SummonAnimal.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Style2\SummonAnimal.png" />
     <EmbeddedResource Include="Assets\Icons\HUD\Style3\SummonAnimal.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style1\LesserEnemy.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style2\LesserEnemy.png" />
+    <EmbeddedResource Include="Assets\Icons\HUD\Style3\LesserEnemy.png" />
     <Content Include="Readmes\MarsarahUI_DescriptionN.txt" />
     <Content Include="Readmes\MarsarahUI_Readme.txt" />
     <Content Include="Readmes\MarsarahUI_TODO.txt" />
