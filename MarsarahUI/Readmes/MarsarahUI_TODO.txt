@@ -25,9 +25,12 @@ C. New additions
 
 D. In Progress
 ------------------------
-* Spirit Caller num summons indicator
 * Enemy Detector - split mode special indicator for either lesser enemies or the medium enemies
 * When switching to a chest or another crafting station, the crafting tabs do not retain their last tab selected. Need to look into this. Also, Give Oat Milk it's own Deep North Category when Food and Mead Modifications is not enabled (now it's in Others). 
+
+spawn Greydwarf_Frozen 1
+spawn Greydwarf_Shaman_Frozen 1
+spawn Skeleton_DeepNorth 1
 
 ============================================================
 TO IMPLEMENT / VERIFY

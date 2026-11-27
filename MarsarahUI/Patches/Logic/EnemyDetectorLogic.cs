@@ -2,12 +2,15 @@
 using MarsarahUI.Managers;
 using System.Collections.Generic;
 using UnityEngine;
+using MarsarahUI.Patches.UI;
 
-namespace MarsarahUI.Patches.UI
+namespace MarsarahUI.Patches.Logic
 {
-	internal class UIEnemyDetector
+	internal class EnemyDetectorLogic
 	{
-		private static readonly LogManager log = new LogManager("UI Enemy Detector", LogManager.LogLevel.Warning);
+		// NOTE: The UI elements for this feature are handled by UIInfoRail
+
+		private static readonly LogManager log = new LogManager("Enemy Detector Logic", LogManager.LogLevel.Warning);
 
 		private const float DetectionRadius = 30f;
 		private const float UpdateInterval = 0.2f;

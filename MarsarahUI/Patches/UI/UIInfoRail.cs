@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using MarsarahUI.Patches.Logic;
 
 namespace MarsarahUI.Patches.UI
 {
@@ -827,10 +828,10 @@ namespace MarsarahUI.Patches.UI
 			bool splitEnemies = mode == ConfigManager.EnemyDetectorMode.Split;
 			bool useText = ConfigManager.EffectiveInfoRailDisplayModeChoice == ConfigManager.InfoRailDisplayMode.Text;
 
-			int enemies = UIEnemyDetector.NumEnemies;
-			int toughEnemies = UIEnemyDetector.NumToughEnemies;
-			int bosses = UIEnemyDetector.NumBosses;
-			int neutralEnemies = UIEnemyDetector.NumNeutralEnemies;
+			int enemies = EnemyDetectorLogic.NumEnemies;
+			int toughEnemies = EnemyDetectorLogic.NumToughEnemies;
+			int bosses = EnemyDetectorLogic.NumBosses;
+			int neutralEnemies = EnemyDetectorLogic.NumNeutralEnemies;
 
 			SetElementVisible(ElementType.Enemies, enemies > 0);
 			SetElementVisible(ElementType.ToughEnemies, splitEnemies && toughEnemies > 0);
@@ -989,7 +990,7 @@ namespace MarsarahUI.Patches.UI
 
 			if (weightText != null) weightText.color = style.ValueTextColor;
 			if (slotsText != null) slotsText.color = UIStyleManager.GetSlotsTextColor(UIInventoryWeightAndSlots.SlotsUsedPercent);
-			if (enemyText != null) enemyText.color = UIStyleManager.GetEnemyTextColor(UIEnemyDetector.NumEnemies);
+			if (enemyText != null) enemyText.color = UIStyleManager.GetEnemyTextColor(EnemyDetectorLogic.NumEnemies);
 			if (toughEnemyText != null) toughEnemyText.color = style.ToughEnemyTextColor;
 			if (bossText != null) bossText.color = style.BossTextColor;
 			if (neutralEnemyText != null) neutralEnemyText.color = style.NeutralTextColor;

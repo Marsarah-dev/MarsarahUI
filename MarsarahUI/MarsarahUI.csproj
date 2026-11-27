@@ -111,7 +111,7 @@
     <Compile Include="Patches\UI\UIContainerContents.cs" />
     <Compile Include="Patches\UI\UIController.cs" />
     <Compile Include="Patches\UI\UIDetailedHovers.cs" />
-    <Compile Include="Patches\UI\UIEnemyDetector.cs" />
+    <Compile Include="Patches\Logic\EnemyDetectorLogic.cs" />
     <Compile Include="Patches\UI\UIEnemyNameplates.cs" />
     <Compile Include="Patches\UI\UIGlobalChat.cs" />
     <Compile Include="Patches\UI\UIInfoRail.cs" />
